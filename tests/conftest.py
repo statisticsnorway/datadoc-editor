@@ -5,6 +5,7 @@ from __future__ import annotations
 import concurrent
 import copy
 import functools
+import logging
 import os
 import pathlib
 import shutil
@@ -36,13 +37,11 @@ if TYPE_CHECKING:
 
     from pytest_mock import MockerFixture
 
+logging.getLogger("faker").setLevel(logging.ERROR)
 
 DATADOC_METADATA_MODULE = "dapla_metadata.datasets"
 CODE_LIST_DIR = "code_list"
 STATISTICAL_SUBJECT_STRUCTURE_DIR = "statistical_subject_structure"
-
-if TYPE_CHECKING:
-    from pytest_mock import MockerFixture
 
 
 @pytest.fixture(autouse=True)
@@ -56,12 +55,12 @@ def faker_session_locale():
     return ["no_NO"]
 
 
-@pytest.fixture()
+@pytest.fixture
 def dummy_timestamp() -> datetime:
     return datetime(2022, 1, 1, tzinfo=timezone.utc)
 
 
-@pytest.fixture()
+@pytest.fixture
 def _mock_timestamp(mocker: MockerFixture, dummy_timestamp: datetime) -> None:
     mocker.patch(
         DATADOC_METADATA_MODULE + ".core.get_timestamp_now",
@@ -69,7 +68,7 @@ def _mock_timestamp(mocker: MockerFixture, dummy_timestamp: datetime) -> None:
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def _mock_user_info(mocker: MockerFixture) -> None:
     mocker.patch(
         DATADOC_METADATA_MODULE + ".user_info.get_user_info_for_current_platform",
@@ -77,7 +76,7 @@ def _mock_user_info(mocker: MockerFixture) -> None:
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def metadata(
     _mock_timestamp: None,
     _mock_user_info: None,
@@ -91,7 +90,7 @@ def metadata(
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def metadata_illegal_shortnames(
     _mock_timestamp: None,
     _mock_user_info: None,
@@ -108,7 +107,7 @@ def metadata_illegal_shortnames(
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def existing_metadata_path() -> Path:
     return TEST_EXISTING_METADATA_DIRECTORY
 
@@ -123,22 +122,22 @@ def _clear_state() -> None:
         pass
 
 
-@pytest.fixture()
+@pytest.fixture
 def english_name() -> str:
     return "English Name"
 
 
-@pytest.fixture()
+@pytest.fixture
 def bokmål_name() -> str:
     return "Bokmål navn"
 
 
-@pytest.fixture()
+@pytest.fixture
 def nynorsk_name() -> str:
     return "Nynorsk namn"
 
 
-@pytest.fixture()
+@pytest.fixture
 def language_object(
     english_name: str,
     bokmål_name: str,
@@ -153,7 +152,7 @@ def language_object(
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def full_dataset_state_path(
     path_parts_to_insert: str | list[str],
 ) -> pathlib.Path:
@@ -177,7 +176,7 @@ def full_dataset_state_path(
     return pathlib.Path().joinpath(*new_path)
 
 
-@pytest.fixture()
+@pytest.fixture
 def subject_xml_file_path() -> pathlib.Path:
     return (
         TEST_RESOURCES_DIRECTORY
@@ -186,12 +185,12 @@ def subject_xml_file_path() -> pathlib.Path:
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def thread_pool_executor() -> concurrent.futures.ThreadPoolExecutor:
     return concurrent.futures.ThreadPoolExecutor(max_workers=12)
 
 
-@pytest.fixture()
+@pytest.fixture
 def subject_mapping_fake_statistical_structure(
     _mock_fetch_statistical_structure,
     thread_pool_executor,
@@ -199,7 +198,7 @@ def subject_mapping_fake_statistical_structure(
     return StatisticSubjectMapping(thread_pool_executor, "placeholder")
 
 
-@pytest.fixture()
+@pytest.fixture
 def _mock_fetch_statistical_structure(
     mocker,
     subject_xml_file_path: pathlib.Path,
@@ -215,7 +214,7 @@ def _mock_fetch_statistical_structure(
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def _statistic_subject_mapping_fake_subjects(
     subject_mapping_fake_statistical_structure,
 ) -> None:
@@ -223,7 +222,7 @@ def _statistic_subject_mapping_fake_subjects(
     state.statistic_subject_mapping.wait_for_external_result()
 
 
-@pytest.fixture()
+@pytest.fixture
 def subject_mapping_http_exception(
     requests_mock,
     exception_to_raise,
@@ -236,22 +235,22 @@ def subject_mapping_http_exception(
     return StatisticSubjectMapping(thread_pool_executor, "http://test.some.url.com")
 
 
-@pytest.fixture()
+@pytest.fixture
 def code_list_csv_filepath_nb() -> pathlib.Path:
     return TEST_RESOURCES_DIRECTORY / CODE_LIST_DIR / "code_list_nb.csv"
 
 
-@pytest.fixture()
+@pytest.fixture
 def code_list_csv_filepath_nn() -> pathlib.Path:
     return TEST_RESOURCES_DIRECTORY / CODE_LIST_DIR / "code_list_nn.csv"
 
 
-@pytest.fixture()
+@pytest.fixture
 def code_list_csv_filepath_en() -> pathlib.Path:
     return TEST_RESOURCES_DIRECTORY / CODE_LIST_DIR / "code_list_en.csv"
 
 
-@pytest.fixture()
+@pytest.fixture
 def _mock_fetch_dataframe(
     mocker,
     code_list_csv_filepath_nb: pathlib.Path,
@@ -272,12 +271,12 @@ def _mock_fetch_dataframe(
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def code_list_fake_structure(_mock_fetch_dataframe, thread_pool_executor) -> CodeList:
     return CodeList(thread_pool_executor, 100)
 
 
-@pytest.fixture()
+@pytest.fixture
 def _code_list_fake_classifications(code_list_fake_structure) -> None:
     state.measurement_units = code_list_fake_structure
     state.measurement_units.wait_for_external_result()
@@ -292,7 +291,7 @@ def _code_list_fake_classifications(code_list_fake_structure) -> None:
     state.organisational_units.wait_for_external_result()
 
 
-@pytest.fixture()
+@pytest.fixture
 def copy_dataset_to_path(
     tmp_path: pathlib.Path,
     full_dataset_state_path: pathlib.Path,

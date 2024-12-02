@@ -24,12 +24,12 @@ from datadoc.frontend.callbacks.register_callbacks import register_callbacks
 from datadoc.frontend.components.control_bars import build_controls_bar
 from datadoc.frontend.components.control_bars import build_footer_control_bar
 from datadoc.frontend.components.control_bars import header
-from datadoc.logging_configuration.logging_config import configure_logging
+from datadoc.logging_configuration.logging_config import get_log_config
 from datadoc.utils import get_app_version
 from datadoc.utils import pick_random_port
 from datadoc.utils import running_in_notebook
 
-configure_logging()
+logging.config.dictConfig(get_log_config())
 logger = logging.getLogger(__name__)
 
 

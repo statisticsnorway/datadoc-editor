@@ -161,6 +161,9 @@ max-complexity = 15
 [tool.ruff.lint.pydocstyle]
 convention = "google" # You can also use "numpy".
 
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = false
+
 [tool.ruff.lint.pep8-naming]
 classmethod-decorators = [
     "classmethod",

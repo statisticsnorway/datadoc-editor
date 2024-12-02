@@ -2,23 +2,15 @@
 
 from __future__ import annotations
 
-import logging
 import os
-import sys
 from pathlib import Path
-from pprint import pformat
 from typing import Literal
 
 from dapla_metadata.datasets import enums
-from dotenv import dotenv_values
 from dotenv import load_dotenv
 
 from datadoc.constants import DAPLA_MANUAL_TEXT
 from datadoc.frontend.components.builders import build_link_object
-
-logging.basicConfig(level=logging.DEBUG, force=True, stream=sys.stdout)
-
-logger = logging.getLogger(__name__)
 
 DOT_ENV_FILE_PATH = Path(__file__).parent.joinpath(".env")
 
@@ -34,18 +26,12 @@ def _load_dotenv_file() -> None:
     if not env_loaded and DOT_ENV_FILE_PATH.exists():
         load_dotenv(DOT_ENV_FILE_PATH)
         env_loaded = True
-        logger.info(
-            "Loaded .env file with config keys: \n%s",
-            pformat(list(dotenv_values(DOT_ENV_FILE_PATH).keys())),
-        )
 
 
 def _get_config_item(item: str) -> str | None:
     """Get a config item. Makes sure all access is logged."""
     _load_dotenv_file()
-    value = os.getenv(item)
-    logger.debug("Config accessed. %s", item)
-    return value
+    return os.getenv(item)
 
 
 def get_jupyterhub_user() -> str | None:

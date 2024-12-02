@@ -37,17 +37,17 @@ if TYPE_CHECKING:
 DATASET_CALLBACKS_MODULE = "datadoc.frontend.callbacks.dataset"
 
 
-@pytest.fixture()
+@pytest.fixture
 def n_clicks_1():
     return 1
 
 
-@pytest.fixture()
+@pytest.fixture
 def file_path():
     return "valid/path/to/file.json"
 
 
-@pytest.fixture()
+@pytest.fixture
 def file_path_without_dates():
     return "valid/path/to/person_data_v1.parquet"
 
