@@ -97,7 +97,7 @@ jobs:
     steps:
       - name: Run mabl tests
         id: mabl-test-deployment
-        uses: mablhq/github-run-tests-action@v1.14
+        uses: mablhq/github-run-tests-action@v1.15
         env:
           # Use a "CI/CD Integration" type of mabl API key
           MABL_API_KEY: ${{ secrets.MABL_API_KEY }}
