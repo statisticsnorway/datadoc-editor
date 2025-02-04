@@ -194,3 +194,4 @@ def main(dataset_path: str | None = None) -> None:
 
 if __name__ == "__main__":
     main()
+    print("Hello")
