@@ -45,6 +45,37 @@ class DatadocJSONFormatter(logging.Formatter):
             )
             for key, val in self.fmt_keys.items()
         }
+
+        extra_fields = {
+            key: value
+            for key, value in record.__dict__.items()
+            if key not in message
+            and key not in always_fields
+            and key
+            not in (
+                "pathname",
+                "filename",
+                "exc_info",
+                "exc_text",
+                "stack_info",
+                "lineno",
+                "funcName",
+                "created",
+                "msecs",
+                "relativeCreated",
+                "thread",
+                "processName",
+                "process",
+                "taskName",
+                "levelno",
+                "args",
+                "msg",
+                "levelname",
+                "name",
+            )
+        }
+
         message.update(always_fields)
+        message.update(extra_fields)
 
         return message
