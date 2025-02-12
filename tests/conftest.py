@@ -17,11 +17,11 @@ import pandas as pd
 import pytest
 from bs4 import BeautifulSoup
 from bs4 import ResultSet
+from dapla_metadata._shared.user_info import TestUserInfo
 from dapla_metadata.datasets import Datadoc
 from dapla_metadata.datasets import model
 from dapla_metadata.datasets.code_list import CodeList
 from dapla_metadata.datasets.statistic_subject_mapping import StatisticSubjectMapping
-from dapla_metadata.datasets.user_info import TestUserInfo
 
 from datadoc import state
 
@@ -40,6 +40,7 @@ if TYPE_CHECKING:
 logging.getLogger("faker").setLevel(logging.ERROR)
 
 DATADOC_METADATA_MODULE = "dapla_metadata.datasets"
+SHARED_MODULE = "dapla_metadata._shared"
 CODE_LIST_DIR = "code_list"
 STATISTICAL_SUBJECT_STRUCTURE_DIR = "statistical_subject_structure"
 
@@ -71,7 +72,7 @@ def _mock_timestamp(mocker: MockerFixture, dummy_timestamp: datetime) -> None:
 @pytest.fixture
 def _mock_user_info(mocker: MockerFixture) -> None:
     mocker.patch(
-        DATADOC_METADATA_MODULE + ".user_info.get_user_info_for_current_platform",
+        SHARED_MODULE + ".user_info.get_user_info_for_current_platform",
         return_value=TestUserInfo(),
     )
 

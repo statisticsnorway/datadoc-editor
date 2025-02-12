@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 from typing import Literal
 
-from dapla_metadata.datasets import enums
+from dapla_metadata._shared import enums
 from dotenv import load_dotenv
 
 from datadoc.constants import DAPLA_MANUAL_TEXT
