@@ -17,11 +17,11 @@ import pandas as pd
 import pytest
 from bs4 import BeautifulSoup
 from bs4 import ResultSet
+from dapla_metadata._shared.user_info import TestUserInfo
 from dapla_metadata.datasets import Datadoc
 from dapla_metadata.datasets import model
 from dapla_metadata.datasets.code_list import CodeList
 from dapla_metadata.datasets.statistic_subject_mapping import StatisticSubjectMapping
-from dapla_metadata.datasets.user_info import TestUserInfo
 
 from datadoc import state
 
