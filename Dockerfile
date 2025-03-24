@@ -25,6 +25,7 @@ ENV \
 # Install Poetry - respects $POETRY_VERSION & $POETRY_HOME
 RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH="$POETRY_HOME/bin:$PATH"
+RUN poetry self add poetry-plugin-export
 
 # Import our project files
 WORKDIR $APP_PATH
