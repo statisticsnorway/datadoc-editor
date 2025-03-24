@@ -35,7 +35,7 @@ def pick_random_port() -> int:
 
 def get_timestamp_now() -> datetime.datetime:
     """Return a timestamp for the current moment."""
-    return datetime.datetime.now(tz=datetime.timezone.utc)
+    return datetime.datetime.now(tz=datetime.UTC)
 
 
 def get_app_version() -> str:

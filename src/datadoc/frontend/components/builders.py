@@ -129,7 +129,7 @@ def build_edit_section(
         id={"type": "edit-section"},
         children=[
             build_input_field_section(inputs, side, variable, field_id="editable")
-            for inputs, side in zip(metadata_inputs, ["left", "right"])
+            for inputs, side in zip(metadata_inputs, ["left", "right"], strict=False)
         ],
         className="edit-section",
     )
@@ -232,7 +232,7 @@ def build_dataset_edit_section(
                 id=f"{DATASET_METADATA_INPUT}-{side}",
                 className="edit-section-form",
             )
-            for inputs, side in zip(metadata_inputs, ["left", "right"])
+            for inputs, side in zip(metadata_inputs, ["left", "right"], strict=False)
         ],
         className="edit-section dataset-edit-section",
     )

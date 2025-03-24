@@ -33,9 +33,9 @@ logging.config.dictConfig(get_log_config())
 logger = logging.getLogger(__name__)
 
 
-def build_app(app: type[Dash]) -> Dash:
+def build_app(app: Dash) -> Dash:
     """Define the layout, register callbacks."""
-    app.layout = html.Div(
+    app.layout = html.Div(  # type: ignore [misc]
         children=[
             html.Header(
                 [

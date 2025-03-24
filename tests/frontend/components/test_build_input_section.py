@@ -81,6 +81,7 @@ def test_build_input_fields_input_components(
         for item1, item2 in zip(
             elements_of_input_and_type_text_url,
             variable_identifier_input,
+            strict=False,
         )
     )
 
@@ -115,7 +116,11 @@ def test_build_input_fields_checkbox_components(
     )
     assert all(
         item1.label == item2.display_name
-        for item1, item2 in zip(elements_of_checkbox, variable_identifier_checkbox)
+        for item1, item2 in zip(
+            elements_of_checkbox,
+            variable_identifier_checkbox,
+            strict=False,
+        )
     )
 
 
@@ -142,7 +147,11 @@ def test_build_input_fields_type_date(field_list, variable):
 
     assert all(
         item1.label == item2.display_name
-        for item1, item2 in zip(elements_of_date, variable_identifier_date)
+        for item1, item2 in zip(
+            elements_of_date,
+            variable_identifier_date,
+            strict=False,
+        )
     )
     assert all(item.debounce is False for item in elements_of_date)
 
@@ -166,7 +175,11 @@ def test_build_input_fields_type_url(field_list, variable):
         if isinstance(element, ssb.Input) and element.type == "url"
     ]
     assert all(item.debounce is True for item in elements_of_input_and_type_url)
-    for item1, item2 in zip(elements_of_input_and_type_url, variable_identifier_url):
+    for item1, item2 in zip(
+        elements_of_input_and_type_url,
+        variable_identifier_url,
+        strict=False,
+    ):
         assert item1.label == item2.display_name
 
 
@@ -193,7 +206,15 @@ def test_build_input_fields_dropdown_components(
     assert all(isinstance(item, type_dropdown) for item in elements_of_dropdown)
     for item in elements_of_dropdown:
         assert item._type == "Dropdown"  # noqa: SLF001
-    for item1, item2 in zip(elements_of_dropdown, variable_identifier_dropdown):
+    for item1, item2 in zip(
+        elements_of_dropdown,
+        variable_identifier_dropdown,
+        strict=False,
+    ):
         assert item1.header == item2.display_name
-    for item1, item2 in zip(elements_of_dropdown, variable_identifier_dropdown):
+    for item1, item2 in zip(
+        elements_of_dropdown,
+        variable_identifier_dropdown,
+        strict=False,
+    ):
         assert item1.items == item2.options_getter()

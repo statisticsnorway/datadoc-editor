@@ -8,7 +8,6 @@ import logging
 import re
 import warnings
 from typing import TYPE_CHECKING
-from typing import TypeAlias
 
 import arrow
 import ssb_dash_components as ssb
@@ -48,9 +47,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-MetadataInputTypes: TypeAlias = (
-    str | list[str] | int | float | bool | datetime.date | None
-)
+MetadataInputTypes = str | list[str] | int | float | bool | datetime.date | None
 
 
 def _check_if_language_string_item_exists(
@@ -196,10 +193,8 @@ def parse_and_validate_dates(
     if parsed_start and parsed_end and (parsed_start > parsed_end):
         raise ValueError(DATE_VALIDATION_MESSAGE)
 
-    start_output = (
-        parsed_start.astimezone(tz=datetime.timezone.utc) if parsed_start else None
-    )
-    end_output = parsed_end.astimezone(tz=datetime.timezone.utc) if parsed_end else None
+    start_output = parsed_start.astimezone(tz=datetime.UTC) if parsed_start else None
+    end_output = parsed_end.astimezone(tz=datetime.UTC) if parsed_end else None
 
     return start_output, end_output
 
