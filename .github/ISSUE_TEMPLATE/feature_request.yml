@@ -1,0 +1,17 @@
+name: "\U0001F381 Feature Request"
+description: Suggest a new feature or enhancment.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: >
+        Describe the feature or enhancement and explain why it should be implemented.
+        Include a code example if applicable.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting this issue! We will get back to you as soon as possible.

@@ -9,15 +9,15 @@ import logging
 import os
 import pathlib
 import shutil
+from datetime import UTC
 from datetime import datetime
-from datetime import timezone
 from typing import TYPE_CHECKING
 
 import pandas as pd
 import pytest
 from bs4 import BeautifulSoup
 from bs4 import ResultSet
-from dapla_metadata._shared.user_info import TestUserInfo
+from dapla_metadata.dapla.user_info import TestUserInfo  # type:ignore [import-untyped]
 from dapla_metadata.datasets import Datadoc
 from dapla_metadata.datasets import model
 from dapla_metadata.datasets.code_list import CodeList
@@ -40,7 +40,6 @@ if TYPE_CHECKING:
 logging.getLogger("faker").setLevel(logging.ERROR)
 
 DATADOC_METADATA_MODULE = "dapla_metadata.datasets"
-SHARED_MODULE = "dapla_metadata._shared"
 CODE_LIST_DIR = "code_list"
 STATISTICAL_SUBJECT_STRUCTURE_DIR = "statistical_subject_structure"
 
@@ -58,7 +57,7 @@ def faker_session_locale():
 
 @pytest.fixture
 def dummy_timestamp() -> datetime:
-    return datetime(2022, 1, 1, tzinfo=timezone.utc)
+    return datetime(2022, 1, 1, tzinfo=UTC)
 
 
 @pytest.fixture
@@ -72,7 +71,7 @@ def _mock_timestamp(mocker: MockerFixture, dummy_timestamp: datetime) -> None:
 @pytest.fixture
 def _mock_user_info(mocker: MockerFixture) -> None:
     mocker.patch(
-        SHARED_MODULE + ".user_info.get_user_info_for_current_platform",
+        "dapla_metadata.dapla.user_info.get_user_info_for_current_platform",
         return_value=TestUserInfo(),
     )
 

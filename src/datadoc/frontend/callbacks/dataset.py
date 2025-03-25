@@ -5,6 +5,7 @@ from __future__ import annotations
 import datetime
 import logging
 from typing import TYPE_CHECKING
+from typing import Any
 
 import arrow
 from dapla_metadata.datasets import DaplaDatasetPathInfo
@@ -71,7 +72,7 @@ def open_dataset_handling(
     n_clicks: int,
     file_path: str,
     dataset_opened_counter: int,
-) -> tuple[dbc.Alert, int]:
+) -> tuple[dbc.Alert, int | Any]:
     """Handle errors and other logic around opening a dataset file."""
     if file_path:
         file_path = file_path.strip()

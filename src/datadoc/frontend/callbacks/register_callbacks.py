@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import logging
 from typing import TYPE_CHECKING
+from typing import Any
 
 from dash import MATCH
 from dash import Dash
@@ -63,7 +64,7 @@ def register_callbacks(app: Dash) -> None:
     def callback_save_metadata_file(
         n_clicks: int,
         alerts: list,  # argument required by Dash  # noqa: ARG001
-    ) -> list:
+    ) -> Any | list:  # noqa: ANN401
         """Save the metadata document to disk and check obligatory metadata.
 
         Returns:
@@ -171,7 +172,7 @@ def register_callbacks(app: Dash) -> None:
         Output("display-tab", "children"),
         Input("tabs", "value"),
     )
-    def callback_render_tabs(tab: html.Article) -> html.Article | None:
+    def callback_render_tabs(tab: str) -> html.Article | None:
         """Return correct tab content."""
         return render_tabs(tab)
 

@@ -1,13 +1,13 @@
 ARG PACKAGE_NAME=datadoc
 ARG APP_NAME=ssb_datadoc
 ARG APP_PATH=/opt/$PACKAGE_NAME
-ARG PYTHON_VERSION=3.12
-ARG POETRY_VERSION=1.8.2
+ARG PYTHON_VERSION=3.13
+ARG POETRY_VERSION=2.1.1
 
 #
 # Stage: build
 #
-FROM python:$PYTHON_VERSION as build
+FROM python:$PYTHON_VERSION AS build
 ARG PACKAGE_NAME
 ARG APP_PATH
 ARG POETRY_VERSION
@@ -31,13 +31,14 @@ WORKDIR $APP_PATH
 COPY ./poetry.lock ./pyproject.toml ./README.md ./
 COPY ./src/$PACKAGE_NAME ./src/$PACKAGE_NAME
 
+RUN poetry self add poetry-plugin-export
 RUN poetry build --format wheel
 RUN poetry export --format constraints.txt --output constraints.txt --without-hashes
 
 #
 # Stage: production
 #
-FROM python:"${PYTHON_VERSION}-slim" as production
+FROM python:"${PYTHON_VERSION}-slim" AS production
 ARG PACKAGE_NAME
 ARG APP_PATH
 
