@@ -182,12 +182,12 @@ def accept_variable_metadata_date_input(
         )
 
         # Save both values to the model if they pass validation.
-        state.metadata.variables_lookup[variable_short_name].contains_data_from = (
-            parsed_contains_data_from
-        )
-        state.metadata.variables_lookup[variable_short_name].contains_data_until = (
-            parsed_contains_data_until
-        )
+        state.metadata.variables_lookup[
+            variable_short_name
+        ].contains_data_from = parsed_contains_data_from
+        state.metadata.variables_lookup[
+            variable_short_name
+        ].contains_data_until = parsed_contains_data_until
     except ValueError as e:
         logger.exception(
             "Validation failed for %s, %s, %s: %s, %s: %s",

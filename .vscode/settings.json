@@ -3,7 +3,7 @@
         "editor.codeActionsOnSave": {
             "source.fixAll": "explicit"
         },
-        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.defaultFormatter": "charliermarsh.ruff",
         "editor.formatOnSave": true
     },
     "python.testing.pytestArgs": [
@@ -11,9 +11,5 @@
         "--disable-warnings"
     ],
     "python.testing.pytestEnabled": true,
-    "python.testing.unittestEnabled": false,
-    "ruff.lint.run": "onType",
-    "cSpell.words": [
-        "multilanguage"
-    ]
+    "python.testing.unittestEnabled": false
 }

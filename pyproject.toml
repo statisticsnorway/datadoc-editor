@@ -36,7 +36,6 @@ gunicorn = ">=23.0.0"
 
 [tool.poetry.group.dev.dependencies]
 mypy = ">=0.950"
-black = ">=22.3.0"
 pytest = ">=7.1.2"
 pytest-cov = ">=3.0.0"
 nbstripout = ">=0.5.0"
@@ -142,11 +141,10 @@ extend-exclude = [
 select = ["ALL"]
 ignore = [
     "A003",
-    "ANN101",  # Suppress missing-type-self.
-    "ANN102",  # Suppress missing-type-cls.
     "B008",
+    "COM812",  # Conflicts with the formatter
     "D100",    # Suppress undocumented-public-module. Only doc of public api required.
-    "E501",    # Let black handle line length
+    "E501",    # Let the formatter handle line length
     "TRY003",
     "FIX002",  # It's OK to use TODOs if they meet the requirements
     "PLC2401", # Allow non-ASCII character because of norwegian letters
