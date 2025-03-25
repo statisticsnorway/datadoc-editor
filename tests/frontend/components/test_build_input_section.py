@@ -111,9 +111,7 @@ def test_build_input_fields_checkbox_components(
 
     assert all(isinstance(item, ssb.Checkbox) for item in elements_of_checkbox)
     assert all(item.disabled is False for item in elements_of_checkbox)
-    assert all(
-        item._type == "Checkbox" for item in elements_of_checkbox  # noqa: SLF001
-    )
+    assert all(item._type == "Checkbox" for item in elements_of_checkbox)  # noqa: SLF001
     assert all(
         item1.label == item2.display_name
         for item1, item2 in zip(
