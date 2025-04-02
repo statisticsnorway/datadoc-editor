@@ -62,6 +62,7 @@ types-beautifulsoup4 = "*"
 requests-mock = "*"
 faker = "*"
 pyarrow-stubs = ">=10.0.1.9"
+tomli = ">=2.2.1"
 
 [tool.pytest.ini_options]
 pythonpath = ["src/datadoc"]
