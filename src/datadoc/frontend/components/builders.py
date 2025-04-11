@@ -13,6 +13,7 @@ from dash import html
 
 from datadoc.frontend.fields.display_base import DATASET_METADATA_INPUT
 from datadoc.frontend.fields.display_base import VARIABLES_METADATA_INPUT
+from datadoc.frontend.fields.display_base import VARIABLES_PSEUDO_INPUT
 from datadoc.frontend.fields.display_base import FieldTypes
 
 if TYPE_CHECKING:
@@ -120,6 +121,30 @@ def build_input_field_section(
     )
 
 
+def build_pseudo_field_section(
+    metadata_fields: list[FieldTypes],
+    side: str,
+    pseudo_variable: model.PseudoVariable,
+    field_id: str = "",
+) -> dbc.Form:
+    """Create form with input fields for pseudo inputs."""
+    return dbc.Form(
+        [
+            i.render(
+                component_id={
+                    "type": VARIABLES_PSEUDO_INPUT,
+                    "variable_short_name": pseudo_variable.short_name,
+                    "id": i.identifier,
+                },
+                metadata=pseudo_variable,
+            )
+            for i in metadata_fields
+        ],
+        id=f"{VARIABLES_PSEUDO_INPUT}-{side}-{field_id}",
+        className="edit-section-form",
+    )
+
+
 def build_edit_section(
     metadata_inputs: list[list[FieldTypes]],
     variable: model.Variable,
@@ -138,7 +163,7 @@ def build_edit_section(
 def build_variables_machine_section(
     metadata_inputs: list,
     title: str,
-    variable: model.Variable,
+    variable: model.PseudoVariable,
 ) -> html.Section:
     """Create input section for variable workspace."""
     return html.Section(
@@ -153,6 +178,49 @@ def build_variables_machine_section(
             ),
         ],
         className="variable-machine-section",
+    )
+
+
+def build_variables_pseudonymization_section(
+    metadata_inputs: list,
+    title: str,
+    pseudo_variable: model.Variable,
+) -> html.Section:
+    return html.Section(
+        id={"type": "edit-section", "title": title},
+        children=[
+            ssb.Title(title, size=3, className="edit-section-title"),
+            build_pseudo_field_section(
+                metadata_inputs,
+                "left",
+                pseudo_variable,
+                field_id="pseudo",
+            ),
+        ],
+        className="variable-pseudo-section",
+    )
+
+
+def build_variables_pseudo_button(title: str, short_name: str) -> html.Section:
+    return html.Section(
+        children=[
+            ssb.Title(title, size=3, className="edit-section-title"),
+            ssb.Button(
+                children=["Legg til pseudonymisering"],
+                id={
+                    "type": "pseudo-button",
+                    "short_name": short_name,
+                },
+                className="add-pseudo-button",
+            ),
+            html.Div(
+                id={
+                    "type": "pseudo-output",
+                    "short_name": short_name,
+                }
+            ),
+        ],
+        className="variable-pseudo-button",
     )
 
 

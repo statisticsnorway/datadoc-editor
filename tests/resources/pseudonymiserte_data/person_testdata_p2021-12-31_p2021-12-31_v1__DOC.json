@@ -1,7 +1,7 @@
 {
     "document_version": "0.0.1",
     "datadoc": {
-        "percentage_complete": 98,
+        "percentage_complete": 93,
         "document_version": "4.0.0",
         "dataset": {
             "short_name": "person_testdata_p2021-12-31_p2021-12-31",
@@ -66,9 +66,9 @@
                     "languageText": "Opprettelse"
                 }
             ],
-            "unit_type": "PERSON",
+            "unit_type": null,
             "temporality_type": "STATUS",
-            "subject_field": "befolkning",
+            "subject_field": null,
             "keyword": [
                 "befolkning",
                 "skatt"
@@ -93,10 +93,10 @@
             "custom_type": null,
             "id": "2f72477a-f051-43ee-bf8b-0d8f47b5e0a7",
             "owner": "",
-            "file_path": "/Users/rlj/datadoc/tests/resources/klargjorte_data/person_testdata_p2021-12-31_p2021-12-31_v1.parquet",
+            "file_path": "None",
             "metadata_created_date": "2022-10-07T07:35:01Z",
             "metadata_created_by": "default_user@ssb.no",
-            "metadata_last_updated_date": "2025-04-11T07:30:08.691847Z",
+            "metadata_last_updated_date": "2025-04-08T07:36:00.113992Z",
             "metadata_last_updated_by": null,
             "contains_data_from": "2021-12-31",
             "contains_data_until": "2021-12-31"
@@ -134,7 +134,7 @@
                 "special_value": null,
                 "invalid_value_description": null,
                 "custom_type": null,
-                "id": "11cc0eb9-28e9-48da-b1ce-82e423e893be",
+                "id": "ea85075c-1258-44cc-b081-fec8762fefca",
                 "contains_data_from": "2021-12-31",
                 "contains_data_until": "2021-12-31"
             },
@@ -170,7 +170,7 @@
                 "special_value": null,
                 "invalid_value_description": null,
                 "custom_type": null,
-                "id": "e70c0e91-4e58-4509-b861-c67282b9d3c1",
+                "id": "debc45be-58f2-4ed3-b644-d5ee72776c16",
                 "contains_data_from": "2021-12-31",
                 "contains_data_until": "2021-12-31"
             },
@@ -206,7 +206,7 @@
                 "special_value": null,
                 "invalid_value_description": null,
                 "custom_type": null,
-                "id": "89ea46a4-d18e-4da8-8166-8ec95674204d",
+                "id": "4aaad517-50df-481e-914a-49e7a740dc86",
                 "contains_data_from": "2021-12-31",
                 "contains_data_until": "2021-12-31"
             },
@@ -235,14 +235,14 @@
                 "population_description": null,
                 "comment": null,
                 "temporality_type": "STATUS",
-                "measurement_unit": null,
+                "measurement_unit": "NOK",
                 "multiplication_factor": null,
                 "format": null,
                 "classification_uri": null,
                 "special_value": null,
                 "invalid_value_description": null,
                 "custom_type": null,
-                "id": "a3673c24-09d7-4181-8a80-b204c4300e3a",
+                "id": "480d61eb-5431-46c5-80d4-311dac684bb1",
                 "contains_data_from": "2021-12-31",
                 "contains_data_until": "2021-12-31"
             },
@@ -271,14 +271,14 @@
                 "population_description": null,
                 "comment": null,
                 "temporality_type": "STATUS",
-                "measurement_unit": null,
+                "measurement_unit": "NOK",
                 "multiplication_factor": null,
                 "format": null,
                 "classification_uri": null,
                 "special_value": null,
                 "invalid_value_description": null,
                 "custom_type": null,
-                "id": "0425fcf8-bfc8-4032-a90e-dc0aa6d8b12e",
+                "id": "4bc99691-8191-4bb5-92b0-0acbb2c8c1e8",
                 "contains_data_from": "2021-12-31",
                 "contains_data_until": "2021-12-31"
             },
@@ -327,7 +327,7 @@
                 "special_value": null,
                 "invalid_value_description": null,
                 "custom_type": null,
-                "id": "0beae501-92ac-4292-9cd7-04303f3ae398",
+                "id": "1be3a8c7-c58a-40b3-a5ec-bf1bf0c33f15",
                 "contains_data_from": "2021-12-31",
                 "contains_data_until": "2021-12-31"
             }
@@ -335,10 +335,7 @@
     },
     "pseudonymization": {
         "document_version": "0.1.0",
-        "pseudo_dataset": {
-            "dataset_pseudo_time": null,
-            "source_dataset_path": null
-        },
+        "pseudo_dataset": null,
         "pseudo_variables": [
             {
                 "short_name": "fnr",
@@ -346,23 +343,15 @@
                 "data_element_pattern": null,
                 "stable_identifier_type": null,
                 "stable_identifier_version": null,
-                "encryption_algorithm": null,
-                "encryption_key_reference": null,
-                "encryption_algorithm_parameters": null,
-                "source_variable": null,
-                "source_variable_datatype": null
-            },
-            {
-                "short_name": "sivilstand",
-                "data_element_path": null,
-                "data_element_pattern": null,
-                "stable_identifier_type": null,
-                "stable_identifier_version": null,
-                "encryption_algorithm": null,
-                "encryption_key_reference": null,
-                "encryption_algorithm_parameters": null,
-                "source_variable": null,
-                "source_variable_datatype": null
+                "encryption_algorithm": "TINK-FPE",
+                "encryption_key_reference": "SSB_GLOBAL_KEY_1",
+                "encryption_algorithm_parameters": [
+                    {
+                        "kekUri": "value1"
+                    }
+                ],
+                "source_variable": "foedselsnr",
+                "source_variable_datatype": "STRING"
             }
         ]
     }

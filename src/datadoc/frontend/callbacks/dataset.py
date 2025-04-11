@@ -287,3 +287,7 @@ def accept_dataset_metadata_date_input(
         if dataset_identifier == DatasetIdentifiers.CONTAINS_DATA_FROM
         else no_error + error
     )
+
+
+def add_pseudo_variable(short_name: str) -> None:
+    return state.metadata.add_pseudo_variable(short_name)

@@ -13,8 +13,13 @@ from datadoc.frontend.callbacks.utils import parse_and_validate_dates
 from datadoc.frontend.components.builders import build_edit_section
 from datadoc.frontend.components.builders import build_ssb_accordion
 from datadoc.frontend.components.builders import build_variables_machine_section
+from datadoc.frontend.components.builders import build_variables_pseudo_button
+from datadoc.frontend.components.builders import (
+    build_variables_pseudonymization_section,
+)
 from datadoc.frontend.constants import INVALID_DATE_ORDER
 from datadoc.frontend.constants import INVALID_VALUE
+from datadoc.frontend.fields.display_pseudo_variables import PSEUDONYMIZATION_METADATA
 from datadoc.frontend.fields.display_variables import DISPLAY_VARIABLES
 from datadoc.frontend.fields.display_variables import (
     MULTIPLE_LANGUAGE_VARIABLES_METADATA,
@@ -31,10 +36,22 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+def get_pseudo_variabel(
+    pseudo_variables: list[model.PseudoVariable], short_name: str | None
+) -> model.PseudoVariable | None:
+    """Returns a pseudo variable if a match with a variable shorth_name is found."""
+    if pseudo_variables is not None:
+        for i in pseudo_variables:
+            if i.short_name == short_name:
+                return i
+    return None
+
+
 def populate_variables_workspace(
     variables: list[model.Variable],
     search_query: str,
     dataset_opened_counter: int,
+    pseudo_variables: list[model.PseudoVariable],
 ) -> list:
     """Create variable workspace with accordions for variables.
 
@@ -57,6 +74,22 @@ def populate_variables_workspace(
                     NON_EDITABLE_VARIABLES_METADATA,
                     "Maskingenerert",
                     variable,
+                ),
+                *(
+                    [
+                        build_variables_pseudonymization_section(
+                            PSEUDONYMIZATION_METADATA,
+                            "Pseudonymisert",
+                            get_pseudo_variabel(pseudo_variables, variable.short_name),
+                        )
+                    ]
+                    if get_pseudo_variabel(pseudo_variables, variable.short_name)
+                    is not None
+                    else [
+                        build_variables_pseudo_button(
+                            "", short_name=variable.short_name
+                        )
+                    ]
                 ),
             ],
         )

@@ -9,6 +9,7 @@ import logging
 from typing import TYPE_CHECKING
 from typing import Any
 
+from dash import ALL
 from dash import MATCH
 from dash import Dash
 from dash import Input
@@ -21,6 +22,7 @@ from dash import no_update
 from datadoc import state
 from datadoc.frontend.callbacks.dataset import accept_dataset_metadata_date_input
 from datadoc.frontend.callbacks.dataset import accept_dataset_metadata_input
+from datadoc.frontend.callbacks.dataset import add_pseudo_variable
 from datadoc.frontend.callbacks.dataset import open_dataset_handling
 from datadoc.frontend.callbacks.utils import render_tabs
 from datadoc.frontend.callbacks.utils import save_metadata_and_generate_alerts
@@ -192,21 +194,45 @@ def register_callbacks(app: Dash) -> None:
         Output(ACCORDION_WRAPPER_ID, "children"),
         Input("dataset-opened-counter", "data"),
         Input("search-variables", "value"),
+        Input("pseudo-variables-updated-counter", "data"),
     )
     def callback_populate_variables_workspace(
-        dataset_opened_counter: int,  # Dash requires arguments for all Inputs
+        dataset_opened_counter: int,
         search_query: str,
+        pseudo_updated_counter: int,
     ) -> list:
-        """Create variable workspace with accordions for variables.
-
-        Allows for filtering which variables are displayed via the search box.
-        """
+        """Create variable workspace with accordions for variables."""
         logger.debug("Populating variables workspace. Search query: %s", search_query)
+        pseudo_variables = None
+
+        if state.metadata.pseudo_variables is not None:
+            #print("pseudovar: ", state.metadata.pseudo_variables)
+            pseudo_variables = state.metadata.pseudo_variables
         return populate_variables_workspace(
             state.metadata.variables,
             search_query,
             dataset_opened_counter,
+            pseudo_variables,
         )
+
+    @app.callback(
+        Output({"type": "pseudo-output", "short_name": MATCH}, "children"),
+        Input({"type": "pseudo-button", "short_name": MATCH}, "n_clicks"),
+        prevent_initial_call=True,
+    )
+    def callback_update_pseudo_output(n_clicks: int):
+        short_name = ctx.triggered_id["short_name"]
+        pseudo_variable = add_pseudo_variable(short_name)
+        return pseudo_variable.short_name
+
+    @app.callback(
+        Output("pseudo-variables-updated-counter", "data"),
+        Input({"type": "pseudo-button", "short_name": ALL}, "n_clicks"),
+        State("pseudo-variables-updated-counter", "data"),
+        prevent_initial_call=True,
+    )
+    def callback_update_pseudo_counter(n_clicks_list, current_counter):
+        return current_counter + 1
 
     @app.callback(
         Output(SECTION_WRAPPER_ID, "children"),
