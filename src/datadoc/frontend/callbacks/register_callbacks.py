@@ -26,6 +26,7 @@ from datadoc.frontend.callbacks.dataset import add_pseudo_variable
 from datadoc.frontend.callbacks.dataset import open_dataset_handling
 from datadoc.frontend.callbacks.utils import render_tabs
 from datadoc.frontend.callbacks.utils import save_metadata_and_generate_alerts
+from datadoc.frontend.callbacks.variables import accept_pseudo_variable_metadata_input
 from datadoc.frontend.callbacks.variables import accept_variable_metadata_date_input
 from datadoc.frontend.callbacks.variables import accept_variable_metadata_input
 from datadoc.frontend.callbacks.variables import populate_variables_workspace
@@ -37,6 +38,7 @@ from datadoc.frontend.components.identifiers import VARIABLES_INFORMATION_ID
 from datadoc.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
 from datadoc.frontend.fields.display_base import DATASET_METADATA_INPUT
 from datadoc.frontend.fields.display_base import DATASET_METADATA_MULTILANGUAGE_INPUT
+from datadoc.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
 from datadoc.frontend.fields.display_base import VARIABLES_METADATA_INPUT
 from datadoc.frontend.fields.display_base import VARIABLES_METADATA_MULTILANGUAGE_INPUT
@@ -206,7 +208,6 @@ def register_callbacks(app: Dash) -> None:
         pseudo_variables = None
 
         if state.metadata.pseudo_variables is not None:
-            #print("pseudovar: ", state.metadata.pseudo_variables)
             pseudo_variables = state.metadata.pseudo_variables
         return populate_variables_workspace(
             state.metadata.variables,
@@ -220,10 +221,10 @@ def register_callbacks(app: Dash) -> None:
         Input({"type": "pseudo-button", "short_name": MATCH}, "n_clicks"),
         prevent_initial_call=True,
     )
-    def callback_update_pseudo_output(n_clicks: int):
+    def callback_update_pseudo_output(n_clicks: int):  # noqa: ANN202
         short_name = ctx.triggered_id["short_name"]
         pseudo_variable = add_pseudo_variable(short_name)
-        return pseudo_variable.short_name
+        # eturn pseudo_variable.short_name
 
     @app.callback(
         Output("pseudo-variables-updated-counter", "data"),
@@ -231,7 +232,7 @@ def register_callbacks(app: Dash) -> None:
         State("pseudo-variables-updated-counter", "data"),
         prevent_initial_call=True,
     )
-    def callback_update_pseudo_counter(n_clicks_list, current_counter):
+    def callback_update_pseudo_counter(n_clicks_list, current_counter):  # noqa: ANN202
         return current_counter + 1
 
     @app.callback(
@@ -265,6 +266,48 @@ def register_callbacks(app: Dash) -> None:
                 },
             ),
         ]
+
+    @app.callback(
+        Output(
+            {
+                "type": PSEUDO_METADATA_INPUT,
+                "variable_short_name": MATCH,
+                "id": MATCH,
+            },
+            "error",
+        ),
+        Output(
+            {
+                "type": PSEUDO_METADATA_INPUT,
+                "variable_short_name": MATCH,
+                "id": MATCH,
+            },
+            "errorMessage",
+        ),
+        Input(
+            {
+                "type": PSEUDO_METADATA_INPUT,
+                "variable_short_name": MATCH,
+                "id": MATCH,
+            },
+            "value",
+        ),
+        prevent_initial_call=True,
+    )
+    def callback_accept_variable_metadata_input(
+        value: MetadataInputTypes,  # noqa: ARG001 argument required by Dash
+    ) -> dbc.Alert:
+        """Save updated variable metadata values."""
+        message = accept_pseudo_variable_metadata_input(
+            ctx.triggered[0]["value"],
+            ctx.triggered_id["variable_short_name"],
+            ctx.triggered_id["id"],
+        )
+        if not message:
+            # No error to display.
+            return False, ""
+
+        return True, message
 
     @app.callback(
         Output(

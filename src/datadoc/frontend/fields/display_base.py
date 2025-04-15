@@ -32,7 +32,7 @@ DATASET_METADATA_INPUT = "dataset-metadata-input"
 DATASET_METADATA_DATE_INPUT = "dataset-metadata-date-input"
 DATASET_METADATA_MULTILANGUAGE_INPUT = "dataset-metadata-multilanguage-input"
 
-VARIABLES_PSEUDO_INPUT = "variables-pseudo-input"
+PSEUDO_METADATA_INPUT = "pseudo-metadata-input"
 VARIABLES_METADATA_INPUT = "variables-metadata-input"
 VARIABLES_METADATA_DATE_INPUT = "variables-metadata-date-input"
 VARIABLES_METADATA_MULTILANGUAGE_INPUT = "dataset-metadata-multilanguage-input"

@@ -39,7 +39,7 @@ logger = logging.getLogger(__name__)
 def get_pseudo_variabel(
     pseudo_variables: list[model.PseudoVariable], short_name: str | None
 ) -> model.PseudoVariable | None:
-    """Returns a pseudo variable if a match with a variable shorth_name is found."""
+    """Returns a pseudo variable if a match with a variable short_name is found."""
     if pseudo_variables is not None:
         for i in pseudo_variables:
             if i.short_name == short_name:
@@ -51,7 +51,7 @@ def populate_variables_workspace(
     variables: list[model.Variable],
     search_query: str,
     dataset_opened_counter: int,
-    pseudo_variables: list[model.PseudoVariable],
+    pseudo_variables: list[model.PseudoVariable] = None,
 ) -> list:
     """Create variable workspace with accordions for variables.
 
@@ -87,7 +87,7 @@ def populate_variables_workspace(
                     is not None
                     else [
                         build_variables_pseudo_button(
-                            "", short_name=variable.short_name
+                            "Pseudonymisert", short_name=variable.short_name
                         )
                     ]
                 ),
@@ -165,6 +165,50 @@ def accept_variable_metadata_input(
             state.metadata.variables_lookup[urllib.parse.unquote(variable_short_name)],
             metadata_field,
             new_value,
+        )
+    except ValueError:
+        logger.exception(
+            "Validation failed for %s, %s, %s:",
+            metadata_field,
+            variable_short_name,
+            value,
+        )
+        return INVALID_VALUE
+    else:
+        if value == "":
+            value = None
+        logger.info(
+            "Updated %s: %s with value '%s'",
+            variable_short_name,
+            metadata_field,
+            value,
+        )
+        return None
+
+
+def accept_pseudo_variable_metadata_input(
+    value: MetadataInputTypes,
+    variable_short_name: str,
+    metadata_field: str,
+    language: str | None = None,
+) -> str | None:
+    """Validate and save the value when a pseudo variable metadata is updated.
+
+    Returns an error message if an exception was raised, otherwise returns None.
+    """
+    logger.debug(
+        "Updating %s, %s with %s",
+        metadata_field,
+        variable_short_name,
+        value,
+    )
+    try:
+        setattr(
+            state.metadata.pseudo_variables_lookup[
+                urllib.parse.unquote(variable_short_name)
+            ],
+            metadata_field,
+            value,
         )
     except ValueError:
         logger.exception(

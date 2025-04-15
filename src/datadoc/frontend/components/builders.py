@@ -12,8 +12,8 @@ import ssb_dash_components as ssb
 from dash import html
 
 from datadoc.frontend.fields.display_base import DATASET_METADATA_INPUT
+from datadoc.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc.frontend.fields.display_base import VARIABLES_METADATA_INPUT
-from datadoc.frontend.fields.display_base import VARIABLES_PSEUDO_INPUT
 from datadoc.frontend.fields.display_base import FieldTypes
 
 if TYPE_CHECKING:
@@ -132,7 +132,7 @@ def build_pseudo_field_section(
         [
             i.render(
                 component_id={
-                    "type": VARIABLES_PSEUDO_INPUT,
+                    "type": PSEUDO_METADATA_INPUT,
                     "variable_short_name": pseudo_variable.short_name,
                     "id": i.identifier,
                 },
@@ -140,7 +140,7 @@ def build_pseudo_field_section(
             )
             for i in metadata_fields
         ],
-        id=f"{VARIABLES_PSEUDO_INPUT}-{side}-{field_id}",
+        id=f"{PSEUDO_METADATA_INPUT}-{side}-{field_id}",
         className="edit-section-form",
     )
 
@@ -184,7 +184,7 @@ def build_variables_machine_section(
 def build_variables_pseudonymization_section(
     metadata_inputs: list,
     title: str,
-    pseudo_variable: model.Variable,
+    pseudo_variable: model.PseudoVariable,
 ) -> html.Section:
     return html.Section(
         id={"type": "edit-section", "title": title},
@@ -197,7 +197,7 @@ def build_variables_pseudonymization_section(
                 field_id="pseudo",
             ),
         ],
-        className="variable-pseudo-section",
+        className="variable-section",
     )
 
 

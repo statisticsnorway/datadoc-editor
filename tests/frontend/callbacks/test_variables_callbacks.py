@@ -43,6 +43,11 @@ if TYPE_CHECKING:
     from datadoc.frontend.callbacks.utils import MetadataInputTypes
 
 
+@pytest.fixture
+def n_clicks_1():
+    return 1
+
+
 @pytest.mark.parametrize(
     ("metadata_field", "value", "expected_model_value"),
     [
@@ -307,17 +312,11 @@ def test_accept_variable_metadata_date_input(
     ],
 )
 def test_populate_variables_workspace_filter_variables(
-    search_query: str,
-    expected_length: int,
-    metadata: Datadoc,
+    search_query: str, expected_length: int, metadata: Datadoc
 ):
     assert (
         len(
-            populate_variables_workspace(
-                metadata.variables,
-                search_query,
-                0,
-            ),
+            populate_variables_workspace(metadata.variables, search_query, 0),
         )
         == expected_length
     )
