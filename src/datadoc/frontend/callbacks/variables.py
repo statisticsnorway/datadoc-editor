@@ -46,6 +46,8 @@ def populate_variables_workspace(
 
     Allows for filtering which variables are displayed via the search box.
     """
+    pseudo_map = {pv.short_name: pv for pv in (pseudo_variables or [])}
+
     return [
         build_ssb_accordion(
             variable.short_name or "",
@@ -69,19 +71,10 @@ def populate_variables_workspace(
                         build_variables_pseudonymization_section(
                             PSEUDONYMIZATION_METADATA,
                             "Pseudonymisert",
-                            pseudo_var,
+                            pseudo_map[variable.short_name],
                         )
                     ]
-                    if (
-                        pseudo_var := next(
-                            (
-                                pv
-                                for pv in (pseudo_variables or [])
-                                if pv.short_name == variable.short_name
-                            ),
-                            None,
-                        )
-                    )
+                    if variable.short_name in pseudo_map
                     else [
                         build_variables_pseudo_button(
                             "Pseudonymisert", short_name=variable.short_name or ""
