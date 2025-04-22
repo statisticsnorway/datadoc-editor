@@ -298,7 +298,7 @@ def register_callbacks(app: Dash) -> None:
         ),
         prevent_initial_call=True,
     )
-    def callback_accept_variable_metadata_input(
+    def callback_accept_pseudo_variable_metadata_input(
         value: MetadataInputTypes,  # noqa: ARG001 argument required by Dash
     ) -> dbc.Alert:
         """Save updated variable metadata values."""

@@ -163,7 +163,7 @@ def build_edit_section(
 def build_variables_machine_section(
     metadata_inputs: list,
     title: str,
-    variable: model.PseudoVariable,
+    variable: model.Variable,
 ) -> html.Section:
     """Create input section for variable workspace."""
     return html.Section(
@@ -186,6 +186,7 @@ def build_variables_pseudonymization_section(
     title: str,
     pseudo_variable: model.PseudoVariable,
 ) -> html.Section:
+    """Create input section for pseudonymization."""
     return html.Section(
         id={"type": "edit-section", "title": title},
         children=[
@@ -202,6 +203,7 @@ def build_variables_pseudonymization_section(
 
 
 def build_variables_pseudo_button(title: str, short_name: str) -> html.Section:
+    """Create the button to add pseudonymization."""
     return html.Section(
         children=[
             ssb.Title(title, size=3, className="edit-section-title"),
