@@ -36,22 +36,11 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def get_pseudo_variabel(
-    pseudo_variables: list[model.PseudoVariable], short_name: str | None
-) -> model.PseudoVariable | None:
-    """Returns a pseudo variable if a match with a variable short_name is found."""
-    if pseudo_variables is not None:
-        for i in pseudo_variables:
-            if i.short_name == short_name:
-                return i
-    return None
-
-
 def populate_variables_workspace(
     variables: list[model.Variable],
     search_query: str,
     dataset_opened_counter: int,
-    pseudo_variables: list[model.PseudoVariable] = None,
+    pseudo_variables: list[model.PseudoVariable] | None = None,
 ) -> list:
     """Create variable workspace with accordions for variables.
 
@@ -80,11 +69,19 @@ def populate_variables_workspace(
                         build_variables_pseudonymization_section(
                             PSEUDONYMIZATION_METADATA,
                             "Pseudonymisert",
-                            get_pseudo_variabel(pseudo_variables, variable.short_name),
+                            pseudo_var,
                         )
                     ]
-                    if get_pseudo_variabel(pseudo_variables, variable.short_name)
-                    is not None
+                    if (
+                        pseudo_var := next(
+                            (
+                                pv
+                                for pv in (pseudo_variables or [])
+                                if pv.short_name == variable.short_name
+                            ),
+                            None,
+                        )
+                    )
                     else [
                         build_variables_pseudo_button(
                             "Pseudonymisert", short_name=variable.short_name
@@ -190,7 +187,6 @@ def accept_pseudo_variable_metadata_input(
     value: MetadataInputTypes,
     variable_short_name: str,
     metadata_field: str,
-    language: str | None = None,
 ) -> str | None:
     """Validate and save the value when a pseudo variable metadata is updated.
 

@@ -717,7 +717,6 @@ def test_accept_pseudo_variable_metadata_input_valid(
             value,
             metadata.pseudo_variables_lookup.get("fnr").short_name,
             metadata_field=metadata_field.value,
-            language="nb",
         )
         is None
     )
