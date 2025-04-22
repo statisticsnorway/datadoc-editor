@@ -22,7 +22,6 @@ from dash import no_update
 from datadoc import state
 from datadoc.frontend.callbacks.dataset import accept_dataset_metadata_date_input
 from datadoc.frontend.callbacks.dataset import accept_dataset_metadata_input
-from datadoc.frontend.callbacks.dataset import add_pseudo_variable
 from datadoc.frontend.callbacks.dataset import open_dataset_handling
 from datadoc.frontend.callbacks.utils import render_tabs
 from datadoc.frontend.callbacks.utils import save_metadata_and_generate_alerts
@@ -224,7 +223,7 @@ def register_callbacks(app: Dash) -> None:
     def callback_update_pseudo_output(n_clicks: int) -> None:  # noqa: ARG001
         """Adding a pseudo variable when the add pseudo variable is clicked."""
         short_name = ctx.triggered_id["short_name"]
-        add_pseudo_variable(short_name)
+        state.metadata.add_pseudo_variable(short_name)
 
     @app.callback(
         Output("pseudo-variables-updated-counter", "data"),
