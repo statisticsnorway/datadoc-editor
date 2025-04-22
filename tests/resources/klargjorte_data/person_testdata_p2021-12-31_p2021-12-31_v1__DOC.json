@@ -1,335 +1,210 @@
 {
     "document_version": "0.0.1",
     "datadoc": {
-        "percentage_complete": 98,
-        "document_version": "4.0.0",
+        "percentage_complete": 97,
+        "document_version": "2.2.0",
         "dataset": {
             "short_name": "person_testdata_p2021-12-31_p2021-12-31",
             "assessment": "PROTECTED",
             "dataset_status": "INTERNAL",
             "dataset_state": "PROCESSED_DATA",
-            "name": [
-                {
-                    "languageCode": "en",
-                    "languageText": ""
-                },
-                {
-                    "languageCode": "nn",
-                    "languageText": ""
-                },
-                {
-                    "languageCode": "nb",
-                    "languageText": "Persondata demo datasett"
-                }
-            ],
-            "description": [
-                {
-                    "languageCode": "en",
-                    "languageText": ""
-                },
-                {
-                    "languageCode": "nn",
-                    "languageText": ""
-                },
-                {
-                    "languageCode": "nb",
-                    "languageText": "Person-data til demo og testing av DataDoc"
-                }
-            ],
+            "name": {
+                "en": "",
+                "nn": "",
+                "nb": "Persondata demo datasett"
+            },
+            "description": {
+                "en": "",
+                "nn": "",
+                "nb": "Person-data til demo og testing av DataDoc"
+            },
             "data_source": null,
-            "population_description": [
-                {
-                    "languageCode": "en",
-                    "languageText": ""
-                },
-                {
-                    "languageCode": "nn",
-                    "languageText": ""
-                },
-                {
-                    "languageCode": "nb",
-                    "languageText": "Alle bosatte i Norge"
-                }
-            ],
+            "register_uri": null,
+            "population_description": {
+                "en": "",
+                "nn": "",
+                "nb": "Alle bosatte i Norge"
+            },
             "version": "1",
-            "version_description": [
-                {
-                    "languageCode": "en",
-                    "languageText": ""
-                },
-                {
-                    "languageCode": "nn",
-                    "languageText": ""
-                },
-                {
-                    "languageCode": "nb",
-                    "languageText": "Opprettelse"
-                }
-            ],
+            "version_description": {
+                "en": "",
+                "nn": "",
+                "nb": "Opprettelse"
+            },
             "unit_type": "PERSON",
             "temporality_type": "STATUS",
-            "subject_field": "befolkning",
+            "subject_field": {
+                "en": "",
+                "nn": "",
+                "nb": "befolkning"
+            },
             "keyword": [
                 "befolkning",
                 "skatt"
             ],
-            "spatial_coverage_description": [
-                {
-                    "languageCode": "en",
-                    "languageText": ""
-                },
-                {
-                    "languageCode": "nn",
-                    "languageText": ""
-                },
-                {
-                    "languageCode": "nb",
-                    "languageText": "Norge"
-                }
-            ],
-            "contains_personal_data": false,
-            "use_restriction": null,
-            "use_restriction_date": null,
-            "custom_type": null,
+            "spatial_coverage_description": {
+                "en": "",
+                "nn": "",
+                "nb": "Norge"
+            },
             "id": "2f72477a-f051-43ee-bf8b-0d8f47b5e0a7",
-            "owner": "",
-            "file_path": "/Users/rlj/datadoc/tests/resources/klargjorte_data/person_testdata_p2021-12-31_p2021-12-31_v1.parquet",
+            "owner": "722",
+            "file_path": null,
             "metadata_created_date": "2022-10-07T07:35:01Z",
             "metadata_created_by": "default_user@ssb.no",
-            "metadata_last_updated_date": "2025-04-11T07:30:08.691847Z",
-            "metadata_last_updated_by": null,
+            "metadata_last_updated_date": "2024-01-08T15:49:17.489872Z",
+            "metadata_last_updated_by": "default_user@ssb.no",
             "contains_data_from": "2021-12-31",
             "contains_data_until": "2021-12-31"
         },
         "variables": [
             {
                 "short_name": "fnr",
-                "data_element_path": null,
-                "name": [
-                    {
-                        "languageCode": "en",
-                        "languageText": "Personal number"
-                    },
-                    {
-                        "languageCode": "nn",
-                        "languageText": ""
-                    },
-                    {
-                        "languageCode": "nb",
-                        "languageText": "Fødselsnummer"
-                    }
-                ],
+                "name": {
+                    "en": "Personal number",
+                    "nn": "",
+                    "nb": "Fødselsnummer"
+                },
                 "data_type": "STRING",
                 "variable_role": "IDENTIFIER",
                 "definition_uri": "https://www.ssb.no/a/metadata/conceptvariable/vardok/26/nb",
-                "is_personal_data": "NOT_PERSONAL_DATA",
+                "direct_person_identifying": true,
                 "data_source": null,
                 "population_description": null,
                 "comment": null,
-                "temporality_type": "STATUS",
+                "temporality_type": null,
                 "measurement_unit": null,
-                "multiplication_factor": null,
                 "format": null,
                 "classification_uri": null,
-                "special_value": null,
+                "sentinel_value_uri": null,
                 "invalid_value_description": null,
-                "custom_type": null,
-                "id": "11cc0eb9-28e9-48da-b1ce-82e423e893be",
-                "contains_data_from": "2021-12-31",
-                "contains_data_until": "2021-12-31"
+                "id": null,
+                "contains_data_from": null,
+                "contains_data_until": null
             },
             {
                 "short_name": "sivilstand",
-                "data_element_path": null,
-                "name": [
-                    {
-                        "languageCode": "en",
-                        "languageText": "Marital status"
-                    },
-                    {
-                        "languageCode": "nn",
-                        "languageText": ""
-                    },
-                    {
-                        "languageCode": "nb",
-                        "languageText": "Sivilstand"
-                    }
-                ],
+                "name": {
+                    "en": "Marital status",
+                    "nn": "",
+                    "nb": "Sivilstand"
+                },
                 "data_type": "STRING",
                 "variable_role": "MEASURE",
                 "definition_uri": "https://www.ssb.no/a/metadata/conceptvariable/vardok/91/nb",
-                "is_personal_data": "NOT_PERSONAL_DATA",
+                "direct_person_identifying": false,
                 "data_source": null,
                 "population_description": null,
                 "comment": null,
-                "temporality_type": "STATUS",
+                "temporality_type": null,
                 "measurement_unit": null,
-                "multiplication_factor": null,
                 "format": null,
                 "classification_uri": null,
-                "special_value": null,
+                "sentinel_value_uri": null,
                 "invalid_value_description": null,
-                "custom_type": null,
-                "id": "e70c0e91-4e58-4509-b861-c67282b9d3c1",
-                "contains_data_from": "2021-12-31",
-                "contains_data_until": "2021-12-31"
+                "id": null,
+                "contains_data_from": null,
+                "contains_data_until": null
             },
             {
                 "short_name": "bostedskommune",
-                "data_element_path": null,
-                "name": [
-                    {
-                        "languageCode": "en",
-                        "languageText": "Residential district"
-                    },
-                    {
-                        "languageCode": "nn",
-                        "languageText": ""
-                    },
-                    {
-                        "languageCode": "nb",
-                        "languageText": "Bostedskommune"
-                    }
-                ],
+                "name": {
+                    "en": "Residential district",
+                    "nn": "",
+                    "nb": "Bostedskommune"
+                },
                 "data_type": "STRING",
                 "variable_role": "MEASURE",
                 "definition_uri": "https://www.ssb.no/a/metadata/conceptvariable/vardok/94/nb",
-                "is_personal_data": "NOT_PERSONAL_DATA",
+                "direct_person_identifying": false,
                 "data_source": null,
                 "population_description": null,
                 "comment": null,
-                "temporality_type": "STATUS",
+                "temporality_type": null,
                 "measurement_unit": null,
-                "multiplication_factor": null,
                 "format": null,
                 "classification_uri": null,
-                "special_value": null,
+                "sentinel_value_uri": null,
                 "invalid_value_description": null,
-                "custom_type": null,
-                "id": "89ea46a4-d18e-4da8-8166-8ec95674204d",
-                "contains_data_from": "2021-12-31",
-                "contains_data_until": "2021-12-31"
+                "id": null,
+                "contains_data_from": null,
+                "contains_data_until": null
             },
             {
                 "short_name": "inntekt",
-                "data_element_path": null,
-                "name": [
-                    {
-                        "languageCode": "en",
-                        "languageText": "Income"
-                    },
-                    {
-                        "languageCode": "nn",
-                        "languageText": ""
-                    },
-                    {
-                        "languageCode": "nb",
-                        "languageText": "Alminnelig inntekt"
-                    }
-                ],
+                "name": {
+                    "en": "Income",
+                    "nn": "",
+                    "nb": "Alminnelig inntekt"
+                },
                 "data_type": "INTEGER",
                 "variable_role": "MEASURE",
                 "definition_uri": "https://www.ssb.no/a/metadata/conceptvariable/vardok/3495/nb",
-                "is_personal_data": "NOT_PERSONAL_DATA",
+                "direct_person_identifying": false,
                 "data_source": null,
                 "population_description": null,
                 "comment": null,
-                "temporality_type": "STATUS",
-                "measurement_unit": null,
-                "multiplication_factor": null,
+                "temporality_type": null,
+                "measurement_unit": "NOK",
                 "format": null,
                 "classification_uri": null,
-                "special_value": null,
+                "sentinel_value_uri": null,
                 "invalid_value_description": null,
-                "custom_type": null,
-                "id": "a3673c24-09d7-4181-8a80-b204c4300e3a",
-                "contains_data_from": "2021-12-31",
-                "contains_data_until": "2021-12-31"
+                "id": null,
+                "contains_data_from": null,
+                "contains_data_until": null
             },
             {
                 "short_name": "bankinnskudd",
-                "data_element_path": null,
-                "name": [
-                    {
-                        "languageCode": "en",
-                        "languageText": "Bank transfer (total)"
-                    },
-                    {
-                        "languageCode": "nn",
-                        "languageText": ""
-                    },
-                    {
-                        "languageCode": "nb",
-                        "languageText": "Bankinnskudd totalt"
-                    }
-                ],
+                "name": {
+                    "en": "Bank transfer (total)",
+                    "nn": "",
+                    "nb": "Bankinnskudd totalt"
+                },
                 "data_type": "INTEGER",
                 "variable_role": "MEASURE",
                 "definition_uri": "https://www.ssb.no/a/metadata/conceptvariable/vardok/591/nb",
-                "is_personal_data": "NOT_PERSONAL_DATA",
+                "direct_person_identifying": false,
                 "data_source": null,
                 "population_description": null,
                 "comment": null,
-                "temporality_type": "STATUS",
-                "measurement_unit": null,
-                "multiplication_factor": null,
+                "temporality_type": null,
+                "measurement_unit": "NOK",
                 "format": null,
                 "classification_uri": null,
-                "special_value": null,
+                "sentinel_value_uri": null,
                 "invalid_value_description": null,
-                "custom_type": null,
-                "id": "0425fcf8-bfc8-4032-a90e-dc0aa6d8b12e",
-                "contains_data_from": "2021-12-31",
-                "contains_data_until": "2021-12-31"
+                "id": null,
+                "contains_data_from": null,
+                "contains_data_until": null
             },
             {
                 "short_name": "dato",
-                "data_element_path": null,
-                "name": [
-                    {
-                        "languageCode": "en",
-                        "languageText": "Date of registration"
-                    },
-                    {
-                        "languageCode": "nn",
-                        "languageText": ""
-                    },
-                    {
-                        "languageCode": "nb",
-                        "languageText": "Registreringsdato"
-                    }
-                ],
+                "name": {
+                    "en": "Date of registration",
+                    "nn": "",
+                    "nb": "Registreringsdato"
+                },
                 "data_type": "DATETIME",
                 "variable_role": "START_TIME",
                 "definition_uri": null,
-                "is_personal_data": "NOT_PERSONAL_DATA",
+                "direct_person_identifying": false,
                 "data_source": null,
                 "population_description": null,
-                "comment": [
-                    {
-                        "languageCode": "en",
-                        "languageText": ""
-                    },
-                    {
-                        "languageCode": "nn",
-                        "languageText": ""
-                    },
-                    {
-                        "languageCode": "nb",
-                        "languageText": "Måletidspunkt for data"
-                    }
-                ],
-                "temporality_type": "STATUS",
+                "comment": {
+                    "en": "",
+                    "nn": "",
+                    "nb": "Måletidspunkt for data"
+                },
+                "temporality_type": null,
                 "measurement_unit": null,
-                "multiplication_factor": null,
                 "format": "YYYY-MM-DD",
                 "classification_uri": null,
-                "special_value": null,
+                "sentinel_value_uri": null,
                 "invalid_value_description": null,
-                "custom_type": null,
-                "id": "0beae501-92ac-4292-9cd7-04303f3ae398",
-                "contains_data_from": "2021-12-31",
-                "contains_data_until": "2021-12-31"
+                "id": null,
+                "contains_data_from": null,
+                "contains_data_until": null
             }
         ]
     },
