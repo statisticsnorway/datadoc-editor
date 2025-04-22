@@ -84,7 +84,7 @@ def populate_variables_workspace(
                     )
                     else [
                         build_variables_pseudo_button(
-                            "Pseudonymisert", short_name=variable.short_name
+                            "Pseudonymisert", short_name=variable.short_name or ""
                         )
                     ]
                 ),

@@ -712,10 +712,13 @@ def test_accept_pseudo_variable_metadata_input_valid(
     state.metadata = metadata
     state.metadata.pseudo_variables = [model.PseudoVariable(short_name="fnr")]
     state.metadata._create_pseudo_variables_lookup()  # noqa: SLF001
+    fnr_variable = metadata.pseudo_variables_lookup.get("fnr")
+    assert fnr_variable is not None
+    assert fnr_variable.short_name is not None
     assert (
         accept_pseudo_variable_metadata_input(
             value,
-            metadata.pseudo_variables_lookup.get("fnr").short_name,
+            fnr_variable.short_name,
             metadata_field=metadata_field.value,
         )
         is None
