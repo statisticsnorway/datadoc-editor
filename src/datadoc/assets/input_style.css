@@ -55,7 +55,7 @@ div > .ssb-input.input-component{
 
 #pseudo-metadata-input-left-pseudo > .ssb-input.input-component,
 #variables-metadata-input-left-machine > .ssb-input.input-component{
-    padding: 0 0;
+    padding: 0;
 }
 
 .metadata-checkbox-field{
