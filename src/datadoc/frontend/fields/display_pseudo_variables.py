@@ -4,7 +4,7 @@ from datadoc.frontend.fields.display_base import FieldTypes
 from datadoc.frontend.fields.display_base import MetadataInputField
 
 
-class PseudonymizationIdentifiers(str, Enum):
+class PseudoVariableIdentifiers(str, Enum):
     """Pseudo fileds."""
 
     SHORT_NAME = "short_name"
@@ -20,67 +20,67 @@ class PseudonymizationIdentifiers(str, Enum):
 
 
 PSEUDO_FIELDS: dict[
-    PseudonymizationIdentifiers,
+    PseudoVariableIdentifiers,
     FieldTypes,
 ] = {
-    PseudonymizationIdentifiers.SHORT_NAME: MetadataInputField(
-        identifier=PseudonymizationIdentifiers.SHORT_NAME.value,
+    PseudoVariableIdentifiers.SHORT_NAME: MetadataInputField(
+        identifier=PseudoVariableIdentifiers.SHORT_NAME.value,
         display_name="Kortnavn",
         description="Fysisk navn på variabelen (elementet) i datasettet som er pseudonymisert",
         obligatory=True,
         editable=False,
     ),
-    PseudonymizationIdentifiers.DATA_ELEMENT_PATH: MetadataInputField(
-        identifier=PseudonymizationIdentifiers.DATA_ELEMENT_PATH.value,
+    PseudoVariableIdentifiers.DATA_ELEMENT_PATH: MetadataInputField(
+        identifier=PseudoVariableIdentifiers.DATA_ELEMENT_PATH.value,
         display_name="Dataelement sti",
         description="Sti (path) til den pseudonymiserte variabelen (elementet) i et hierarkisk datasett.",
         obligatory=True,
     ),
-    PseudonymizationIdentifiers.DATA_ELEMENT_PATTERN: MetadataInputField(
-        identifier=PseudonymizationIdentifiers.DATA_ELEMENT_PATTERN.value,
+    PseudoVariableIdentifiers.DATA_ELEMENT_PATTERN: MetadataInputField(
+        identifier=PseudoVariableIdentifiers.DATA_ELEMENT_PATTERN.value,
         display_name="Dataelement mønster",
         description="Eventuelt “søke-mønster” (glob pattern) som resulterte i at denne variabelen ble pseudonymisert.",
         obligatory=True,
     ),
-    PseudonymizationIdentifiers.STABLE_IDENTIFIER_VERSION: MetadataInputField(
-        identifier=PseudonymizationIdentifiers.STABLE_IDENTIFIER_VERSION.value,
+    PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION: MetadataInputField(
+        identifier=PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
         display_name="Stabil identifikator type",
         description="Type stabil identifikator som er benyttet før pseudonymisering (krypteirng), eksempelvis at fødselsnummer er byttet ut med SNR fra SNR-katalogen i FREG.",
         obligatory=True,
     ),
-    PseudonymizationIdentifiers.STABLE_IDENTIFIER_TYPE: MetadataInputField(
-        identifier=PseudonymizationIdentifiers.STABLE_IDENTIFIER_TYPE.value,
+    PseudoVariableIdentifiers.STABLE_IDENTIFIER_TYPE: MetadataInputField(
+        identifier=PseudoVariableIdentifiers.STABLE_IDENTIFIER_TYPE.value,
         display_name="Stabil identifikator versjon",
         description="Det skal brukes den type versjonering som er brukt for stabil identifikator katalogen, eksempler kan være dato eller semantisk versjonering.",
         obligatory=True,
     ),
-    PseudonymizationIdentifiers.ENCRYPTION_ALGORITHM: MetadataInputField(
-        identifier=PseudonymizationIdentifiers.ENCRYPTION_ALGORITHM.value,
+    PseudoVariableIdentifiers.ENCRYPTION_ALGORITHM: MetadataInputField(
+        identifier=PseudoVariableIdentifiers.ENCRYPTION_ALGORITHM.value,
         display_name="Krypteringsalgoritme",
         description="Krypteringsalgoritmen som er benyttet for å pseudonymisere variabelen.",
         obligatory=True,
     ),
-    PseudonymizationIdentifiers.ENCRYPTION_KEY_REFERENCE: MetadataInputField(
-        identifier=PseudonymizationIdentifiers.ENCRYPTION_KEY_REFERENCE.value,
+    PseudoVariableIdentifiers.ENCRYPTION_KEY_REFERENCE: MetadataInputField(
+        identifier=PseudoVariableIdentifiers.ENCRYPTION_KEY_REFERENCE.value,
         display_name="Krypteringsnøkkel referanse",
         description="Navn eller referanse til krypteringsnøkkelen som er benyttet til å pseudonymisere variabelen.",
         obligatory=True,
     ),
-    PseudonymizationIdentifiers.ENCRYPTION_ALGORITHM_PARAMETERS: MetadataInputField(
-        identifier=PseudonymizationIdentifiers.ENCRYPTION_ALGORITHM_PARAMETERS.value,
+    PseudoVariableIdentifiers.ENCRYPTION_ALGORITHM_PARAMETERS: MetadataInputField(
+        identifier=PseudoVariableIdentifiers.ENCRYPTION_ALGORITHM_PARAMETERS.value,
         display_name="Krypteringsalgoritme-parametere",
         description="Eventuelle krypteringsalgoritme-parametere som er benyttet utover “encryption_key_reference” nevnt over.",
         obligatory=True,
         editable=False,
     ),
-    PseudonymizationIdentifiers.SOURCE_VARIABLE: MetadataInputField(
-        identifier=PseudonymizationIdentifiers.SOURCE_VARIABLE.value,
+    PseudoVariableIdentifiers.SOURCE_VARIABLE: MetadataInputField(
+        identifier=PseudoVariableIdentifiers.SOURCE_VARIABLE.value,
         display_name="Kilde-variabel",
         description="Eventuelt navn på kilde-variabelen før pseudonymisering.",
         obligatory=True,
     ),
-    PseudonymizationIdentifiers.SOURCE_DISPLAY_DATATYPE: MetadataInputField(
-        identifier=PseudonymizationIdentifiers.SOURCE_DISPLAY_DATATYPE.value,
+    PseudoVariableIdentifiers.SOURCE_DISPLAY_DATATYPE: MetadataInputField(
+        identifier=PseudoVariableIdentifiers.SOURCE_DISPLAY_DATATYPE.value,
         display_name="Kilde-variabel datatype",
         description="Eventuell datatype på kildevariabelen før pseudonymisering.",
         obligatory=True,

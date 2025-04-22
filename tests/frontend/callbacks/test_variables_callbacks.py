@@ -17,6 +17,7 @@ from pydantic import AnyUrl
 from datadoc import enums
 from datadoc import state
 from datadoc.frontend.callbacks.utils import variables_control
+from datadoc.frontend.callbacks.variables import accept_pseudo_variable_metadata_input
 from datadoc.frontend.callbacks.variables import accept_variable_metadata_date_input
 from datadoc.frontend.callbacks.variables import accept_variable_metadata_input
 from datadoc.frontend.callbacks.variables import populate_variables_workspace
@@ -34,6 +35,7 @@ from datadoc.frontend.constants import INVALID_VALUE
 from datadoc.frontend.fields.display_base import get_metadata_and_stringify
 from datadoc.frontend.fields.display_base import get_standard_metadata
 from datadoc.frontend.fields.display_dataset import DatasetIdentifiers
+from datadoc.frontend.fields.display_pseudo_variables import PseudoVariableIdentifiers
 from datadoc.frontend.fields.display_variables import DISPLAY_VARIABLES
 from datadoc.frontend.fields.display_variables import VariableIdentifiers
 
@@ -653,4 +655,73 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
     assert (
         getattr(state.metadata.variables[-1], VariableIdentifiers.FORMAT.value)
         == "Format value"
+    )
+
+
+@pytest.mark.parametrize(
+    ("metadata_field", "value", "expected_model_value"),
+    [
+        (
+            PseudoVariableIdentifiers.SHORT_NAME,
+            "fnr",
+            "fnr",
+        ),
+        (
+            PseudoVariableIdentifiers.DATA_ELEMENT_PATH,
+            "path",
+            "path",
+        ),
+        (
+            PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION,
+            "stable identifier",
+            "stable identifier",
+        ),
+        (
+            PseudoVariableIdentifiers.STABLE_IDENTIFIER_TYPE,
+            "stable identifier type",
+            "stable identifier type",
+        ),
+        (
+            PseudoVariableIdentifiers.ENCRYPTION_ALGORITHM,
+            "TINK-FPE",
+            "TINK-FPE",
+        ),
+        (
+            PseudoVariableIdentifiers.ENCRYPTION_KEY_REFERENCE,
+            "SSB_GLOBAL_KEY_1",
+            "SSB_GLOBAL_KEY_1",
+        ),
+        (
+            PseudoVariableIdentifiers.SOURCE_VARIABLE,
+            "fnr",
+            "fnr",
+        ),
+        (
+            PseudoVariableIdentifiers.SOURCE_DISPLAY_DATATYPE,
+            "STRING",
+            "STRING",
+        ),
+    ],
+)
+def test_accept_pseudo_variable_metadata_input_valid(
+    metadata: Datadoc,
+    metadata_field: PseudoVariableIdentifiers,
+    value: MetadataInputTypes,
+    expected_model_value: Any,  # noqa: ANN401
+):
+    state.metadata = metadata
+    state.metadata.pseudo_variables = [model.PseudoVariable(short_name="fnr")]
+    state.metadata._create_pseudo_variables_lookup()  # noqa: SLF001
+    assert (
+        accept_pseudo_variable_metadata_input(
+            value,
+            metadata.pseudo_variables_lookup.get("fnr").short_name,
+            metadata_field=metadata_field.value,
+            language="nb",
+        )
+        is None
+    )
+    assert (
+        getattr(state.metadata.pseudo_variables_lookup.get("fnr"), metadata_field.value)
+        == expected_model_value
     )
