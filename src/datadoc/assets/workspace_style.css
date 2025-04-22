@@ -42,14 +42,14 @@
     flex-direction: row;
     gap: 2rem;
     width: 100%;
-    padding: 1rem;
+    padding: 1rem 0;
 }
 
 .edit-section-form{
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
-    padding-top: 1rem;
+    padding: 1rem 0;
     align-items: flex-start;
 }
 
@@ -76,6 +76,7 @@
 }
 
 #dataset-metadata-input-left,
+#pseudo-metadata-input-left-pseudo
 #variables-metadata-input-left-editable{
     padding-top: 0.5rem;
 }
@@ -86,7 +87,7 @@
     justify-content: center;
 }
 
-#dataset-metadata-input-Maskingenerert, #variables-metadata-input-left-machine{
+#dataset-metadata-input-Maskingenerert, #pseudo-metadata-input-left-pseudo, #variables-metadata-input-left-machine{
     justify-content: space-between;
 }
 
@@ -95,4 +96,10 @@
 #dataset-metadata-input-left > div > span > span > button
 {
     background-image: none;
+}
+
+.add-pseudo-button {
+    float: right;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
 }
