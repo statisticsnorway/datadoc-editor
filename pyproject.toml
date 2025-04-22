@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ssb-datadoc"
-version = "1.0.10"
+version = "1.0.11"
 description = "Document dataset metadata. For use in Statistics Norway's metadata system."
 authors = ["Statistics Norway <stat-dev@ssb.no>"]
 license = "MIT"
