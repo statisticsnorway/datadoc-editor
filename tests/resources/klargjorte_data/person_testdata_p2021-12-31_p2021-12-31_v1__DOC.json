@@ -333,5 +333,37 @@
             }
         ]
     },
-    "pseudonymization": null
+    "pseudonymization": {
+        "document_version": "0.1.0",
+        "pseudo_dataset": {
+            "dataset_pseudo_time": null,
+            "source_dataset_path": null
+        },
+        "pseudo_variables": [
+            {
+                "short_name": "fnr",
+                "data_element_path": null,
+                "data_element_pattern": null,
+                "stable_identifier_type": null,
+                "stable_identifier_version": null,
+                "encryption_algorithm": null,
+                "encryption_key_reference": null,
+                "encryption_algorithm_parameters": null,
+                "source_variable": null,
+                "source_variable_datatype": null
+            },
+            {
+                "short_name": "sivilstand",
+                "data_element_path": null,
+                "data_element_pattern": null,
+                "stable_identifier_type": null,
+                "stable_identifier_version": null,
+                "encryption_algorithm": null,
+                "encryption_key_reference": null,
+                "encryption_algorithm_parameters": null,
+                "source_variable": null,
+                "source_variable_datatype": null
+            }
+        ]
+    }
 }
