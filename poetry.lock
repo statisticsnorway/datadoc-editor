@@ -435,14 +435,14 @@ toml = ["tomli ; python_full_version <= \"3.11.0a6\""]
 
 [[package]]
 name = "dapla-toolbelt-metadata"
-version = "0.6.4"
+version = "0.6.5"
 description = "Dapla Toolbelt Metadata"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "dapla_toolbelt_metadata-0.6.4-py3-none-any.whl", hash = "sha256:3f76bf57f892cc67dee42b2e1932afbedf60636a48cef22a2b3bed7f1a7f8265"},
-    {file = "dapla_toolbelt_metadata-0.6.4.tar.gz", hash = "sha256:5da35cfcabd549de7a43565f201716e32f30520d9d228e265fb21e52f315d518"},
+    {file = "dapla_toolbelt_metadata-0.6.5-py3-none-any.whl", hash = "sha256:453249922b068f54cd4d2246d55dedb502a15e7bca05c44976cd5f1d249bcad1"},
+    {file = "dapla_toolbelt_metadata-0.6.5.tar.gz", hash = "sha256:2e3c23b19531e7519f4f80fbef2ce5d51c7b267f3d2b460fdf52fe0aa400c24e"},
 ]
 
 [package.dependencies]
@@ -4033,4 +4033,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4.0"
-content-hash = "f91b157857640c17dbe583d91103b7a7b6f166ff26bf06cc51e72874793e7f12"
+content-hash = "8d5801b23d2dd581226ff5d4e0de2e76f74998ee78cbaadb75c7b1082bf91256"
