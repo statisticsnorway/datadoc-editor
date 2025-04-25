@@ -14,7 +14,7 @@ import ssb_dash_components as ssb
 from dapla_metadata.datasets import enums
 from dash import html
 
-from datadoc import state
+from datadoc_editor import state
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -23,8 +23,8 @@ if TYPE_CHECKING:
     from dash.development.base_component import Component
     from pydantic import BaseModel
 
-    from datadoc.enums import LanguageStringsEnum
-    from datadoc.frontend.callbacks.utils import MetadataInputTypes
+    from datadoc_editor.enums import LanguageStringsEnum
+    from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 
 logger = logging.getLogger(__name__)
 

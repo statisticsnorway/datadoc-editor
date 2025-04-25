@@ -5,17 +5,19 @@ import pytest
 import ssb_dash_components as ssb  # type: ignore[import-untyped]
 from dapla_metadata.datasets import model
 
-from datadoc.frontend.components.builders import build_input_field_section
-from datadoc.frontend.components.builders import (
+from datadoc_editor.frontend.components.builders import build_input_field_section
+from datadoc_editor.frontend.components.builders import (
     build_variables_pseudonymization_section,
 )
-from datadoc.frontend.fields.display_base import MetadataCheckboxField
-from datadoc.frontend.fields.display_base import MetadataDropdownField
-from datadoc.frontend.fields.display_base import MetadataInputField
-from datadoc.frontend.fields.display_base import MetadataPeriodField
-from datadoc.frontend.fields.display_pseudo_variables import PSEUDONYMIZATION_METADATA
-from datadoc.frontend.fields.display_variables import VARIABLES_METADATA_LEFT
-from datadoc.frontend.fields.display_variables import VARIABLES_METADATA_RIGHT
+from datadoc_editor.frontend.fields.display_base import MetadataCheckboxField
+from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
+from datadoc_editor.frontend.fields.display_base import MetadataInputField
+from datadoc_editor.frontend.fields.display_base import MetadataPeriodField
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PSEUDONYMIZATION_METADATA,
+)
+from datadoc_editor.frontend.fields.display_variables import VARIABLES_METADATA_LEFT
+from datadoc_editor.frontend.fields.display_variables import VARIABLES_METADATA_RIGHT
 
 VARIABLES_METADATA = VARIABLES_METADATA_LEFT + VARIABLES_METADATA_RIGHT
 

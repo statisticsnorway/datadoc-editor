@@ -14,35 +14,41 @@ from dapla_metadata.datasets import ObligatoryVariableWarning
 from dapla_metadata.datasets import model
 from pydantic import AnyUrl
 
-from datadoc import enums
-from datadoc import state
-from datadoc.frontend.callbacks.utils import variables_control
-from datadoc.frontend.callbacks.variables import accept_pseudo_variable_metadata_input
-from datadoc.frontend.callbacks.variables import accept_variable_metadata_date_input
-from datadoc.frontend.callbacks.variables import accept_variable_metadata_input
-from datadoc.frontend.callbacks.variables import populate_variables_workspace
-from datadoc.frontend.callbacks.variables import (
+from datadoc_editor import enums
+from datadoc_editor import state
+from datadoc_editor.frontend.callbacks.utils import variables_control
+from datadoc_editor.frontend.callbacks.variables import (
+    accept_pseudo_variable_metadata_input,
+)
+from datadoc_editor.frontend.callbacks.variables import (
+    accept_variable_metadata_date_input,
+)
+from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
+from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
+from datadoc_editor.frontend.callbacks.variables import (
     set_variables_value_multilanguage_inherit_dataset_values,
 )
-from datadoc.frontend.callbacks.variables import (
+from datadoc_editor.frontend.callbacks.variables import (
     set_variables_values_inherit_dataset_derived_date_values,
 )
-from datadoc.frontend.callbacks.variables import (
+from datadoc_editor.frontend.callbacks.variables import (
     set_variables_values_inherit_dataset_values,
 )
-from datadoc.frontend.constants import INVALID_DATE_ORDER
-from datadoc.frontend.constants import INVALID_VALUE
-from datadoc.frontend.fields.display_base import get_metadata_and_stringify
-from datadoc.frontend.fields.display_base import get_standard_metadata
-from datadoc.frontend.fields.display_dataset import DatasetIdentifiers
-from datadoc.frontend.fields.display_pseudo_variables import PseudoVariableIdentifiers
-from datadoc.frontend.fields.display_variables import DISPLAY_VARIABLES
-from datadoc.frontend.fields.display_variables import VariableIdentifiers
+from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
+from datadoc_editor.frontend.constants import INVALID_VALUE
+from datadoc_editor.frontend.fields.display_base import get_metadata_and_stringify
+from datadoc_editor.frontend.fields.display_base import get_standard_metadata
+from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PseudoVariableIdentifiers,
+)
+from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
+from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
     from dapla_metadata.datasets import Datadoc
 
-    from datadoc.frontend.callbacks.utils import MetadataInputTypes
+    from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 
 
 @pytest.fixture

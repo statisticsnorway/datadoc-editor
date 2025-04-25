@@ -1,13 +1,13 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Datadoc",
-            "type": "python",
-            "request": "launch",
-            "program": "src/datadoc/app.py",
-            "console": "integratedTerminal",
-            "justMyCode": true
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Datadoc",
+      "type": "python",
+      "request": "launch",
+      "program": "src/datadoc_editor/app.py",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
 }

@@ -6,28 +6,32 @@ import logging
 import urllib.parse
 from typing import TYPE_CHECKING
 
-from datadoc import state
-from datadoc.frontend.callbacks.utils import MetadataInputTypes
-from datadoc.frontend.callbacks.utils import find_existing_language_string
-from datadoc.frontend.callbacks.utils import parse_and_validate_dates
-from datadoc.frontend.components.builders import build_edit_section
-from datadoc.frontend.components.builders import build_ssb_accordion
-from datadoc.frontend.components.builders import build_variables_machine_section
-from datadoc.frontend.components.builders import build_variables_pseudo_button
-from datadoc.frontend.components.builders import (
+from datadoc_editor import state
+from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
+from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
+from datadoc_editor.frontend.callbacks.utils import parse_and_validate_dates
+from datadoc_editor.frontend.components.builders import build_edit_section
+from datadoc_editor.frontend.components.builders import build_ssb_accordion
+from datadoc_editor.frontend.components.builders import build_variables_machine_section
+from datadoc_editor.frontend.components.builders import build_variables_pseudo_button
+from datadoc_editor.frontend.components.builders import (
     build_variables_pseudonymization_section,
 )
-from datadoc.frontend.constants import INVALID_DATE_ORDER
-from datadoc.frontend.constants import INVALID_VALUE
-from datadoc.frontend.fields.display_pseudo_variables import PSEUDONYMIZATION_METADATA
-from datadoc.frontend.fields.display_variables import DISPLAY_VARIABLES
-from datadoc.frontend.fields.display_variables import (
+from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
+from datadoc_editor.frontend.constants import INVALID_VALUE
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PSEUDONYMIZATION_METADATA,
+)
+from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
+from datadoc_editor.frontend.fields.display_variables import (
     MULTIPLE_LANGUAGE_VARIABLES_METADATA,
 )
-from datadoc.frontend.fields.display_variables import NON_EDITABLE_VARIABLES_METADATA
-from datadoc.frontend.fields.display_variables import VARIABLES_METADATA_LEFT
-from datadoc.frontend.fields.display_variables import VARIABLES_METADATA_RIGHT
-from datadoc.frontend.fields.display_variables import VariableIdentifiers
+from datadoc_editor.frontend.fields.display_variables import (
+    NON_EDITABLE_VARIABLES_METADATA,
+)
+from datadoc_editor.frontend.fields.display_variables import VARIABLES_METADATA_LEFT
+from datadoc_editor.frontend.fields.display_variables import VARIABLES_METADATA_RIGHT
+from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
     from dapla_metadata.datasets import model

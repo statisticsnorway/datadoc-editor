@@ -86,15 +86,15 @@ We use a python package called `python-dotenv` for configuration management. Thi
 
 To set up for local development run this command from the root of the repo.
 
-1. Create a file `src/datadoc/.env`
+1. Create a file `src/datadoc_editor/.env`
 1. Place the following lines in the file:
 
-    ```env
-    DATADOC_DASH_DEVELOPMENT_MODE=True
-    DATADOC_LOG_LEVEL=debug
-    ```
+   ```env
+   DATADOC_DASH_DEVELOPMENT_MODE=True
+   DATADOC_LOG_LEVEL=debug
+   ```
 
-To see all configuration options, see `src/datadoc/config.py`
+To see all configuration options, see `src/datadoc_editor/config.py`
 
 ## How to test the project
 
@@ -166,16 +166,16 @@ nox --session=pre-commit -- install
 It is recommended to open an issue before starting work on anything.
 This will allow a chance to talk it over with the owners and validate your approach.
 
-[mit license]: <https://opensource.org/licenses/MIT>
-[source code]: <https://github.com/statisticsnorway/datadoc>
-[documentation]: <https://statisticsnorway.github.io/datadoc>
-[issue tracker]: <https://github.com/statisticsnorway/datadoc/issues>
-[pipx]: <https://pipx.pypa.io/>
-[poetry]: <https://python-poetry.org/>
-[nox]: <https://nox.thea.codes/>
-[nox-poetry]: <https://nox-poetry.readthedocs.io/>
-[pytest]: <https://pytest.readthedocs.io/>
-[pull request]: https://github.com/statisticsnorway/datadoc/pulls
+[mit license]: https://opensource.org/licenses/MIT
+[source code]: https://github.com/statisticsnorway/datadoc
+[documentation]: https://statisticsnorway.github.io/datadoc
+[issue tracker]: https://github.com/statisticsnorway/datadoc-editor/issues
+[pipx]: https://pipx.pypa.io/
+[poetry]: https://python-poetry.org/
+[nox]: https://nox.thea.codes/
+[nox-poetry]: https://nox-poetry.readthedocs.io/
+[pytest]: https://pytest.readthedocs.io/
+[pull request]: https://github.com/statisticsnorway/datadoc-editor/pulls
 
 <!-- github-only -->
 

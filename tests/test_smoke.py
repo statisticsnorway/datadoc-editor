@@ -1,7 +1,7 @@
 """Smoke tests."""
 
-from datadoc import state
-from datadoc.app import get_app
+from datadoc_editor import state
+from datadoc_editor.app import get_app
 
 
 def test_get_app(

@@ -5,8 +5,8 @@
 [![Python Version](https://img.shields.io/pypi/pyversions/ssb-datadoc)][pypi status]
 [![License](https://img.shields.io/pypi/l/ssb-datadoc)][license]
 
-[![Documentation](https://github.com/statisticsnorway/datadoc/actions/workflows/docs.yml/badge.svg)][documentation]
-[![Tests](https://github.com/statisticsnorway/datadoc/actions/workflows/tests.yml/badge.svg)][tests]
+[![Documentation](https://github.com/statisticsnorway/datadoc-editor/actions/workflows/docs.yml/badge.svg)][documentation]
+[![Tests](https://github.com/statisticsnorway/datadoc-editor/actions/workflows/tests.yml/badge.svg)][tests]
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=statisticsnorway_datadoc&metric=coverage)][sonarcov]
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=statisticsnorway_datadoc&metric=alert_status)][sonarquality]
 
@@ -16,8 +16,7 @@
 
 [pypi status]: https://pypi.org/project/ssb-datadoc/
 [documentation]: https://statisticsnorway.github.io/datadoc
-[tests]: https://github.com/statisticsnorway/datadoc/actions?workflow=Tests
-
+[tests]: https://github.com/statisticsnorway/datadoc-editor/actions?workflow=Tests
 [sonarcov]: https://sonarcloud.io/summary/overall?id=statisticsnorway_datadoc
 [sonarquality]: https://sonarcloud.io/summary/overall?id=statisticsnorway_datadoc
 [pre-commit]: https://github.com/pre-commit/pre-commit
@@ -65,11 +64,11 @@ This project was generated from [Statistics Norway]'s [SSB PyPI Template].
 [statistics norway]: https://www.ssb.no/en
 [pypi]: https://pypi.org/
 [ssb pypi template]: https://github.com/statisticsnorway/ssb-pypitemplate
-[file an issue]: https://github.com/statisticsnorway/datadoc/issues
+[file an issue]: https://github.com/statisticsnorway/datadoc-editor/issues
 [pipx]: https://pipx.pypa.io/latest/installation/
 
 <!-- github-only -->
 
-[license]: https://github.com/statisticsnorway/datadoc/blob/main/LICENSE
-[contributor guide]: https://github.com/statisticsnorway/datadoc/blob/main/CONTRIBUTING.md
-[reference guide]: https://statisticsnorway.github.io/datadoc/reference.html
+[license]: https://github.com/statisticsnorway/datadoc-editor/blob/main/LICENSE
+[contributor guide]: https://github.com/statisticsnorway/datadoc-editor/blob/main/CONTRIBUTING.md
+[reference guide]: https://statisticsnorway.github.io/datadoc-editor/reference.html

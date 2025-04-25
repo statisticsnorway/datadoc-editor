@@ -7,20 +7,22 @@ from enum import Enum
 
 from dapla_metadata.datasets import enums
 
-from datadoc import state
-from datadoc.enums import DataType
-from datadoc.enums import IsPersonalData
-from datadoc.enums import TemporalityTypeType
-from datadoc.enums import VariableRole
-from datadoc.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
-from datadoc.frontend.fields.display_base import VARIABLES_METADATA_MULTILANGUAGE_INPUT
-from datadoc.frontend.fields.display_base import FieldTypes
-from datadoc.frontend.fields.display_base import MetadataDropdownField
-from datadoc.frontend.fields.display_base import MetadataInputField
-from datadoc.frontend.fields.display_base import MetadataMultiLanguageField
-from datadoc.frontend.fields.display_base import MetadataPeriodField
-from datadoc.frontend.fields.display_base import get_data_source_options
-from datadoc.frontend.fields.display_base import get_enum_options
+from datadoc_editor import state
+from datadoc_editor.enums import DataType
+from datadoc_editor.enums import IsPersonalData
+from datadoc_editor.enums import TemporalityTypeType
+from datadoc_editor.enums import VariableRole
+from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
+from datadoc_editor.frontend.fields.display_base import (
+    VARIABLES_METADATA_MULTILANGUAGE_INPUT,
+)
+from datadoc_editor.frontend.fields.display_base import FieldTypes
+from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
+from datadoc_editor.frontend.fields.display_base import MetadataInputField
+from datadoc_editor.frontend.fields.display_base import MetadataMultiLanguageField
+from datadoc_editor.frontend.fields.display_base import MetadataPeriodField
+from datadoc_editor.frontend.fields.display_base import get_data_source_options
+from datadoc_editor.frontend.fields.display_base import get_enum_options
 
 
 def get_measurement_unit_options() -> list[dict[str, str]]:

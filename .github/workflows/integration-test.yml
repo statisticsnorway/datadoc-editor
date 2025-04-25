@@ -3,7 +3,7 @@ name: Integration test
 on:
   pull_request:
     paths:
-      - "src/datadoc/**"
+      - "src/datadoc_editor/**"
       - "poetry.lock"
       - ".nais/test-pr.yaml"
       - ".github/workflows/integration-test.yml"

@@ -8,16 +8,12 @@ readme = "README.md"
 homepage = "https://github.com/statisticsnorway/datadoc-editor"
 repository = "https://github.com/statisticsnorway/datadoc-editor"
 documentation = "https://statisticsnorway.github.io/datadoc-editor"
-classifiers = [
-    "Development Status :: 4 - Beta",
-    "Framework :: Dash",
-    "Typing :: Typed",
-]
+classifiers = ["Development Status :: 4 - Beta", "Framework :: Dash", "Typing :: Typed"]
 
-packages = [{ include = "datadoc", from = "src" }]
+packages = [{ include = "datadoc_editor", from = "src" }]
 
 [tool.poetry.scripts]
-datadoc = 'datadoc.app:main'
+datadoc = 'datadoc_editor.app:main'
 
 [tool.poetry.urls]
 Changelog = "https://github.com/statisticsnorway/datadoc-editor/releases"
@@ -65,7 +61,7 @@ pyarrow-stubs = ">=10.0.1.9"
 tomli = ">=2.2.1"
 
 [tool.pytest.ini_options]
-pythonpath = ["src/datadoc"]
+pythonpath = ["src/datadoc_editor"]
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
@@ -73,12 +69,8 @@ tests = ["tests", "*/tests"]
 
 [tool.coverage.run]
 branch = true
-source = ["datadoc"]
-omit = [
-    "datadoc/tests/*",
-    "datadoc/__init__.py",
-    "datadoc/frontend/callbacks/register.py",
-]
+source = ["datadoc_editor"]
+omit = ["datadoc_editor/tests/*", "datadoc_editor/__init__.py", "datadoc_editor/frontend/callbacks/register.py"]
 relative_files = true
 
 [tool.coverage.report]
@@ -115,12 +107,7 @@ ignore_missing_imports = true
 # Also don't require type annotations
 [[tool.mypy.overrides]]
 module = ["tests.*"]
-disable_error_code = [
-    "var-annotated",
-    "has-type",
-    "no-any-return",
-    "no-untyped-def",
-]
+disable_error_code = ["var-annotated", "has-type", "no-any-return", "no-untyped-def"]
 
 [tool.ruff]
 force-exclude = true     # Apply excludes to pre-commit
@@ -129,13 +116,7 @@ src = ["src", "tests"]
 target-version = "py312" # Minimum Python version supported
 
 include = ["*.py", "*.pyi", "**/pyproject.toml", "*.ipynb"]
-extend-exclude = [
-    "__pycache__",
-    "old",
-    ".ipynb_checkpoints",
-    "noxfile.py",
-    "docs/conf.py",
-]
+extend-exclude = ["__pycache__", "old", ".ipynb_checkpoints", "noxfile.py", "docs/conf.py"]
 
 [tool.ruff.lint]
 # Ruff rules may be customized as desired: https://docs.astral.sh/ruff/rules/
@@ -164,12 +145,7 @@ convention = "google" # You can also use "numpy".
 fixture-parentheses = false
 
 [tool.ruff.lint.pep8-naming]
-classmethod-decorators = [
-    "classmethod",
-    "validator",
-    "root_validator",
-    "pydantic.validator",
-]
+classmethod-decorators = ["classmethod", "validator", "root_validator", "pydantic.validator"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = [
@@ -185,9 +161,9 @@ classmethod-decorators = [
     "D100",
 ]
 "*/__init__.py" = ["F401"]
-"src/datadoc/frontend/callbacks/register_callbacks.py" = ["C901"]
+"src/datadoc_editor/frontend/callbacks/register_callbacks.py" = ["C901"]
 # This filename is a convention for Gunicorn
-"src/datadoc/gunicorn.conf.py" = ["N999"]
+"src/datadoc_editor/gunicorn.conf.py" = ["N999"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
