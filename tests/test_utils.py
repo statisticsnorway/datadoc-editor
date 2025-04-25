@@ -16,4 +16,4 @@ def test_get_app_version():
     with (pathlib.Path(__file__).parent.parent / "pyproject.toml").open("rb") as f:
         pyproject = tomli.load(f)
 
-    assert get_app_version() == pyproject["tool"]["poetry"]["version"]
+    assert get_app_version() == pyproject["project"]["version"]

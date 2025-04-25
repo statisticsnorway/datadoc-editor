@@ -40,4 +40,4 @@ def get_timestamp_now() -> datetime.datetime:
 
 def get_app_version() -> str:
     """Get the version of the Datadoc package."""
-    return importlib.metadata.distribution("ssb-datadoc").version
+    return importlib.metadata.distribution("datadoc-editor").version
