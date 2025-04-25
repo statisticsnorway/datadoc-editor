@@ -1,40 +1,42 @@
-# Use a Python image with uv pre-installed
-FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
+FROM ghcr.io/astral-sh/uv:bookworm-slim AS builder
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
 
-ARG PACKAGE_NAME="datadoc_editor"
-ARG APP_PATH="/app"
+# Configure the Python directory so it is consistent
+ENV UV_PYTHON_INSTALL_DIR=/python
 
-ENV PACKAGE_NAME=$PACKAGE_NAME
-ENV APP_PATH=$APP_PATH
+# Only use the managed Python version
+ENV UV_PYTHON_PREFERENCE=only-managed
 
-# Install the project into `/app`
+# Install Python before the project for caching
+RUN uv python install 3.12
+
 WORKDIR /app
-
-# Enable bytecode compilation
-ENV UV_COMPILE_BYTECODE=1
-
-# Copy from the cache instead of linking since it's a mounted volume
-ENV UV_LINK_MODE=copy
-
-# Install the project's dependencies using the lockfile and settings
 RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=uv.lock,target=uv.lock \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --frozen --no-install-project --no-dev
-
-# Then, add the rest of the project source code and install it
-# Installing separately from its dependencies allows optimal layer caching
-ADD . /app
+    uv sync --frozen --no-install-project --no-dev --no-editable
+COPY . /app
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --frozen --no-dev
+    uv sync --frozen --no-dev --no-editable
+
+# Then, use a final image without uv
+FROM gcr.io/distroless/cc
+
+
+# Determine chipset architecture for copying python
+ARG CHIPSET_ARCH=x86_64-linux-gnu
+
+# required by lots of packages - e.g. six, numpy, wsgi
+COPY --from=builder /lib/${CHIPSET_ARCH}/libz.so.1 /lib/${CHIPSET_ARCH}/
+
+# Copy the Python version
+COPY --from=builder --chown=python:python /python /python
+
+WORKDIR /app
+# Copy the application from the builder
+COPY --from=builder --chown=app:app /app/.venv /app/.venv
 
 # Place executables in the environment at the front of the path
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Reset the entrypoint, don't invoke `uv`
-ENTRYPOINT []
-
-# Get build artifact wheel and install it respecting dependency versions
-COPY ./gunicorn.conf.py ./
-
-CMD exec gunicorn --config "./gunicorn.conf.py" "$PACKAGE_NAME.wsgi:server"
+CMD ["datadoc"]
