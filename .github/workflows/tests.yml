@@ -51,11 +51,6 @@ jobs:
           version: "0.6.17"
           enable-cache: true
 
-      - name: Install Nox
-        run: |
-          uvx install --pip-args "-c ${{ github.workspace }}/.github/workflows/constraints.txt" nox
-          nox --version
-
       - name: Compute pre-commit cache key
         if: matrix.session == 'pre-commit'
         id: pre-commit-cache
@@ -83,7 +78,7 @@ jobs:
 
       - name: Run Nox
         run: |
-          nox --python=${{ matrix.python }}
+          uvx --constraints "${{ github.workspace }}/.github/workflows/constraints.txt" nox --python=${{ matrix.python }}
 
       - name: Upload coverage data
         if: always() && matrix.session == 'tests'
@@ -120,11 +115,6 @@ jobs:
           version: "0.6.17"
           enable-cache: true
 
-      - name: Install Nox
-        run: |
-          uvx install --pip-args "-c ${{ github.workspace }}/.github/workflows/constraints.txt" nox
-          nox --version
-
       - name: Download coverage data
         uses: actions/download-artifact@v4
         with:
@@ -133,11 +123,11 @@ jobs:
 
       - name: Combine coverage data and display human readable report
         run: |
-          nox --session=coverage
+          uvx --constraints "${{ github.workspace }}/.github/workflows/constraints.txt" nox --session=coverage
 
       - name: Create coverage report
         run: |
-          nox --session=coverage -- xml
+          uvx --constraints "${{ github.workspace }}/.github/workflows/constraints.txt" nox --session=coverage -- xml
 
       # Need to fix coverage source paths for SonarCloud scanning in GitHub actions.
       # Replace root path with /github/workspace (mounted in docker container).
