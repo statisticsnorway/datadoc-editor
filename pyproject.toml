@@ -67,7 +67,7 @@ tests = ["tests", "*/tests"]
 
 [tool.coverage.run]
 branch = true
-source = ["src/datadoc_editor"]
+source = ["datadoc_editor"]
 omit = [
     "src/datadoc_editor/tests/*",
     "src/datadoc_editor/__init__.py",
