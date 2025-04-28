@@ -306,99 +306,6 @@ wheels = [
 ]
 
 [[package]]
-name = "datadoc-editor"
-version = "1.0.11"
-source = { editable = "." }
-dependencies = [
-    { name = "arrow" },
-    { name = "dapla-toolbelt-metadata" },
-    { name = "dash" },
-    { name = "dash-bootstrap-components" },
-    { name = "flask-healthz" },
-    { name = "gunicorn" },
-    { name = "pydantic" },
-    { name = "python-dotenv" },
-    { name = "ssb-dash-components" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "coverage" },
-    { name = "deptry" },
-    { name = "faker" },
-    { name = "furo" },
-    { name = "mypy" },
-    { name = "myst-parser" },
-    { name = "nbstripout" },
-    { name = "pandas-stubs" },
-    { name = "pre-commit" },
-    { name = "pyarrow-stubs" },
-    { name = "pygments" },
-    { name = "pytest" },
-    { name = "pytest-cov" },
-    { name = "pytest-mock" },
-    { name = "python-kacl" },
-    { name = "requests-mock" },
-    { name = "ruff" },
-    { name = "sphinx" },
-    { name = "sphinx-autobuild" },
-    { name = "sphinx-autodoc-typehints" },
-    { name = "sphinx-click" },
-    { name = "tomli" },
-    { name = "typeguard" },
-    { name = "types-beautifulsoup4" },
-    { name = "types-colorama" },
-    { name = "types-pygments" },
-    { name = "types-setuptools" },
-    { name = "xdoctest", extra = ["colors"] },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "arrow", specifier = ">=1.3.0" },
-    { name = "dapla-toolbelt-metadata", specifier = ">=0.6.4" },
-    { name = "dash", specifier = ">=2.15.0" },
-    { name = "dash-bootstrap-components", specifier = ">=1.1.0" },
-    { name = "flask-healthz", specifier = ">=0.0.3" },
-    { name = "gunicorn", specifier = ">=23.0.0" },
-    { name = "pydantic", specifier = ">=2.5.2" },
-    { name = "python-dotenv", specifier = ">=1.0.1" },
-    { name = "ssb-dash-components", specifier = ">=0.9.1" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "coverage", extras = ["toml"], specifier = ">=6.2" },
-    { name = "deptry", specifier = ">=0.12.0" },
-    { name = "faker", specifier = ">=37.1.0" },
-    { name = "furo", specifier = ">=2021.11.12" },
-    { name = "mypy", specifier = ">=0.950" },
-    { name = "myst-parser", specifier = ">=0.16.1" },
-    { name = "nbstripout", specifier = ">=0.5.0" },
-    { name = "pandas-stubs", specifier = ">=2.2.3.250308" },
-    { name = "pre-commit", specifier = ">=4.2.0" },
-    { name = "pyarrow-stubs", specifier = ">=10.0.1.9" },
-    { name = "pygments", specifier = ">=2.10.0" },
-    { name = "pytest", specifier = ">=7.1.2" },
-    { name = "pytest-cov", specifier = ">=3.0.0" },
-    { name = "pytest-mock", specifier = ">=3.14.0" },
-    { name = "python-kacl", specifier = ">=0.6.3" },
-    { name = "requests-mock", specifier = ">=1.12.1" },
-    { name = "ruff", specifier = ">=0.0.284" },
-    { name = "sphinx", specifier = ">=6.2.1" },
-    { name = "sphinx-autobuild", specifier = ">=2021.3.14" },
-    { name = "sphinx-autodoc-typehints", specifier = ">=1.24.0" },
-    { name = "sphinx-click", specifier = ">=3.0.2" },
-    { name = "tomli", specifier = ">=2.2.1" },
-    { name = "typeguard", specifier = ">=2.13.3" },
-    { name = "types-beautifulsoup4", specifier = ">=4.12.0.20250204" },
-    { name = "types-colorama", specifier = ">=0.4.15.20240311" },
-    { name = "types-pygments", specifier = ">=2.19.0.20250305" },
-    { name = "types-setuptools", specifier = ">=79.0.0.20250422" },
-    { name = "xdoctest", extras = ["colors"], specifier = ">=0.15.10" },
-]
-
-[[package]]
 name = "decorator"
 version = "5.2.1"
 source = { registry = "https://pypi.org/simple" }
@@ -2063,6 +1970,99 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/72/a1/068ede13d66f33eed181946bf8cd847c1c4ad64bc7150e637bbd52f8091a/ssb_dash_components-0.10.0.tar.gz", hash = "sha256:a40eacbd63d8e178de20adf09583bc501f9ecffde4405508c47fdeab68aa9501", size = 136225 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/df/c0/c233e516f4d1a15d146d7c2719deddc602177385d914c98950df22b67d49/ssb_dash_components-0.10.0-py3-none-any.whl", hash = "sha256:dbe0e3bdbbab00ea9bcfe830563f60f6bb7d0665e5ea54074310c05e885d2eb2", size = 149430 },
+]
+
+[[package]]
+name = "ssb-datadoc"
+version = "1.0.11"
+source = { editable = "." }
+dependencies = [
+    { name = "arrow" },
+    { name = "dapla-toolbelt-metadata" },
+    { name = "dash" },
+    { name = "dash-bootstrap-components" },
+    { name = "flask-healthz" },
+    { name = "gunicorn" },
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+    { name = "ssb-dash-components" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "coverage" },
+    { name = "deptry" },
+    { name = "faker" },
+    { name = "furo" },
+    { name = "mypy" },
+    { name = "myst-parser" },
+    { name = "nbstripout" },
+    { name = "pandas-stubs" },
+    { name = "pre-commit" },
+    { name = "pyarrow-stubs" },
+    { name = "pygments" },
+    { name = "pytest" },
+    { name = "pytest-cov" },
+    { name = "pytest-mock" },
+    { name = "python-kacl" },
+    { name = "requests-mock" },
+    { name = "ruff" },
+    { name = "sphinx" },
+    { name = "sphinx-autobuild" },
+    { name = "sphinx-autodoc-typehints" },
+    { name = "sphinx-click" },
+    { name = "tomli" },
+    { name = "typeguard" },
+    { name = "types-beautifulsoup4" },
+    { name = "types-colorama" },
+    { name = "types-pygments" },
+    { name = "types-setuptools" },
+    { name = "xdoctest", extra = ["colors"] },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "arrow", specifier = ">=1.3.0" },
+    { name = "dapla-toolbelt-metadata", specifier = ">=0.6.4" },
+    { name = "dash", specifier = ">=2.15.0" },
+    { name = "dash-bootstrap-components", specifier = ">=1.1.0" },
+    { name = "flask-healthz", specifier = ">=0.0.3" },
+    { name = "gunicorn", specifier = ">=23.0.0" },
+    { name = "pydantic", specifier = ">=2.5.2" },
+    { name = "python-dotenv", specifier = ">=1.0.1" },
+    { name = "ssb-dash-components", specifier = ">=0.9.1" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "coverage", extras = ["toml"], specifier = ">=6.2" },
+    { name = "deptry", specifier = ">=0.12.0" },
+    { name = "faker", specifier = ">=37.1.0" },
+    { name = "furo", specifier = ">=2021.11.12" },
+    { name = "mypy", specifier = ">=0.950" },
+    { name = "myst-parser", specifier = ">=0.16.1" },
+    { name = "nbstripout", specifier = ">=0.5.0" },
+    { name = "pandas-stubs", specifier = ">=2.2.3.250308" },
+    { name = "pre-commit", specifier = ">=4.2.0" },
+    { name = "pyarrow-stubs", specifier = ">=10.0.1.9" },
+    { name = "pygments", specifier = ">=2.10.0" },
+    { name = "pytest", specifier = ">=7.1.2" },
+    { name = "pytest-cov", specifier = ">=3.0.0" },
+    { name = "pytest-mock", specifier = ">=3.14.0" },
+    { name = "python-kacl", specifier = ">=0.6.3" },
+    { name = "requests-mock", specifier = ">=1.12.1" },
+    { name = "ruff", specifier = ">=0.0.284" },
+    { name = "sphinx", specifier = ">=6.2.1" },
+    { name = "sphinx-autobuild", specifier = ">=2021.3.14" },
+    { name = "sphinx-autodoc-typehints", specifier = ">=1.24.0" },
+    { name = "sphinx-click", specifier = ">=3.0.2" },
+    { name = "tomli", specifier = ">=2.2.1" },
+    { name = "typeguard", specifier = ">=2.13.3" },
+    { name = "types-beautifulsoup4", specifier = ">=4.12.0.20250204" },
+    { name = "types-colorama", specifier = ">=0.4.15.20240311" },
+    { name = "types-pygments", specifier = ">=2.19.0.20250305" },
+    { name = "types-setuptools", specifier = ">=79.0.0.20250422" },
+    { name = "xdoctest", extras = ["colors"], specifier = ">=0.15.10" },
 ]
 
 [[package]]
