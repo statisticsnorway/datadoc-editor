@@ -32,16 +32,6 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Upgrade pip
-        run: |
-          pip install -c ${{ github.workspace }}/.github/workflows/constraints.txt pip
-          pip --version
-
-      - name: Install Poetry
-        run: |
-          pip install -c ${{ github.workspace }}/.github/workflows/constraints.txt poetry
-          poetry --version
-
       - name: Check if there is a parent commit
         id: check-parent-commit
         run: |
@@ -53,18 +43,17 @@ jobs:
         uses: salsify/action-detect-and-tag-new-version@v2.0.3
         with:
           version-command: |
-            bash -o pipefail -c "poetry version | cut -f 2 -d' '"
+            bash -o pipefail -c "uvx --from=toml-cli toml get --toml-path=pyproject.toml project.version"
 
       - name: Bump version for developmental release
         if: (!steps.check-version.outputs.tag)
         run: |
-          poetry version patch &&
-          version=$(poetry version | awk '{ print $2 }') &&
-          poetry version $version.dev.$(date +%s)
+          version=$(uvx --from=toml-cli toml get --toml-path=pyproject.toml project.version) &&
+          uvx --from=toml-cli toml set --toml-path=pyproject.toml project.version $version.dev.$(date +%s)
 
       - name: Build package
         run: |
-          poetry build --ansi
+          uv build
 
       - name: Publish package on PyPI
         if: steps.check-version.outputs.tag
