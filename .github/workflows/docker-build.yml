@@ -8,7 +8,7 @@ on:
       - master
     paths:
       - "src/datadoc_editor/**"
-      - "poetry.lock"
+      - "uv.lock"
       - "Dockerfile"
       - ".github/workflows/docker-build.yml"
 
