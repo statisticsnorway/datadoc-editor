@@ -9,9 +9,6 @@ ENV UV_PYTHON_INSTALL_DIR=/python
 # Only use the managed Python version
 ENV UV_PYTHON_PREFERENCE=only-managed
 
-# TEMPORARY: see if this file is where we expect
-RUN ls -la /lib && ls -la /lib/x86_64-linux-gnu && ls -la /lib/x86_64-linux-gnu/libz.so.1
-
 # Install Python before the project for caching
 RUN uv python install $PYTHON_VERSION
 
@@ -29,10 +26,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --no-editable
 
 # Then, use a final image without uv
-FROM gcr.io/distroless/cc
-
-# Copy this shared object from the builder since it's needed to run pandas (numpy)
-COPY --from=builder /lib/x86_64-linux-gnu/libz.so.1 /lib/x86_64-linux-gnu/
+FROM ghcr.io/statisticsnorway/distroless-python3.12
 
 # Copy the Python version
 COPY --from=builder --chown=python:python /python /python
@@ -44,5 +38,5 @@ ADD ./gunicorn.conf.py /app
 
 # Place executables in the environment at the front of the path
 ENV PATH="/app/.venv/bin:$PATH"
-
+ENTRYPOINT []
 CMD ["gunicorn", "--config", "/app/gunicorn.conf.py", "datadoc_editor.wsgi:server"]
