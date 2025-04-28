@@ -9,6 +9,9 @@ ENV UV_PYTHON_INSTALL_DIR=/python
 # Only use the managed Python version
 ENV UV_PYTHON_PREFERENCE=only-managed
 
+# TEMPORARY: see if this file is where we expect
+RUN ls -la /lib && ls -la /lib/x86_64-linux-gnu && ls -la /lib/x86_64-linux-gnu/libz.so.1
+
 # Install Python before the project for caching
 RUN uv python install $PYTHON_VERSION
 
@@ -28,11 +31,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # Then, use a final image without uv
 FROM gcr.io/distroless/cc
 
-# Determine chipset architecture for copying system libraries
-ARG CHIPSET_ARCH=x86_64-linux-gnu
-
-# Needed to run pandas (numpy)
-COPY --from=builder /lib/${CHIPSET_ARCH}/libz.so.1 /lib/${CHIPSET_ARCH}/
+# Copy this shared object from the builder since it's needed to run pandas (numpy)
+COPY --from=builder /lib/x86_64-linux-gnu/libz.so.1 /lib/x86_64-linux-gnu/
 
 # Copy the Python version
 COPY --from=builder --chown=python:python /python /python
