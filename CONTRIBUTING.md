@@ -34,9 +34,8 @@ Request features on the [Issue Tracker].
 
 You need Python 3.12+ and the following tools:
 
-- [Poetry]
+- [uv]
 - [Nox]
-- [nox-poetry]
 
 Install [pipx]:
 
@@ -45,17 +44,18 @@ python -m pip install --user pipx
 python -m pipx ensurepath
 ```
 
-Install [Poetry]:
+Install [uv]:
+
+<https://docs.astral.sh/uv/getting-started/installation/>
 
 ```console
-pipx install poetry
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-Install [Nox] and [nox-poetry]:
+Install [Nox]:
 
 ```console
 pipx install nox
-pipx inject nox nox-poetry
 ```
 
 Install the pre-commit hooks
@@ -67,14 +67,13 @@ nox --session=pre-commit -- install
 Install the package with development requirements:
 
 ```console
-poetry install
+uv sync --dev
 ```
 
-You can now run an interactive Python session, or your app:
+You can now run datadoc:
 
 ```console
-poetry run python
-poetry run datadoc
+uv run datadoc
 ```
 
 ## Config for local development
@@ -131,15 +130,7 @@ datadoc
 
 ### Release process
 
-Run the relevant version command on a branch e.g.
-
-```shell
-poetry version patch
-```
-
-```shell
-poetry version minor
-```
+Manually edit the `project.version` field in `pyproject.toml`. This project uses semantic versioning so follow that standard when bumping the version number.
 
 Commit with message like `Bump version x.x.x -> y.y.y`.
 
@@ -171,9 +162,7 @@ This will allow a chance to talk it over with the owners and validate your appro
 [documentation]: https://statisticsnorway.github.io/datadoc
 [issue tracker]: https://github.com/statisticsnorway/datadoc-editor/issues
 [pipx]: https://pipx.pypa.io/
-[poetry]: https://python-poetry.org/
 [nox]: https://nox.thea.codes/
-[nox-poetry]: https://nox-poetry.readthedocs.io/
 [pytest]: https://pytest.readthedocs.io/
 [pull request]: https://github.com/statisticsnorway/datadoc-editor/pulls
 
