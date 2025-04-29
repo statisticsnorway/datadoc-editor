@@ -2,10 +2,10 @@
 
 from dapla_metadata.datasets import model
 
-from datadoc.frontend.fields.display_dataset import DISPLAY_DATASET
-from datadoc.frontend.fields.display_dataset import DatasetIdentifiers
-from datadoc.frontend.fields.display_variables import DISPLAY_VARIABLES
-from datadoc.frontend.fields.display_variables import VariableIdentifiers
+from datadoc_editor.frontend.fields.display_dataset import DISPLAY_DATASET
+from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
+from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
+from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 
 def test_dataset_metadata_definition_parity():

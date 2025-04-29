@@ -28,24 +28,24 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v4
 
-      - name: Install Poetry
-        run: |
-          pipx install --pip-args "-c ${{ github.workspace }}/.github/workflows/constraints.txt" poetry
-          poetry --version
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.6.17"
+          enable-cache: true
 
       - name: Set up Python
         uses: actions/setup-python@v5.5.0
         with:
-          python-version: "3.13"
-          cache: "poetry"
+          python-version-file: "pyproject.toml"
 
       - name: Install dependencies
         run: |
-          poetry install
+          uv sync --locked --all-extras --dev
 
       - name: Build doc with Sphinx
         run: |
-          poetry run sphinx-build docs docs/_build
+          uv run sphinx-build docs docs/_build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

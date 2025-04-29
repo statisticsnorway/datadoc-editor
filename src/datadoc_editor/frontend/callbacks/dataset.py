@@ -12,36 +12,38 @@ from dapla_metadata.datasets import DaplaDatasetPathInfo
 from dapla_metadata.datasets import Datadoc
 from dash import no_update
 
-from datadoc import config
-from datadoc import state
-from datadoc.frontend.callbacks.utils import VALIDATION_ERROR
-from datadoc.frontend.callbacks.utils import MetadataInputTypes
-from datadoc.frontend.callbacks.utils import find_existing_language_string
-from datadoc.frontend.callbacks.utils import get_dataset_path
-from datadoc.frontend.callbacks.utils import parse_and_validate_dates
-from datadoc.frontend.callbacks.variables import (
+from datadoc_editor import config
+from datadoc_editor import state
+from datadoc_editor.frontend.callbacks.utils import VALIDATION_ERROR
+from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
+from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
+from datadoc_editor.frontend.callbacks.utils import get_dataset_path
+from datadoc_editor.frontend.callbacks.utils import parse_and_validate_dates
+from datadoc_editor.frontend.callbacks.variables import (
     set_variables_value_multilanguage_inherit_dataset_values,
 )
-from datadoc.frontend.callbacks.variables import (
+from datadoc_editor.frontend.callbacks.variables import (
     set_variables_values_inherit_dataset_derived_date_values,
 )
-from datadoc.frontend.callbacks.variables import (
+from datadoc_editor.frontend.callbacks.variables import (
     set_variables_values_inherit_dataset_values,
 )
-from datadoc.frontend.components.builders import AlertTypes
-from datadoc.frontend.components.builders import build_ssb_alert
-from datadoc.frontend.constants import INVALID_DATE_ORDER
-from datadoc.frontend.constants import INVALID_VALUE
-from datadoc.frontend.fields.display_dataset import DISPLAY_DATASET
-from datadoc.frontend.fields.display_dataset import (
+from datadoc_editor.frontend.components.builders import AlertTypes
+from datadoc_editor.frontend.components.builders import build_ssb_alert
+from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
+from datadoc_editor.frontend.constants import INVALID_VALUE
+from datadoc_editor.frontend.fields.display_dataset import DISPLAY_DATASET
+from datadoc_editor.frontend.fields.display_dataset import (
     DROPDOWN_DATASET_METADATA_IDENTIFIERS,
 )
-from datadoc.frontend.fields.display_dataset import (
+from datadoc_editor.frontend.fields.display_dataset import (
     MULTIPLE_LANGUAGE_DATASET_IDENTIFIERS,
 )
-from datadoc.frontend.fields.display_dataset import TIMEZONE_AWARE_METADATA_IDENTIFIERS
-from datadoc.frontend.fields.display_dataset import DatasetIdentifiers
-from datadoc.utils import METADATA_DOCUMENT_FILE_SUFFIX
+from datadoc_editor.frontend.fields.display_dataset import (
+    TIMEZONE_AWARE_METADATA_IDENTIFIERS,
+)
+from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
+from datadoc_editor.utils import METADATA_DOCUMENT_FILE_SUFFIX
 
 if TYPE_CHECKING:
     import dash_bootstrap_components as dbc

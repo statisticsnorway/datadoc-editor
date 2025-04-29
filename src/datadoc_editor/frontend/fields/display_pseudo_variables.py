@@ -1,7 +1,7 @@
 from enum import Enum
 
-from datadoc.frontend.fields.display_base import FieldTypes
-from datadoc.frontend.fields.display_base import MetadataInputField
+from datadoc_editor.frontend.fields.display_base import FieldTypes
+from datadoc_editor.frontend.fields.display_base import MetadataInputField
 
 
 class PseudoVariableIdentifiers(str, Enum):

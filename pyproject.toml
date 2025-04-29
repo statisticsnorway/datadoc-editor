@@ -1,71 +1,75 @@
-[tool.poetry]
+[project]
 name = "ssb-datadoc"
 version = "1.0.12"
 description = "Document dataset metadata. For use in Statistics Norway's metadata system."
-authors = ["Statistics Norway <stat-dev@ssb.no>"]
+authors = [{ name = "Statistics Norway", email = "metadata@ssb.no" }]
 license = "MIT"
 readme = "README.md"
+classifiers = ["Development Status :: 4 - Beta", "Framework :: Dash", "Typing :: Typed"]
+
+requires-python = ">=3.12"
+dependencies = [
+    "arrow>=1.3.0",
+    "dapla-toolbelt-metadata>=0.6.5",
+    "dash>=2.15.0",
+    "dash-bootstrap-components>=1.1.0",
+    "flask-healthz>=0.0.3",
+    "gunicorn>=23.0.0",
+    "pydantic>=2.5.2",
+    "python-dotenv>=1.0.1",
+    "ssb-dash-components>=0.9.1",
+]
+
+[project.urls]
 homepage = "https://github.com/statisticsnorway/datadoc-editor"
 repository = "https://github.com/statisticsnorway/datadoc-editor"
 documentation = "https://statisticsnorway.github.io/datadoc-editor"
-classifiers = [
-    "Development Status :: 4 - Beta",
-    "Framework :: Dash",
-    "Typing :: Typed",
+changelog = "https://github.com/statisticsnorway/datadoc-editor/releases"
+
+[project.scripts]
+datadoc = "datadoc_editor.app:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "coverage[toml]>=6.2",
+    "deptry>=0.12.0",
+    "faker>=37.1.0",
+    "furo>=2021.11.12",
+    "mypy>=0.950",
+    "myst-parser>=0.16.1",
+    "nbstripout>=0.5.0",
+    "pandas-stubs>=2.2.3.250308",
+    "pre-commit>=4.2.0",
+    "pyarrow-stubs>=10.0.1.9",
+    "pygments>=2.10.0",
+    "pytest>=7.1.2",
+    "pytest-cov>=3.0.0",
+    "pytest-mock>=3.14.0",
+    "python-kacl>=0.6.3",
+    "requests-mock>=1.12.1",
+    "ruff>=0.0.284",
+    "sphinx>=6.2.1",
+    "sphinx-autobuild>=2021.3.14",
+    "sphinx-autodoc-typehints>=1.24.0",
+    "sphinx-click>=3.0.2",
+    "tomli>=2.2.1",
+    "typeguard>=2.13.3",
+    "types-beautifulsoup4>=4.12.0.20250204",
+    "types-colorama>=0.4.15.20240311",
+    "types-pygments>=2.19.0.20250305",
+    "types-setuptools>=79.0.0.20250422",
+    "xdoctest[colors]>=0.15.10",
 ]
 
-packages = [{ include = "datadoc", from = "src" }]
-
-[tool.poetry.scripts]
-datadoc = 'datadoc.app:main'
-
-[tool.poetry.urls]
-Changelog = "https://github.com/statisticsnorway/datadoc-editor/releases"
-
-[tool.poetry.dependencies]
-python = ">=3.12,<4.0"
-dash = "^2.15.0"
-pydantic = ">=2.5.2"
-dash-bootstrap-components = ">=1.1.0"
-flask-healthz = ">=0.0.3"
-arrow = ">=1.3.0"
-python-dotenv = ">=1.0.1"
-ssb-dash-components = ">=0.9.1"
-dapla-toolbelt-metadata = "^0.6.5"
-gunicorn = ">=23.0.0"
-
-[tool.poetry.group.dev.dependencies]
-mypy = ">=0.950"
-pytest = ">=7.1.2"
-pytest-cov = ">=3.0.0"
-nbstripout = ">=0.5.0"
-python-kacl = "*"
-pre-commit = "*"
-pytest-mock = "*"
-ruff = ">=0.0.284"
-deptry = ">=0.12.0"
-pygments = ">=2.10.0"
-coverage = { extras = ["toml"], version = ">=6.2" }
-furo = ">=2021.11.12"
-sphinx = ">=6.2.1"
-sphinx-autobuild = ">=2021.3.14"
-sphinx-autodoc-typehints = ">=1.24.0"
-sphinx-click = ">=3.0.2"
-typeguard = ">=2.13.3"
-xdoctest = { extras = ["colors"], version = ">=0.15.10" }
-myst-parser = { version = ">=0.16.1" }
-pandas-stubs = "*"
-types-Pygments = "*"
-types-colorama = "*"
-types-setuptools = "*"
-types-beautifulsoup4 = "*"
-requests-mock = "*"
-faker = "*"
-pyarrow-stubs = ">=10.0.1.9"
-tomli = ">=2.2.1"
+[tool.hatch.build.targets.wheel]
+packages = ["src/datadoc_editor"]
 
 [tool.pytest.ini_options]
-pythonpath = ["src/datadoc"]
+pythonpath = ["src/datadoc_editor"]
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
@@ -73,11 +77,11 @@ tests = ["tests", "*/tests"]
 
 [tool.coverage.run]
 branch = true
-source = ["datadoc"]
+source = ["datadoc_editor"]
 omit = [
-    "datadoc/tests/*",
-    "datadoc/__init__.py",
-    "datadoc/frontend/callbacks/register.py",
+    "src/datadoc_editor/tests/*",
+    "src/datadoc_editor/__init__.py",
+    "src/datadoc_editor/frontend/callbacks/register.py",
 ]
 relative_files = true
 
@@ -115,12 +119,7 @@ ignore_missing_imports = true
 # Also don't require type annotations
 [[tool.mypy.overrides]]
 module = ["tests.*"]
-disable_error_code = [
-    "var-annotated",
-    "has-type",
-    "no-any-return",
-    "no-untyped-def",
-]
+disable_error_code = ["var-annotated", "has-type", "no-any-return", "no-untyped-def"]
 
 [tool.ruff]
 force-exclude = true     # Apply excludes to pre-commit
@@ -129,13 +128,7 @@ src = ["src", "tests"]
 target-version = "py312" # Minimum Python version supported
 
 include = ["*.py", "*.pyi", "**/pyproject.toml", "*.ipynb"]
-extend-exclude = [
-    "__pycache__",
-    "old",
-    ".ipynb_checkpoints",
-    "noxfile.py",
-    "docs/conf.py",
-]
+extend-exclude = ["__pycache__", "old", ".ipynb_checkpoints", "noxfile.py", "docs/conf.py"]
 
 [tool.ruff.lint]
 # Ruff rules may be customized as desired: https://docs.astral.sh/ruff/rules/
@@ -164,12 +157,7 @@ convention = "google" # You can also use "numpy".
 fixture-parentheses = false
 
 [tool.ruff.lint.pep8-naming]
-classmethod-decorators = [
-    "classmethod",
-    "validator",
-    "root_validator",
-    "pydantic.validator",
-]
+classmethod-decorators = ["classmethod", "validator", "root_validator", "pydantic.validator"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = [
@@ -185,10 +173,6 @@ classmethod-decorators = [
     "D100",
 ]
 "*/__init__.py" = ["F401"]
-"src/datadoc/frontend/callbacks/register_callbacks.py" = ["C901"]
+"src/datadoc_editor/frontend/callbacks/register_callbacks.py" = ["C901"]
 # This filename is a convention for Gunicorn
-"src/datadoc/gunicorn.conf.py" = ["N999"]
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+"src/datadoc_editor/gunicorn.conf.py" = ["N999"]

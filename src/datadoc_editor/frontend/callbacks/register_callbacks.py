@@ -19,38 +19,50 @@ from dash import ctx
 from dash import html
 from dash import no_update
 
-from datadoc import state
-from datadoc.frontend.callbacks.dataset import accept_dataset_metadata_date_input
-from datadoc.frontend.callbacks.dataset import accept_dataset_metadata_input
-from datadoc.frontend.callbacks.dataset import open_dataset_handling
-from datadoc.frontend.callbacks.utils import render_tabs
-from datadoc.frontend.callbacks.utils import save_metadata_and_generate_alerts
-from datadoc.frontend.callbacks.variables import accept_pseudo_variable_metadata_input
-from datadoc.frontend.callbacks.variables import accept_variable_metadata_date_input
-from datadoc.frontend.callbacks.variables import accept_variable_metadata_input
-from datadoc.frontend.callbacks.variables import populate_variables_workspace
-from datadoc.frontend.components.builders import build_dataset_edit_section
-from datadoc.frontend.components.builders import build_dataset_machine_section
-from datadoc.frontend.components.identifiers import ACCORDION_WRAPPER_ID
-from datadoc.frontend.components.identifiers import SECTION_WRAPPER_ID
-from datadoc.frontend.components.identifiers import VARIABLES_INFORMATION_ID
-from datadoc.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
-from datadoc.frontend.fields.display_base import DATASET_METADATA_INPUT
-from datadoc.frontend.fields.display_base import DATASET_METADATA_MULTILANGUAGE_INPUT
-from datadoc.frontend.fields.display_base import PSEUDO_METADATA_INPUT
-from datadoc.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
-from datadoc.frontend.fields.display_base import VARIABLES_METADATA_INPUT
-from datadoc.frontend.fields.display_base import VARIABLES_METADATA_MULTILANGUAGE_INPUT
-from datadoc.frontend.fields.display_dataset import EDITABLE_DATASET_METADATA_LEFT
-from datadoc.frontend.fields.display_dataset import EDITABLE_DATASET_METADATA_RIGHT
-from datadoc.frontend.fields.display_dataset import NON_EDITABLE_DATASET_METADATA
-from datadoc.frontend.fields.display_dataset import DatasetIdentifiers
-from datadoc.frontend.fields.display_variables import VariableIdentifiers
+from datadoc_editor import state
+from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_date_input
+from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
+from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
+from datadoc_editor.frontend.callbacks.utils import render_tabs
+from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
+from datadoc_editor.frontend.callbacks.variables import (
+    accept_pseudo_variable_metadata_input,
+)
+from datadoc_editor.frontend.callbacks.variables import (
+    accept_variable_metadata_date_input,
+)
+from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
+from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
+from datadoc_editor.frontend.components.builders import build_dataset_edit_section
+from datadoc_editor.frontend.components.builders import build_dataset_machine_section
+from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
+from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
+from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
+from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
+from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
+from datadoc_editor.frontend.fields.display_base import (
+    DATASET_METADATA_MULTILANGUAGE_INPUT,
+)
+from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
+from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
+from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
+from datadoc_editor.frontend.fields.display_base import (
+    VARIABLES_METADATA_MULTILANGUAGE_INPUT,
+)
+from datadoc_editor.frontend.fields.display_dataset import (
+    EDITABLE_DATASET_METADATA_LEFT,
+)
+from datadoc_editor.frontend.fields.display_dataset import (
+    EDITABLE_DATASET_METADATA_RIGHT,
+)
+from datadoc_editor.frontend.fields.display_dataset import NON_EDITABLE_DATASET_METADATA
+from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
+from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
 
-    from datadoc.frontend.callbacks.utils import MetadataInputTypes
+    from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 
 logger = logging.getLogger(__name__)
 

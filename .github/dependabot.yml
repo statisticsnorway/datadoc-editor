@@ -27,6 +27,6 @@ updates:
       - dependency-type: "all"
     open-pull-requests-limit: 99
     groups:
-      poetry-dependencies:
+      python-dependencies:
         patterns:
           - "*"

@@ -9,8 +9,8 @@ from typing import Literal
 from dapla_metadata._shared import enums
 from dotenv import load_dotenv
 
-from datadoc.constants import DAPLA_MANUAL_TEXT
-from datadoc.frontend.components.builders import build_link_object
+from datadoc_editor.constants import DAPLA_MANUAL_TEXT
+from datadoc_editor.frontend.components.builders import build_link_object
 
 DOT_ENV_FILE_PATH = Path(__file__).parent.joinpath(".env")
 
