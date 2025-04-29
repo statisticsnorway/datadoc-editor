@@ -153,3 +153,5 @@ dmypy.json
 *.vsix
 
 **/.DS_Store
+
+.direnv
