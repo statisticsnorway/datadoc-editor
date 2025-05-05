@@ -6,23 +6,32 @@ import logging
 import urllib.parse
 from typing import TYPE_CHECKING
 
-from datadoc import state
-from datadoc.frontend.callbacks.utils import MetadataInputTypes
-from datadoc.frontend.callbacks.utils import find_existing_language_string
-from datadoc.frontend.callbacks.utils import parse_and_validate_dates
-from datadoc.frontend.components.builders import build_edit_section
-from datadoc.frontend.components.builders import build_ssb_accordion
-from datadoc.frontend.components.builders import build_variables_machine_section
-from datadoc.frontend.constants import INVALID_DATE_ORDER
-from datadoc.frontend.constants import INVALID_VALUE
-from datadoc.frontend.fields.display_variables import DISPLAY_VARIABLES
-from datadoc.frontend.fields.display_variables import (
+from datadoc_editor import state
+from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
+from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
+from datadoc_editor.frontend.callbacks.utils import parse_and_validate_dates
+from datadoc_editor.frontend.components.builders import build_edit_section
+from datadoc_editor.frontend.components.builders import build_ssb_accordion
+from datadoc_editor.frontend.components.builders import build_variables_machine_section
+from datadoc_editor.frontend.components.builders import build_variables_pseudo_button
+from datadoc_editor.frontend.components.builders import (
+    build_variables_pseudonymization_section,
+)
+from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
+from datadoc_editor.frontend.constants import INVALID_VALUE
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PSEUDONYMIZATION_METADATA,
+)
+from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
+from datadoc_editor.frontend.fields.display_variables import (
     MULTIPLE_LANGUAGE_VARIABLES_METADATA,
 )
-from datadoc.frontend.fields.display_variables import NON_EDITABLE_VARIABLES_METADATA
-from datadoc.frontend.fields.display_variables import VARIABLES_METADATA_LEFT
-from datadoc.frontend.fields.display_variables import VARIABLES_METADATA_RIGHT
-from datadoc.frontend.fields.display_variables import VariableIdentifiers
+from datadoc_editor.frontend.fields.display_variables import (
+    NON_EDITABLE_VARIABLES_METADATA,
+)
+from datadoc_editor.frontend.fields.display_variables import VARIABLES_METADATA_LEFT
+from datadoc_editor.frontend.fields.display_variables import VARIABLES_METADATA_RIGHT
+from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
     from dapla_metadata.datasets import model
@@ -35,11 +44,14 @@ def populate_variables_workspace(
     variables: list[model.Variable],
     search_query: str,
     dataset_opened_counter: int,
+    pseudo_variables: list[model.PseudoVariable] | None = None,
 ) -> list:
     """Create variable workspace with accordions for variables.
 
     Allows for filtering which variables are displayed via the search box.
     """
+    pseudo_map = {pv.short_name: pv for pv in (pseudo_variables or [])}
+
     return [
         build_ssb_accordion(
             variable.short_name or "",
@@ -57,6 +69,21 @@ def populate_variables_workspace(
                     NON_EDITABLE_VARIABLES_METADATA,
                     "Maskingenerert",
                     variable,
+                ),
+                *(
+                    [
+                        build_variables_pseudonymization_section(
+                            PSEUDONYMIZATION_METADATA,
+                            "Pseudonymisert",
+                            pseudo_map[variable.short_name],
+                        )
+                    ]
+                    if variable.short_name in pseudo_map
+                    else [
+                        build_variables_pseudo_button(
+                            "Pseudonymisert", short_name=variable.short_name or ""
+                        )
+                    ]
                 ),
             ],
         )
@@ -132,6 +159,49 @@ def accept_variable_metadata_input(
             state.metadata.variables_lookup[urllib.parse.unquote(variable_short_name)],
             metadata_field,
             new_value,
+        )
+    except ValueError:
+        logger.exception(
+            "Validation failed for %s, %s, %s:",
+            metadata_field,
+            variable_short_name,
+            value,
+        )
+        return INVALID_VALUE
+    else:
+        if value == "":
+            value = None
+        logger.info(
+            "Updated %s: %s with value '%s'",
+            variable_short_name,
+            metadata_field,
+            value,
+        )
+        return None
+
+
+def accept_pseudo_variable_metadata_input(
+    value: MetadataInputTypes,
+    variable_short_name: str,
+    metadata_field: str,
+) -> str | None:
+    """Validate and save the value when a pseudo variable metadata is updated.
+
+    Returns an error message if an exception was raised, otherwise returns None.
+    """
+    logger.debug(
+        "Updating %s, %s with %s",
+        metadata_field,
+        variable_short_name,
+        value,
+    )
+    try:
+        setattr(
+            state.metadata.pseudo_variables_lookup[
+                urllib.parse.unquote(variable_short_name)
+            ],
+            metadata_field,
+            value,
         )
     except ValueError:
         logger.exception(

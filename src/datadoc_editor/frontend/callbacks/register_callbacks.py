@@ -9,6 +9,7 @@ import logging
 from typing import TYPE_CHECKING
 from typing import Any
 
+from dash import ALL
 from dash import MATCH
 from dash import Dash
 from dash import Input
@@ -18,36 +19,50 @@ from dash import ctx
 from dash import html
 from dash import no_update
 
-from datadoc import state
-from datadoc.frontend.callbacks.dataset import accept_dataset_metadata_date_input
-from datadoc.frontend.callbacks.dataset import accept_dataset_metadata_input
-from datadoc.frontend.callbacks.dataset import open_dataset_handling
-from datadoc.frontend.callbacks.utils import render_tabs
-from datadoc.frontend.callbacks.utils import save_metadata_and_generate_alerts
-from datadoc.frontend.callbacks.variables import accept_variable_metadata_date_input
-from datadoc.frontend.callbacks.variables import accept_variable_metadata_input
-from datadoc.frontend.callbacks.variables import populate_variables_workspace
-from datadoc.frontend.components.builders import build_dataset_edit_section
-from datadoc.frontend.components.builders import build_dataset_machine_section
-from datadoc.frontend.components.identifiers import ACCORDION_WRAPPER_ID
-from datadoc.frontend.components.identifiers import SECTION_WRAPPER_ID
-from datadoc.frontend.components.identifiers import VARIABLES_INFORMATION_ID
-from datadoc.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
-from datadoc.frontend.fields.display_base import DATASET_METADATA_INPUT
-from datadoc.frontend.fields.display_base import DATASET_METADATA_MULTILANGUAGE_INPUT
-from datadoc.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
-from datadoc.frontend.fields.display_base import VARIABLES_METADATA_INPUT
-from datadoc.frontend.fields.display_base import VARIABLES_METADATA_MULTILANGUAGE_INPUT
-from datadoc.frontend.fields.display_dataset import EDITABLE_DATASET_METADATA_LEFT
-from datadoc.frontend.fields.display_dataset import EDITABLE_DATASET_METADATA_RIGHT
-from datadoc.frontend.fields.display_dataset import NON_EDITABLE_DATASET_METADATA
-from datadoc.frontend.fields.display_dataset import DatasetIdentifiers
-from datadoc.frontend.fields.display_variables import VariableIdentifiers
+from datadoc_editor import state
+from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_date_input
+from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
+from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
+from datadoc_editor.frontend.callbacks.utils import render_tabs
+from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
+from datadoc_editor.frontend.callbacks.variables import (
+    accept_pseudo_variable_metadata_input,
+)
+from datadoc_editor.frontend.callbacks.variables import (
+    accept_variable_metadata_date_input,
+)
+from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
+from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
+from datadoc_editor.frontend.components.builders import build_dataset_edit_section
+from datadoc_editor.frontend.components.builders import build_dataset_machine_section
+from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
+from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
+from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
+from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
+from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
+from datadoc_editor.frontend.fields.display_base import (
+    DATASET_METADATA_MULTILANGUAGE_INPUT,
+)
+from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
+from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
+from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
+from datadoc_editor.frontend.fields.display_base import (
+    VARIABLES_METADATA_MULTILANGUAGE_INPUT,
+)
+from datadoc_editor.frontend.fields.display_dataset import (
+    EDITABLE_DATASET_METADATA_LEFT,
+)
+from datadoc_editor.frontend.fields.display_dataset import (
+    EDITABLE_DATASET_METADATA_RIGHT,
+)
+from datadoc_editor.frontend.fields.display_dataset import NON_EDITABLE_DATASET_METADATA
+from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
+from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
 
-    from datadoc.frontend.callbacks.utils import MetadataInputTypes
+    from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 
 logger = logging.getLogger(__name__)
 
@@ -192,21 +207,48 @@ def register_callbacks(app: Dash) -> None:
         Output(ACCORDION_WRAPPER_ID, "children"),
         Input("dataset-opened-counter", "data"),
         Input("search-variables", "value"),
+        Input("pseudo-variables-updated-counter", "data"),
     )
     def callback_populate_variables_workspace(
-        dataset_opened_counter: int,  # Dash requires arguments for all Inputs
+        dataset_opened_counter: int,
         search_query: str,
+        pseudo_updated_counter: int,  # noqa: ARG001
     ) -> list:
-        """Create variable workspace with accordions for variables.
-
-        Allows for filtering which variables are displayed via the search box.
-        """
+        """Create variable workspace with accordions for variables."""
         logger.debug("Populating variables workspace. Search query: %s", search_query)
+        pseudo_variables = None
+
+        if state.metadata.pseudo_variables is not None:
+            pseudo_variables = state.metadata.pseudo_variables
         return populate_variables_workspace(
             state.metadata.variables,
             search_query,
             dataset_opened_counter,
+            pseudo_variables,
         )
+
+    @app.callback(
+        Output({"type": "pseudo-output", "short_name": MATCH}, "children"),
+        Input({"type": "pseudo-button", "short_name": MATCH}, "n_clicks"),
+        prevent_initial_call=True,
+    )
+    def callback_update_pseudo_output(n_clicks: int) -> None:  # noqa: ARG001
+        """Adding a pseudo variable when the add pseudo variable is clicked."""
+        short_name = ctx.triggered_id["short_name"]
+        state.metadata.add_pseudo_variable(short_name)
+
+    @app.callback(
+        Output("pseudo-variables-updated-counter", "data"),
+        Input({"type": "pseudo-button", "short_name": ALL}, "n_clicks"),
+        State("pseudo-variables-updated-counter", "data"),
+        prevent_initial_call=True,
+    )
+    def callback_update_pseudo_counter(
+        n_clicks_list: list,  # noqa: ARG001
+        current_counter: int,
+    ) -> int:
+        """Counter for the pseudo variable button."""
+        return current_counter + 1
 
     @app.callback(
         Output(SECTION_WRAPPER_ID, "children"),
@@ -239,6 +281,48 @@ def register_callbacks(app: Dash) -> None:
                 },
             ),
         ]
+
+    @app.callback(
+        Output(
+            {
+                "type": PSEUDO_METADATA_INPUT,
+                "variable_short_name": MATCH,
+                "id": MATCH,
+            },
+            "error",
+        ),
+        Output(
+            {
+                "type": PSEUDO_METADATA_INPUT,
+                "variable_short_name": MATCH,
+                "id": MATCH,
+            },
+            "errorMessage",
+        ),
+        Input(
+            {
+                "type": PSEUDO_METADATA_INPUT,
+                "variable_short_name": MATCH,
+                "id": MATCH,
+            },
+            "value",
+        ),
+        prevent_initial_call=True,
+    )
+    def callback_accept_pseudo_variable_metadata_input(
+        value: MetadataInputTypes,  # noqa: ARG001 argument required by Dash
+    ) -> dbc.Alert:
+        """Save updated variable metadata values."""
+        message = accept_pseudo_variable_metadata_input(
+            ctx.triggered[0]["value"],
+            ctx.triggered_id["variable_short_name"],
+            ctx.triggered_id["id"],
+        )
+        if not message:
+            # No error to display.
+            return False, ""
+
+        return True, message
 
     @app.callback(
         Output(

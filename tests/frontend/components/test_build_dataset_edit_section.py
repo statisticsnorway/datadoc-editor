@@ -5,12 +5,16 @@ import ssb_dash_components as ssb  # type: ignore[import-untyped]
 from dapla_metadata.datasets import model
 from dash import html
 
-from datadoc.frontend.components.builders import build_dataset_edit_section
-from datadoc.frontend.fields.display_dataset import DISPLAY_DATASET
-from datadoc.frontend.fields.display_dataset import EDITABLE_DATASET_METADATA_LEFT
-from datadoc.frontend.fields.display_dataset import EDITABLE_DATASET_METADATA_RIGHT
-from datadoc.frontend.fields.display_dataset import NON_EDITABLE_DATASET_METADATA
-from datadoc.frontend.fields.display_dataset import DatasetIdentifiers
+from datadoc_editor.frontend.components.builders import build_dataset_edit_section
+from datadoc_editor.frontend.fields.display_dataset import DISPLAY_DATASET
+from datadoc_editor.frontend.fields.display_dataset import (
+    EDITABLE_DATASET_METADATA_LEFT,
+)
+from datadoc_editor.frontend.fields.display_dataset import (
+    EDITABLE_DATASET_METADATA_RIGHT,
+)
+from datadoc_editor.frontend.fields.display_dataset import NON_EDITABLE_DATASET_METADATA
+from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
 
 # List of obligatory and editable fields minus dropdowns with atypical options-getters
 NON_ATYPICAL_DROPDOWNS = [

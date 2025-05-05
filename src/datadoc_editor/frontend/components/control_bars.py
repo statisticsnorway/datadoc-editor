@@ -5,8 +5,8 @@ from __future__ import annotations
 import ssb_dash_components as ssb
 from dash import html
 
-from datadoc.frontend.callbacks.utils import get_dataset_path
-from datadoc.utils import get_app_version
+from datadoc_editor.frontend.callbacks.utils import get_dataset_path
+from datadoc_editor.utils import get_app_version
 
 header = ssb.Header(
     [

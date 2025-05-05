@@ -17,22 +17,22 @@ from dapla_metadata.datasets import ObligatoryVariableWarning
 from dapla_metadata.datasets import model
 from dash import html
 
-from datadoc import config
-from datadoc import state
-from datadoc.constants import CHECK_OBLIGATORY_METADATA_DATASET_MESSAGE
-from datadoc.constants import CHECK_OBLIGATORY_METADATA_VARIABLES_MESSAGE
-from datadoc.constants import ILLEGAL_SHORTNAME_WARNING
-from datadoc.constants import ILLEGAL_SHORTNAME_WARNING_MESSAGE
-from datadoc.constants import MISSING_METADATA_WARNING
-from datadoc.frontend.components.builders import AlertTypes
-from datadoc.frontend.components.builders import build_ssb_alert
-from datadoc.frontend.components.identifiers import ACCORDION_WRAPPER_ID
-from datadoc.frontend.components.identifiers import SECTION_WRAPPER_ID
-from datadoc.frontend.components.identifiers import VARIABLES_INFORMATION_ID
-from datadoc.frontend.fields.display_dataset import (
+from datadoc_editor import config
+from datadoc_editor import state
+from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_DATASET_MESSAGE
+from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_VARIABLES_MESSAGE
+from datadoc_editor.constants import ILLEGAL_SHORTNAME_WARNING
+from datadoc_editor.constants import ILLEGAL_SHORTNAME_WARNING_MESSAGE
+from datadoc_editor.constants import MISSING_METADATA_WARNING
+from datadoc_editor.frontend.components.builders import AlertTypes
+from datadoc_editor.frontend.components.builders import build_ssb_alert
+from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
+from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
+from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
+from datadoc_editor.frontend.fields.display_dataset import (
     OBLIGATORY_DATASET_METADATA_IDENTIFIERS_AND_DISPLAY_NAME,
 )
-from datadoc.frontend.fields.display_variables import (
+from datadoc_editor.frontend.fields.display_variables import (
     OBLIGATORY_VARIABLES_METADATA_IDENTIFIERS_AND_DISPLAY_NAME,
 )
 

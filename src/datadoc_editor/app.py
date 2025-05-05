@@ -18,16 +18,16 @@ from dash import dcc
 from dash import html
 from flask_healthz import healthz
 
-from datadoc import config
-from datadoc import state
-from datadoc.frontend.callbacks.register_callbacks import register_callbacks
-from datadoc.frontend.components.control_bars import build_controls_bar
-from datadoc.frontend.components.control_bars import build_footer_control_bar
-from datadoc.frontend.components.control_bars import header
-from datadoc.logging_configuration.logging_config import get_log_config
-from datadoc.utils import get_app_version
-from datadoc.utils import pick_random_port
-from datadoc.utils import running_in_notebook
+from datadoc_editor import config
+from datadoc_editor import state
+from datadoc_editor.frontend.callbacks.register_callbacks import register_callbacks
+from datadoc_editor.frontend.components.control_bars import build_controls_bar
+from datadoc_editor.frontend.components.control_bars import build_footer_control_bar
+from datadoc_editor.frontend.components.control_bars import header
+from datadoc_editor.logging_configuration.logging_config import get_log_config
+from datadoc_editor.utils import get_app_version
+from datadoc_editor.utils import pick_random_port
+from datadoc_editor.utils import running_in_notebook
 
 logging.config.dictConfig(get_log_config())
 logger = logging.getLogger(__name__)
@@ -50,6 +50,7 @@ def build_app(app: Dash) -> Dash:
                         data=0,
                         storage_type="session",
                     ),
+                    dcc.Store(id="pseudo-variables-updated-counter", data=0),
                     build_controls_bar(),
                     html.Div(id="alerts-section"),
                     dcc.Tabs(

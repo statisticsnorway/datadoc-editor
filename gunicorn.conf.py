@@ -1,6 +1,6 @@
 """Configuration for the Gunicorn server."""
 
-from datadoc.logging_configuration.logging_config import get_log_config
+from datadoc_editor.logging_configuration.logging_config import get_log_config
 
 bind = "0.0.0.0:8050"
 workers = 1
