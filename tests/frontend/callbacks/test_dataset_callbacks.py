@@ -362,20 +362,24 @@ def test_open_dataset_handling_naming_standard(
 
 @patch(f"{DATASET_CALLBACKS_MODULE}.DaplaDatasetPathInfo")
 @patch(f"{DATASET_CALLBACKS_MODULE}.open_file")
-@patch(f"{DATASET_CALLBACKS_MODULE}.set_variables_values_inherit_dataset_derived_date_values")
+@patch(
+    f"{DATASET_CALLBACKS_MODULE}.set_variables_values_inherit_dataset_derived_date_values"
+)
 def test_open_dataset_handling_metadata_inconsistency(
     set_vars_mock: Mock,  # noqa: ARG001
     open_file_mock: Mock,
-    path_info_mock: Mock,  # noqa: ARG001
+    path_info_mock: Mock,
 ):
     path_info_mock.return_value.path_complies_with_naming_standard.return_value = True
     mock_metadata = Mock()
-    mock_metadata.dataset_consistency_status = [{'name': 'Bucket name', 'success': True}, 
-                                                {'name': 'Data product name', 'success': True}, 
-                                                {'name': 'Dataset state', 'success': False}, 
-                                                {'name': 'Dataset short name', 'success': True}, 
-                                                {'name': 'Variable names', 'success': True}, 
-                                                {'name': 'Variable datatypes', 'success': True}]
+    mock_metadata.dataset_consistency_status = [
+        {"name": "Bucket name", "success": True},
+        {"name": "Data product name", "success": True},
+        {"name": "Dataset state", "success": False},
+        {"name": "Dataset short name", "success": True},
+        {"name": "Variable names", "success": True},
+        {"name": "Variable datatypes", "success": True},
+    ]
     open_file_mock.return_value = mock_metadata
     alert, counter = open_dataset_handling(
         n_clicks=1,
@@ -389,7 +393,9 @@ def test_open_dataset_handling_metadata_inconsistency(
 
 @patch(f"{DATASET_CALLBACKS_MODULE}.DaplaDatasetPathInfo")
 @patch(f"{DATASET_CALLBACKS_MODULE}.open_file")
-@patch(f"{DATASET_CALLBACKS_MODULE}.set_variables_values_inherit_dataset_derived_date_values")
+@patch(
+    f"{DATASET_CALLBACKS_MODULE}.set_variables_values_inherit_dataset_derived_date_values"
+)
 def test_open_dataset_handling_metadata_inconsistency_success(
     set_vars_mock: Mock,  # noqa: ARG001
     open_file_mock: Mock,
@@ -398,12 +404,12 @@ def test_open_dataset_handling_metadata_inconsistency_success(
     path_info_mock.return_value.path_complies_with_naming_standard.return_value = True
     mock_metadata = Mock()
     mock_metadata.dataset_consistency_status = [
-        {'name': 'Bucket name', 'success': True},
-        {'name': 'Data product name', 'success': True},
-        {'name': 'Dataset state', 'success': True},
-        {'name': 'Dataset short name', 'success': True},
-        {'name': 'Variable names', 'success': True},
-        {'name': 'Variable datatypes', 'success': True}
+        {"name": "Bucket name", "success": True},
+        {"name": "Data product name", "success": True},
+        {"name": "Dataset state", "success": True},
+        {"name": "Dataset short name", "success": True},
+        {"name": "Variable names", "success": True},
+        {"name": "Variable datatypes", "success": True},
     ]
     open_file_mock.return_value = mock_metadata
     alert, counter = open_dataset_handling(
