@@ -114,6 +114,20 @@ def open_dataset_handling(
                 ),
                 dataset_opened_counter,
             )
+        failed_items = [
+            item["name"]
+            for item in getattr(state.metadata, "dataset_consistency_status", [])
+            if not item["success"]
+        ]
+        if failed_items:
+            return (
+                build_ssb_alert(
+                    AlertTypes.WARNING,
+                    "Det er inkonsistens mellom data og metadata for:",
+                    alert_list=list(failed_items),
+                ),
+                dataset_opened_counter,
+            )
     return (
         build_ssb_alert(
             AlertTypes.SUCCESS,
