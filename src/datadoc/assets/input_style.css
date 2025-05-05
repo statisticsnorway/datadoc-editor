@@ -47,15 +47,13 @@ div > .ssb-input.input-component{
 }
 
 #dataset-metadata-input-Maskingenerert > .ssb-input.input-component,
-#pseudo-metadata-input-left-pseudo > .ssb-input.input-component,
 #variables-metadata-input-left-machine > .ssb-input.input-component{
     max-width: 720px;
     width: 100%;
 }
 
-#pseudo-metadata-input-left-pseudo > .ssb-input.input-component,
 #variables-metadata-input-left-machine > .ssb-input.input-component{
-    padding: 0;
+    padding: 0 1rem;
 }
 
 .metadata-checkbox-field{
@@ -89,15 +87,12 @@ label.form-check-label{
 }
 
 #dataset-metadata-input-Maskingenerert > .ssb-input .input-component > .ssb-glossary > .glossary-button,
-#variables-metadata-input-left-machine > div > span > span > button,
-#pseudo-metadata-input-left-pseudo > div > span > span > button {
+#variables-metadata-input-left-machine > div > span > span > button {
     background-image: none;
 }
 
-
 @media only screen and (max-width: 1900px) {
     #variables-metadata-input-left-machine > .ssb-input.input-component,
-    #pseudo-metadata-input-left-pseudo > .ssb-input.input-component,
     #dataset-metadata-input-Maskingenerert > .ssb-input.input-component {
         max-width: 46%;
     }

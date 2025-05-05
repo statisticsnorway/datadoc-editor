@@ -3,11 +3,9 @@
 import pytest
 import ssb_dash_components as ssb  # type: ignore[import-untyped]
 
-from datadoc_editor.frontend.components.builders import build_ssb_accordion
-from datadoc_editor.frontend.fields.display_variables import (
-    OBLIGATORY_VARIABLES_METADATA,
-)
-from datadoc_editor.frontend.fields.display_variables import OPTIONAL_VARIABLES_METADATA
+from datadoc.frontend.components.builders import build_ssb_accordion
+from datadoc.frontend.fields.display_variables import OBLIGATORY_VARIABLES_METADATA
+from datadoc.frontend.fields.display_variables import OPTIONAL_VARIABLES_METADATA
 
 ACCORDION_TYPE = "variables-accordion"
 

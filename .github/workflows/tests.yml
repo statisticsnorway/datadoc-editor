@@ -9,7 +9,7 @@ on:
       - "tests/**"
       - "docs/**"
       - "pyproject.toml"
-      - "uv.lock"
+      - "poetry.lock"
       - ".pre-commit-config.yaml"
       - "noxfile.py"
       - ".github/workflows/tests.yml"
@@ -41,14 +41,36 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v5.6.0
+        uses: actions/setup-python@v5.4.0
         with:
           python-version: ${{ matrix.python }}
+          cache: "pip" # caching pip dependencies
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
+      - name: Upgrade pip
+        run: |
+          pip install -c ${{ github.workspace }}/.github/workflows/constraints.txt pip
+          pip --version
+
+      - name: Upgrade pip in virtual environments
+        shell: python
+        run: |
+          import os
+          import pip
+
+          with open(os.environ["GITHUB_ENV"], mode="a") as io:
+              print(f"VIRTUALENV_PIP={pip.__version__}", file=io)
+
+      - name: Install Poetry
+        run: |
+          pipx install --pip-args "-c ${{ github.workspace }}/.github/workflows/constraints.txt" poetry
+          pipx inject poetry poetry-plugin-export
+          poetry --version
+
+      - name: Install Nox
+        run: |
+          pipx install --pip-args "-c ${{ github.workspace }}/.github/workflows/constraints.txt" nox
+          pipx inject --pip-args "-c ${{ github.workspace }}/.github/workflows/constraints.txt" nox nox-poetry
+          nox --version
 
       - name: Compute pre-commit cache key
         if: matrix.session == 'pre-commit'
@@ -77,7 +99,7 @@ jobs:
 
       - name: Run Nox
         run: |
-          uvx --constraints "${{ github.workspace }}/.github/workflows/constraints.txt" nox --python=${{ matrix.python }}
+          nox --python=${{ matrix.python }}
 
       - name: Upload coverage data
         if: always() && matrix.session == 'tests'
@@ -103,10 +125,28 @@ jobs:
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v6
+      - name: Set up Python
+        uses: actions/setup-python@v5.4.0
         with:
-          enable-cache: true
+          python-version: "3.13"
+          cache: "pip" # caching pip dependencies
+
+      - name: Upgrade pip
+        run: |
+          pip install -c ${{ github.workspace }}/.github/workflows/constraints.txt pip
+          pip --version
+
+      - name: Install Poetry
+        run: |
+          pipx install --pip-args "-c ${{ github.workspace }}/.github/workflows/constraints.txt" poetry
+          pipx inject poetry poetry-plugin-export
+          poetry --version
+
+      - name: Install Nox
+        run: |
+          pipx install --pip-args "-c ${{ github.workspace }}/.github/workflows/constraints.txt" nox
+          pipx inject --pip-args "-c ${{ github.workspace }}/.github/workflows/constraints.txt" nox nox-poetry
+          nox --version
 
       - name: Download coverage data
         uses: actions/download-artifact@v4
@@ -116,11 +156,11 @@ jobs:
 
       - name: Combine coverage data and display human readable report
         run: |
-          uvx --constraints "${{ github.workspace }}/.github/workflows/constraints.txt" nox --session=coverage
+          nox --session=coverage
 
       - name: Create coverage report
         run: |
-          uvx --constraints "${{ github.workspace }}/.github/workflows/constraints.txt" nox --session=coverage -- xml
+          nox --session=coverage -- xml
 
       # Need to fix coverage source paths for SonarCloud scanning in GitHub actions.
       # Replace root path with /github/workspace (mounted in docker container).
@@ -134,4 +174,4 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         # No need to run SonarCloud analysis if dependabot update or token not defined
         if: env.SONAR_TOKEN != '' && (github.actor != 'dependabot[bot]')
-        uses: SonarSource/sonarqube-scan-action@v5.1.0
+        uses: SonarSource/sonarqube-scan-action@v5.0.0

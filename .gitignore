@@ -1,6 +1,6 @@
 # Project specific ignores
 tests/resources/*.json
-src/datadoc_editor/.env
+src/datadoc/.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

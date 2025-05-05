@@ -1,9 +1,0 @@
-__pycache__
-.mypy_cache
-.nox
-.pytest_cache
-.ruff_cache
-dist
-docs
-tests
-flake.*

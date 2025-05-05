@@ -5,9 +5,9 @@ import pytest
 from dapla_metadata.datasets import model
 from dash import html
 
-from datadoc_editor.frontend.components.builders import build_edit_section
-from datadoc_editor.frontend.fields.display_variables import VARIABLES_METADATA_LEFT
-from datadoc_editor.frontend.fields.display_variables import VARIABLES_METADATA_RIGHT
+from datadoc.frontend.components.builders import build_edit_section
+from datadoc.frontend.fields.display_variables import VARIABLES_METADATA_LEFT
+from datadoc.frontend.fields.display_variables import VARIABLES_METADATA_RIGHT
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")

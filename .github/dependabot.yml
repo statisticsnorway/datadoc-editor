@@ -1,6 +1,4 @@
 version: 2
-# Needed for uv support
-enable-beta-ecosystems: true
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -20,14 +18,15 @@ updates:
       workflows-dependencies:
         patterns:
           - "*"
-  - package-ecosystem: "uv"
+  - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "monthly"
+    versioning-strategy: lockfile-only
     allow:
       - dependency-type: "all"
     open-pull-requests-limit: 99
     groups:
-      python-dependencies:
+      poetry-dependencies:
         patterns:
           - "*"

@@ -18,5 +18,5 @@ reference
 contributing
 Code of Conduct <codeofconduct>
 License <license>
-Changelog <https://github.com/statisticsnorway/datadoc-editor/releases>
+Changelog <https://github.com/statisticsnorway/datadoc/releases>
 ```

@@ -1,42 +1,67 @@
-FROM ghcr.io/astral-sh/uv:bookworm-slim AS builder
-ARG PYTHON_VERSION=3.12
+ARG PACKAGE_NAME=datadoc
+ARG APP_NAME=ssb_datadoc
+ARG APP_PATH=/opt/$PACKAGE_NAME
+ARG PYTHON_VERSION=3.13
+ARG POETRY_VERSION=2.1.1
 
-ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+#
+# Stage: build
+#
+FROM python:$PYTHON_VERSION AS build
+ARG PACKAGE_NAME
+ARG APP_PATH
+ARG POETRY_VERSION
 
-# Configure the Python directory so it is consistent
-ENV UV_PYTHON_INSTALL_DIR=/python
+ENV \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONFAULTHANDLER=1
+ENV \
+    POETRY_VERSION=$POETRY_VERSION \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_VIRTUALENVS_IN_PROJECT=true \
+    POETRY_NO_INTERACTION=1
 
-# Only use the managed Python version
-ENV UV_PYTHON_PREFERENCE=only-managed
+# Install Poetry - respects $POETRY_VERSION & $POETRY_HOME
+RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV PATH="$POETRY_HOME/bin:$PATH"
 
-# Install Python before the project for caching
-RUN uv python install $PYTHON_VERSION
+# Import our project files
+WORKDIR $APP_PATH
+COPY ./poetry.lock ./pyproject.toml ./README.md ./
+COPY ./src/$PACKAGE_NAME ./src/$PACKAGE_NAME
 
-WORKDIR /app
+RUN poetry self add poetry-plugin-export
+RUN poetry build --format wheel
+RUN poetry export --format constraints.txt --output constraints.txt --without-hashes
 
-# Install dependencies
-RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --frozen --no-install-project --no-dev --no-editable
+#
+# Stage: production
+#
+FROM python:"${PYTHON_VERSION}-slim" AS production
+ARG PACKAGE_NAME
+ARG APP_PATH
 
-# Install the app
-COPY . /app
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --frozen --no-dev --no-editable
+ENV \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONFAULTHANDLER=1
 
-# Then, use a final image without uv
-FROM ghcr.io/statisticsnorway/distroless-python3.12
+ENV \
+    PIP_NO_CACHE_DIR=off \
+    PIP_DISABLE_PIP_VERSION_CHECK=on \
+    PIP_DEFAULT_TIMEOUT=100
 
-# Copy the Python version
-COPY --from=builder --chown=python:python /python /python
+# export environment variables for the CMD
+ENV PACKAGE_NAME=$PACKAGE_NAME
+ENV APP_PATH=$APP_PATH
 
-WORKDIR /app
-# Copy the application from the builder
-COPY --from=builder --chown=app:app /app/.venv /app/.venv
-ADD ./gunicorn.conf.py /app
+# Get build artifact wheel and install it respecting dependency versions
+WORKDIR $APP_PATH
+COPY ./gunicorn.conf.py ./
+COPY --from=build $APP_PATH/constraints.txt ./
+RUN pip install -r constraints.txt
+COPY --from=build $APP_PATH/dist/*.whl ./
+RUN pip install ./$APP_NAME*.whl
 
-# Place executables in the environment at the front of the path
-ENV PATH="/app/.venv/bin:$PATH"
-ENTRYPOINT []
-CMD ["gunicorn", "--config", "/app/gunicorn.conf.py", "datadoc_editor.wsgi:server"]
+CMD exec gunicorn --config "./gunicorn.conf.py" "$PACKAGE_NAME.wsgi:server"

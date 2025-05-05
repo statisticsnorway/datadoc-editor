@@ -34,8 +34,9 @@ Request features on the [Issue Tracker].
 
 You need Python 3.12+ and the following tools:
 
-- [uv]
+- [Poetry]
 - [Nox]
+- [nox-poetry]
 
 Install [pipx]:
 
@@ -44,18 +45,17 @@ python -m pip install --user pipx
 python -m pipx ensurepath
 ```
 
-Install [uv]:
-
-<https://docs.astral.sh/uv/getting-started/installation/>
+Install [Poetry]:
 
 ```console
-curl -LsSf https://astral.sh/uv/install.sh | sh
+pipx install poetry
 ```
 
-Install [Nox]:
+Install [Nox] and [nox-poetry]:
 
 ```console
 pipx install nox
+pipx inject nox nox-poetry
 ```
 
 Install the pre-commit hooks
@@ -67,13 +67,14 @@ nox --session=pre-commit -- install
 Install the package with development requirements:
 
 ```console
-uv sync --dev
+poetry install
 ```
 
-You can now run datadoc:
+You can now run an interactive Python session, or your app:
 
 ```console
-uv run datadoc
+poetry run python
+poetry run datadoc
 ```
 
 ## Config for local development
@@ -85,15 +86,15 @@ We use a python package called `python-dotenv` for configuration management. Thi
 
 To set up for local development run this command from the root of the repo.
 
-1. Create a file `src/datadoc_editor/.env`
+1. Create a file `src/datadoc/.env`
 1. Place the following lines in the file:
 
-   ```env
-   DATADOC_DASH_DEVELOPMENT_MODE=True
-   DATADOC_LOG_LEVEL=debug
-   ```
+    ```env
+    DATADOC_DASH_DEVELOPMENT_MODE=True
+    DATADOC_LOG_LEVEL=debug
+    ```
 
-To see all configuration options, see `src/datadoc_editor/config.py`
+To see all configuration options, see `src/datadoc/config.py`
 
 ## How to test the project
 
@@ -130,7 +131,15 @@ datadoc
 
 ### Release process
 
-Manually edit the `project.version` field in `pyproject.toml`. This project uses semantic versioning so follow that standard when bumping the version number.
+Run the relevant version command on a branch e.g.
+
+```shell
+poetry version patch
+```
+
+```shell
+poetry version minor
+```
 
 Commit with message like `Bump version x.x.x -> y.y.y`.
 
@@ -157,14 +166,16 @@ nox --session=pre-commit -- install
 It is recommended to open an issue before starting work on anything.
 This will allow a chance to talk it over with the owners and validate your approach.
 
-[mit license]: https://opensource.org/licenses/MIT
-[source code]: https://github.com/statisticsnorway/datadoc
-[documentation]: https://statisticsnorway.github.io/datadoc
-[issue tracker]: https://github.com/statisticsnorway/datadoc-editor/issues
-[pipx]: https://pipx.pypa.io/
-[nox]: https://nox.thea.codes/
-[pytest]: https://pytest.readthedocs.io/
-[pull request]: https://github.com/statisticsnorway/datadoc-editor/pulls
+[mit license]: <https://opensource.org/licenses/MIT>
+[source code]: <https://github.com/statisticsnorway/datadoc>
+[documentation]: <https://statisticsnorway.github.io/datadoc>
+[issue tracker]: <https://github.com/statisticsnorway/datadoc/issues>
+[pipx]: <https://pipx.pypa.io/>
+[poetry]: <https://python-poetry.org/>
+[nox]: <https://nox.thea.codes/>
+[nox-poetry]: <https://nox-poetry.readthedocs.io/>
+[pytest]: <https://pytest.readthedocs.io/>
+[pull request]: https://github.com/statisticsnorway/datadoc/pulls
 
 <!-- github-only -->
 

@@ -1,11 +1,9 @@
 import pytest
 
-from datadoc_editor import state
-from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
-from datadoc_editor.frontend.fields.display_dataset import (
-    get_statistical_subject_options,
-)
-from datadoc_editor.frontend.fields.display_dataset import get_unit_type_options
+from datadoc import state
+from datadoc.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
+from datadoc.frontend.fields.display_dataset import get_statistical_subject_options
+from datadoc.frontend.fields.display_dataset import get_unit_type_options
 from tests.conftest import CODE_LIST_DIR
 from tests.conftest import STATISTICAL_SUBJECT_STRUCTURE_DIR
 from tests.utils import TEST_RESOURCES_DIRECTORY

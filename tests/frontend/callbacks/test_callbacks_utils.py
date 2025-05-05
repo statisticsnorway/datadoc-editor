@@ -6,13 +6,13 @@ import pytest
 from dapla_metadata.datasets import model
 from dash import html
 
-from datadoc_editor import state
-from datadoc_editor.frontend.callbacks.utils import check_variable_names
-from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
-from datadoc_editor.frontend.callbacks.utils import render_tabs
-from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
-from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
-from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
+from datadoc import state
+from datadoc.frontend.callbacks.utils import check_variable_names
+from datadoc.frontend.callbacks.utils import find_existing_language_string
+from datadoc.frontend.callbacks.utils import render_tabs
+from datadoc.frontend.callbacks.utils import save_metadata_and_generate_alerts
+from datadoc.frontend.components.identifiers import ACCORDION_WRAPPER_ID
+from datadoc.frontend.components.identifiers import SECTION_WRAPPER_ID
 
 
 def test_find_existing_language_string_no_existing_strings(bokmål_name: str):

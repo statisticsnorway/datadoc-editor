@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from datadoc_editor.config import get_log_formatter
-from datadoc_editor.config import get_log_level
-from datadoc_editor.logging_configuration.gunicorn_access_log_filter import (
+from datadoc.config import get_log_formatter
+from datadoc.config import get_log_level
+from datadoc.logging_configuration.gunicorn_access_log_filter import (
     GunicornAccessLoggerHealthProbeFilter,
 )
 
@@ -21,7 +21,7 @@ def get_log_config() -> dict[str, Any]:
                 "datefmt": "%Y-%m-%d %H:%M:%S",
             },
             "json": {
-                "()": "datadoc_editor.logging_configuration.json_formatter.DatadocJSONFormatter",
+                "()": "datadoc.logging_configuration.json_formatter.DatadocJSONFormatter",
                 "fmt_keys": {
                     "level": "levelname",
                     "message": "message",

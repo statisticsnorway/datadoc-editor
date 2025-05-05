@@ -23,7 +23,7 @@ from dapla_metadata.datasets import model
 from dapla_metadata.datasets.code_list import CodeList
 from dapla_metadata.datasets.statistic_subject_mapping import StatisticSubjectMapping
 
-from datadoc_editor import state
+from datadoc import state
 
 from .utils import TEST_EXISTING_METADATA_DIRECTORY
 from .utils import TEST_PARQUET_FILE_NAME

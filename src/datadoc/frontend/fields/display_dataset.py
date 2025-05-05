@@ -8,27 +8,25 @@ from enum import Enum
 
 from dapla_metadata.datasets import enums
 
-from datadoc_editor import state
-from datadoc_editor.enums import Assessment
-from datadoc_editor.enums import DataSetState
-from datadoc_editor.enums import DataSetStatus
-from datadoc_editor.enums import TemporalityTypeType
-from datadoc_editor.enums import UseRestriction
-from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
-from datadoc_editor.frontend.fields.display_base import (
-    DATASET_METADATA_MULTILANGUAGE_INPUT,
-)
-from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
-from datadoc_editor.frontend.fields.display_base import FieldTypes
-from datadoc_editor.frontend.fields.display_base import MetadataCheckboxField
-from datadoc_editor.frontend.fields.display_base import MetadataDateField
-from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
-from datadoc_editor.frontend.fields.display_base import MetadataInputField
-from datadoc_editor.frontend.fields.display_base import MetadataMultiLanguageField
-from datadoc_editor.frontend.fields.display_base import MetadataPeriodField
-from datadoc_editor.frontend.fields.display_base import get_comma_separated_string
-from datadoc_editor.frontend.fields.display_base import get_data_source_options
-from datadoc_editor.frontend.fields.display_base import get_enum_options
+from datadoc import state
+from datadoc.enums import Assessment
+from datadoc.enums import DataSetState
+from datadoc.enums import DataSetStatus
+from datadoc.enums import TemporalityTypeType
+from datadoc.enums import UseRestriction
+from datadoc.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
+from datadoc.frontend.fields.display_base import DATASET_METADATA_MULTILANGUAGE_INPUT
+from datadoc.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
+from datadoc.frontend.fields.display_base import FieldTypes
+from datadoc.frontend.fields.display_base import MetadataCheckboxField
+from datadoc.frontend.fields.display_base import MetadataDateField
+from datadoc.frontend.fields.display_base import MetadataDropdownField
+from datadoc.frontend.fields.display_base import MetadataInputField
+from datadoc.frontend.fields.display_base import MetadataMultiLanguageField
+from datadoc.frontend.fields.display_base import MetadataPeriodField
+from datadoc.frontend.fields.display_base import get_comma_separated_string
+from datadoc.frontend.fields.display_base import get_data_source_options
+from datadoc.frontend.fields.display_base import get_enum_options
 
 logger = logging.getLogger(__name__)
 

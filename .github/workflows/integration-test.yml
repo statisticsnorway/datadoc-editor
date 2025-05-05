@@ -3,9 +3,8 @@ name: Integration test
 on:
   pull_request:
     paths:
-      - "Dockerfile"
-      - "src/datadoc_editor/**"
-      - "uv.lock"
+      - "src/datadoc/**"
+      - "poetry.lock"
       - ".nais/test-pr.yaml"
       - ".github/workflows/integration-test.yml"
       - "gunicorn.conf.py"

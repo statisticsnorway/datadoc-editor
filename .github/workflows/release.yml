@@ -28,14 +28,19 @@ jobs:
           fetch-depth: 2
 
       - name: Set up Python
-        uses: actions/setup-python@v5.6.0
+        uses: actions/setup-python@v5.4.0
         with:
-          python-version-file: "pyproject.toml"
+          python-version: "3.13"
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
+      - name: Upgrade pip
+        run: |
+          pip install -c ${{ github.workspace }}/.github/workflows/constraints.txt pip
+          pip --version
+
+      - name: Install Poetry
+        run: |
+          pip install -c ${{ github.workspace }}/.github/workflows/constraints.txt poetry
+          poetry --version
 
       - name: Check if there is a parent commit
         id: check-parent-commit
@@ -48,17 +53,18 @@ jobs:
         uses: salsify/action-detect-and-tag-new-version@v2.0.3
         with:
           version-command: |
-            bash -o pipefail -c "uvx --from=toml-cli toml get --toml-path=pyproject.toml project.version"
+            bash -o pipefail -c "poetry version | cut -f 2 -d' '"
 
       - name: Bump version for developmental release
         if: (!steps.check-version.outputs.tag)
         run: |
-          version=$(uvx --from=toml-cli toml get --toml-path=pyproject.toml project.version) &&
-          uvx --from=toml-cli toml set --toml-path=pyproject.toml project.version $version.dev.$(date +%s)
+          poetry version patch &&
+          version=$(poetry version | awk '{ print $2 }') &&
+          poetry version $version.dev.$(date +%s)
 
       - name: Build package
         run: |
-          uv build
+          poetry build --ansi
 
       - name: Publish package on PyPI
         if: steps.check-version.outputs.tag

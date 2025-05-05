@@ -14,27 +14,27 @@ import pytest
 from dapla_metadata.datasets import ObligatoryDatasetWarning
 from dapla_metadata.datasets import model
 
-from datadoc_editor import enums
-from datadoc_editor import state
-from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_date_input
-from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
-from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
-from datadoc_editor.frontend.callbacks.dataset import process_special_cases
-from datadoc_editor.frontend.callbacks.utils import dataset_control
-from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
-from datadoc_editor.frontend.constants import INVALID_VALUE
-from datadoc_editor.frontend.fields.display_dataset import DISPLAY_DATASET
-from datadoc_editor.frontend.fields.display_dataset import (
+from datadoc import enums
+from datadoc import state
+from datadoc.frontend.callbacks.dataset import accept_dataset_metadata_date_input
+from datadoc.frontend.callbacks.dataset import accept_dataset_metadata_input
+from datadoc.frontend.callbacks.dataset import open_dataset_handling
+from datadoc.frontend.callbacks.dataset import process_special_cases
+from datadoc.frontend.callbacks.utils import dataset_control
+from datadoc.frontend.constants import INVALID_DATE_ORDER
+from datadoc.frontend.constants import INVALID_VALUE
+from datadoc.frontend.fields.display_dataset import DISPLAY_DATASET
+from datadoc.frontend.fields.display_dataset import (
     MULTIPLE_LANGUAGE_DATASET_IDENTIFIERS,
 )
-from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
+from datadoc.frontend.fields.display_dataset import DatasetIdentifiers
 
 if TYPE_CHECKING:
     from dapla_metadata.datasets import Datadoc
 
-    from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
+    from datadoc.frontend.callbacks.utils import MetadataInputTypes
 
-DATASET_CALLBACKS_MODULE = "datadoc_editor.frontend.callbacks.dataset"
+DATASET_CALLBACKS_MODULE = "datadoc.frontend.callbacks.dataset"
 
 
 @pytest.fixture
