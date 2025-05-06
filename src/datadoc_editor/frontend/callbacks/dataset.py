@@ -116,7 +116,7 @@ def open_dataset_handling(
             )
         failed_items = [
             item["name"]
-            for item in getattr(state.metadata, "dataset_consistency_status", [])
+            for item in state.metadata.dataset_consistency_status or []
             if not item["success"]
         ]
         if failed_items:
