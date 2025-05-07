@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import datetime
 import logging
+from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Any
 
@@ -83,14 +84,32 @@ def open_dataset_handling(
         set_variables_values_inherit_dataset_derived_date_values()
     except FileNotFoundError:
         logger.exception("File %s not found", str(file_path))
-        return (
-            build_ssb_alert(
-                AlertTypes.ERROR,
-                "Kunne ikke åpne datasettet",
-                message=f"Datasettet '{file_path}' finnes ikke.",
-            ),
-            no_update,
-        )
+        try:
+            metadata_file_path = str(
+                Path(file_path).with_name(
+                    Path(file_path).stem + METADATA_DOCUMENT_FILE_SUFFIX
+                )
+            )
+            open_file(metadata_file_path)
+            logger.info("Metadata-document found: %s", metadata_file_path)
+            return (
+                build_ssb_alert(
+                    AlertTypes.WARNING,
+                    "Datasettet finnes ikke, men metadata eksisterer",
+                    message=f"{metadata_file_path}. Har datasettet endret navn eller blitt slettet?",
+                ),
+                no_update,
+            )
+        except FileNotFoundError:
+            logger.exception("Metadata-document %s not found", str(metadata_file_path))
+            return (
+                build_ssb_alert(
+                    AlertTypes.ERROR,
+                    "Kunne ikke åpne datasettet",
+                    message=f"Datasettet '{file_path}' finnes ikke.",
+                ),
+                no_update,
+            )
     except Exception:
         logger.exception("Could not open %s", str(file_path))
         return (
