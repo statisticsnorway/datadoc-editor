@@ -5,6 +5,7 @@ import random
 import warnings
 from typing import TYPE_CHECKING
 from unittest.mock import Mock
+from unittest.mock import call
 from unittest.mock import patch
 from uuid import UUID
 
@@ -420,6 +421,33 @@ def test_open_dataset_handling_no_metadata_inconsistency(
     assert alert.color == "success"
     assert counter == 1
     assert "Åpnet dataset" in str(alert)
+
+
+@patch(f"{DATASET_CALLBACKS_MODULE}.DaplaDatasetPathInfo")
+@patch(f"{DATASET_CALLBACKS_MODULE}.open_file")
+@patch(
+    f"{DATASET_CALLBACKS_MODULE}.set_variables_values_inherit_dataset_derived_date_values"
+)
+def test_open_dataset_alert_when_metadata_exists(
+    set_vars_mock: Mock,
+    open_file_mock: Mock,
+    path_info_mock: Mock,
+):
+    set_vars_mock.assert_not_called()
+    path_info_mock.return_value.path_complies_with_naming_standard.return_value = True
+    parquet_path = "/tests/resources/existing_metadata_file/person_testdata_p2020-12-31_p2020-12-31_v1.parquet"
+    metadata_path = "/tests/resources/existing_metadata_file/person_testdata_p2020-12-31_p2020-12-31_v1__DOC.json"
+    open_file_mock.side_effect = [FileNotFoundError, Mock()]
+    alert, counter = open_dataset_handling(
+        n_clicks=1,
+        file_path=parquet_path,
+        dataset_opened_counter=0,
+    )
+    assert alert.color == "warning"
+    assert "Datasettet finnes ikke, men metadata eksisterer" in str(alert)
+    assert metadata_path in str(alert)
+    assert counter is dash.no_update
+    open_file_mock.assert_has_calls([call(parquet_path), call(metadata_path)])
 
 
 def test_process_special_cases_keyword():
