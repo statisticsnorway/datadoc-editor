@@ -250,7 +250,7 @@ wheels = [
 
 [[package]]
 name = "dapla-toolbelt-metadata"
-version = "0.7.0"
+version = "0.7.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "arrow" },
@@ -268,9 +268,9 @@ dependencies = [
     { name = "ssb-klass-python" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4b/2a/1c0b6b345c9f07dc381a46dce1d56f503b04a6e5a36c63b51bd7a2ce4ea4/dapla_toolbelt_metadata-0.7.0.tar.gz", hash = "sha256:981825715a22927438f14160fad19379035fb2257d363fb033e7b0d60899d8b4", size = 90074, upload-time = "2025-05-07T10:19:44.715Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b1/95/cedc03faf3fe05980698f3cdc5017209aa71b23fcffa050029c27ff66679/dapla_toolbelt_metadata-0.7.1.tar.gz", hash = "sha256:f863fce1786bc53e2e95f0c8cd7259a7e35b30a712cabd3b911e323f09b704c6", size = 90365, upload-time = "2025-05-12T08:41:22.812Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/dc/89/bdfe6fba676c4dbc3aca422e4245a417b6bac6cfc673226810e22393f9dd/dapla_toolbelt_metadata-0.7.0-py3-none-any.whl", hash = "sha256:c5870f86058870e45f7b651a671bccf52182c68445488474337dbffabc12d543", size = 161233, upload-time = "2025-05-07T10:19:42.742Z" },
+    { url = "https://files.pythonhosted.org/packages/df/bb/f1e2ee9229b28dd49dd093bdf4e006e39b329b8fbb194c6397a6188c4bcb/dapla_toolbelt_metadata-0.7.1-py3-none-any.whl", hash = "sha256:3c2f60298650a1e43390c33f0d52aab9758a6651fa8fb0ff26b4c01bbb94b58f", size = 161442, upload-time = "2025-05-12T08:41:20.895Z" },
 ]
 
 [[package]]
@@ -1347,7 +1347,7 @@ wheels = [
 
 [[package]]
 name = "pydantic"
-version = "2.11.4"
+version = "2.11.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "annotated-types" },
@@ -1355,9 +1355,9 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "typing-inspection" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/77/ab/5250d56ad03884ab5efd07f734203943c8a8ab40d551e208af81d0257bf2/pydantic-2.11.4.tar.gz", hash = "sha256:32738d19d63a226a52eed76645a98ee07c1f410ee41d93b4afbfa85ed8111c2d", size = 786540, upload-time = "2025-04-29T20:38:55.02Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f0/86/8ce9040065e8f924d642c58e4a344e33163a07f6b57f836d0d734e0ad3fb/pydantic-2.11.5.tar.gz", hash = "sha256:7f853db3d0ce78ce8bbb148c401c2cdd6431b3473c0cdff2755c7690952a7b7a", size = 787102, upload-time = "2025-05-22T21:18:08.761Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e7/12/46b65f3534d099349e38ef6ec98b1a5a81f42536d17e0ba382c28c67ba67/pydantic-2.11.4-py3-none-any.whl", hash = "sha256:d9615eaa9ac5a063471da949c8fc16376a84afb5024688b3ff885693506764eb", size = 443900, upload-time = "2025-04-29T20:38:52.724Z" },
+    { url = "https://files.pythonhosted.org/packages/b5/69/831ed22b38ff9b4b64b66569f0e5b7b97cf3638346eb95a2147fdb49ad5f/pydantic-2.11.5-py3-none-any.whl", hash = "sha256:f9c26ba06f9747749ca1e5c94d6a85cb84254577553c8785576fd38fa64dc0f7", size = 444229, upload-time = "2025-05-22T21:18:06.329Z" },
 ]
 
 [[package]]
@@ -1981,7 +1981,7 @@ wheels = [
 
 [[package]]
 name = "ssb-datadoc"
-version = "1.0.12"
+version = "1.0.13"
 source = { editable = "." }
 dependencies = [
     { name = "arrow" },
