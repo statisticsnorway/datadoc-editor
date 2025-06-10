@@ -1,45 +1,29 @@
 from enum import Enum
 
 from datadoc_editor.frontend.fields.display_base import FieldTypes
+from datadoc_editor.frontend.fields.display_base import MetadataDateField
 from datadoc_editor.frontend.fields.display_base import MetadataInputField
 
 
 class PseudoVariableIdentifiers(str, Enum):
     """Pseudo fileds."""
 
-    SHORT_NAME = "short_name"
-    DATA_ELEMENT_PATH = "data_element_path"
-    DATA_ELEMENT_PATTERN = "data_element_pattern"
+    PSEUDONYMIZATION_TIME = "pseudonymization_time"
     STABLE_IDENTIFIER_TYPE = "stable_identifier_type"
     STABLE_IDENTIFIER_VERSION = "stable_identifier_version"
     ENCRYPTION_ALGORITHM = "encryption_algorithm"
     ENCRYPTION_KEY_REFERENCE = "encryption_key_reference"
     ENCRYPTION_ALGORITHM_PARAMETERS = "encryption_algorithm_parameters"
-    SOURCE_VARIABLE = "source_variable"
-    SOURCE_DISPLAY_DATATYPE = "source_variable_datatype"
 
 
 PSEUDO_FIELDS: dict[
     PseudoVariableIdentifiers,
     FieldTypes,
 ] = {
-    PseudoVariableIdentifiers.SHORT_NAME: MetadataInputField(
-        identifier=PseudoVariableIdentifiers.SHORT_NAME.value,
-        display_name="Kortnavn",
-        description="Fysisk navn på variabelen (elementet) i datasettet som er pseudonymisert",
-        obligatory=True,
-        editable=False,
-    ),
-    PseudoVariableIdentifiers.DATA_ELEMENT_PATH: MetadataInputField(
-        identifier=PseudoVariableIdentifiers.DATA_ELEMENT_PATH.value,
-        display_name="Dataelement sti",
-        description="Sti (path) til den pseudonymiserte variabelen (elementet) i et hierarkisk datasett.",
-        obligatory=True,
-    ),
-    PseudoVariableIdentifiers.DATA_ELEMENT_PATTERN: MetadataInputField(
-        identifier=PseudoVariableIdentifiers.DATA_ELEMENT_PATTERN.value,
-        display_name="Dataelement mønster",
-        description="Eventuelt “søke-mønster” (glob pattern) som resulterte i at denne variabelen ble pseudonymisert.",
+    PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME: MetadataDateField(
+        identifier=PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME.value,
+        display_name="Pseudonymiseringstidspunkt",
+        description="Tidspunktet datasettet ble pseudonymisert.",
         obligatory=True,
     ),
     PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION: MetadataInputField(
@@ -72,18 +56,6 @@ PSEUDO_FIELDS: dict[
         description="Eventuelle krypteringsalgoritme-parametere som er benyttet utover “encryption_key_reference” nevnt over.",
         obligatory=True,
         editable=False,
-    ),
-    PseudoVariableIdentifiers.SOURCE_VARIABLE: MetadataInputField(
-        identifier=PseudoVariableIdentifiers.SOURCE_VARIABLE.value,
-        display_name="Kilde-variabel",
-        description="Eventuelt navn på kilde-variabelen før pseudonymisering.",
-        obligatory=True,
-    ),
-    PseudoVariableIdentifiers.SOURCE_DISPLAY_DATATYPE: MetadataInputField(
-        identifier=PseudoVariableIdentifiers.SOURCE_DISPLAY_DATATYPE.value,
-        display_name="Kilde-variabel datatype",
-        description="Eventuell datatype på kildevariabelen før pseudonymisering.",
-        obligatory=True,
     ),
 }
 

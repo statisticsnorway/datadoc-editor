@@ -216,15 +216,11 @@ def register_callbacks(app: Dash) -> None:
     ) -> list:
         """Create variable workspace with accordions for variables."""
         logger.debug("Populating variables workspace. Search query: %s", search_query)
-        pseudo_variables = None
 
-        if state.metadata.pseudo_variables is not None:
-            pseudo_variables = state.metadata.pseudo_variables
         return populate_variables_workspace(
             state.metadata.variables,
             search_query,
             dataset_opened_counter,
-            pseudo_variables,
         )
 
     @app.callback(
@@ -235,7 +231,7 @@ def register_callbacks(app: Dash) -> None:
     def callback_update_pseudo_output(n_clicks: int) -> None:  # noqa: ARG001
         """Adding a pseudo variable when the add pseudo variable is clicked."""
         short_name = ctx.triggered_id["short_name"]
-        state.metadata.add_pseudo_variable(short_name)
+        state.metadata.add_pseudonymization(short_name)
 
     @app.callback(
         Output("pseudo-variables-updated-counter", "data"),

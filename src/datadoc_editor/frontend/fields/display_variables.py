@@ -9,7 +9,6 @@ from dapla_metadata.datasets import enums
 
 from datadoc_editor import state
 from datadoc_editor.enums import DataType
-from datadoc_editor.enums import IsPersonalData
 from datadoc_editor.enums import TemporalityTypeType
 from datadoc_editor.enums import VariableRole
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
@@ -17,6 +16,7 @@ from datadoc_editor.frontend.fields.display_base import (
     VARIABLES_METADATA_MULTILANGUAGE_INPUT,
 )
 from datadoc_editor.frontend.fields.display_base import FieldTypes
+from datadoc_editor.frontend.fields.display_base import MetadataCheckboxField
 from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
 from datadoc_editor.frontend.fields.display_base import MetadataInputField
 from datadoc_editor.frontend.fields.display_base import MetadataMultiLanguageField
@@ -85,15 +85,11 @@ DISPLAY_VARIABLES: dict[
         description="Kommentaren har to funksjoner. Den skal brukes til å beskrive variabelforekomsten dersom denne ikke har lenke til VarDef (gjelder klargjorte data, statistikk og utdata), og den kan brukes til å gi ytterligere presiseringer av variabelforekomstens definisjon dersom variabelforekomsten er lenket til VarDef",
         id_type=VARIABLES_METADATA_MULTILANGUAGE_INPUT,
     ),
-    VariableIdentifiers.IS_PERSONAL_DATA: MetadataDropdownField(
+    VariableIdentifiers.IS_PERSONAL_DATA: MetadataCheckboxField(
         identifier=VariableIdentifiers.IS_PERSONAL_DATA.value,
         display_name="Er personopplysning",
-        description="Dersom variabelen er en personopplysning, skal det oppgis om den er pseudonymisert/kryptert eller ikke. Dersom den ikke er en personopplysning, lar en bare defaultsvaret «Ikke personopplysning» bli stående. All informasjon som entydig kan knyttes til en fysisk person (f.eks. fødselsnummer eller adresse) er personopplysninger. Næringsdata om enkeltpersonforetak (ENK) skal imidlertid ikke regnes som personopplysninger.",
+        description="Dersom variabelen er en personopplysning, skal denne sjekkboksen være avkrysset. Dersom den ikke er en personopplysning, lar en bare defaultsvaret bli stående. All informasjon som entydig kan knyttes til en fysisk person (f.eks. fødselsnummer eller adresse) er personopplysninger. Næringsdata om enkeltpersonforetak (ENK) skal imidlertid ikke regnes som personopplysninger.",
         obligatory=True,
-        options_getter=functools.partial(
-            get_enum_options,
-            IsPersonalData,
-        ),
     ),
     VariableIdentifiers.POPULATION_DESCRIPTION: MetadataMultiLanguageField(
         identifier=VariableIdentifiers.POPULATION_DESCRIPTION.value,
