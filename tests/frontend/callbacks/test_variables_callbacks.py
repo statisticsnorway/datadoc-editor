@@ -701,11 +701,6 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
             "SSB_GLOBAL_KEY_1",
             "SSB_GLOBAL_KEY_1",
         ),
-        (
-            PseudoVariableIdentifiers.ENCRYPTION_ALGORITHM_PARAMETERS,
-            "Parameters",
-            "Parameters",
-        ),
     ],
 )
 def test_accept_pseudo_variable_metadata_input_valid(

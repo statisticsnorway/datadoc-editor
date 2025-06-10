@@ -224,17 +224,28 @@ def test_build_input_fields_dropdown_components(
         assert item1.items == item2.options_getter()
 
 
+PSEDUO_VARIABLES_METADATA = PSEUDONYMIZATION_METADATA
+
+PSEUDO_INPUT_FIELD_SECTION = [
+    (
+        PSEDUO_VARIABLES_METADATA,
+        model.Variable(short_name="hoveddiagnose"),
+    ),
+]
+
+
 @pytest.mark.usefixtures("_code_list_fake_classifications")
 @pytest.mark.parametrize(
     ("field_list", "variable"),
-    INPUT_FIELD_SECTION,
+    PSEUDO_INPUT_FIELD_SECTION,
 )
 def test_build_pseudo_input_section(
     field_list,
     variable,
 ):
+    variable.pseudonymization = model.Pseudonymization()
     input_section = build_variables_pseudonymization_section(
-        field_list, "left", variable
+        field_list, "left", variable, variable.pseudonymization
     )
 
     elements_of_input = [

@@ -44,7 +44,6 @@ def populate_variables_workspace(
     variables: list[model.Variable],
     search_query: str,
     dataset_opened_counter: int,
-    pseudo_variables: list[model.Pseudonymization] | None = None,
 ) -> list:
     """Create variable workspace with accordions for variables.
 
@@ -74,6 +73,7 @@ def populate_variables_workspace(
                             PSEUDONYMIZATION_METADATA,
                             "Pseudonymisert",
                             variable,
+                            variable.pseudonymization,
                         )
                     ]
                     if variable.pseudonymization is not None

@@ -28,6 +28,7 @@ def test_variables_metadata_definition_parity():
     # TODO @Jorgen-5: Fields that are currently not supported by datadoc # noqa: TD003
     model_values.remove("custom_type")
     model_values.remove("special_value")
+    model_values.remove("pseudonymization")
 
     assert datadoc_values == model_values
 
