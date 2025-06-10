@@ -7,7 +7,7 @@
       "request": "launch",
       "program": "src/datadoc_editor/app.py",
       "console": "integratedTerminal",
-      "justMyCode": false
+      "justMyCode": true
     }
   ]
 }
