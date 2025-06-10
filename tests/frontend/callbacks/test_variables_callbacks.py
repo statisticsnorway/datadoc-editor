@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import datetime
 import warnings
 from typing import TYPE_CHECKING
 from typing import Any
@@ -88,8 +89,8 @@ def n_clicks_1():
         ),
         (
             VariableIdentifiers.IS_PERSONAL_DATA,
-            enums.IsPersonalData.NOT_PERSONAL_DATA,
-            enums.IsPersonalData.NOT_PERSONAL_DATA.value,
+            False,
+            False,
         ),
         (
             VariableIdentifiers.DATA_SOURCE,
@@ -632,7 +633,7 @@ def test_variables_metadata_control_dont_return_alert(metadata: Datadoc):
         setattr(
             state.metadata.variables_lookup[val.short_name],
             VariableIdentifiers.IS_PERSONAL_DATA,
-            enums.IsPersonalData.NON_PSEUDONYMISED_ENCRYPTED_PERSONAL_DATA,
+            True,
         )
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
@@ -668,14 +669,17 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
     ("metadata_field", "value", "expected_model_value"),
     [
         (
-            PseudoVariableIdentifiers.SHORT_NAME,
-            "fnr",
-            "fnr",
-        ),
-        (
-            PseudoVariableIdentifiers.DATA_ELEMENT_PATH,
-            "path",
-            "path",
+            PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME,
+            "2024-12-31T23:59:59Z",
+            datetime.datetime(
+                2024,
+                12,
+                31,
+                23,
+                59,
+                59,
+                tzinfo=datetime.UTC,
+            ),
         ),
         (
             PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION,
@@ -698,14 +702,9 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
             "SSB_GLOBAL_KEY_1",
         ),
         (
-            PseudoVariableIdentifiers.SOURCE_VARIABLE,
-            "fnr",
-            "fnr",
-        ),
-        (
-            PseudoVariableIdentifiers.SOURCE_DISPLAY_DATATYPE,
-            "STRING",
-            "STRING",
+            PseudoVariableIdentifiers.ENCRYPTION_ALGORITHM_PARAMETERS,
+            "Parameters",
+            "Parameters",
         ),
     ],
 )
@@ -716,20 +715,22 @@ def test_accept_pseudo_variable_metadata_input_valid(
     expected_model_value: Any,  # noqa: ANN401
 ):
     state.metadata = metadata
-    state.metadata.pseudo_variables = [model.PseudoVariable(short_name="fnr")]
-    state.metadata._create_pseudo_variables_lookup()  # noqa: SLF001
-    fnr_variable = metadata.pseudo_variables_lookup.get("fnr")
-    assert fnr_variable is not None
-    assert fnr_variable.short_name is not None
+    first_var_short_name = metadata.variables[0].short_name
+    state.metadata.add_pseudonymization(first_var_short_name)
     assert (
         accept_pseudo_variable_metadata_input(
             value,
-            fnr_variable.short_name,
+            first_var_short_name,
             metadata_field=metadata_field.value,
         )
         is None
     )
+    variable = state.metadata.variables_lookup.get(first_var_short_name)
+    assert variable is not None
     assert (
-        getattr(state.metadata.pseudo_variables_lookup.get("fnr"), metadata_field.value)
+        getattr(
+            variable.pseudonymization,
+            metadata_field.value,
+        )
         == expected_model_value
     )

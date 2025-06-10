@@ -125,6 +125,7 @@ def build_pseudo_field_section(
     metadata_fields: list[FieldTypes],
     side: str,
     variable: model.Variable,
+    pseudonymization: model.Pseudonymization,
     field_id: str = "",
 ) -> dbc.Form:
     """Create form with input fields for pseudo inputs."""
@@ -136,7 +137,7 @@ def build_pseudo_field_section(
                     "variable_short_name": variable.short_name,
                     "id": i.identifier,
                 },
-                metadata=variable.pseudonymization,
+                metadata=pseudonymization,
             )
             for i in metadata_fields
         ],
@@ -185,6 +186,7 @@ def build_variables_pseudonymization_section(
     metadata_inputs: list,
     title: str,
     variable: model.Variable,
+    pseudonymization: model.Pseudonymization,
 ) -> html.Section:
     """Create input section for pseudonymization."""
     return html.Section(
@@ -195,6 +197,7 @@ def build_variables_pseudonymization_section(
                 metadata_inputs,
                 "left",
                 variable,
+                pseudonymization,
                 field_id="pseudo",
             ),
         ],
