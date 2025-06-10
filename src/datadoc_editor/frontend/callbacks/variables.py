@@ -44,14 +44,11 @@ def populate_variables_workspace(
     variables: list[model.Variable],
     search_query: str,
     dataset_opened_counter: int,
-    pseudo_variables: list[model.PseudoVariable] | None = None,
 ) -> list:
     """Create variable workspace with accordions for variables.
 
     Allows for filtering which variables are displayed via the search box.
     """
-    pseudo_map = {pv.short_name: pv for pv in (pseudo_variables or [])}
-
     return [
         build_ssb_accordion(
             variable.short_name or "",
@@ -75,10 +72,11 @@ def populate_variables_workspace(
                         build_variables_pseudonymization_section(
                             PSEUDONYMIZATION_METADATA,
                             "Pseudonymisert",
-                            pseudo_map[variable.short_name],
+                            variable,
+                            variable.pseudonymization,
                         )
                     ]
-                    if variable.short_name in pseudo_map
+                    if variable.pseudonymization is not None
                     else [
                         build_variables_pseudo_button(
                             "Pseudonymisert", short_name=variable.short_name or ""
@@ -197,9 +195,9 @@ def accept_pseudo_variable_metadata_input(
     )
     try:
         setattr(
-            state.metadata.pseudo_variables_lookup[
+            state.metadata.variables_lookup[
                 urllib.parse.unquote(variable_short_name)
-            ],
+            ].pseudonymization,
             metadata_field,
             value,
         )

@@ -280,59 +280,6 @@ class DataType(LanguageStringsEnum):
     )
 
 
-class IsPersonalData(LanguageStringsEnum):
-    """Is the variable instance personal data and if so, how is it encrypted."""
-
-    NOT_PERSONAL_DATA = model.LanguageStringType(
-        [
-            model.LanguageStringTypeItem(
-                languageCode="en",
-                languageText=model.IsPersonalData.NOT_PERSONAL_DATA.value,
-            ),
-            model.LanguageStringTypeItem(
-                languageCode="nn",
-                languageText="IKKE PERSONOPPLYSNING",
-            ),
-            model.LanguageStringTypeItem(
-                languageCode="nb",
-                languageText="IKKE PERSONOPPLYSNING",
-            ),
-        ],
-    )
-    PSEUDONYMISED_ENCRYPTED_PERSONAL_DATA = model.LanguageStringType(
-        [
-            model.LanguageStringTypeItem(
-                languageCode="en",
-                languageText=model.IsPersonalData.PSEUDONYMISED_ENCRYPTED_PERSONAL_DATA.value,
-            ),
-            model.LanguageStringTypeItem(
-                languageCode="nn",
-                languageText="PSEUDONYMISERT/KRYPTERT PERSONOPPLYSNING",
-            ),
-            model.LanguageStringTypeItem(
-                languageCode="nb",
-                languageText="PSEUDONYMISERT/KRYPTERT PERSONOPPLYSNING",
-            ),
-        ],
-    )
-    NON_PSEUDONYMISED_ENCRYPTED_PERSONAL_DATA = model.LanguageStringType(
-        [
-            model.LanguageStringTypeItem(
-                languageCode="en",
-                languageText=model.IsPersonalData.NON_PSEUDONYMISED_ENCRYPTED_PERSONAL_DATA.value,
-            ),
-            model.LanguageStringTypeItem(
-                languageCode="nn",
-                languageText="IKKE PSEUDONYMISERT/KRYPTERT PERSONOPPLYSNING",
-            ),
-            model.LanguageStringTypeItem(
-                languageCode="nb",
-                languageText="IKKE PSEUDONYMISERT/KRYPTERT PERSONOPPLYSNING",
-            ),
-        ],
-    )
-
-
 class VariableRole(LanguageStringsEnum):
     """The role of a variable in a dataset."""
 
