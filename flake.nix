@@ -23,11 +23,16 @@
         devShells.default = pkgs.mkShell {
           name = "datadoc-editor";
           packages = with pkgs; [
-            python3
             uv
             python313Packages.ruff
             python313Packages.nox
+            pre-commit
           ];
+          shellHook = ''
+            pre-commit install
+            uv python install 3.13
+            uv sync --dev
+          '';
         };
         formatter = pkgs.alejandra;
       };
