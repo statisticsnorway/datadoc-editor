@@ -372,7 +372,7 @@ def check_variable_names(
     illegal_names: list = [
         v.short_name
         for v in variables
-        if not re.match(r"^[a-z0-9_]{3,}$", v.short_name)
+        if not re.match(r"^[a-z0-9_]{2,}$", v.short_name)
     ]
 
     if not illegal_names:
