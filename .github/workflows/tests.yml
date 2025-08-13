@@ -134,4 +134,4 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         # No need to run SonarCloud analysis if dependabot update or token not defined
         if: env.SONAR_TOKEN != '' && (github.actor != 'dependabot[bot]')
-        uses: SonarSource/sonarqube-scan-action@v5.1.0
+        uses: SonarSource/sonarqube-scan-action@v5.3.0
