@@ -40,7 +40,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          uv sync --locked --all-extras --dev
+          uv sync uv lock --all-extras --dev
 
       - name: Build doc with Sphinx
         run: |
