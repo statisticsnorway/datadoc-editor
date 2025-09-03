@@ -450,3 +450,20 @@ class PseudonymizationAlgorithms(LanguageStringsEnum):
             ),
         ]
     )
+    CUSTOM = model.LanguageStringType(
+        [
+            model.LanguageStringTypeItem(
+                languageCode="en",
+                languageText="Other",
+            ),
+            model.LanguageStringTypeItem(
+                languageCode="nn",
+                languageText="Annen",
+            ),
+            model.LanguageStringTypeItem(
+                languageCode="nb",
+                languageText="Annen",
+            ),
+        ]
+    )
+    
