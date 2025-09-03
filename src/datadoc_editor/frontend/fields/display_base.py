@@ -357,6 +357,108 @@ class MetadataMultiLanguageField(DisplayMetadata):
         )
 
 
+class MetadataMultiDropdownField(DisplayMetadata):
+    """A dropdown field for dataset metadata that supports multiple options,
+    with an additional date input field.
+    """
+
+    id_type: str = ""
+    type: str = "text"
+
+    def __init__(
+        self,
+        *,
+        identifier: str,
+        display_name: str,
+        description: str,
+        options_getter: Callable[[], list[dict[str, str]]] = list,
+        date_identifier: str | None = None,
+        date_display_name: str | None = None,
+        date_description: str | None = None,
+        **kwargs,
+    ):
+        super().__init__(
+            identifier=identifier,
+            display_name=display_name,
+            description=description,
+            **kwargs,
+        )
+        self.options_getter = options_getter
+
+        # separate config for the date input
+        self.date_identifier = date_identifier or f"{identifier}_date"
+        self.date_display_name = date_display_name or "Dato"
+        self.date_description = date_description or "Velg en dato."
+
+    def render_input_group(
+        self,
+        component_id: dict,
+        metadata: BaseModel,
+    ) -> html.Section:
+        """Build section with Dropdown and Date Input components."""
+        self.url_encode_shortname_ids(component_id)
+
+        return html.Section(
+            children=[
+                ssb.Dropdown(
+                    header=self.display_name,
+                    id=component_id,
+                    items=self.options_getter(),
+                    placeholder=DROPDOWN_DESELECT_OPTION,
+                    value=get_metadata_and_stringify(metadata, self.identifier),
+                    className="dropdown-component",
+                    showDescription=True,
+                    description=self.description,
+                ),
+                ssb.Input(
+                    label=self.date_display_name,
+                    id={**component_id, "field": "date"},
+                    debounce=False,
+                    type="date",
+                    disabled=not self.editable,
+                    showDescription=True,
+                    description=self.date_description,
+                    value=get_metadata_and_stringify(metadata, self.date_identifier),
+                    className="input-component",
+                ),
+                ssb.Button(
+                    children=["+"],
+                    id={
+                        "type": "use-restriction-button",
+                    },
+                    className="add-use-restriction",
+                ),
+            ],
+            className="input-group-container",
+        )
+
+    def render(
+        self,
+        component_id: dict,
+        metadata: BaseModel,
+    ) -> html.Fieldset:
+        """Build fieldset group with legend and input group."""
+        return html.Fieldset(
+            children=[
+                ssb.Glossary(
+                    children=[
+                        html.Legend(
+                            self.display_name,
+                            className="multilanguage-legend",
+                        )
+                    ],
+                    explanation=self.description,
+                    className="legend-glossary",
+                ),
+                self.render_input_group(
+                    component_id=component_id,
+                    metadata=metadata,
+                ),
+            ],
+            className="multidropdown-fieldset",
+        )
+
+
 @dataclass
 class MetadataCheckboxField(DisplayMetadata):
     """Controls for how a checkbox metadata field should be displayed."""

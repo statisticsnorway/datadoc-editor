@@ -1,0 +1,80 @@
+.input-group-container {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 0;
+  margin: 0 
+}
+
+.add-use-restriction {
+  margin-top: auto; 
+}
+
+/*Style for multidropdown fields*/
+
+.multidropdown-fieldset{
+    border: 1px solid #274247;
+    outline: #274247;
+    padding: 1rem;
+    width: 100%;
+    position: relative;
+}
+
+.legend-glossary{
+    background-color: white;
+    padding-top: 0;
+    margin: 0.3rem;
+}
+
+.multidropdown-legend{
+    width: fit-content;
+    font-size: 1rem;
+}
+
+.multidropdown-fieldset > .ssb-glossary.legend-glossary > .glossary-button{
+    padding: 0 0.3rem;
+    background-image: none;
+}
+
+.multidropdown-fieldset:focus{
+    border: 1px solid #00824d;
+    outline: 1px solid #00824d;
+    outline-offset: 0;
+}
+
+.multidropdown-fieldset:hover{
+    border: 1px solid #00824d;
+    outline: 1px solid #00824d;
+    outline-offset: 0;
+}
+
+.ssb-glossary.legend-glossary{
+    position: absolute;
+    z-index: 10;
+    top: -20px;
+}
+
+.ssb-input.multidropdown-input-component{
+    max-width: unset;
+    width: 100%;
+}
+
+.multidropdown-fieldset > .ssb-glossary.legend-glossary > .glossary-popup {
+    margin-left: 20px;
+    left: unset;
+    top: unset;
+    bottom: 5px;
+}
+
+.multidropdown-fieldset > .ssb-glossary.legend-glossary > .glossary-popup::after {
+    left: -10px;
+    margin-left: -10px;
+    top: unset;
+    bottom: 5px;
+    transform: rotateX(-90deg);
+    -webkit-transform: rotate(-90deg);
+}
+
+.ssb-glossary.legend-glossary > .glossary-popup .content-box > .glossary-closing{
+    margin-top: 1.8rem;
+}

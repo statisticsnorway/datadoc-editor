@@ -24,6 +24,7 @@ from datadoc_editor.frontend.fields.display_base import MetadataCheckboxField
 from datadoc_editor.frontend.fields.display_base import MetadataDateField
 from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
 from datadoc_editor.frontend.fields.display_base import MetadataInputField
+from datadoc_editor.frontend.fields.display_base import MetadataMultiDropdownField
 from datadoc_editor.frontend.fields.display_base import MetadataMultiLanguageField
 from datadoc_editor.frontend.fields.display_base import MetadataPeriodField
 from datadoc_editor.frontend.fields.display_base import get_comma_separated_string
@@ -146,20 +147,20 @@ DISPLAY_DATASET: dict[
         obligatory=True,
         id_type=DATASET_METADATA_MULTILANGUAGE_INPUT,
     ),
-    DatasetIdentifiers.USE_RESTRICTION: MetadataDropdownField(
+    DatasetIdentifiers.USE_RESTRICTION: MetadataMultiDropdownField(
         identifier=DatasetIdentifiers.USE_RESTRICTION.value,
         display_name="Bruksrestriksjon",
-        description="Oppgi om det er knyttet noen bruksrestriksjoner til datasettet, f.eks. krav om sletting/anonymisering.",
-        options_getter=functools.partial(
-            get_enum_options,
-            UseRestriction,
-        ),
+        description="Velg hvilken bruksrestriksjon som gjelder.",
+        options_getter=functools.partial(get_enum_options, UseRestriction),
+        date_identifier="use_restriction_date",
+        date_display_name="Dato for restriksjon",
+        date_description="Oppgi datoen når restriksjonen gjelder fra.",
     ),
-    DatasetIdentifiers.USE_RESTRICTION_DATE: MetadataDateField(
-        identifier=DatasetIdentifiers.USE_RESTRICTION_DATE.value,
-        display_name="Bruksrestriksjonsdato",
-        description='Oppgi ev. "tiltaksdato" for bruksrestriksjoner, f.eks. frist for sletting/anonymisering. Noen bruksrestriksjoner vil ikke ha en slik dato, f.eks. vil en behandlingsbegrensning normalt være permanent/tidsuavhengig.',
-    ),
+    # DatasetIdentifiers.USE_RESTRICTION_DATE: MetadataMultiDropdownField(
+    #     identifier=DatasetIdentifiers.USE_RESTRICTION_DATE.value,
+    #     display_name="Bruksrestriksjonsdato",
+    #     description='Oppgi ev. "tiltaksdato" for bruksrestriksjoner, f.eks. frist for sletting/anonymisering. Noen bruksrestriksjoner vil ikke ha en slik dato, f.eks. vil en behandlingsbegrensning normalt være permanent/tidsuavhengig.',
+    # ),
     DatasetIdentifiers.DATASET_STATE: MetadataDropdownField(
         identifier=DatasetIdentifiers.DATASET_STATE.value,
         display_name="Datatilstand",
