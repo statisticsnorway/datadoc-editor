@@ -398,3 +398,55 @@ class UseRestriction(LanguageStringsEnum):
             ),
         ],
     )
+    
+    
+class PseudonymizationAlgorithms(LanguageStringsEnum):
+    """Pseudonymization algorithms options."""
+    PAPIS_ALGORITHM_WITHOUT_STABIL_ID = model.LanguageStringType(
+        [
+            model.LanguageStringTypeItem(
+                languageCode="en",
+                languageText="PAPIS-algorithm without stabil ID",
+            ),
+            model.LanguageStringTypeItem(
+                languageCode="nn",
+                languageText="PAPIS-algoritme uten stabil ID",
+            ),
+            model.LanguageStringTypeItem(
+                languageCode="nb",
+                languageText="PAPIS-algoritme uten stabil ID",
+            ),
+        ]
+    )
+    PAPIS_ALGORITHM_WITH_STABIL_ID = model.LanguageStringType(
+        [
+            model.LanguageStringTypeItem(
+                languageCode="en",
+                languageText="PAPIS-algorithm with stabil ID",
+            ),
+            model.LanguageStringTypeItem(
+                languageCode="nn",
+                languageText="PAPIS-algoritme med stabil ID",
+            ),
+            model.LanguageStringTypeItem(
+                languageCode="nb",
+                languageText="PAPIS-algoritme med stabil ID",
+            ),
+        ]
+    )
+    STANDARD_ALGORITM_DAPLA = model.LanguageStringType(
+        [
+            model.LanguageStringTypeItem(
+                languageCode="en",
+                languageText="Standard algorithm on Dapla (DAEAD)",
+            ),
+            model.LanguageStringTypeItem(
+                languageCode="nn",
+                languageText="Standard algoritme på Dapla (DAEAD)",
+            ),
+            model.LanguageStringTypeItem(
+                languageCode="nb",
+                languageText="Standard algoritme på Dapla (DAEAD)",
+            ),
+        ]
+    )
