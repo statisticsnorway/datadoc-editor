@@ -18,8 +18,10 @@ from dash import State
 from dash import ctx
 from dash import html
 from dash import no_update
+import dash
 
 from datadoc_editor import state
+from datadoc_editor.enums import PseudonymizationAlgorithms
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_date_input
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
@@ -27,13 +29,14 @@ from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
 from datadoc_editor.frontend.callbacks.variables import (
     accept_pseudo_variable_metadata_input,
+    choose_metadata_inputs_based_on_algorithm,
 )
 from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
 )
 from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
-from datadoc_editor.frontend.components.builders import build_dataset_edit_section
+from datadoc_editor.frontend.components.builders import build_dataset_edit_section, build_pseudo_field_section
 from datadoc_editor.frontend.components.builders import build_dataset_machine_section
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
@@ -278,47 +281,88 @@ def register_callbacks(app: Dash) -> None:
             ),
         ]
 
+    #@app.callback(
+    #    Output(
+    #        {
+    #            "type": PSEUDO_METADATA_INPUT,
+    #            "variable_short_name": MATCH,
+    #            "id": MATCH,
+    #        },
+    #        "error",
+    #    ),
+    #    Output(
+    #        {
+    #            "type": PSEUDO_METADATA_INPUT,
+    #            "variable_short_name": MATCH,
+    #            "id": MATCH,
+    #        },
+    #        "errorMessage",
+    #    ),
+    #    Input(
+    #        {
+    #            "type": PSEUDO_METADATA_INPUT,
+    #            "variable_short_name": MATCH,
+    #            "id": MATCH,
+    #        },
+    #        "value",
+    #    ),
+    #    prevent_initial_call=True,
+    #)
+    #def callback_accept_pseudo_variable_metadata_input(
+    #    value: MetadataInputTypes,  # noqa: ARG001 argument required by Dash
+    #) -> dbc.Alert:
+    #    """Save updated variable metadata values."""
+    #    message = accept_pseudo_variable_metadata_input(
+    #        ctx.triggered[0]["value"],
+    #        ctx.triggered_id["variable_short_name"],
+    #        ctx.triggered_id["id"],
+    #    )
+    #    if not message:
+    #        # No error to display.
+    #        return False, ""
+#
+    #    return True, message
+    
     @app.callback(
         Output(
-            {
-                "type": PSEUDO_METADATA_INPUT,
-                "variable_short_name": MATCH,
-                "id": MATCH,
-            },
+            {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
             "error",
         ),
         Output(
-            {
-                "type": PSEUDO_METADATA_INPUT,
-                "variable_short_name": MATCH,
-                "id": MATCH,
-            },
+            {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
             "errorMessage",
         ),
         Input(
-            {
-                "type": PSEUDO_METADATA_INPUT,
-                "variable_short_name": MATCH,
-                "id": MATCH,
-            },
+            {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
             "value",
+        ),
+        State(
+            {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
+            "id",
         ),
         prevent_initial_call=True,
     )
-    def callback_accept_pseudo_variable_metadata_input(
-        value: MetadataInputTypes,  # noqa: ARG001 argument required by Dash
-    ) -> dbc.Alert:
-        """Save updated variable metadata values."""
-        message = accept_pseudo_variable_metadata_input(
-            ctx.triggered[0]["value"],
-            ctx.triggered_id["variable_short_name"],
-            ctx.triggered_id["id"],
-        )
+    def callback_accept_pseudo_variable_metadata_input(value, component_id):
+        if value is None or component_id is None:
+            # Nothing to do if deselected or missing
+            return False, ""
+
+        variable_short_name = component_id["variable_short_name"]
+        input_id = component_id["id"]
+
+        # Safely get variable from state
+        variable = state.metadata.variables_lookup.get(variable_short_name)
+        if not variable:
+            print(f"Variable not found: {variable_short_name}")
+            return False, "Variable not found."
+
+        message = accept_pseudo_variable_metadata_input(value, variable_short_name, input_id)
+
         if not message:
-            # No error to display.
             return False, ""
 
         return True, message
+
 
     @app.callback(
         Output(
@@ -526,3 +570,57 @@ def register_callbacks(app: Dash) -> None:
             contains_data_from,
             contains_data_until,
         )
+    
+    @app.callback(
+        Output({"type": "pseudo-field-container", "variable": MATCH}, "children"),
+        Input({"type": "pseudonymization-dropdown", "variable": MATCH}, "value"),
+        State({"type": "pseudonymization-dropdown", "variable": MATCH}, "id"),
+    )
+    def update_pseudo_fields(selected_algorithm: str, dropdown_id):
+        print("Callback triggered!")  # Debug: check if callback fires
+        print("Selected algorithm:", selected_algorithm)
+        if not selected_algorithm:
+            return []
+        try:
+            # Convert dropdown value (name) to enum
+            if selected_algorithm is None:
+                return []
+            selected_algorithm = selected_algorithm
+            print("Converted to enum:", selected_algorithm)
+        except KeyError:
+            print("Invalid algorithm name:", selected_algorithm)
+            return []
+        # Get variable short_name from triggered component
+        #if ctx.triggered_id is None or "variable" not in ctx.triggered_id:
+        #    print("No triggered_id or missing 'variable'. Exiting callback.")
+        #    return []
+        #else:
+        #    variable_short_name = dropdown_id["variable"]
+            #variable_short_name = ctx.triggered_id.get("variable")
+            
+        #variable_short_name = ctx.triggered_id["variable"]
+        #print("Triggered variable short_name:", variable_short_name)
+
+        # Lookup variable from your existing state
+        variable_short_name = dropdown_id["variable"]
+        variable = state.metadata.variables_lookup.get(variable_short_name)
+        if variable is None:
+            print("Variable not found in lookup!")
+            return []
+
+        print("Found variable:", variable.short_name)
+
+        # Choose metadata_inputs for this algorithm
+        metadata_inputs = choose_metadata_inputs_based_on_algorithm(selected_algorithm)
+        print("Metadata inputs:", metadata_inputs)
+
+        # Build pseudo field section dynamically
+        section = build_pseudo_field_section(
+            metadata_inputs,
+            "left",
+            variable=variable,
+            pseudonymization=variable.pseudonymization,  # use the variable you just looked up
+            field_id="pseudo",
+        )
+        print("Returning build_pseudo_field_section")
+        return section

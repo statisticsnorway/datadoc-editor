@@ -1,9 +1,51 @@
+from dataclasses import dataclass
 from enum import Enum
+import functools
+from typing import Callable
 
-from datadoc_editor.frontend.fields.display_base import FieldTypes
+from pydantic import BaseModel
+
+from datadoc_editor.enums import PseudonymizationAlgorithms
+from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION, DisplayMetadata, FieldTypes, MetadataDropdownField, get_enum_options, get_metadata_and_stringify
 from datadoc_editor.frontend.fields.display_base import MetadataDateField
 from datadoc_editor.frontend.fields.display_base import MetadataInputField
+import ssb_dash_components as ssb
+from dash import html
 
+
+class PseudoVariableIdentifier:
+    """Represents a single special variable, based on VariableIdentifiers."""
+
+    def __init__(self, identifier, display_name, description, options_getter, obligatory=False, editable=True):
+        self.identifier = identifier
+        self.display_name = display_name
+        self.description = description
+        self.options_getter = options_getter
+        self.obligatory = obligatory
+        self.editable = editable
+    
+
+    def __repr__(self):
+        return (
+            f"SpecialVariable(identifier={self.identifier!r}, "
+            f"display_name={self.display_name!r}, obligatory={self.obligatory}, editable={self.editable})"
+        )
+        
+PSEDONYMIZATION  = "Pseudonymisert"
+pseudo_identifier = PseudoVariableIdentifier(
+    identifier=PSEDONYMIZATION,
+    display_name="Pseudonymisert 2",
+    description=(
+        "Variabelnavn som er forståelig for mennesker. "
+        "Navnet kan arves fra lenket VarDef-variabel eller endres her."
+    ),
+    obligatory=False,
+    editable=True,
+    options_getter=functools.partial(
+            get_enum_options,
+            PseudonymizationAlgorithms,
+    ),
+)
 
 class PseudoVariableIdentifiers(str, Enum):
     """Pseudo fileds."""
@@ -16,6 +58,48 @@ class PseudoVariableIdentifiers(str, Enum):
     ENCRYPTION_ALGORITHM_PARAMETERS = "encryption_algorithm_parameters"
 
 
+@dataclass
+class PseudoField(DisplayMetadata):
+    """Controls how a pseudo section should be displayed."""
+
+    options_getter: Callable[[], list[dict[str, str]]] = list
+
+    def render(
+        self,
+        component_id: dict,
+        metadata: BaseModel,
+    ) -> html.Section:
+        """Build Pseudo component."""
+        self.url_encode_shortname_ids(component_id)
+        return html.Section(
+            [
+            ssb.Dropdown(
+                header=self.display_name,
+                id=component_id,
+                items=self.options_getter(),
+                placeholder=DROPDOWN_DESELECT_OPTION,
+                value=get_metadata_and_stringify(metadata, self.identifier),
+                className="dropdown-component",
+                showDescription=False,
+                description=self.description,
+            )
+            ]
+        )
+
+class PseudoIdentifier(str, Enum):
+    
+    PSEDONYMIZATION  = "Pseudonymisert"
+    
+    DISPLAY_PSEUDO = PseudoField(
+            identifier=PSEDONYMIZATION,
+            display_name="Pseudonymisert",
+            description="",
+            options_getter=functools.partial(
+                get_enum_options,
+                PseudonymizationAlgorithms,
+            ),
+    )
+    
 PSEUDO_FIELDS: dict[
     PseudoVariableIdentifiers,
     FieldTypes,
@@ -60,3 +144,19 @@ PSEUDO_FIELDS: dict[
 }
 
 PSEUDONYMIZATION_METADATA = list(PSEUDO_FIELDS.values())
+PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID = [
+    m
+    for m in PSEUDO_FIELDS.values()
+    if (m.identifier in (PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME.value,PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value ) and m.editable)
+]
+PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID = [
+    m
+    for m in PSEUDO_FIELDS.values()
+    if (m.identifier in (PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME.value ) and m.editable)
+]
+PSEUDONYMIZATION_DEAD = [
+    m
+    for m in PSEUDO_FIELDS.values()
+    if (m.identifier in (PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME.value,PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value ) and m.editable)
+]
+
