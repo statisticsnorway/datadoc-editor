@@ -18,10 +18,9 @@ from dash import State
 from dash import ctx
 from dash import html
 from dash import no_update
-import dash
+
 
 from datadoc_editor import state
-from datadoc_editor.enums import PseudonymizationAlgorithms
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_date_input
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
