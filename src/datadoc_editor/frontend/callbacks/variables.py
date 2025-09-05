@@ -402,7 +402,7 @@ def set_variables_values_inherit_dataset_derived_date_values() -> None:
 def choose_metadata_inputs_based_on_algorithm(
     selected_algorithm: PseudonymizationAlgorithms,
 ) -> list:
-    """Map a PseudonymizationAlgorithms enum value to the correct metadata input list."""
+    """Map a PseudonymizationAlgorithms enum value to the correct pseudonymization input list."""
     mapping = {
         "PAPIS_ALGORITHM_WITHOUT_STABIL_ID": PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID,
         "PAPIS_ALGORITHM_WITH_STABIL_ID": PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID,
