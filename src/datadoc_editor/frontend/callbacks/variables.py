@@ -400,7 +400,7 @@ def set_variables_values_inherit_dataset_derived_date_values() -> None:
 
 
 def choose_metadata_inputs_based_on_algorithm(
-    selected_algorithm: PseudonymizationAlgorithms,
+    selected_algorithm: str,
 ) -> list:
     """Map a PseudonymizationAlgorithms enum value to the correct pseudonymization input list."""
     mapping = {
