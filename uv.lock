@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version < '3.13'",
@@ -253,8 +253,8 @@ wheels = [
 
 [[package]]
 name = "dapla-toolbelt-metadata"
-version = "0.8.0"
-source = { registry = "https://pypi.org/simple" }
+version = "0.8.5"
+source = { git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git?rev=49e7bea#49e7bea3209157da05ef37fd8a11b0ea274364d3" }
 dependencies = [
     { name = "arrow" },
     { name = "beautifulsoup4" },
@@ -270,10 +270,6 @@ dependencies = [
     { name = "ssb-datadoc-model" },
     { name = "ssb-klass-python" },
     { name = "typing-extensions" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/e6/3f/3e90701e79c7f7106aff6e3d67c1a6f635b54953e1d8cd9f8372559c67e9/dapla_toolbelt_metadata-0.8.0.tar.gz", hash = "sha256:a6baa8744d372d831a6f809b50f6e2000c4076069bae5f6a69b1da1f873392ad", size = 95685, upload-time = "2025-06-10T07:11:55.551Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/02/58/bb96630de068d0a7efd383bb85ccb5bc6adeae4247157978ea461182b0f4/dapla_toolbelt_metadata-0.8.0-py3-none-any.whl", hash = "sha256:a408ee534d3ecea02d09b9d7b9fcbcf41f1e28f1b41feb9eb8f5537691c58795", size = 171497, upload-time = "2025-06-10T07:11:53.655Z" },
 ]
 
 [[package]]
@@ -2048,7 +2044,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "arrow", specifier = ">=1.3.0" },
-    { name = "dapla-toolbelt-metadata", specifier = ">=0.8.0" },
+    { name = "dapla-toolbelt-metadata", git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git?rev=49e7bea" },
     { name = "dash", specifier = ">=2.15.0" },
     { name = "dash-bootstrap-components", specifier = ">=1.1.0" },
     { name = "flask-healthz", specifier = ">=0.0.3" },
@@ -2092,14 +2088,10 @@ dev = [
 
 [[package]]
 name = "ssb-datadoc-model"
-version = "7.0.1"
-source = { registry = "https://pypi.org/simple" }
+version = "7.0.2"
+source = { git = "https://github.com/statisticsnorway/ssb-datadoc-model.git?subdirectory=generated%2Fpython%2Fdatadoc_model&rev=676b3e7#676b3e73b1843392e8763e8ef86c5589daffccff" }
 dependencies = [
     { name = "pydantic" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/7f/6a/3927508823df3d4fe59932b52a89d97a74aa8c8b3a1ac7270f8aa1362c8f/ssb_datadoc_model-7.0.1.tar.gz", hash = "sha256:e01a3097d5d96e7507a52da7c384dffa99ff553d2fdcc5477207f6a94cb38bbc", size = 28743, upload-time = "2025-05-28T11:14:34.093Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/d6/20/ea3571837b6da2e9b237dc8a8e0f58fa7a11426eb099ede0917972478dc3/ssb_datadoc_model-7.0.1-py3-none-any.whl", hash = "sha256:8495285da6d641855281d018fb5f207464f61227d655ad1e7281569843ace6f0", size = 11289, upload-time = "2025-05-28T11:14:32.789Z" },
 ]
 
 [[package]]

@@ -11,6 +11,7 @@ from datadoc_editor import state
 from datadoc_editor.enums import DataType
 from datadoc_editor.enums import TemporalityTypeType
 from datadoc_editor.enums import VariableRole
+from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
 from datadoc_editor.frontend.fields.display_base import (
     VARIABLES_METADATA_MULTILANGUAGE_INPUT,
@@ -38,6 +39,19 @@ def get_measurement_unit_options() -> list[dict[str, str]]:
     return dropdown_options
 
 
+def get_unit_type_options() -> list[dict[str, str]]:
+    """Collect the unit type options."""
+    dropdown_options = [
+        {
+            "title": unit_type.get_title(enums.SupportedLanguages.NORSK_BOKMÅL),
+            "id": unit_type.code,
+        }
+        for unit_type in state.unit_types.classifications
+    ]
+    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": ""})
+    return dropdown_options
+
+
 class VariableIdentifiers(str, Enum):
     """As defined here: https://statistics-norway.atlassian.net/wiki/spaces/MPD/pages/3042869256/Variabelforekomst."""
 
@@ -47,6 +61,7 @@ class VariableIdentifiers(str, Enum):
     VARIABLE_ROLE = "variable_role"
     DEFINITION_URI = "definition_uri"
     IS_PERSONAL_DATA = "is_personal_data"
+    UNIT_TYPE = "unit_type"
     DATA_SOURCE = "data_source"
     POPULATION_DESCRIPTION = "population_description"
     COMMENT = "comment"
@@ -89,6 +104,13 @@ DISPLAY_VARIABLES: dict[
         identifier=VariableIdentifiers.IS_PERSONAL_DATA.value,
         display_name="Er personopplysning",
         description="Dersom variabelen er en personopplysning, skal denne sjekkboksen være avkrysset. Dersom den ikke er en personopplysning, lar en bare defaultsvaret bli stående. All informasjon som entydig kan knyttes til en fysisk person (f.eks. fødselsnummer eller adresse) er personopplysninger. Næringsdata om enkeltpersonforetak (ENK) skal imidlertid ikke regnes som personopplysninger.",
+        obligatory=True,
+    ),
+    VariableIdentifiers.UNIT_TYPE: MetadataDropdownField(
+        identifier=VariableIdentifiers.UNIT_TYPE.value,
+        display_name="Enhetstype",
+        description="Den eller de enhetstypen(e) datasettet inneholder informasjon om. Eksempler på enhetstyper er person, foretak og eiendom.",
+        options_getter=get_unit_type_options,
         obligatory=True,
     ),
     VariableIdentifiers.POPULATION_DESCRIPTION: MetadataMultiLanguageField(
