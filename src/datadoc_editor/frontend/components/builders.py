@@ -188,7 +188,7 @@ def build_variables_pseudonymization_section_new(
     title: str,
     variable: model.Variable,
 ) -> html.Section:
-    """Create input section for pseudonymization."""
+    """Create input section for pseudonymization with dropdown for selecting pseudo algorithm."""
     return html.Section(
         id={"type": "edit-section", "title": title},
         children=[
@@ -206,18 +206,6 @@ def build_variables_pseudonymization_section_new(
         ],
         className="variable-section",
     )
-
-
-def build_papis_with_stabil_id() -> html.Section:
-    """Hhj."""
-
-
-def build_papis_without_stabil_id() -> html.Section:
-    """Hhj."""
-
-
-def build_dead() -> html.Section:
-    """Hhj."""
 
 
 def build_variables_pseudonymization_section(
