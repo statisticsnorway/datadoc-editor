@@ -398,10 +398,11 @@ class UseRestriction(LanguageStringsEnum):
             ),
         ],
     )
-    
-    
+
+
 class PseudonymizationAlgorithms(LanguageStringsEnum):
     """Pseudonymization algorithms options."""
+
     PAPIS_ALGORITHM_WITHOUT_STABIL_ID = model.LanguageStringType(
         [
             model.LanguageStringTypeItem(
@@ -466,4 +467,3 @@ class PseudonymizationAlgorithms(LanguageStringsEnum):
             ),
         ]
     )
-    

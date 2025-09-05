@@ -4,26 +4,35 @@ from __future__ import annotations
 
 import logging
 import urllib.parse
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from datadoc_editor import state
 from datadoc_editor.enums import PseudonymizationAlgorithms
 from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import parse_and_validate_dates
-from datadoc_editor.frontend.components.builders import build_edit_section, build_variables_pseudonymization_section_new
+from datadoc_editor.frontend.components.builders import build_edit_section
 from datadoc_editor.frontend.components.builders import build_ssb_accordion
 from datadoc_editor.frontend.components.builders import build_variables_machine_section
 from datadoc_editor.frontend.components.builders import build_variables_pseudo_button
 from datadoc_editor.frontend.components.builders import (
     build_variables_pseudonymization_section,
 )
+from datadoc_editor.frontend.components.builders import (
+    build_variables_pseudonymization_section_new,
+)
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PSEUDONYMIZATION_DEAD,
+)
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PSEUDONYMIZATION_METADATA,
+)
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID,
+)
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID,
 )
 from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
@@ -72,9 +81,9 @@ def populate_variables_workspace(
                     variable,
                 ),
                 build_variables_pseudonymization_section_new(
-                            "Pseudonymisert",
-                            variable,
-                        ),
+                    "Pseudonymisert",
+                    variable,
+                ),
                 *(
                     [
                         build_variables_pseudonymization_section(
@@ -389,21 +398,16 @@ def set_variables_values_inherit_dataset_derived_date_values() -> None:
                 state.metadata.dataset.contains_data_until,
             )
 
+
 def choose_metadata_inputs_based_on_algorithm(
     selected_algorithm: PseudonymizationAlgorithms,
 ) -> list:
-    """
-    Map a PseudonymizationAlgorithms enum value to the correct metadata input list.
-    """
+    """Map a PseudonymizationAlgorithms enum value to the correct metadata input list."""
     mapping = {
-        "PAPIS_ALGORITHM_WITHOUT_STABIL_ID": 
-            PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID,
-        "PAPIS_ALGORITHM_WITH_STABIL_ID": 
-            PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID,
-        "STANDARD_ALGORITM_DAPLA": 
-            PSEUDONYMIZATION_DEAD,
-        "CUSTOM": 
-            PSEUDONYMIZATION_METADATA ,
+        "PAPIS_ALGORITHM_WITHOUT_STABIL_ID": PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID,
+        "PAPIS_ALGORITHM_WITH_STABIL_ID": PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID,
+        "STANDARD_ALGORITM_DAPLA": PSEUDONYMIZATION_DEAD,
+        "CUSTOM": PSEUDONYMIZATION_METADATA,
     }
 
     return mapping.get(selected_algorithm, [])

@@ -12,10 +12,11 @@ import ssb_dash_components as ssb
 from dash import html
 
 from datadoc_editor.enums import PseudonymizationAlgorithms
-from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT, get_enum_options
+from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import FieldTypes
+from datadoc_editor.frontend.fields.display_base import get_enum_options
 
 if TYPE_CHECKING:
     from dapla_metadata.datasets import model
@@ -182,6 +183,7 @@ def build_variables_machine_section(
         className="variable-machine-section",
     )
 
+
 def build_variables_pseudonymization_section_new(
     title: str,
     variable: model.Variable,
@@ -192,23 +194,32 @@ def build_variables_pseudonymization_section_new(
         children=[
             ssb.Title(title, size=3, className="edit-section-title"),
             ssb.Dropdown(
-                id={"type": "pseudonymization-dropdown", "variable": variable.short_name},
+                id={
+                    "type": "pseudonymization-dropdown",
+                    "variable": variable.short_name,
+                },
                 items=get_enum_options(PseudonymizationAlgorithms),
-                ),
-            html.Div(id={"type": "pseudo-field-container", "variable": variable.short_name}),
+            ),
+            html.Div(
+                id={"type": "pseudo-field-container", "variable": variable.short_name}
+            ),
         ],
         className="variable-section",
     )
-    
-def build_papis_with_stabil_id()-> html.Section:
-    """hhj."""
 
-def build_papis_without_stabil_id()-> html.Section:
-    """hhj."""
 
-def build_dead()-> html.Section:
-    """hhj."""
-    
+def build_papis_with_stabil_id() -> html.Section:
+    """Hhj."""
+
+
+def build_papis_without_stabil_id() -> html.Section:
+    """Hhj."""
+
+
+def build_dead() -> html.Section:
+    """Hhj."""
+
+
 def build_variables_pseudonymization_section(
     metadata_inputs: list,
     title: str,
@@ -221,12 +232,12 @@ def build_variables_pseudonymization_section(
         children=[
             ssb.Title(title, size=3, className="edit-section-title"),
             build_pseudo_field_section(
-                    metadata_inputs,
-                    "left",
-                    variable,
-                    pseudonymization,
-                    field_id="pseudo",
-                ),
+                metadata_inputs,
+                "left",
+                variable,
+                pseudonymization,
+                field_id="pseudo",
+            ),
         ],
         className="variable-section",
     )
@@ -254,6 +265,7 @@ def build_variables_pseudo_button(title: str, short_name: str) -> html.Section:
         ],
         className="variable-pseudo-button",
     )
+
 
 def build_ssb_accordion(
     header: str,
