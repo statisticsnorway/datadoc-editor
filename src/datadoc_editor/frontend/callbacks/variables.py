@@ -84,22 +84,6 @@ def populate_variables_workspace(
                     "Pseudonymisert",
                     variable,
                 ),
-                *(
-                    [
-                        build_variables_pseudonymization_section(
-                            PSEUDONYMIZATION_METADATA,
-                            "Pseudonymisert",
-                            variable,
-                            variable.pseudonymization,
-                        )
-                    ]
-                    if variable.pseudonymization is not None
-                    else [
-                        build_variables_pseudo_button(
-                            "Pseudonymisert", short_name=variable.short_name or ""
-                        )
-                    ]
-                ),
             ],
         )
         for variable in variables

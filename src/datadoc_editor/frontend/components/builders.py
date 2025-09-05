@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 from enum import auto
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 import dash_bootstrap_components as dbc
 import ssb_dash_components as ssb
@@ -122,7 +122,7 @@ def build_input_field_section(
         className="edit-section-form",
     )
 
-
+#     
 def build_pseudo_field_section(
     metadata_fields: list[FieldTypes],
     side: str,
@@ -147,6 +147,29 @@ def build_pseudo_field_section(
         className="edit-section-form",
     )
 
+#def build_pseudo_field_section(
+#    metadata_fields: list[FieldTypes],
+#    side: str,
+#    variable: model.Variable,
+#    pseudonymization: model.Pseudonymization,
+#    field_id: str = "",
+#) -> dbc.Form:
+#    """Create form with input fields for pseudo inputs."""
+#    return dbc.Form(
+#        [
+#            i.render(
+#                component_id={
+#                    "type": PSEUDO_METADATA_INPUT,
+#                    "variable_short_name": variable.short_name,
+#                    "id": i.identifier,
+#                },
+#                metadata=pseudonymization,
+#            )
+#            for i in metadata_fields
+#        ],
+#        id=f"{PSEUDO_METADATA_INPUT}-{side}-{field_id}",
+#        className="edit-section-form",
+#    )
 
 def build_edit_section(
     metadata_inputs: list[list[FieldTypes]],
@@ -189,19 +212,32 @@ def build_variables_pseudonymization_section_new(
     variable: model.Variable,
 ) -> html.Section:
     """Create input section for pseudonymization with dropdown for selecting pseudo algorithm."""
+    if variable.pseudonymization is None:
+        # Show the "Add Pseudonymization" button
+        control = ssb.Button(
+                    children=["Legg til pseudonymisering"],
+                    id={
+                        "type": "pseudo-button",
+                        "short_name": variable.short_name,
+                    },
+                    className="add-pseudo-button",
+                )
+    else:
+        # Show the pseudonymization dropdown
+        control = ssb.Dropdown(
+                    id={
+                        "type": "pseudonymization-dropdown",
+                        "short_name": variable.short_name,
+                    },
+                    items=get_enum_options(PseudonymizationAlgorithms),
+                )
     return html.Section(
         id={"type": "edit-section", "title": title},
         children=[
             ssb.Title(title, size=3, className="edit-section-title"),
-            ssb.Dropdown(
-                id={
-                    "type": "pseudonymization-dropdown",
-                    "variable": variable.short_name,
-                },
-                items=get_enum_options(PseudonymizationAlgorithms),
-            ),
+            control,
             html.Div(
-                id={"type": "pseudo-field-container", "variable": variable.short_name}
+                id={"type": "pseudo-field-container", "short_name": variable.short_name}
             ),
         ],
         className="variable-section",
@@ -246,8 +282,8 @@ def build_variables_pseudo_button(title: str, short_name: str) -> html.Section:
             ),
             html.Div(
                 id={
-                    "type": "pseudo-output",
-                    "short_name": short_name,
+                    "type": "pseudo-field-container", 
+                    "variable": short_name
                 }
             ),
         ],

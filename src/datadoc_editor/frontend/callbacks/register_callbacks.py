@@ -227,14 +227,25 @@ def register_callbacks(app: Dash) -> None:
             dataset_opened_counter,
         )
 
+# @app.callback(
+#        Output({"type": "pseudo-output", "short_name": MATCH}, "children"),
+#        Input({"type": "pseudo-button", "short_name": MATCH}, "n_clicks"),
+#        prevent_initial_call=True,
+#    )
+#    def callback_update_pseudo_output(n_clicks: int) -> None:  # noqa: ARG001
+#        """Adding a pseudo variable when the add pseudo variable is clicked."""
+#        short_name = ctx.triggered_id["short_name"]
+#        state.metadata.add_pseudonymization(short_name)
+
     @app.callback(
-        Output({"type": "pseudo-output", "short_name": MATCH}, "children"),
+        Output({"type": "pseudo-field-container", "short_name": MATCH}, "children"),
         Input({"type": "pseudo-button", "short_name": MATCH}, "n_clicks"),
         prevent_initial_call=True,
     )
     def callback_update_pseudo_output(n_clicks: int) -> None:  # noqa: ARG001
         """Adding a pseudo variable when the add pseudo variable is clicked."""
         short_name = ctx.triggered_id["short_name"]
+        print("Shortname:" + short_name)
         state.metadata.add_pseudonymization(short_name)
 
     @app.callback(
@@ -572,9 +583,10 @@ def register_callbacks(app: Dash) -> None:
             contains_data_until,
         )
 
+# fix diverging ids use short_name for all(?)
     @app.callback(
         Output({"type": "pseudo-field-container", "variable": MATCH}, "children"),
-        Input({"type": "pseudonymization-dropdown", "variable": MATCH}, "value"),
+        Input({"type": "pseudonymization-dropdown", "short_name": MATCH}, "value"),
         State({"type": "pseudonymization-dropdown", "variable": MATCH}, "id"),
     )
     def update_pseudo_fields(selected_algorithm: str, dropdown_id):
