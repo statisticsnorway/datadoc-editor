@@ -5,8 +5,6 @@ from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_dataset import (
     get_statistical_subject_options,
 )
-from datadoc_editor.frontend.fields.display_dataset import get_unit_type_options
-from tests.conftest import CODE_LIST_DIR
 from tests.conftest import STATISTICAL_SUBJECT_STRUCTURE_DIR
 from tests.utils import TEST_RESOURCES_DIRECTORY
 
@@ -47,26 +45,3 @@ def test_get_statistical_subject_options(
     state.statistic_subject_mapping = subject_mapping_fake_statistical_structure
     state.statistic_subject_mapping.wait_for_external_result()
     assert get_statistical_subject_options() == expected
-
-
-@pytest.mark.parametrize(
-    ("code_list_csv_filepath_nb", "expected"),
-    [
-        (
-            TEST_RESOURCES_DIRECTORY / CODE_LIST_DIR / "code_list_nb.csv",
-            [
-                {"title": DROPDOWN_DESELECT_OPTION, "id": ""},
-                {"title": "Adresse", "id": "01"},
-                {"title": "Arbeidsulykke", "id": "02"},
-                {"title": "Bolig", "id": "03"},
-            ],
-        ),
-    ],
-)
-def test_get_unit_type_options(
-    code_list_fake_structure,
-    expected,
-):
-    state.unit_types = code_list_fake_structure
-    state.unit_types.wait_for_external_result()
-    assert get_unit_type_options() == expected

@@ -93,6 +93,11 @@ def n_clicks_1():
             False,
         ),
         (
+            VariableIdentifiers.UNIT_TYPE,
+            "17",
+            "17",
+        ),
+        (
             VariableIdentifiers.DATA_SOURCE,
             "Atlantis",
             "Atlantis",
@@ -339,16 +344,6 @@ def test_populate_variables_workspace_filter_variables(
     ),
     [
         (
-            "STATUS",
-            DatasetIdentifiers.TEMPORALITY_TYPE,
-            VariableIdentifiers.TEMPORALITY_TYPE,
-        ),
-        (
-            "01",
-            DatasetIdentifiers.DATA_SOURCE,
-            VariableIdentifiers.DATA_SOURCE,
-        ),
-        (
             "2009-01-02",
             DatasetIdentifiers.CONTAINS_DATA_FROM,
             VariableIdentifiers.CONTAINS_DATA_FROM,
@@ -391,18 +386,6 @@ def test_variables_values_inherit_dataset_values(
         "update_value",
     ),
     [
-        (
-            "EVENT",
-            DatasetIdentifiers.TEMPORALITY_TYPE,
-            VariableIdentifiers.TEMPORALITY_TYPE,
-            "ACCUMULATED",
-        ),
-        (
-            "02",
-            DatasetIdentifiers.DATA_SOURCE,
-            VariableIdentifiers.DATA_SOURCE,
-            "03",
-        ),
         (
             "2009-01-02",
             DatasetIdentifiers.CONTAINS_DATA_FROM,
