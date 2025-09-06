@@ -591,16 +591,17 @@ def register_callbacks(app: Dash) -> None:
     )
     def update_pseudo_fields(selected_algorithm: str, dropdown_id):
         """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
-        logger.debug("Selected pseudo algorithm: ", selected_algorithm)
+        logger.info("Selected pseudo algorithm: ", selected_algorithm)
         if not selected_algorithm:
+            #state.metadata.remove_pseudonymization(variable_short_name)
             return []
         variable_short_name = dropdown_id["variable"]
         variable = state.metadata.variables_lookup.get(variable_short_name)
         if variable is None:
-            logger.debug("Variable not found in lookup!")
+            logger.info("Variable not found in lookup!")
             return []
 
-        logger.debug("Found variable: ", variable.short_name)
+        logger.info("Found variable: ", variable.short_name)
 
         # Map the selected algorithm to its corresponding fields
         metadata_inputs = choose_metadata_inputs_based_on_algorithm(selected_algorithm)
