@@ -586,7 +586,7 @@ def register_callbacks(app: Dash) -> None:
 # fix diverging ids use short_name for all(?)
     @app.callback(
         Output({"type": "pseudo-field-container", "variable": MATCH}, "children"),
-        Input({"type": "pseudonymization-dropdown", "short_name": MATCH}, "value"),
+        Input({"type": "pseudonymization-dropdown", "variable": MATCH}, "value"),
         State({"type": "pseudonymization-dropdown", "variable": MATCH}, "id"),
     )
     def update_pseudo_fields(selected_algorithm: str, dropdown_id):

@@ -212,32 +212,19 @@ def build_variables_pseudonymization_section_new(
     variable: model.Variable,
 ) -> html.Section:
     """Create input section for pseudonymization with dropdown for selecting pseudo algorithm."""
-    if variable.pseudonymization is None:
-        # Show the "Add Pseudonymization" button
-        control = ssb.Button(
-                    children=["Legg til pseudonymisering"],
-                    id={
-                        "type": "pseudo-button",
-                        "short_name": variable.short_name,
-                    },
-                    className="add-pseudo-button",
-                )
-    else:
-        # Show the pseudonymization dropdown
-        control = ssb.Dropdown(
-                    id={
-                        "type": "pseudonymization-dropdown",
-                        "short_name": variable.short_name,
-                    },
-                    items=get_enum_options(PseudonymizationAlgorithms),
-                )
     return html.Section(
         id={"type": "edit-section", "title": title},
         children=[
             ssb.Title(title, size=3, className="edit-section-title"),
-            control,
+            ssb.Dropdown(
+                id={
+                    "type": "pseudonymization-dropdown",
+                    "variable": variable.short_name,
+                },
+                items=get_enum_options(PseudonymizationAlgorithms),
+            ),
             html.Div(
-                id={"type": "pseudo-field-container", "short_name": variable.short_name}
+                id={"type": "pseudo-field-container", "variable": variable.short_name}
             ),
         ],
         className="variable-section",
