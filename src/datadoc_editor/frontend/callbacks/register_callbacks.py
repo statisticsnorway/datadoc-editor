@@ -511,7 +511,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         State({"type": "pseudonymization-dropdown", "variable": MATCH}, "id"),
     )
     def update_pseudo_fields(
-        selected_algorithm: str, dropdown_id: str
+        selected_algorithm: str, dropdown_id: Any
     ) -> dbc.Form | None:
         """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
         logger.info("Selected pseudo algorithm: %s", selected_algorithm)
