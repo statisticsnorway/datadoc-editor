@@ -17,49 +17,6 @@ from datadoc_editor.frontend.fields.display_base import get_enum_options
 from datadoc_editor.frontend.fields.display_base import get_metadata_and_stringify
 
 
-class PseudoVariableIdentifier:
-    """Represents a single special variable, based on VariableIdentifiers."""
-
-    def __init__(
-        self,
-        identifier,
-        display_name,
-        description,
-        options_getter,
-        obligatory=False,
-        editable=True,
-    ):
-        self.identifier = identifier
-        self.display_name = display_name
-        self.description = description
-        self.options_getter = options_getter
-        self.obligatory = obligatory
-        self.editable = editable
-
-    def __repr__(self):
-        return (
-            f"SpecialVariable(identifier={self.identifier!r}, "
-            f"display_name={self.display_name!r}, obligatory={self.obligatory}, editable={self.editable})"
-        )
-
-
-PSEDONYMIZATION = "Pseudonymisert"
-pseudo_identifier = PseudoVariableIdentifier(
-    identifier=PSEDONYMIZATION,
-    display_name="Pseudonymisert 2",
-    description=(
-        "Variabelnavn som er forståelig for mennesker. "
-        "Navnet kan arves fra lenket VarDef-variabel eller endres her."
-    ),
-    obligatory=False,
-    editable=True,
-    options_getter=functools.partial(
-        get_enum_options,
-        PseudonymizationAlgorithms,
-    ),
-)
-
-
 class PseudoVariableIdentifiers(str, Enum):
     """Pseudo fileds."""
 
