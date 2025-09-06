@@ -529,11 +529,10 @@ def register_callbacks(app: Dash) -> None:  # pylint: disable=too-many-statement
 
         assert variable.pseudonymization is not None
 
-        section = build_pseudo_field_section(
+        return build_pseudo_field_section(
             metadata_inputs,
             "left",
             variable=variable,
             pseudonymization=variable.pseudonymization,
             field_id="pseudo",
         )
-        return section
