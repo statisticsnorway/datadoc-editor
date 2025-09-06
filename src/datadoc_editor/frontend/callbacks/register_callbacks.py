@@ -286,7 +286,7 @@ def register_callbacks(app: Dash) -> None:  # pylint: disable=too-many-statement
         # Safely get variable from state
         variable = state.metadata.variables_lookup.get(variable_short_name)
         if not variable:
-            print(f"Variable not found: {variable_short_name}")
+            logger.info(f"Variable not found: {variable_short_name}")
             return False, "Variable not found."
 
         message = accept_pseudo_variable_metadata_input(
@@ -510,7 +510,9 @@ def register_callbacks(app: Dash) -> None:  # pylint: disable=too-many-statement
         Input({"type": "pseudonymization-dropdown", "variable": MATCH}, "value"),
         State({"type": "pseudonymization-dropdown", "variable": MATCH}, "id"),
     )
-    def update_pseudo_fields(selected_algorithm: str, dropdown_id) -> dbc.Form | None:
+    def update_pseudo_fields(
+        selected_algorithm: str, dropdown_id: str
+    ) -> dbc.Form | None:
         """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
         logger.info("Selected pseudo algorithm: %s", selected_algorithm)
         if not selected_algorithm:
