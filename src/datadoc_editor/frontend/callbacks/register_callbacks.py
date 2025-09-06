@@ -9,7 +9,6 @@ import logging
 from typing import TYPE_CHECKING
 from typing import Any
 
-from dash import ALL
 from dash import MATCH
 from dash import Dash
 from dash import Input
@@ -71,7 +70,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def register_callbacks(app: Dash) -> None:
+def register_callbacks(app: Dash) -> None:  # pylint: disable=too-many-statements
     """Define and register callbacks."""
 
     @app.callback(
@@ -224,7 +223,6 @@ def register_callbacks(app: Dash) -> None:
             search_query,
             dataset_opened_counter,
         )
-
 
     @app.callback(
         Output(SECTION_WRAPPER_ID, "children"),

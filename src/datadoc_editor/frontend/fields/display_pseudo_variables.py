@@ -59,6 +59,7 @@ class PseudoField(DisplayMetadata):
 
 class PseudoIdentifier(str, Enum):
     """Identifier for pseudonymization."""
+
     PSEDONYMIZATION = "Pseudonymisert"
 
     DISPLAY_PSEUDO = PseudoField(
