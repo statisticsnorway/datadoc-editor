@@ -512,7 +512,7 @@ def register_callbacks(app: Dash) -> None:  # pylint: disable=too-many-statement
     )
     def update_pseudo_fields(selected_algorithm: str, dropdown_id):
         """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
-        logger.info("Selected pseudo algorithm: ", selected_algorithm)
+        logger.info("Selected pseudo algorithm: %s", selected_algorithm)
         if not selected_algorithm:
             return []
         variable_short_name = dropdown_id["variable"]
@@ -521,7 +521,7 @@ def register_callbacks(app: Dash) -> None:  # pylint: disable=too-many-statement
             logger.info("Variable not found in lookup!")
             return []
 
-        logger.info("Found variable: ", variable.short_name)
+        logger.info("Found variable: %s", variable.short_name)
 
         metadata_inputs = choose_metadata_inputs_based_on_algorithm(selected_algorithm)
         if variable.pseudonymization is None:
