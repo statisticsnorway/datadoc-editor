@@ -227,16 +227,6 @@ def register_callbacks(app: Dash) -> None:
             dataset_opened_counter,
         )
 
-# @app.callback(
-#        Output({"type": "pseudo-output", "short_name": MATCH}, "children"),
-#        Input({"type": "pseudo-button", "short_name": MATCH}, "n_clicks"),
-#        prevent_initial_call=True,
-#    )
-#    def callback_update_pseudo_output(n_clicks: int) -> None:  # noqa: ARG001
-#        """Adding a pseudo variable when the add pseudo variable is clicked."""
-#        short_name = ctx.triggered_id["short_name"]
-#        state.metadata.add_pseudonymization(short_name)
-
     @app.callback(
         Output({"type": "pseudo-field-container", "short_name": MATCH}, "children"),
         Input({"type": "pseudo-button", "short_name": MATCH}, "n_clicks"),
@@ -292,47 +282,6 @@ def register_callbacks(app: Dash) -> None:
                 },
             ),
         ]
-
-    # @app.callback(
-    #    Output(
-    #        {
-    #            "type": PSEUDO_METADATA_INPUT,
-    #            "variable_short_name": MATCH,
-    #            "id": MATCH,
-    #        },
-    #        "error",
-    #    ),
-    #    Output(
-    #        {
-    #            "type": PSEUDO_METADATA_INPUT,
-    #            "variable_short_name": MATCH,
-    #            "id": MATCH,
-    #        },
-    #        "errorMessage",
-    #    ),
-    #    Input(
-    #        {
-    #            "type": PSEUDO_METADATA_INPUT,
-    #            "variable_short_name": MATCH,
-    #            "id": MATCH,
-    #        },
-    #        "value",
-    #    ),
-    #    prevent_initial_call=True,
-    # )
-    # def callback_accept_pseudo_variable_metadata_input(
-    #    value: MetadataInputTypes,
-    # ) -> dbc.Alert:
-    #    """Save updated variable metadata values."""
-    #    message = accept_pseudo_variable_metadata_input(
-    #        ctx.triggered[0]["value"],
-    #        ctx.triggered_id["variable_short_name"],
-    #        ctx.triggered_id["id"],
-    #    )
-    #    if not message:
-    #        # No error to display.
-    #        return False, ""
-    #    return True, message
 
     @app.callback(
         Output(
@@ -593,7 +542,6 @@ def register_callbacks(app: Dash) -> None:
         """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
         logger.info("Selected pseudo algorithm: ", selected_algorithm)
         if not selected_algorithm:
-            #state.metadata.remove_pseudonymization(variable_short_name)
             return []
         variable_short_name = dropdown_id["variable"]
         variable = state.metadata.variables_lookup.get(variable_short_name)
@@ -603,13 +551,12 @@ def register_callbacks(app: Dash) -> None:
 
         logger.info("Found variable: ", variable.short_name)
 
-        # Map the selected algorithm to its corresponding fields
         metadata_inputs = choose_metadata_inputs_based_on_algorithm(selected_algorithm)
         if variable.pseudonymization is None:
             state.metadata.add_pseudonymization(variable_short_name)
 
         assert variable.pseudonymization is not None
-        # Build pseudo field section
+
         section = build_pseudo_field_section(
             metadata_inputs,
             "left",

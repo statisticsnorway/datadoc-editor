@@ -147,29 +147,6 @@ def build_pseudo_field_section(
         className="edit-section-form",
     )
 
-#def build_pseudo_field_section(
-#    metadata_fields: list[FieldTypes],
-#    side: str,
-#    variable: model.Variable,
-#    pseudonymization: model.Pseudonymization,
-#    field_id: str = "",
-#) -> dbc.Form:
-#    """Create form with input fields for pseudo inputs."""
-#    return dbc.Form(
-#        [
-#            i.render(
-#                component_id={
-#                    "type": PSEUDO_METADATA_INPUT,
-#                    "variable_short_name": variable.short_name,
-#                    "id": i.identifier,
-#                },
-#                metadata=pseudonymization,
-#            )
-#            for i in metadata_fields
-#        ],
-#        id=f"{PSEUDO_METADATA_INPUT}-{side}-{field_id}",
-#        className="edit-section-form",
-#    )
 
 def build_edit_section(
     metadata_inputs: list[list[FieldTypes]],
