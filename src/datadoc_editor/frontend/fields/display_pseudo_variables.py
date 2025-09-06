@@ -18,7 +18,7 @@ from datadoc_editor.frontend.fields.display_base import get_metadata_and_stringi
 
 
 class PseudoVariableIdentifiers(str, Enum):
-    """Pseudo fileds."""
+    """Pseudo fields."""
 
     PSEUDONYMIZATION_TIME = "pseudonymization_time"
     STABLE_IDENTIFIER_TYPE = "stable_identifier_type"
@@ -58,6 +58,7 @@ class PseudoField(DisplayMetadata):
 
 
 class PseudoIdentifier(str, Enum):
+    """Identifier for pseudonymization."""
     PSEDONYMIZATION = "Pseudonymisert"
 
     DISPLAY_PSEUDO = PseudoField(
