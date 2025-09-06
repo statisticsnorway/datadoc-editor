@@ -604,7 +604,10 @@ def register_callbacks(app: Dash) -> None:
 
         # Map the selected algorithm to its corresponding fields
         metadata_inputs = choose_metadata_inputs_based_on_algorithm(selected_algorithm)
+        if variable.pseudonymization is None:
+            state.metadata.add_pseudonymization(variable_short_name)
 
+        assert variable.pseudonymization is not None
         # Build pseudo field section
         section = build_pseudo_field_section(
             metadata_inputs,
