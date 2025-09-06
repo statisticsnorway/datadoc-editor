@@ -70,7 +70,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def register_callbacks(app: Dash) -> None:  # pylint: disable=too-many-statements
+def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
     """Define and register callbacks."""
 
     @app.callback(
@@ -275,7 +275,7 @@ def register_callbacks(app: Dash) -> None:  # pylint: disable=too-many-statement
         ),
         prevent_initial_call=True,
     )
-    def callback_accept_pseudo_variable_metadata_input(value, component_id):
+    def callback_accept_pseudo_variable_metadata_input(value, component_id):  # noqa: ANN202, ANN001
         if value is None or component_id is None:
             # Nothing to do if deselected or missing
             return False, ""
@@ -286,7 +286,7 @@ def register_callbacks(app: Dash) -> None:  # pylint: disable=too-many-statement
         # Safely get variable from state
         variable = state.metadata.variables_lookup.get(variable_short_name)
         if not variable:
-            logger.info(f"Variable not found: {variable_short_name}")
+            logger.info("Variable not found: %s", variable_short_name)
             return False, "Variable not found."
 
         message = accept_pseudo_variable_metadata_input(
@@ -525,14 +525,13 @@ def register_callbacks(app: Dash) -> None:  # pylint: disable=too-many-statement
 
         logger.info("Found variable: %s", variable.short_name)
 
-        metadata_inputs = choose_metadata_inputs_based_on_algorithm(selected_algorithm)
         if variable.pseudonymization is None:
             state.metadata.add_pseudonymization(variable_short_name)
 
-        assert variable.pseudonymization is not None
+        assert variable.pseudonymization is not None  # noqa: S101
 
         return build_pseudo_field_section(
-            metadata_inputs,
+            choose_metadata_inputs_based_on_algorithm(selected_algorithm),
             "left",
             variable=variable,
             pseudonymization=variable.pseudonymization,
