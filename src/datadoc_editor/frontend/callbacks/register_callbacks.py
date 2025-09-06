@@ -510,7 +510,7 @@ def register_callbacks(app: Dash) -> None:  # pylint: disable=too-many-statement
         Input({"type": "pseudonymization-dropdown", "variable": MATCH}, "value"),
         State({"type": "pseudonymization-dropdown", "variable": MATCH}, "id"),
     )
-    def update_pseudo_fields(selected_algorithm: str, dropdown_id):
+    def update_pseudo_fields(selected_algorithm: str, dropdown_id) -> dbc.Form | None:
         """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
         logger.info("Selected pseudo algorithm: %s", selected_algorithm)
         if not selected_algorithm:
