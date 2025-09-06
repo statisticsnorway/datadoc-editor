@@ -211,12 +211,10 @@ def register_callbacks(app: Dash) -> None:
         Output(ACCORDION_WRAPPER_ID, "children"),
         Input("dataset-opened-counter", "data"),
         Input("search-variables", "value"),
-        Input("pseudo-variables-updated-counter", "data"),
     )
     def callback_populate_variables_workspace(
         dataset_opened_counter: int,
         search_query: str,
-        pseudo_updated_counter: int,  # noqa: ARG001
     ) -> list:
         """Create variable workspace with accordions for variables."""
         logger.debug("Populating variables workspace. Search query: %s", search_query)
@@ -227,29 +225,6 @@ def register_callbacks(app: Dash) -> None:
             dataset_opened_counter,
         )
 
-    @app.callback(
-        Output({"type": "pseudo-field-container", "short_name": MATCH}, "children"),
-        Input({"type": "pseudo-button", "short_name": MATCH}, "n_clicks"),
-        prevent_initial_call=True,
-    )
-    def callback_update_pseudo_output(n_clicks: int) -> None:  # noqa: ARG001
-        """Adding a pseudo variable when the add pseudo variable is clicked."""
-        short_name = ctx.triggered_id["short_name"]
-        print("Shortname:" + short_name)
-        state.metadata.add_pseudonymization(short_name)
-
-    @app.callback(
-        Output("pseudo-variables-updated-counter", "data"),
-        Input({"type": "pseudo-button", "short_name": ALL}, "n_clicks"),
-        State("pseudo-variables-updated-counter", "data"),
-        prevent_initial_call=True,
-    )
-    def callback_update_pseudo_counter(
-        n_clicks_list: list,  # noqa: ARG001
-        current_counter: int,
-    ) -> int:
-        """Counter for the pseudo variable button."""
-        return current_counter + 1
 
     @app.callback(
         Output(SECTION_WRAPPER_ID, "children"),
@@ -532,7 +507,6 @@ def register_callbacks(app: Dash) -> None:
             contains_data_until,
         )
 
-    # fix diverging ids use short_name for all(?)
     @app.callback(
         Output({"type": "pseudo-field-container", "variable": MATCH}, "children"),
         Input({"type": "pseudonymization-dropdown", "variable": MATCH}, "value"),
