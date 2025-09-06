@@ -532,7 +532,7 @@ def register_callbacks(app: Dash) -> None:
             contains_data_until,
         )
 
-# fix diverging ids use short_name for all(?)
+    # fix diverging ids use short_name for all(?)
     @app.callback(
         Output({"type": "pseudo-field-container", "variable": MATCH}, "children"),
         Input({"type": "pseudonymization-dropdown", "variable": MATCH}, "value"),
@@ -561,7 +561,7 @@ def register_callbacks(app: Dash) -> None:
             metadata_inputs,
             "left",
             variable=variable,
-            pseudonymization=variable.pseudonymization, 
+            pseudonymization=variable.pseudonymization,
             field_id="pseudo",
         )
         return section

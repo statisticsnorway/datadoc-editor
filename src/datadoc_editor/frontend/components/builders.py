@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 from enum import auto
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import dash_bootstrap_components as dbc
 import ssb_dash_components as ssb
@@ -122,7 +122,7 @@ def build_input_field_section(
         className="edit-section-form",
     )
 
-#     
+
 def build_pseudo_field_section(
     metadata_fields: list[FieldTypes],
     side: str,
@@ -244,12 +244,7 @@ def build_variables_pseudo_button(title: str, short_name: str) -> html.Section:
                 },
                 className="add-pseudo-button",
             ),
-            html.Div(
-                id={
-                    "type": "pseudo-field-container", 
-                    "variable": short_name
-                }
-            ),
+            html.Div(id={"type": "pseudo-field-container", "variable": short_name}),
         ],
         className="variable-pseudo-button",
     )
