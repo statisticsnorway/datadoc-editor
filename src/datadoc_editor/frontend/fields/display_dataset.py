@@ -20,7 +20,6 @@ from datadoc_editor.frontend.fields.display_base import (
 )
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import FieldTypes
-from datadoc_editor.frontend.fields.display_base import MetadataCheckboxField
 from datadoc_editor.frontend.fields.display_base import MetadataDateField
 from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
 from datadoc_editor.frontend.fields.display_base import MetadataInputField
@@ -93,8 +92,7 @@ class DatasetIdentifiers(str, Enum):
     KEYWORD = "keyword"
     SPATIAL_COVERAGE_DESCRIPTION = "spatial_coverage_description"
     CONTAINS_PERSONAL_DATA = "contains_personal_data"
-    USE_RESTRICTION = "use_restriction"
-    USE_RESTRICTION_DATE = "use_restriction_date"
+    USE_RESTRICTIONS = "use_restrictions"
     ID = "id"
     OWNER = "owner"
     FILE_PATH = "file_path"
@@ -117,12 +115,12 @@ DISPLAY_DATASET: dict[
         obligatory=True,
         id_type=DATASET_METADATA_MULTILANGUAGE_INPUT,
     ),
-    DatasetIdentifiers.CONTAINS_PERSONAL_DATA: MetadataCheckboxField(
-        identifier=DatasetIdentifiers.CONTAINS_PERSONAL_DATA.value,
-        display_name="Inneholder personopplysninger",
-        description="Oppgi om datasettet inneholder personopplysninger. All informasjon som entydig kan knyttes til en fysisk person (f.eks. fødselsnummer og adresse), er personopplysninger. Pseudonymiserte personopplysninger er fortsatt personopplysninger. Næringsdata om enkeltpersonforetak (ENK) skal imidlertid ikke regnes som personopplysninger.",
-        obligatory=True,
-    ),
+    # DatasetIdentifiers.CONTAINS_PERSONAL_DATA: MetadataCheckboxField(
+    #     identifier=DatasetIdentifiers.CONTAINS_PERSONAL_DATA.value,
+    #     display_name="Inneholder personopplysninger",
+    #     description="Oppgi om datasettet inneholder personopplysninger. All informasjon som entydig kan knyttes til en fysisk person (f.eks. fødselsnummer og adresse), er personopplysninger. Pseudonymiserte personopplysninger er fortsatt personopplysninger. Næringsdata om enkeltpersonforetak (ENK) skal imidlertid ikke regnes som personopplysninger.",
+    #     obligatory=True,
+    # ),
     DatasetIdentifiers.DESCRIPTION: MetadataMultiLanguageField(
         identifier=DatasetIdentifiers.DESCRIPTION.value,
         display_name="Beskrivelse",
@@ -147,20 +145,15 @@ DISPLAY_DATASET: dict[
         obligatory=True,
         id_type=DATASET_METADATA_MULTILANGUAGE_INPUT,
     ),
-    DatasetIdentifiers.USE_RESTRICTION: MetadataMultiDropdownField(
-        identifier=DatasetIdentifiers.USE_RESTRICTION.value,
+    DatasetIdentifiers.USE_RESTRICTIONS: MetadataMultiDropdownField(
+        identifier=DatasetIdentifiers.USE_RESTRICTIONS.value,
         display_name="Bruksrestriksjon",
         description="Velg hvilken bruksrestriksjon som gjelder.",
         options_getter=functools.partial(get_enum_options, UseRestriction),
-        date_identifier="use_restriction_date",
+        date_identifier="",
         date_display_name="Dato for restriksjon",
         date_description="Oppgi datoen når restriksjonen gjelder fra.",
     ),
-    # DatasetIdentifiers.USE_RESTRICTION_DATE: MetadataMultiDropdownField(
-    #     identifier=DatasetIdentifiers.USE_RESTRICTION_DATE.value,
-    #     display_name="Bruksrestriksjonsdato",
-    #     description='Oppgi ev. "tiltaksdato" for bruksrestriksjoner, f.eks. frist for sletting/anonymisering. Noen bruksrestriksjoner vil ikke ha en slik dato, f.eks. vil en behandlingsbegrensning normalt være permanent/tidsuavhengig.',
-    # ),
     DatasetIdentifiers.DATASET_STATE: MetadataDropdownField(
         identifier=DatasetIdentifiers.DATASET_STATE.value,
         display_name="Datatilstand",

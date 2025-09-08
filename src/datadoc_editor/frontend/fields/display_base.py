@@ -385,7 +385,6 @@ class MetadataMultiDropdownField(DisplayMetadata):
         )
         self.options_getter = options_getter
 
-        # separate config for the date input
         self.date_identifier = date_identifier or f"{identifier}_date"
         self.date_display_name = date_display_name or "Dato"
         self.date_description = date_description or "Velg en dato."
@@ -398,37 +397,45 @@ class MetadataMultiDropdownField(DisplayMetadata):
         """Build section with Dropdown and Date Input components."""
         self.url_encode_shortname_ids(component_id)
 
+        use_restrictions: list[model.UseRestrictionItem] = (
+            getattr(metadata, self.identifier, None) or []
+        )
+
+        children = []
+        for idx, item in enumerate(use_restrictions):
+            children.append(
+                html.Div(
+                    children=[
+                        ssb.Dropdown(
+                            header=self.display_name,
+                            id={**component_id, "index": idx, "field": "type"},
+                            items=self.options_getter(),
+                            placeholder=DROPDOWN_DESELECT_OPTION,
+                            value=item.use_restriction_type,
+                            className="dropdown-component",
+                            showDescription=True,
+                            description=self.description,
+                        ),
+                        ssb.Input(
+                            label=self.date_display_name,
+                            id={**component_id, "index": idx, "field": "date"},
+                            debounce=False,
+                            type="date",
+                            disabled=not self.editable,
+                            showDescription=True,
+                            description=self.date_description,
+                            value=item.use_restriction_date.isoformat()
+                            if item.use_restriction_date
+                            else "",
+                            className="input-component",
+                        ),
+                    ],
+                    className="input-group-row",
+                )
+            )
+
         return html.Section(
-            children=[
-                ssb.Dropdown(
-                    header=self.display_name,
-                    id=component_id,
-                    items=self.options_getter(),
-                    placeholder=DROPDOWN_DESELECT_OPTION,
-                    value=get_metadata_and_stringify(metadata, self.identifier),
-                    className="dropdown-component",
-                    showDescription=True,
-                    description=self.description,
-                ),
-                ssb.Input(
-                    label=self.date_display_name,
-                    id={**component_id, "field": "date"},
-                    debounce=False,
-                    type="date",
-                    disabled=not self.editable,
-                    showDescription=True,
-                    description=self.date_description,
-                    value=get_metadata_and_stringify(metadata, self.date_identifier),
-                    className="input-component",
-                ),
-                ssb.Button(
-                    children=["+"],
-                    id={
-                        "type": "use-restriction-button",
-                    },
-                    className="add-use-restriction",
-                ),
-            ],
+            children=children,
             className="input-group-container",
         )
 

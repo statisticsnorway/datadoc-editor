@@ -7,10 +7,10 @@ license = "MIT"
 readme = "README.md"
 classifiers = ["Development Status :: 4 - Beta", "Framework :: Dash", "Typing :: Typed"]
 
-requires-python = ">=3.12"
+requires-python = ">=3.12,<4.0"
 dependencies = [
     "arrow>=1.3.0",
-    "dapla-toolbelt-metadata>=0.8.0",
+    "dapla-toolbelt-metadata @ git+https://github.com/statisticsnorway/dapla-toolbelt-metadata@feat/use-restriction",
     "dash>=2.15.0",
     "dash-bootstrap-components>=1.1.0",
     "flask-healthz>=0.0.3",
