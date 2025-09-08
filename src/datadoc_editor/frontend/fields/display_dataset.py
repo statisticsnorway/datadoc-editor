@@ -115,12 +115,12 @@ DISPLAY_DATASET: dict[
         obligatory=True,
         id_type=DATASET_METADATA_MULTILANGUAGE_INPUT,
     ),
-    # DatasetIdentifiers.CONTAINS_PERSONAL_DATA: MetadataCheckboxField(
-    #     identifier=DatasetIdentifiers.CONTAINS_PERSONAL_DATA.value,
-    #     display_name="Inneholder personopplysninger",
-    #     description="Oppgi om datasettet inneholder personopplysninger. All informasjon som entydig kan knyttes til en fysisk person (f.eks. fødselsnummer og adresse), er personopplysninger. Pseudonymiserte personopplysninger er fortsatt personopplysninger. Næringsdata om enkeltpersonforetak (ENK) skal imidlertid ikke regnes som personopplysninger.",
-    #     obligatory=True,
-    # ),
+    DatasetIdentifiers.CONTAINS_PERSONAL_DATA: MetadataCheckboxField(
+        identifier=DatasetIdentifiers.CONTAINS_PERSONAL_DATA.value,
+        display_name="Inneholder personopplysninger",
+        description="Oppgi om datasettet inneholder personopplysninger. All informasjon som entydig kan knyttes til en fysisk person (f.eks. fødselsnummer og adresse), er personopplysninger. Pseudonymiserte personopplysninger er fortsatt personopplysninger. Næringsdata om enkeltpersonforetak (ENK) skal imidlertid ikke regnes som personopplysninger.",
+        obligatory=True,
+    ),
     DatasetIdentifiers.DESCRIPTION: MetadataMultiLanguageField(
         identifier=DatasetIdentifiers.DESCRIPTION.value,
         display_name="Beskrivelse",
