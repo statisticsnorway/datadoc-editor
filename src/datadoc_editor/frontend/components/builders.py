@@ -213,31 +213,6 @@ def build_variables_pseudonymization_section(
         className="variable-section",
     )
 
-
-def build_variables_pseudo_button(title: str, short_name: str) -> html.Section:
-    """Create the button to add pseudonymization."""
-    return html.Section(
-        children=[
-            ssb.Title(title, size=3, className="edit-section-title"),
-            ssb.Button(
-                children=["Legg til pseudonymisering"],
-                id={
-                    "type": "pseudo-button",
-                    "short_name": short_name,
-                },
-                className="add-pseudo-button",
-            ),
-            html.Div(
-                id={
-                    "type": "pseudo-output",
-                    "short_name": short_name,
-                }
-            ),
-        ],
-        className="variable-pseudo-button",
-    )
-
-
 def build_ssb_accordion(
     header: str,
     key: dict,
