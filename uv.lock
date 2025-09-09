@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version < '3.13'",
@@ -253,7 +253,7 @@ wheels = [
 
 [[package]]
 name = "dapla-toolbelt-metadata"
-version = "0.8.0"
+version = "0.8.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "arrow" },
@@ -271,9 +271,9 @@ dependencies = [
     { name = "ssb-klass-python" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e6/3f/3e90701e79c7f7106aff6e3d67c1a6f635b54953e1d8cd9f8372559c67e9/dapla_toolbelt_metadata-0.8.0.tar.gz", hash = "sha256:a6baa8744d372d831a6f809b50f6e2000c4076069bae5f6a69b1da1f873392ad", size = 95685, upload-time = "2025-06-10T07:11:55.551Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5a/a9/e287204252c3aee72fce872ff8b71bc8dc635852f2f20473a0cbfeefaff6/dapla_toolbelt_metadata-0.8.5.tar.gz", hash = "sha256:7a8648d15da985349d152128b6901c7d999ff2972a53953d8671962839d0443c", size = 96227, upload-time = "2025-08-18T07:41:26.027Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/02/58/bb96630de068d0a7efd383bb85ccb5bc6adeae4247157978ea461182b0f4/dapla_toolbelt_metadata-0.8.0-py3-none-any.whl", hash = "sha256:a408ee534d3ecea02d09b9d7b9fcbcf41f1e28f1b41feb9eb8f5537691c58795", size = 171497, upload-time = "2025-06-10T07:11:53.655Z" },
+    { url = "https://files.pythonhosted.org/packages/39/4d/8ead13eddea4ea3041b7c4fbd6f31c0f0a5251c8154b679d5a525d60888d/dapla_toolbelt_metadata-0.8.5-py3-none-any.whl", hash = "sha256:71bd772eb61ca755068eb33ed82ae60f456060ec166048c4b7c1b81a942f911e", size = 172212, upload-time = "2025-08-18T07:41:24.033Z" },
 ]
 
 [[package]]
@@ -2011,6 +2011,7 @@ dependencies = [
     { name = "pydantic" },
     { name = "python-dotenv" },
     { name = "ssb-dash-components" },
+    { name = "ssb-datadoc-model" },
 ]
 
 [package.dev-dependencies]
@@ -2056,6 +2057,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.5.2" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "ssb-dash-components", specifier = ">=0.9.1" },
+    { name = "ssb-datadoc-model", specifier = "==7.0.2" },
 ]
 
 [package.metadata.requires-dev]
@@ -2092,14 +2094,14 @@ dev = [
 
 [[package]]
 name = "ssb-datadoc-model"
-version = "7.0.1"
+version = "7.0.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/7f/6a/3927508823df3d4fe59932b52a89d97a74aa8c8b3a1ac7270f8aa1362c8f/ssb_datadoc_model-7.0.1.tar.gz", hash = "sha256:e01a3097d5d96e7507a52da7c384dffa99ff553d2fdcc5477207f6a94cb38bbc", size = 28743, upload-time = "2025-05-28T11:14:34.093Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/34/d9/6468c91bbb4a43750d94d82606b1792bbfcc1fffe8bd99fcb5911ac1a148/ssb_datadoc_model-7.0.2.tar.gz", hash = "sha256:146cee5fb69d5c7b25762a9bbd088358f550ea77e8a3994429266063d479116e", size = 29093, upload-time = "2025-08-15T10:25:10.269Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d6/20/ea3571837b6da2e9b237dc8a8e0f58fa7a11426eb099ede0917972478dc3/ssb_datadoc_model-7.0.1-py3-none-any.whl", hash = "sha256:8495285da6d641855281d018fb5f207464f61227d655ad1e7281569843ace6f0", size = 11289, upload-time = "2025-05-28T11:14:32.789Z" },
+    { url = "https://files.pythonhosted.org/packages/21/de/6eada0c76ea50f443783e54ff7f8bbead579c98acdbfe7d567c685cb541a/ssb_datadoc_model-7.0.2-py3-none-any.whl", hash = "sha256:8f553538f4832ee0816135ef96fcf4dd4ad2e7a5a2788fb97d9d58c667ca1112", size = 11251, upload-time = "2025-08-15T10:25:07.803Z" },
 ]
 
 [[package]]
