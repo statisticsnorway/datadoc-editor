@@ -488,9 +488,9 @@ def register_callbacks(app: Dash) -> None:
     )
     def store_selected_pseudo_algorithm(
         all_values: list, all_ids: list, store_data: dict
-    ) -> None:
+    ) -> dict:
         """Store the value of selected pseudo algorithm in dcc.Store object."""
-        if store_data is None:
+        if not store_data:
             store_data = {}
 
         for val, val_id in zip(all_values, all_ids, strict=False):
