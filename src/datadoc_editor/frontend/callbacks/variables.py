@@ -7,7 +7,7 @@ import urllib.parse
 from typing import TYPE_CHECKING
 
 from datadoc_editor import state
-from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
+from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes, map_dropdown_to_pseudo
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import parse_and_validate_dates
 from datadoc_editor.frontend.components.builders import build_edit_section
@@ -19,9 +19,6 @@ from datadoc_editor.frontend.components.builders import (
 )
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
-from datadoc_editor.frontend.fields.display_pseudo_variables import (
-    PSEUDONYMIZATION_METADATA,
-)
 from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
 from datadoc_editor.frontend.fields.display_variables import (
     MULTIPLE_LANGUAGE_VARIABLES_METADATA,
@@ -67,21 +64,10 @@ def populate_variables_workspace(
                     "Maskingenerert",
                     variable,
                 ),
-                *(
-                    [
-                        build_variables_pseudonymization_section(
-                            PSEUDONYMIZATION_METADATA,
-                            "Pseudonymisert",
-                            variable,
-                            variable.pseudonymization,
-                        )
-                    ]
-                    if variable.pseudonymization is not None
-                    else [
-                        build_variables_pseudo_button(
-                            "Pseudonymisert", short_name=variable.short_name or ""
-                        )
-                    ]
+                build_variables_pseudonymization_section(
+                    "Pseudonymisert",
+                    variable,
+                    map_dropdown_to_pseudo(variable),
                 ),
             ],
         )
