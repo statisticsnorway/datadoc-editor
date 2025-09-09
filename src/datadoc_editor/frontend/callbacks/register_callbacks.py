@@ -523,3 +523,23 @@ def register_callbacks(app: Dash) -> None:
             }
         logger.debug("Saved in pseudo: %s", store_data)
         return store_data
+    
+    @app.callback(
+        Output("pseudo-variables-selected-algorithm", "data"),
+        Input({"type": "pseudonymization-dropdown", "variable": ALL}, "value"),
+        State({"type": "pseudonymization-dropdown", "variable": ALL}, "id"),
+        State("pseudo-variables-selected-algorithm", "data"),
+    )
+    def store_selected_pseudo_algorithm(all_values, all_ids, store_data) -> None:  # noqa: ANN001
+        """Store the value of selected pseudo algorithm in dcc.Store object."""
+        if store_data is None:
+            store_data = {}
+
+        for val, val_id in zip(all_values, all_ids, strict=False):
+            var_name = val_id["variable"]
+            store_data[var_name] = {
+                "variable_short_name": var_name,
+                "selected_algorithm": val,
+            }
+        logger.debug("Saved in pseudo: %s", store_data)
+        return store_data
