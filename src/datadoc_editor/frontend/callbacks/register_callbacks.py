@@ -71,7 +71,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def register_callbacks(app: Dash) -> None:
+def register_callbacks(app: Dash) -> None:  # noqa PLR0915
     """Define and register callbacks."""
 
     @app.callback(
@@ -510,7 +510,6 @@ def register_callbacks(app: Dash) -> None:
     def update_pseudo_fields(
         selected_algorithm,  # noqa: ANN001
         dropdown_id,  # noqa: ANN001
-        data: dict,
     ) -> list[dbc.Form]:
         """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
         logger.debug("Selected algorithm: %s", selected_algorithm)
