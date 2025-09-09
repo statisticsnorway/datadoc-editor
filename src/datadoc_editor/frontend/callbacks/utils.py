@@ -36,7 +36,18 @@ from datadoc_editor.frontend.constants import STANDARD_ALGORITM_DAPLA_ENCRYPTION
 from datadoc_editor.frontend.fields.display_dataset import (
     OBLIGATORY_DATASET_METADATA_IDENTIFIERS_AND_DISPLAY_NAME,
 )
-from datadoc_editor.frontend.fields.display_pseudo_variables import PSEUDONYMIZATION_DEAD_METADATA, PSEUDONYMIZATION_METADATA, PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID_METADATA, PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID_METADATA
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PSEUDONYMIZATION_DEAD_METADATA,
+)
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PSEUDONYMIZATION_METADATA,
+)
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID_METADATA,
+)
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID_METADATA,
+)
 from datadoc_editor.frontend.fields.display_variables import (
     OBLIGATORY_VARIABLES_METADATA_IDENTIFIERS_AND_DISPLAY_NAME,
 )
@@ -452,6 +463,7 @@ def choose_metadata_inputs_based_on_algorithm(
     }
 
     return mapping.get(selected_algorithm, [])
+
 
 def map_dropdown_to_pseudo(variable: model.Variable) -> str:
     """Helper."""
