@@ -280,10 +280,17 @@ def register_callbacks(app: Dash) -> None:
             },
             "value",
         ),
+        State(
+            {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
+            "id",
+        ),
+        State("pseudo-variables-selected-algorithm", "data"),
         prevent_initial_call=True,
     )
     def callback_accept_pseudo_variable_metadata_input(
         value: MetadataInputTypes,  # noqa: ARG001 argument required by Dash
+        component_id,
+        data
     ) -> dbc.Alert:
         """Save updated variable metadata values."""
         message = accept_pseudo_variable_metadata_input(
