@@ -213,6 +213,7 @@ def build_variables_pseudonymization_section(
         className="variable-section",
     )
 
+
 def build_ssb_accordion(
     header: str,
     key: dict,

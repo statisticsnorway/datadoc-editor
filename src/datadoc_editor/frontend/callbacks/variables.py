@@ -7,13 +7,13 @@ import urllib.parse
 from typing import TYPE_CHECKING
 
 from datadoc_editor import state
-from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes, map_dropdown_to_pseudo
+from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
+from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
 from datadoc_editor.frontend.callbacks.utils import parse_and_validate_dates
 from datadoc_editor.frontend.components.builders import build_edit_section
 from datadoc_editor.frontend.components.builders import build_ssb_accordion
 from datadoc_editor.frontend.components.builders import build_variables_machine_section
-from datadoc_editor.frontend.components.builders import build_variables_pseudo_button
 from datadoc_editor.frontend.components.builders import (
     build_variables_pseudonymization_section,
 )
