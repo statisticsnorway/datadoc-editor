@@ -23,6 +23,10 @@ from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_date_input
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
+from datadoc_editor.frontend.callbacks.utils import (
+    choose_metadata_inputs_based_on_algorithm,
+)
+from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
 from datadoc_editor.frontend.callbacks.variables import (
@@ -35,6 +39,7 @@ from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
 from datadoc_editor.frontend.components.builders import build_dataset_edit_section
 from datadoc_editor.frontend.components.builders import build_dataset_machine_section
+from datadoc_editor.frontend.components.builders import build_pseudo_field_section
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
@@ -207,16 +212,13 @@ def register_callbacks(app: Dash) -> None:
         Output(ACCORDION_WRAPPER_ID, "children"),
         Input("dataset-opened-counter", "data"),
         Input("search-variables", "value"),
-        Input("pseudo-variables-updated-counter", "data"),
     )
     def callback_populate_variables_workspace(
         dataset_opened_counter: int,
         search_query: str,
-        pseudo_updated_counter: int,  # noqa: ARG001
     ) -> list:
         """Create variable workspace with accordions for variables."""
         logger.debug("Populating variables workspace. Search query: %s", search_query)
-
         return populate_variables_workspace(
             state.metadata.variables,
             search_query,
@@ -288,21 +290,56 @@ def register_callbacks(app: Dash) -> None:
         prevent_initial_call=True,
     )
     def callback_accept_pseudo_variable_metadata_input(
-        value: MetadataInputTypes,  # noqa: ARG001 argument required by Dash
-        component_id,
-        data
+        value: MetadataInputTypes, component_id, data
     ) -> dbc.Alert:
         """Save updated variable metadata values."""
-        message = accept_pseudo_variable_metadata_input(
-            ctx.triggered[0]["value"],
-            ctx.triggered_id["variable_short_name"],
-            ctx.triggered_id["id"],
+        if value is None or component_id is None:
+            # Nothing to do if deselected or missing
+            return False, ""
+        variable_short_name = component_id["variable_short_name"]
+        input_id = component_id["id"]
+        logger.debug(
+            "Callback triggered with value=%s, component_id=%s, data_keys=%s",
+            value,
+            component_id,
+            list(data.keys()) if data else None,
         )
+        logger.debug(
+            "Value %s",
+            value,
+        )
+        selected_algorithm = data.get(variable_short_name, {}).get(
+            "selected_algorithm", ""
+        )
+        logger.debug(
+            "Reading selected algorithm for current %s: %s",
+            variable_short_name,
+            selected_algorithm,
+        )
+
+        # Safely get variable from state
+        variable = state.metadata.variables_lookup.get(variable_short_name)
+        if not variable:
+            logger.info("Variable not found: %s", variable_short_name)
+            return False, "Variable not found."
+
+        message = accept_pseudo_variable_metadata_input(
+            value, variable_short_name, input_id
+        )
+
         if not message:
-            # No error to display.
             return False, ""
 
         return True, message
+        # message = accept_pseudo_variable_metadata_input(
+        #    ctx.triggered[0]["value"],
+        #    ctx.triggered_id["variable_short_name"],
+        #    ctx.triggered_id["id"],
+        # )
+        # if not message:
+        #    # No error to display.
+        #    return False, ""
+        # return True, message
 
     @app.callback(
         Output(
@@ -530,23 +567,70 @@ def register_callbacks(app: Dash) -> None:
             }
         logger.debug("Saved in pseudo: %s", store_data)
         return store_data
-    
+
     @app.callback(
-        Output("pseudo-variables-selected-algorithm", "data"),
-        Input({"type": "pseudonymization-dropdown", "variable": ALL}, "value"),
-        State({"type": "pseudonymization-dropdown", "variable": ALL}, "id"),
+        Output({"type": "pseudo-field-container", "variable": MATCH}, "children"),
+        Input({"type": "pseudonymization-dropdown", "variable": MATCH}, "value"),
+        State({"type": "pseudonymization-dropdown", "variable": MATCH}, "id"),
         State("pseudo-variables-selected-algorithm", "data"),
     )
-    def store_selected_pseudo_algorithm(all_values, all_ids, store_data) -> None:  # noqa: ANN001
-        """Store the value of selected pseudo algorithm in dcc.Store object."""
-        if store_data is None:
-            store_data = {}
+    def update_pseudo_fields(
+        selected_algorithm,  # noqa: ANN001
+        dropdown_id,  # noqa: ANN001
+        data,  # noqa: ANN001
+    ) -> list[dbc.Form]:
+        """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
+        variable_short_name = dropdown_id["variable"]
+        variable = state.metadata.variables_lookup.get(variable_short_name)
+        if variable is None:
+            logger.info("Variable not found in lookup!")
+            return []
 
-        for val, val_id in zip(all_values, all_ids, strict=False):
-            var_name = val_id["variable"]
-            store_data[var_name] = {
-                "variable_short_name": var_name,
-                "selected_algorithm": val,
-            }
-        logger.debug("Saved in pseudo: %s", store_data)
-        return store_data
+        logger.info("Found variable: %s", variable.short_name)
+
+        selected_algorithm_from_state = data.get(variable_short_name, {}).get(
+            "selected_algorithm", ""
+        )
+        if selected_algorithm == "":
+            selected_algorithm = None
+
+        if selected_algorithm is None and variable.pseudonymization is None:
+            state.metadata.remove_pseudonymization(variable_short_name)
+            selected_algorithm = ""
+            logger.info("Removed pseudonymization for %s", variable.short_name)
+            return []
+        if selected_algorithm is None and variable.pseudonymization is not None:
+            selected_algorithm = map_dropdown_to_pseudo(variable)
+            save_algorithm_selected = choose_metadata_inputs_based_on_algorithm(
+                selected_algorithm_from_state
+            )
+            logger.debug("selected from state: %s", selected_algorithm)
+
+        if variable.pseudonymization is None and selected_algorithm is not None:
+            state.metadata.add_pseudonymization(variable_short_name)
+            logger.info("Added pseudonymization for %s", variable.short_name)
+
+        if variable.pseudonymization is None:
+            logger.info(
+                "No pseudonymization for %s, returning empty list", variable.short_name
+            )
+            return []
+
+        save_algorithm_selected = choose_metadata_inputs_based_on_algorithm(
+            selected_algorithm
+        )
+
+        logger.debug(
+            "This is saved pseudo %s for %s",
+            variable.pseudonymization,
+            variable.short_name,
+        )
+
+        logger.debug("Save and view %s", selected_algorithm)
+        return build_pseudo_field_section(
+            save_algorithm_selected,
+            "left",
+            variable=variable,
+            pseudonymization=variable.pseudonymization,
+            field_id="pseudo",
+        )
