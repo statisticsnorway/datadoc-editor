@@ -399,6 +399,7 @@ class UseRestriction(LanguageStringsEnum):
         ],
     )
 
+
 class PseudonymizationAlgorithmsEnum(LanguageStringsEnum):
     """Standard pseudonymization algorithms."""
 
