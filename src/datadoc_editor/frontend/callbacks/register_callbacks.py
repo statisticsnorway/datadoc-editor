@@ -24,13 +24,14 @@ from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_da
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
 from datadoc_editor.frontend.callbacks.utils import (
-    choose_metadata_inputs_based_on_algorithm,
+    map_selected_algorithm_to_pseudo_fields,
 )
 from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
 from datadoc_editor.frontend.callbacks.variables import (
     accept_pseudo_variable_metadata_input,
+    populate_pseudo_edit_section,
 )
 from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
@@ -518,15 +519,18 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         if variable is None:
             logger.info("Variable not found in lookup!")
             return []
-
-        logger.info("Found variable: %s", variable.short_name)
-
+        else:
+            logger.debug(
+                "This is saved pseudo %s for %s",
+                variable.pseudonymization,
+                variable.short_name,
+            )
         if selected_algorithm == "":
             selected_algorithm = None
 
         if selected_algorithm is None and variable.pseudonymization is not None:
             selected_algorithm = map_dropdown_to_pseudo(variable)
-            save_algorithm_selected = choose_metadata_inputs_based_on_algorithm(
+            filtered_pseudo_fields = map_selected_algorithm_to_pseudo_fields(
                 selected_algorithm
             )
             logger.debug(
@@ -534,32 +538,27 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             )
             logger.debug(
                 "Save algorithm selected %s for %s",
-                save_algorithm_selected,
+                filtered_pseudo_fields,
                 variable_short_name,
             )
 
-        if selected_algorithm and not variable.pseudonymization:
+        elif selected_algorithm and not variable.pseudonymization:
             state.metadata.add_pseudonymization(variable_short_name)
             logger.info("Added pseudonymization for %s", variable.short_name)
 
         # Mypy
-        if variable.pseudonymization is None:
+        elif variable.pseudonymization is None:
             logger.info(
                 "No pseudonymization for %s, returning empty list", variable.short_name
             )
             return []
 
-        save_algorithm_selected = choose_metadata_inputs_based_on_algorithm(
+        filtered_pseudo_fields = map_selected_algorithm_to_pseudo_fields(
             selected_algorithm
         )
 
-        logger.debug(
-            "This is saved pseudo %s for %s",
-            variable.pseudonymization,
-            variable.short_name,
-        )
         return build_pseudo_field_section(
-            save_algorithm_selected,
+            filtered_pseudo_fields,
             "left",
             variable=variable,
             pseudonymization=variable.pseudonymization,
