@@ -224,29 +224,6 @@ def register_callbacks(app: Dash) -> None:
         )
 
     @app.callback(
-        Output({"type": "pseudo-output", "short_name": MATCH}, "children"),
-        Input({"type": "pseudo-button", "short_name": MATCH}, "n_clicks"),
-        prevent_initial_call=True,
-    )
-    def callback_update_pseudo_output(n_clicks: int) -> None:  # noqa: ARG001
-        """Adding a pseudo variable when the add pseudo variable is clicked."""
-        short_name = ctx.triggered_id["short_name"]
-        state.metadata.add_pseudonymization(short_name)
-
-    @app.callback(
-        Output("pseudo-variables-updated-counter", "data"),
-        Input({"type": "pseudo-button", "short_name": ALL}, "n_clicks"),
-        State("pseudo-variables-updated-counter", "data"),
-        prevent_initial_call=True,
-    )
-    def callback_update_pseudo_counter(
-        n_clicks_list: list,  # noqa: ARG001
-        current_counter: int,
-    ) -> int:
-        """Counter for the pseudo variable button."""
-        return current_counter + 1
-
-    @app.callback(
         Output(SECTION_WRAPPER_ID, "children"),
         Input("dataset-opened-counter", "data"),
     )
@@ -526,3 +503,23 @@ def register_callbacks(app: Dash) -> None:
             contains_data_from,
             contains_data_until,
         )
+
+    @app.callback(
+        Output("pseudo-variables-selected-algorithm", "data"),
+        Input({"type": "pseudonymization-dropdown", "variable": ALL}, "value"),
+        State({"type": "pseudonymization-dropdown", "variable": ALL}, "id"),
+        State("pseudo-variables-selected-algorithm", "data"),
+    )
+    def store_selected_pseudo_algorithm(all_values, all_ids, store_data) -> None:  # noqa: ANN001
+        """Store the value of selected pseudo algorithm in dcc.Store object."""
+        if store_data is None:
+            store_data = {}
+
+        for val, val_id in zip(all_values, all_ids, strict=False):
+            var_name = val_id["variable"]
+            store_data[var_name] = {
+                "variable_short_name": var_name,
+                "selected_algorithm": val,
+            }
+        logger.debug("Saved in pseudo: %s", store_data)
+        return store_data
