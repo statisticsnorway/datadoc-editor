@@ -14,7 +14,10 @@ from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
 from datadoc_editor.frontend.fields.display_base import MetadataInputField
 from datadoc_editor.frontend.fields.display_base import MetadataPeriodField
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PSEUDONYMIZATION_DEAD_METADATA,
     PSEUDONYMIZATION_METADATA,
+    PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID_METADATA,
+    PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID_METADATA,
 )
 from datadoc_editor.frontend.fields.display_variables import VARIABLES_METADATA_LEFT
 from datadoc_editor.frontend.fields.display_variables import VARIABLES_METADATA_RIGHT
@@ -226,9 +229,15 @@ def test_build_input_fields_dropdown_components(
 
 PSEDUO_VARIABLES_METADATA = PSEUDONYMIZATION_METADATA
 
+SELECTED_ALGORITHMS = [
+    PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID_METADATA,
+    PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID_METADATA,
+    PSEUDONYMIZATION_DEAD_METADATA,
+]
+
 PSEUDO_INPUT_FIELD_SECTION = [
     (
-        PSEDUO_VARIABLES_METADATA,
+        SELECTED_ALGORITHMS,
         model.Variable(short_name="hoveddiagnose"),
     ),
 ]
@@ -236,16 +245,16 @@ PSEUDO_INPUT_FIELD_SECTION = [
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
 @pytest.mark.parametrize(
-    ("field_list", "variable"),
+    ("selected_algorithm", "variable"),
     PSEUDO_INPUT_FIELD_SECTION,
 )
 def test_build_pseudo_input_section(
-    field_list,
+    selected_algorithm,
     variable,
 ):
     variable.pseudonymization = model.Pseudonymization()
     input_section = build_variables_pseudonymization_section(
-        field_list, "left", variable, variable.pseudonymization
+        "Pseudonymisert", variable, selected_algorithm
     )
 
     elements_of_input = [
