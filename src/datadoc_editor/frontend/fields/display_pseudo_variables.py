@@ -15,6 +15,7 @@ class PseudoVariableIdentifiers(str, Enum):
     ENCRYPTION_KEY_REFERENCE = "encryption_key_reference"
     ENCRYPTION_ALGORITHM_PARAMETERS = "encryption_algorithm_parameters"
 
+
 PSEUDO_FIELDS: dict[
     PseudoVariableIdentifiers,
     FieldTypes,
