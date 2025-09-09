@@ -24,11 +24,15 @@ from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_VARIABLES_MESSAGE
 from datadoc_editor.constants import ILLEGAL_SHORTNAME_WARNING
 from datadoc_editor.constants import ILLEGAL_SHORTNAME_WARNING_MESSAGE
 from datadoc_editor.constants import MISSING_METADATA_WARNING
+from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.components.builders import AlertTypes
 from datadoc_editor.frontend.components.builders import build_ssb_alert
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
+from datadoc_editor.frontend.constants import PAPIS_ALGORITHM_ENCRYPTION
+from datadoc_editor.frontend.constants import PAPIS_ALGORITHM_WITH_STABIL_ID_TYPE
+from datadoc_editor.frontend.constants import STANDARD_ALGORITM_DAPLA_ENCRYPTION
 from datadoc_editor.frontend.fields.display_dataset import (
     OBLIGATORY_DATASET_METADATA_IDENTIFIERS_AND_DISPLAY_NAME,
 )
@@ -433,3 +437,25 @@ def save_metadata_and_generate_alerts(metadata: Datadoc) -> list:
         variables_control(missing_obligatory_variables, metadata.variables),
         check_variable_names(metadata.variables),
     ]
+
+
+def map_dropdown_to_pseudo(variable: model.Variable) -> str:
+    """Helper."""
+    pseudonym_obj = variable.pseudonymization
+    selected_algorithm = ""
+    if pseudonym_obj is None:
+        return selected_algorithm
+    if pseudonym_obj.encryption_algorithm == PAPIS_ALGORITHM_ENCRYPTION:
+        if pseudonym_obj.stable_identifier_type == PAPIS_ALGORITHM_WITH_STABIL_ID_TYPE:
+            selected_algorithm = str(
+                PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABIL_ID.value
+            )
+        else:
+            selected_algorithm = str(
+                PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABIL_ID.value
+            )
+    if pseudonym_obj.encryption_algorithm == STANDARD_ALGORITM_DAPLA_ENCRYPTION:
+        selected_algorithm = str(
+            PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA.value
+        )
+    return selected_algorithm
