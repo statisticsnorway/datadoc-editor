@@ -451,7 +451,7 @@ def save_metadata_and_generate_alerts(metadata: Datadoc) -> list:
     ]
 
 
-def choose_metadata_inputs_based_on_algorithm(
+def map_selected_algorithm_to_pseudo_fields(
     selected_algorithm: str,
 ) -> list:
     """Map a PseudonymizationAlgorithms enum value to the correct pseudonymization input list."""
