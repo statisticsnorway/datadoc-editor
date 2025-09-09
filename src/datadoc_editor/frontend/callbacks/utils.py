@@ -36,6 +36,7 @@ from datadoc_editor.frontend.constants import STANDARD_ALGORITM_DAPLA_ENCRYPTION
 from datadoc_editor.frontend.fields.display_dataset import (
     OBLIGATORY_DATASET_METADATA_IDENTIFIERS_AND_DISPLAY_NAME,
 )
+from datadoc_editor.frontend.fields.display_pseudo_variables import PSEUDONYMIZATION_DEAD_METADATA, PSEUDONYMIZATION_METADATA, PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID_METADATA, PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID_METADATA
 from datadoc_editor.frontend.fields.display_variables import (
     OBLIGATORY_VARIABLES_METADATA_IDENTIFIERS_AND_DISPLAY_NAME,
 )
@@ -438,6 +439,19 @@ def save_metadata_and_generate_alerts(metadata: Datadoc) -> list:
         check_variable_names(metadata.variables),
     ]
 
+
+def choose_metadata_inputs_based_on_algorithm(
+    selected_algorithm: str,
+) -> list:
+    """Map a PseudonymizationAlgorithms enum value to the correct pseudonymization input list."""
+    mapping = {
+        "PAPIS_ALGORITHM_WITHOUT_STABIL_ID": PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID_METADATA,
+        "PAPIS_ALGORITHM_WITH_STABIL_ID": PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID_METADATA,
+        "STANDARD_ALGORITM_DAPLA": PSEUDONYMIZATION_DEAD_METADATA,
+        "CUSTOM": PSEUDONYMIZATION_METADATA,
+    }
+
+    return mapping.get(selected_algorithm, [])
 
 def map_dropdown_to_pseudo(variable: model.Variable) -> str:
     """Helper."""
