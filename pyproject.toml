@@ -10,7 +10,7 @@ classifiers = ["Development Status :: 4 - Beta", "Framework :: Dash", "Typing ::
 requires-python = ">=3.12,<4.0"
 dependencies = [
     "arrow>=1.3.0",
-    "dapla-toolbelt-metadata @ git+https://github.com/statisticsnorway/dapla-toolbelt-metadata@feat/use-restriction",
+    "dapla-toolbelt-metadata @ git+https://github.com/statisticsnorway/dapla-toolbelt-metadata@main",
     "dash>=2.15.0",
     "dash-bootstrap-components>=1.1.0",
     "flask-healthz>=0.0.3",
@@ -19,6 +19,9 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "ssb-dash-components>=0.9.1",
 ]
+
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [project.urls]
 homepage = "https://github.com/statisticsnorway/datadoc-editor"

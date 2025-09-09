@@ -12,6 +12,7 @@ from typing import Any
 
 import ssb_dash_components as ssb
 from dapla_metadata.datasets import enums
+from dapla_metadata.datasets import model
 from dash import html
 
 from datadoc_editor import state
@@ -19,7 +20,6 @@ from datadoc_editor import state
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from dapla_metadata.datasets import model
     from dash.development.base_component import Component
     from pydantic import BaseModel
 
@@ -31,6 +31,7 @@ logger = logging.getLogger(__name__)
 DATASET_METADATA_INPUT = "dataset-metadata-input"
 DATASET_METADATA_DATE_INPUT = "dataset-metadata-date-input"
 DATASET_METADATA_MULTILANGUAGE_INPUT = "dataset-metadata-multilanguage-input"
+DATASET_METADATA_MULTIDROPDOWN_INPUT = "dataset-metadata-multidropdown-input"
 
 PSEUDO_METADATA_INPUT = "pseudo-metadata-input"
 VARIABLES_METADATA_INPUT = "variables-metadata-input"
@@ -357,6 +358,7 @@ class MetadataMultiLanguageField(DisplayMetadata):
         )
 
 
+@dataclass
 class MetadataMultiDropdownField(DisplayMetadata):
     """A dropdown field for dataset metadata that supports multiple options,
     with an additional date input field.
@@ -364,30 +366,7 @@ class MetadataMultiDropdownField(DisplayMetadata):
 
     id_type: str = ""
     type: str = "text"
-
-    def __init__(
-        self,
-        *,
-        identifier: str,
-        display_name: str,
-        description: str,
-        options_getter: Callable[[], list[dict[str, str]]] = list,
-        date_identifier: str | None = None,
-        date_display_name: str | None = None,
-        date_description: str | None = None,
-        **kwargs,
-    ):
-        super().__init__(
-            identifier=identifier,
-            display_name=display_name,
-            description=description,
-            **kwargs,
-        )
-        self.options_getter = options_getter
-
-        self.date_identifier = date_identifier or f"{identifier}_date"
-        self.date_display_name = date_display_name or "Dato"
-        self.date_description = date_description or "Velg en dato."
+    options_getter: Callable[[], list[dict[str, str]]] = list
 
     def render_input_group(
         self,
@@ -398,17 +377,21 @@ class MetadataMultiDropdownField(DisplayMetadata):
         self.url_encode_shortname_ids(component_id)
 
         use_restrictions: list[model.UseRestrictionItem] = (
-            getattr(metadata, self.identifier, None) or []
+            get_standard_metadata(metadata, self.identifier) or []
         )
 
-        children = []
-        for idx, item in enumerate(use_restrictions):
-            children.append(
+        return html.Section(
+            children=[
                 html.Div(
                     children=[
                         ssb.Dropdown(
                             header=self.display_name,
-                            id={**component_id, "index": idx, "field": "type"},
+                            id={
+                                "type": self.id_type,
+                                "id": component_id["id"],
+                                "field": "type",
+                                "index": idx,
+                            },
                             items=self.options_getter(),
                             placeholder=DROPDOWN_DESELECT_OPTION,
                             value=item.use_restriction_type,
@@ -417,13 +400,18 @@ class MetadataMultiDropdownField(DisplayMetadata):
                             description=self.description,
                         ),
                         ssb.Input(
-                            label=self.date_display_name,
-                            id={**component_id, "index": idx, "field": "date"},
+                            label="",
+                            id={
+                                "type": self.id_type,
+                                "id": component_id["id"],
+                                "field": "date",
+                                "index": idx,
+                            },
                             debounce=False,
                             type="date",
                             disabled=not self.editable,
                             showDescription=True,
-                            description=self.date_description,
+                            description="",
                             value=item.use_restriction_date.isoformat()
                             if item.use_restriction_date
                             else "",
@@ -432,11 +420,16 @@ class MetadataMultiDropdownField(DisplayMetadata):
                     ],
                     className="input-group-row",
                 )
-            )
-
-        return html.Section(
-            children=children,
+                for idx, item in enumerate(use_restrictions)
+            ]
+            + [
+                ssb.Button(
+                    children=["Legg til bruksrestriksjon"],
+                    id="add-use-restriction-button",
+                )
+            ],
             className="input-group-container",
+            id={"type": self.id_type},
         )
 
     def render(

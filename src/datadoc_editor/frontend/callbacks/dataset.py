@@ -17,6 +17,7 @@ from datadoc_editor import config
 from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.utils import VALIDATION_ERROR
 from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
+from datadoc_editor.frontend.callbacks.utils import find_and_update_multidropdown_list
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import get_dataset_path
 from datadoc_editor.frontend.callbacks.utils import parse_and_validate_dates
@@ -36,6 +37,9 @@ from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.fields.display_dataset import DISPLAY_DATASET
 from datadoc_editor.frontend.fields.display_dataset import (
     DROPDOWN_DATASET_METADATA_IDENTIFIERS,
+)
+from datadoc_editor.frontend.fields.display_dataset import (
+    MULTIPLE_DROPDOWN_DATASET_IDENTIFIERS,
 )
 from datadoc_editor.frontend.fields.display_dataset import (
     MULTIPLE_LANGUAGE_DATASET_IDENTIFIERS,
@@ -168,6 +172,7 @@ def process_special_cases(
     value: MetadataInputTypes | model.LanguageStringType,
     metadata_identifier: str,
     language: str | None = None,
+    index: str | None = None,
 ) -> MetadataInputTypes | model.LanguageStringType:
     """Pre-process metadata where needed.
 
@@ -199,6 +204,14 @@ def process_special_cases(
                 metadata_identifier,
                 language,
             )
+    elif metadata_identifier in MULTIPLE_DROPDOWN_DATASET_IDENTIFIERS:
+        updated_value = find_and_update_multidropdown_list(
+            state.metadata.dataset,
+            metadata_identifier,
+            language,
+            value,
+            index,
+        )
     elif metadata_identifier in DROPDOWN_DATASET_METADATA_IDENTIFIERS and value == "":
         updated_value = None
     elif metadata_identifier in TIMEZONE_AWARE_METADATA_IDENTIFIERS and isinstance(
@@ -220,6 +233,7 @@ def accept_dataset_metadata_input(
     value: MetadataInputTypes | model.LanguageStringType,
     metadata_identifier: str,
     language: str | None = None,
+    index: str | None = None,
 ) -> tuple[bool, str]:
     """Handle user inputs of dataset metadata values."""
     logger.debug(
@@ -228,7 +242,7 @@ def accept_dataset_metadata_input(
         metadata_identifier,
     )
     try:
-        value = process_special_cases(value, metadata_identifier, language)
+        value = process_special_cases(value, metadata_identifier, language, index)
         # Update the value in the model
         setattr(
             state.metadata.dataset,

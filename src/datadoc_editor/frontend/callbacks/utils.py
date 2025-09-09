@@ -126,6 +126,41 @@ def find_existing_language_string(
     return language_strings
 
 
+def find_and_update_multidropdown_list(
+    metadata_model_object: pydantic.BaseModel,
+    metadata_identifier: str,
+    value: str,
+    language: str,
+    index: int,
+) -> list:
+    """Retrieve a list from the metadata model and update a specific item's attribute.
+
+    This function first retrieves a list attribute from the pydantic model using
+    the provided metadata identifier. It then updates either the `use_restriction_type`
+    or `use_restriction_date` of the item at the specified index, based on the
+    `language` argument.
+
+    Args:
+        metadata_model_object (pydantic.BaseModel): The metadata model instance.
+        metadata_identifier (str): The name of the attribute in the model that holds the list.
+        value (str): The new value to set on the item's attribute.
+        language (str): Determines which attribute to update; should be "type" or "date".
+        index (int): The index of the item in the list to update.
+
+    Returns:
+        list: The updated list after the specified item's attribute has been modified.
+    """
+    multidropdown_list = getattr(metadata_model_object, metadata_identifier)
+
+    item = multidropdown_list[index]
+    if language == "type":
+        item.use_restriction_type = value
+    elif language == "date":
+        item.use_restriction_date = value
+
+    return multidropdown_list
+
+
 def get_dataset_path() -> pathlib.Path | CloudPath | str:
     """Extract the path to the dataset from the potential sources."""
     if state.metadata.dataset_path is not None:

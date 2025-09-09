@@ -41,6 +41,9 @@ from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION
 from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
 from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import (
+    DATASET_METADATA_MULTIDROPDOWN_INPUT,
+)
+from datadoc_editor.frontend.fields.display_base import (
     DATASET_METADATA_MULTILANGUAGE_INPUT,
 )
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
@@ -161,6 +164,52 @@ def register_callbacks(app: Dash) -> None:
         )
 
     @app.callback(
+        Output(
+            {
+                "type": DATASET_METADATA_MULTIDROPDOWN_INPUT,
+                "id": MATCH,
+                "field": MATCH,
+                "index": MATCH,
+            },
+            "error",
+        ),
+        Output(
+            {
+                "type": DATASET_METADATA_MULTIDROPDOWN_INPUT,
+                "id": MATCH,
+                "field": MATCH,
+                "index": MATCH,
+            },
+            "errorMessage",
+        ),
+        Input(
+            {
+                "type": DATASET_METADATA_MULTIDROPDOWN_INPUT,
+                "id": MATCH,
+                "field": MATCH,
+                "index": MATCH,
+            },
+            "value",
+        ),
+        prevent_initial_call=True,
+    )
+    def callback_accept_dataset_metadata_multidropdown_input(
+        value: MetadataInputTypes,  # noqa: ARG001 argument required by Dash
+    ) -> tuple[bool, str]:
+        """Save updated dataset metadata values.
+
+        Will display an alert if validation fails.
+        """
+        # Get the ID of the input that changed. This MUST match the attribute name defined in DataDocDataSet
+
+        return accept_dataset_metadata_input(
+            ctx.triggered[0]["value"],
+            ctx.triggered_id["id"],
+            ctx.triggered_id["field"],
+            ctx.triggered_id["index"],
+        )
+
+    @app.callback(
         Output("alerts-section", "children", allow_duplicate=True),
         Output("dataset-opened-counter", "data"),  # Used to force reload of metadata
         Input("open-button", "n_clicks"),
@@ -245,6 +294,21 @@ def register_callbacks(app: Dash) -> None:
     ) -> int:
         """Counter for the pseudo variable button."""
         return current_counter + 1
+
+    @app.callback(
+        Output("use-restriction-store", "data"),
+        Input("add-use-restriction-button", "n_clicks"),
+        State("use-restriction-store", "data"),
+        prevent_initial_call=True,
+    )
+    def add_use_restriction_callback(n_clicks, current_list):
+        if current_list is None:
+            current_list = []
+        # Example: add a new item (could be dynamic)
+        new_item = {"use_restriction_type": None, "use_restriction_date": None}
+        current_list.append(new_item)
+        print(f"Updated list: {current_list}")
+        return current_list
 
     @app.callback(
         Output(SECTION_WRAPPER_ID, "children"),

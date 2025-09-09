@@ -347,7 +347,7 @@ class VariableRole(LanguageStringsEnum):
     )
 
 
-class UseRestriction(LanguageStringsEnum):
+class UseRestrictionType(LanguageStringsEnum):
     """Lifecycle status of a dataset."""
 
     DELETION_ANONYMIZATION = model.LanguageStringType(
