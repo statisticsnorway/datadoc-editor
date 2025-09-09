@@ -23,15 +23,14 @@ from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_date_input
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
+from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
 from datadoc_editor.frontend.callbacks.utils import (
     map_selected_algorithm_to_pseudo_fields,
 )
-from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
 from datadoc_editor.frontend.callbacks.variables import (
     accept_pseudo_variable_metadata_input,
-    populate_pseudo_edit_section,
 )
 from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
@@ -519,12 +518,11 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         if variable is None:
             logger.info("Variable not found in lookup!")
             return []
-        else:
-            logger.debug(
-                "This is saved pseudo %s for %s",
-                variable.pseudonymization,
-                variable.short_name,
-            )
+        logger.debug(
+            "This is saved pseudo %s for %s",
+            variable.pseudonymization,
+            variable.short_name,
+        )
         if selected_algorithm == "":
             selected_algorithm = None
 
@@ -547,7 +545,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             logger.info("Added pseudonymization for %s", variable.short_name)
 
         # Mypy
-        elif variable.pseudonymization is None:
+        if variable.pseudonymization is None:
             logger.info(
                 "No pseudonymization for %s, returning empty list", variable.short_name
             )
