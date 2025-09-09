@@ -15,8 +15,14 @@ from datadoc_editor.frontend.fields.display_base import MetadataInputField
 from datadoc_editor.frontend.fields.display_base import MetadataPeriodField
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PSEUDONYMIZATION_DEAD_METADATA,
+)
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PSEUDONYMIZATION_METADATA,
+)
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID_METADATA,
+)
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID_METADATA,
 )
 from datadoc_editor.frontend.fields.display_variables import VARIABLES_METADATA_LEFT
