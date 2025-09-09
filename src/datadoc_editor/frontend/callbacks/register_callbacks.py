@@ -50,7 +50,6 @@ from datadoc_editor.frontend.fields.display_base import (
 )
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
-from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import (
     VARIABLES_METADATA_MULTILANGUAGE_INPUT,
 )
@@ -259,27 +258,15 @@ def register_callbacks(app: Dash) -> None:
 
     @app.callback(
         Output(
-            {
-                "type": PSEUDO_METADATA_INPUT,
-                "variable_short_name": MATCH,
-                "id": MATCH,
-            },
+            {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
             "error",
         ),
         Output(
-            {
-                "type": PSEUDO_METADATA_INPUT,
-                "variable_short_name": MATCH,
-                "id": MATCH,
-            },
+            {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
             "errorMessage",
         ),
         Input(
-            {
-                "type": PSEUDO_METADATA_INPUT,
-                "variable_short_name": MATCH,
-                "id": MATCH,
-            },
+            {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
             "value",
         ),
         State(
@@ -287,12 +274,8 @@ def register_callbacks(app: Dash) -> None:
             "id",
         ),
         State("pseudo-variables-selected-algorithm", "data"),
-        prevent_initial_call=True,
     )
-    def callback_accept_pseudo_variable_metadata_input(
-        value: MetadataInputTypes, component_id, data
-    ) -> dbc.Alert:
-        """Save updated variable metadata values."""
+    def callback_accept_pseudo_variable_metadata_input(value, component_id, data):  # noqa: ANN202, ANN001
         if value is None or component_id is None:
             # Nothing to do if deselected or missing
             return False, ""
@@ -328,57 +311,6 @@ def register_callbacks(app: Dash) -> None:
         )
 
         if not message:
-            return False, ""
-
-        return True, message
-        # message = accept_pseudo_variable_metadata_input(
-        #    ctx.triggered[0]["value"],
-        #    ctx.triggered_id["variable_short_name"],
-        #    ctx.triggered_id["id"],
-        # )
-        # if not message:
-        #    # No error to display.
-        #    return False, ""
-        # return True, message
-
-    @app.callback(
-        Output(
-            {
-                "type": VARIABLES_METADATA_INPUT,
-                "variable_short_name": MATCH,
-                "id": MATCH,
-            },
-            "error",
-        ),
-        Output(
-            {
-                "type": VARIABLES_METADATA_INPUT,
-                "variable_short_name": MATCH,
-                "id": MATCH,
-            },
-            "errorMessage",
-        ),
-        Input(
-            {
-                "type": VARIABLES_METADATA_INPUT,
-                "variable_short_name": MATCH,
-                "id": MATCH,
-            },
-            "value",
-        ),
-        prevent_initial_call=True,
-    )
-    def callback_accept_variable_metadata_input(
-        value: MetadataInputTypes,  # noqa: ARG001 argument required by Dash
-    ) -> dbc.Alert:
-        """Save updated variable metadata values."""
-        message = accept_variable_metadata_input(
-            ctx.triggered[0]["value"],
-            ctx.triggered_id["variable_short_name"],
-            ctx.triggered_id["id"],
-        )
-        if not message:
-            # No error to display.
             return False, ""
 
         return True, message
@@ -554,7 +486,9 @@ def register_callbacks(app: Dash) -> None:
         State({"type": "pseudonymization-dropdown", "variable": ALL}, "id"),
         State("pseudo-variables-selected-algorithm", "data"),
     )
-    def store_selected_pseudo_algorithm(all_values, all_ids, store_data) -> None:  # noqa: ANN001
+    def store_selected_pseudo_algorithm(
+        all_values: list, all_ids: list, store_data: dict
+    ) -> None:
         """Store the value of selected pseudo algorithm in dcc.Store object."""
         if store_data is None:
             store_data = {}
@@ -565,7 +499,7 @@ def register_callbacks(app: Dash) -> None:
                 "variable_short_name": var_name,
                 "selected_algorithm": val,
             }
-        logger.debug("Saved in pseudo: %s", store_data)
+        logger.debug("Saved in pseudo selected algorithm: %s", store_data)
         return store_data
 
     @app.callback(
@@ -577,9 +511,10 @@ def register_callbacks(app: Dash) -> None:
     def update_pseudo_fields(
         selected_algorithm,  # noqa: ANN001
         dropdown_id,  # noqa: ANN001
-        data,  # noqa: ANN001
+        data: dict,
     ) -> list[dbc.Form]:
         """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
+        logger.debug("Selected algorithm: %s", selected_algorithm)
         variable_short_name = dropdown_id["variable"]
         variable = state.metadata.variables_lookup.get(variable_short_name)
         if variable is None:
@@ -588,24 +523,25 @@ def register_callbacks(app: Dash) -> None:
 
         logger.info("Found variable: %s", variable.short_name)
 
-        selected_algorithm_from_state = data.get(variable_short_name, {}).get(
-            "selected_algorithm", ""
-        )
         if selected_algorithm == "":
             selected_algorithm = None
 
-        if selected_algorithm is None and variable.pseudonymization is None:
-            state.metadata.remove_pseudonymization(variable_short_name)
-            selected_algorithm = ""
-            logger.info("Removed pseudonymization for %s", variable.short_name)
-            return []
         if selected_algorithm is None and variable.pseudonymization is not None:
+            # add correct default values here
             selected_algorithm = map_dropdown_to_pseudo(variable)
             save_algorithm_selected = choose_metadata_inputs_based_on_algorithm(
-                selected_algorithm_from_state
+                selected_algorithm
             )
-            logger.debug("selected from state: %s", selected_algorithm)
+            logger.debug(
+                "Selected algorithm %s for %s", selected_algorithm, variable_short_name
+            )
+            logger.debug(
+                "Save algorithm selected %s for %s",
+                save_algorithm_selected,
+                variable_short_name,
+            )
 
+        # skjer aldri ?
         if variable.pseudonymization is None and selected_algorithm is not None:
             state.metadata.add_pseudonymization(variable_short_name)
             logger.info("Added pseudonymization for %s", variable.short_name)
@@ -625,8 +561,6 @@ def register_callbacks(app: Dash) -> None:
             variable.pseudonymization,
             variable.short_name,
         )
-
-        logger.debug("Save and view %s", selected_algorithm)
         return build_pseudo_field_section(
             save_algorithm_selected,
             "left",
