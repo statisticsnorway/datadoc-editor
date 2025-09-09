@@ -304,11 +304,32 @@ def register_callbacks(app: Dash) -> None:
     def add_use_restriction_callback(n_clicks, current_list):
         if current_list is None:
             current_list = []
-        # Example: add a new item (could be dynamic)
         new_item = {"use_restriction_type": None, "use_restriction_date": None}
         current_list.append(new_item)
         print(f"Updated list: {current_list}")
         return current_list
+
+    @app.callback(
+        Output("use-restriction-list-container", "children"),
+        Input("use-restriction-store", "data"),
+    )
+    def render_use_restriction_list(current_list):
+        if not current_list:
+            return "No use restrictions added yet."
+
+        items = []
+        for i, item in enumerate(current_list):
+            items.append(
+                html.Div(
+                    [
+                        html.Span(f"Type: {item.get('use_restriction_type')}"),
+                        html.Span(f" | Date: {item.get('use_restriction_date')}"),
+                    ],
+                    className="use-restriction-item",
+                    style={"marginBottom": "5px"},
+                )
+            )
+        return items
 
     @app.callback(
         Output(SECTION_WRAPPER_ID, "children"),

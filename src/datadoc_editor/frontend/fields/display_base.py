@@ -13,6 +13,7 @@ from typing import Any
 import ssb_dash_components as ssb
 from dapla_metadata.datasets import enums
 from dapla_metadata.datasets import model
+from dash import dcc
 from dash import html
 
 from datadoc_editor import state
@@ -368,76 +369,24 @@ class MetadataMultiDropdownField(DisplayMetadata):
     type: str = "text"
     options_getter: Callable[[], list[dict[str, str]]] = list
 
-    def render_input_group(
-        self,
-        component_id: dict,
-        metadata: BaseModel,
-    ) -> html.Section:
-        """Build section with Dropdown and Date Input components."""
-        self.url_encode_shortname_ids(component_id)
-
-        use_restrictions: list[model.UseRestrictionItem] = (
-            get_standard_metadata(metadata, self.identifier) or []
-        )
-
-        return html.Section(
-            children=[
-                html.Div(
-                    children=[
-                        ssb.Dropdown(
-                            header=self.display_name,
-                            id={
-                                "type": self.id_type,
-                                "id": component_id["id"],
-                                "field": "type",
-                                "index": idx,
-                            },
-                            items=self.options_getter(),
-                            placeholder=DROPDOWN_DESELECT_OPTION,
-                            value=item.use_restriction_type,
-                            className="dropdown-component",
-                            showDescription=True,
-                            description=self.description,
-                        ),
-                        ssb.Input(
-                            label="",
-                            id={
-                                "type": self.id_type,
-                                "id": component_id["id"],
-                                "field": "date",
-                                "index": idx,
-                            },
-                            debounce=False,
-                            type="date",
-                            disabled=not self.editable,
-                            showDescription=True,
-                            description="",
-                            value=item.use_restriction_date.isoformat()
-                            if item.use_restriction_date
-                            else "",
-                            className="input-component",
-                        ),
-                    ],
-                    className="input-group-row",
-                )
-                for idx, item in enumerate(use_restrictions)
-            ]
-            + [
-                ssb.Button(
-                    children=["Legg til bruksrestriksjon"],
-                    id="add-use-restriction-button",
-                )
-            ],
-            className="input-group-container",
-            id={"type": self.id_type},
-        )
-
     def render(
         self,
         component_id: dict,
         metadata: BaseModel,
     ) -> html.Fieldset:
-        """Build fieldset group with legend and input group."""
+        # Get initial use restrictions from metadata
+        use_restrictions: list[model.UseRestrictionItem] = (
+            get_standard_metadata(metadata, self.identifier) or []
+        )
+        # Serialize to dicts for the store
+        initial_data = [
+            {
+                "use_restriction_type": ur.use_restriction_type,
+                "use_restriction_date": ur.use_restriction_date,
+            }
+            for ur in use_restrictions
+        ]
+
         return html.Fieldset(
             children=[
                 ssb.Glossary(
@@ -450,13 +399,115 @@ class MetadataMultiDropdownField(DisplayMetadata):
                     explanation=self.description,
                     className="legend-glossary",
                 ),
-                self.render_input_group(
-                    component_id=component_id,
-                    metadata=metadata,
-                ),
+                ssb.Button(id="add-use-restriction-button"),
+                # Container for displaying the list
+                html.Div(id="use-restriction-list-container"),
+                # Hidden store to keep the data
+                dcc.Store(id="use-restriction-store", data=initial_data),
             ],
             className="multidropdown-fieldset",
         )
+
+
+# @dataclass
+# class MetadataMultiDropdownField(DisplayMetadata):
+#     """A dropdown field for dataset metadata that supports multiple options,
+#     with an additional date input field.
+#     """
+
+#     id_type: str = ""
+#     type: str = "text"
+#     options_getter: Callable[[], list[dict[str, str]]] = list
+
+#     def render_input_group(
+#         self,
+#         component_id: dict,
+#         metadata: BaseModel,
+#     ) -> html.Section:
+#         """Build section with Dropdown and Date Input components."""
+#         self.url_encode_shortname_ids(component_id)
+
+#         use_restrictions: list[model.UseRestrictionItem] = (
+#             get_standard_metadata(metadata, self.identifier) or []
+#         )
+
+#         return html.Section(
+#             children=[
+#                 html.Div(
+#                     children=[
+#                         ssb.Dropdown(
+#                             header=self.display_name,
+#                             id={
+#                                 "type": self.id_type,
+#                                 "id": component_id["id"],
+#                                 "field": "type",
+#                                 "index": idx,
+#                             },
+#                             items=self.options_getter(),
+#                             placeholder=DROPDOWN_DESELECT_OPTION,
+#                             value=item.use_restriction_type,
+#                             className="dropdown-component",
+#                             showDescription=True,
+#                             description=self.description,
+#                         ),
+#                         ssb.Input(
+#                             label="",
+#                             id={
+#                                 "type": self.id_type,
+#                                 "id": component_id["id"],
+#                                 "field": "date",
+#                                 "index": idx,
+#                             },
+#                             debounce=False,
+#                             type="date",
+#                             disabled=not self.editable,
+#                             showDescription=True,
+#                             description="",
+#                             value=item.use_restriction_date.isoformat()
+#                             if item.use_restriction_date
+#                             else "",
+#                             className="input-component",
+#                         ),
+#                     ],
+#                     className="input-group-row",
+#                 )
+#                 for idx, item in enumerate(use_restrictions)
+#             ]
+#             + [
+#                 ssb.Button(
+#                     children=["Legg til bruksrestriksjon"],
+#                     id="add-use-restriction-button",
+#                 )
+#             ],
+#             className="input-group-container",
+#             id={"type": self.id_type},
+#         )
+
+#     def render(
+#         self,
+#         component_id: dict,
+#         metadata: BaseModel,
+#     ) -> html.Fieldset:
+#         """Build fieldset group with legend and input group."""
+#         return html.Fieldset(
+#             children=[
+#                 ssb.Glossary(
+#                     children=[
+#                         html.Legend(
+#                             self.display_name,
+#                             className="multilanguage-legend",
+#                         )
+#                     ],
+#                     explanation=self.description,
+#                     className="legend-glossary",
+#                 ),
+#                 self.render_input_group(
+#                     component_id=component_id,
+#                     metadata=metadata,
+#                 ),
+#             ],
+#             className="multidropdown-fieldset",
+#         )
 
 
 @dataclass
