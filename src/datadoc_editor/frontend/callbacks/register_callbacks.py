@@ -525,7 +525,6 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             selected_algorithm = None
 
         if selected_algorithm is None and variable.pseudonymization is not None:
-            # add correct default values here
             selected_algorithm = map_dropdown_to_pseudo(variable)
             save_algorithm_selected = choose_metadata_inputs_based_on_algorithm(
                 selected_algorithm
@@ -539,11 +538,11 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
                 variable_short_name,
             )
 
-        # skjer aldri ?
-        if variable.pseudonymization is None and selected_algorithm is not None:
+        if selected_algorithm and not variable.pseudonymization:
             state.metadata.add_pseudonymization(variable_short_name)
             logger.info("Added pseudonymization for %s", variable.short_name)
 
+        # Mypy
         if variable.pseudonymization is None:
             logger.info(
                 "No pseudonymization for %s, returning empty list", variable.short_name
