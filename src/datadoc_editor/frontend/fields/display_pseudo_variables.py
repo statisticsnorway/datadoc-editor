@@ -15,7 +15,6 @@ class PseudoVariableIdentifiers(str, Enum):
     ENCRYPTION_KEY_REFERENCE = "encryption_key_reference"
     ENCRYPTION_ALGORITHM_PARAMETERS = "encryption_algorithm_parameters"
 
-
 PSEUDO_FIELDS: dict[
     PseudoVariableIdentifiers,
     FieldTypes,
@@ -28,14 +27,14 @@ PSEUDO_FIELDS: dict[
     ),
     PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION: MetadataInputField(
         identifier=PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
-        display_name="Stabil identifikator type",
-        description="Type stabil identifikator som er benyttet før pseudonymisering (krypteirng), eksempelvis at fødselsnummer er byttet ut med SNR fra SNR-katalogen i FREG.",
+        display_name="Stabil identifikator versjon",
+        description="Det skal brukes den type versjonering som er brukt for stabil identifikator katalogen, eksempler kan være dato eller semantisk versjonering.",
         obligatory=True,
     ),
     PseudoVariableIdentifiers.STABLE_IDENTIFIER_TYPE: MetadataInputField(
         identifier=PseudoVariableIdentifiers.STABLE_IDENTIFIER_TYPE.value,
-        display_name="Stabil identifikator versjon",
-        description="Det skal brukes den type versjonering som er brukt for stabil identifikator katalogen, eksempler kan være dato eller semantisk versjonering.",
+        display_name="Stabil identifikator type",
+        description="Type stabil identifikator som er benyttet før pseudonymisering (kryptering), eksempelvis at fødselsnummer er byttet ut med SNR fra SNR-katalogen i FREG.",
         obligatory=True,
     ),
     PseudoVariableIdentifiers.ENCRYPTION_ALGORITHM: MetadataInputField(
@@ -60,3 +59,31 @@ PSEUDO_FIELDS: dict[
 }
 
 PSEUDONYMIZATION_METADATA = list(PSEUDO_FIELDS.values())
+PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID_METADATA = [
+    m
+    for m in PSEUDO_FIELDS.values()
+    if (
+        m.identifier
+        in (
+            PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME.value,
+            PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
+        )
+        and m.editable
+    )
+]
+PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID_METADATA = [
+    m
+    for m in PSEUDO_FIELDS.values()
+    if (
+        m.identifier in (PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME.value)
+        and m.editable
+    )
+]
+PSEUDONYMIZATION_DEAD_METADATA = [
+    m
+    for m in PSEUDO_FIELDS.values()
+    if (
+        m.identifier in (PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME.value)
+        and m.editable
+    )
+]
