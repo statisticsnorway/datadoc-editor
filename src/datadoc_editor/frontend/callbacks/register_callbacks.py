@@ -506,7 +506,6 @@ def register_callbacks(app: Dash) -> None:
         Output({"type": "pseudo-field-container", "variable": MATCH}, "children"),
         Input({"type": "pseudonymization-dropdown", "variable": MATCH}, "value"),
         State({"type": "pseudonymization-dropdown", "variable": MATCH}, "id"),
-        State("pseudo-variables-selected-algorithm", "data"),
     )
     def update_pseudo_fields(
         selected_algorithm,  # noqa: ANN001
