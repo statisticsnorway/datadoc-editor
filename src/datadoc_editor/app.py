@@ -53,7 +53,7 @@ def build_app(app: Dash) -> Dash:
                     dcc.Store(
                         id="pseudo-variables-selected-algorithm",
                         data={},
-                        storage_type="memory",
+                        storage_type="local",
                     ),
                     build_controls_bar(),
                     html.Div(id="alerts-section"),
