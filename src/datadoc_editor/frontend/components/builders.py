@@ -11,10 +11,14 @@ import dash_bootstrap_components as dbc
 import ssb_dash_components as ssb
 from dash import html
 
+from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
+from datadoc_editor.frontend.constants import PSEUDONYMIZATION
 from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
+from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import FieldTypes
+from datadoc_editor.frontend.fields.display_base import get_enum_options
 
 if TYPE_CHECKING:
     from dapla_metadata.datasets import model
@@ -183,22 +187,27 @@ def build_variables_machine_section(
 
 
 def build_variables_pseudonymization_section(
-    metadata_inputs: list,
-    title: str,
-    variable: model.Variable,
-    pseudonymization: model.Pseudonymization,
+    title: str, variable: model.Variable, selected_algorithm: str
 ) -> html.Section:
-    """Create input section for pseudonymization."""
+    """Create input section for pseudonymization with dropdown for selecting pseudo algorithm."""
     return html.Section(
         id={"type": "edit-section", "title": title},
         children=[
             ssb.Title(title, size=3, className="edit-section-title"),
-            build_pseudo_field_section(
-                metadata_inputs,
-                "left",
-                variable,
-                pseudonymization,
-                field_id="pseudo",
+            ssb.Dropdown(
+                header=PSEUDONYMIZATION,
+                placeholder=DROPDOWN_DESELECT_OPTION,
+                showDescription=False,
+                description="",
+                id={
+                    "type": "pseudonymization-dropdown",
+                    "variable": variable.short_name,
+                },
+                items=get_enum_options(PseudonymizationAlgorithmsEnum),
+                value=selected_algorithm,
+            ),
+            html.Div(
+                id={"type": "pseudo-field-container", "variable": variable.short_name}
             ),
         ],
         className="variable-section",
