@@ -9,7 +9,6 @@ import logging
 from typing import TYPE_CHECKING
 from typing import Any
 
-from dash import ALL
 from dash import MATCH
 from dash import Dash
 from dash import Input
@@ -273,10 +272,9 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
             "id",
         ),
-        State("pseudo-variables-selected-algorithm", "data"),
         prevent_initial_call=True,
     )
-    def callback_accept_pseudo_variable_metadata_input(value, component_id, data):  # noqa: ANN202, ANN001
+    def callback_accept_pseudo_variable_metadata_input(value, component_id):  # noqa: ANN202, ANN001
         if value is None or component_id is None:
             # Nothing to do if deselected or missing
             return False, ""
@@ -287,15 +285,6 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             value,
             component_id,
         )
-        selected_algorithm = data.get(variable_short_name, {}).get(
-            "selected_algorithm", ""
-        )
-        logger.debug(
-            "Reading selected algorithm for current %s: %s",
-            variable_short_name,
-            selected_algorithm,
-        )
-
         # Safely get variable from state
         variable = state.metadata.variables_lookup.get(variable_short_name)
         if not variable:
@@ -475,28 +464,6 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             contains_data_from,
             contains_data_until,
         )
-
-    @app.callback(
-        Output("pseudo-variables-selected-algorithm", "data"),
-        Input({"type": "pseudonymization-dropdown", "variable": ALL}, "value"),
-        State({"type": "pseudonymization-dropdown", "variable": ALL}, "id"),
-        State("pseudo-variables-selected-algorithm", "data"),
-    )
-    def store_selected_pseudo_algorithm(
-        all_values: list, all_ids: list, store_data: dict
-    ) -> dict:
-        """Store the value of selected pseudo algorithm in dcc.Store object."""
-        if not store_data:
-            store_data = {}
-
-        for val, val_id in zip(all_values, all_ids, strict=False):
-            var_name = val_id["variable"]
-            store_data[var_name] = {
-                "variable_short_name": var_name,
-                "selected_algorithm": val,
-            }
-        logger.debug("Saved in pseudo selected algorithm: %s", store_data)
-        return store_data
 
     @app.callback(
         Output({"type": "pseudo-field-container", "variable": MATCH}, "children"),

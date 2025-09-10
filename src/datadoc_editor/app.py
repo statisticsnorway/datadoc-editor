@@ -50,11 +50,6 @@ def build_app(app: Dash) -> Dash:
                         data=0,
                         storage_type="session",
                     ),
-                    dcc.Store(
-                        id="pseudo-variables-selected-algorithm",
-                        data={},
-                        storage_type="session",
-                    ),
                     build_controls_bar(),
                     html.Div(id="alerts-section"),
                     dcc.Tabs(
