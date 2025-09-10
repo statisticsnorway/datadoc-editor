@@ -31,6 +31,7 @@ from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
 from datadoc_editor.frontend.callbacks.variables import (
     accept_pseudo_variable_metadata_input,
+    populate_pseudo_workspace,
 )
 from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
@@ -71,7 +72,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
+def register_callbacks(app: Dash) -> None:
     """Define and register callbacks."""
 
     @app.callback(
@@ -489,31 +490,4 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             variable.short_name,
             variable.pseudonymization,
         )
-
-        if not selected_algorithm and variable.pseudonymization is not None:
-            selected_algorithm = map_dropdown_to_pseudo(variable)
-            logger.debug(
-                "Algorithm inferred for %s: %s", variable.short_name, selected_algorithm
-            )
-
-        if (
-            variable.short_name
-            and selected_algorithm
-            and variable.pseudonymization is None
-        ):
-            state.metadata.add_pseudonymization(variable.short_name)
-            logger.info("Added pseudonymization for %s", variable.short_name)
-
-        if variable.pseudonymization is None:
-            logger.info(
-                "No pseudonymization for %s, returning empty list", variable.short_name
-            )
-            return []
-
-        return build_pseudo_field_section(
-            map_selected_algorithm_to_pseudo_fields(selected_algorithm),
-            "left",
-            variable=variable,
-            pseudonymization=variable.pseudonymization,
-            field_id="pseudo",
-        )
+        return populate_pseudo_workspace(variable, selected_algorithm)

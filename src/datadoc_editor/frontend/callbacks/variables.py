@@ -7,11 +7,11 @@ import urllib.parse
 from typing import TYPE_CHECKING
 
 from datadoc_editor import state
-from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
+from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes, map_selected_algorithm_to_pseudo_fields
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
 from datadoc_editor.frontend.callbacks.utils import parse_and_validate_dates
-from datadoc_editor.frontend.components.builders import build_edit_section
+from datadoc_editor.frontend.components.builders import build_edit_section, build_pseudo_field_section
 from datadoc_editor.frontend.components.builders import build_ssb_accordion
 from datadoc_editor.frontend.components.builders import build_variables_machine_section
 from datadoc_editor.frontend.components.builders import (
@@ -32,6 +32,7 @@ from datadoc_editor.frontend.fields.display_variables import VARIABLES_METADATA_
 from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
+    import dash_bootstrap_components as dbc
     from dapla_metadata.datasets import model
 
 
@@ -367,3 +368,43 @@ def set_variables_values_inherit_dataset_derived_date_values() -> None:
                 VariableIdentifiers.CONTAINS_DATA_UNTIL,
                 state.metadata.dataset.contains_data_until,
             )
+
+def populate_pseudo_workspace(variable: model.Variable, selected_algorithm)-> dbc.Form:
+    
+        if variable is None:
+            logger.info("Variable not found in lookup!")
+            return []
+
+        logger.debug(
+            "Variable %s has pseudo info: %s",
+            variable.short_name,
+            variable.pseudonymization,
+        )
+
+        if not selected_algorithm and variable.pseudonymization is not None:
+            selected_algorithm = map_dropdown_to_pseudo(variable)
+            logger.debug(
+                "Algorithm inferred for %s: %s", variable.short_name, selected_algorithm
+            )
+
+        if (
+            variable.short_name
+            and selected_algorithm
+            and variable.pseudonymization is None
+        ):
+            state.metadata.add_pseudonymization(variable.short_name)
+            logger.info("Added pseudonymization for %s", variable.short_name)
+
+        if variable.pseudonymization is None:
+            logger.info(
+                "No pseudonymization for %s, returning empty list", variable.short_name
+            )
+            return []
+
+        return build_pseudo_field_section(
+            map_selected_algorithm_to_pseudo_fields(selected_algorithm),
+            "left",
+            variable=variable,
+            pseudonymization=variable.pseudonymization,
+            field_id="pseudo",
+        )
