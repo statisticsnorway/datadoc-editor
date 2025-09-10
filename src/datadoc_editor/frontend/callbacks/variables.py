@@ -380,16 +380,6 @@ def populate_pseudo_workspace(
     variable: model.Variable, selected_algorithm: PseudonymizationAlgorithmsEnum | None
 ) -> dbc.Form:
     """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
-    if variable is None:
-        logger.info("Variable not found in lookup!")
-        return []
-
-    logger.debug(
-        "Variable %s has pseudo info: %s",
-        variable.short_name,
-        variable.pseudonymization,
-    )
-
     if not selected_algorithm and variable.pseudonymization is not None:
         selected_algorithm = map_dropdown_to_pseudo(variable)
         logger.debug(
