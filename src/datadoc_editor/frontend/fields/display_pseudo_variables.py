@@ -59,11 +59,7 @@ PSEUDO_FIELDS: dict[
     ),
 }
 
-PSEUDONYMIZATION_METADATA = [
-    m
-    for m in PSEUDO_FIELDS.values()
-    if m.editable
-]
+PSEUDONYMIZATION_METADATA = [m for m in PSEUDO_FIELDS.values() if m.editable]
 PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID_METADATA = [
     m
     for m in PSEUDO_FIELDS.values()
