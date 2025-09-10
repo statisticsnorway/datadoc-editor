@@ -139,4 +139,3 @@ def test_build_pseudonymization_field_section(
         field.label == meta.display_name
         for field, meta in zip(editable_fields, pseudo_metadata_list, strict=True)
     ), "Editable field labels do not match pseudo metadata display names"
-
