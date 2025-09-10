@@ -11,6 +11,7 @@ from datadoc_editor.frontend.components.builders import build_pseudo_field_secti
 from datadoc_editor.frontend.components.builders import (
     build_variables_pseudonymization_section,
 )
+from datadoc_editor.frontend.constants import PSEUDONYMIZATION
 
 TEST_VARIABLES = [
     (
@@ -139,11 +140,11 @@ def test_build_variables_pseudonymization_section(
     num_editable_fields,  # noqa: ARG001
 ):
     pseudo_section = build_variables_pseudonymization_section(
-        "Pseudonymisert", variable, map_dropdown_to_pseudo(variable)
+        PSEUDONYMIZATION, variable, map_dropdown_to_pseudo(variable)
     )
     assert pseudo_section is not None
     assert isinstance(pseudo_section, html.Section)
-    assert pseudo_section.id["title"] == "Pseudonymisert"
+    assert pseudo_section.id["title"] == PSEUDONYMIZATION
 
     children = [c for c in pseudo_section.children if isinstance(c, ssb.Dropdown)]
     dropdown = children[0]
