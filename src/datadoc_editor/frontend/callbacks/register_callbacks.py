@@ -9,6 +9,7 @@ import logging
 from typing import TYPE_CHECKING
 from typing import Any
 
+import ssb_dash_components as ssb
 from dash import ALL
 from dash import MATCH
 from dash import Dash
@@ -46,6 +47,7 @@ from datadoc_editor.frontend.fields.display_base import (
 from datadoc_editor.frontend.fields.display_base import (
     DATASET_METADATA_MULTILANGUAGE_INPUT,
 )
+from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
@@ -191,7 +193,6 @@ def register_callbacks(app: Dash) -> None:
             },
             "value",
         ),
-        prevent_initial_call=True,
     )
     def callback_accept_dataset_metadata_multidropdown_input(
         value: MetadataInputTypes,  # noqa: ARG001 argument required by Dash
@@ -202,6 +203,8 @@ def register_callbacks(app: Dash) -> None:
         """
         # Get the ID of the input that changed. This MUST match the attribute name defined in DataDocDataSet
 
+        if ctx.triggered_id is None:
+            return False, ""
         return accept_dataset_metadata_input(
             ctx.triggered[0]["value"],
             ctx.triggered_id["id"],
@@ -301,32 +304,60 @@ def register_callbacks(app: Dash) -> None:
         State("use-restriction-store", "data"),
         prevent_initial_call=True,
     )
-    def add_use_restriction_callback(n_clicks, current_list):
+    def update_use_restrictions(add_clicks, current_list):
         if current_list is None:
             current_list = []
-        new_item = {"use_restriction_type": None, "use_restriction_date": None}
-        current_list.append(new_item)
-        print(f"Updated list: {current_list}")
+
+        triggered = ctx.triggered_id
+
+        if triggered is None:
+            return current_list
+
+        if triggered == "add-use-restriction-button":
+            current_list.append(
+                {"use_restriction_type": None, "use_restriction_date": None}
+            )
+            return current_list
+
         return current_list
 
     @app.callback(
         Output("use-restriction-list-container", "children"),
         Input("use-restriction-store", "data"),
+        Input("use-restriction-options-store", "data"),
+        Input("use-restriction-id-store", "data"),
+        Input("use-restriction-display-values-store", "data"),
     )
-    def render_use_restriction_list(current_list):
-        if not current_list:
-            return "No use restrictions added yet."
-
+    def render_use_restriction_list(current_list, options, idx, display_values):
         items = []
         for i, item in enumerate(current_list):
+            dropdown_id = {**idx, "index": i}
+            date_id = {**idx, "index": i, "field": "date"}
+
             items.append(
                 html.Div(
                     [
-                        html.Span(f"Type: {item.get('use_restriction_type')}"),
-                        html.Span(f" | Date: {item.get('use_restriction_date')}"),
+                        ssb.Dropdown(
+                            header=display_values["type_display_name"],
+                            items=options,
+                            placeholder=DROPDOWN_DESELECT_OPTION,
+                            value=item.get("use_restriction_type"),
+                            id=dropdown_id,
+                            className="dropdown-component",
+                            showDescription=True,
+                            description=display_values["type_description"],
+                        ),
+                        ssb.Input(
+                            label=display_values["date_display_name"],
+                            value=item.get("use_restriction_date"),
+                            id=date_id,
+                            className="input-component",
+                            type="date",
+                            showDescription=True,
+                            description=display_values["date_description"],
+                        ),
                     ],
-                    className="use-restriction-item",
-                    style={"marginBottom": "5px"},
+                    className="input-group-row",
                 )
             )
         return items

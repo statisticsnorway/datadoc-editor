@@ -128,29 +128,32 @@ def find_existing_language_string(
 
 def find_and_update_multidropdown_list(
     metadata_model_object: pydantic.BaseModel,
-    metadata_identifier: str,
     value: str,
+    metadata_identifier: str,
     language: str,
     index: int,
 ) -> list:
-    """Retrieve a list from the metadata model and update a specific item's attribute.
+    """Retrieve a list from a Pydantic metadata model and update or remove items.
 
-    This function first retrieves a list attribute from the pydantic model using
-    the provided metadata identifier. It then updates either the `use_restriction_type`
-    or `use_restriction_date` of the item at the specified index, based on the
-    `language` argument.
+    This function retrieves a list attribute from the metadata model using the provided
+    `metadata_identifier`. It updates the item's `type` or `date` at the specified index.
+    If the resulting item has both `type` and `date` as None, it removes the item completely.
 
     Args:
         metadata_model_object (pydantic.BaseModel): The metadata model instance.
-        metadata_identifier (str): The name of the attribute in the model that holds the list.
+        metadata_identifier (str): Name of the attribute in the model that holds the list.
         value (str): The new value to set on the item's attribute.
         language (str): Determines which attribute to update; should be "type" or "date".
         index (int): The index of the item in the list to update.
 
     Returns:
-        list: The updated list after the specified item's attribute has been modified.
+        list: The updated list after modification or removal of the specified item.
     """
-    multidropdown_list = getattr(metadata_model_object, metadata_identifier)
+    multidropdown_list = getattr(metadata_model_object, metadata_identifier) or []
+    setattr(metadata_model_object, metadata_identifier, multidropdown_list)
+
+    while len(multidropdown_list) <= index:
+        multidropdown_list.append(model.UseRestrictionItem())
 
     item = multidropdown_list[index]
     if language == "type":

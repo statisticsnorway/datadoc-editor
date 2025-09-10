@@ -75,11 +75,19 @@
             "use_restrictions": [
                 {
                     "use_restriction_type": "PROCESS_LIMITATIONS",
-                    "use_restriction_date": "2022-09-05"
+                    "use_restriction_date": null
                 },
                 {
                     "use_restriction_type": "DELETION_ANONYMIZATION",
-                    "use_restriction_date": "2022-09-05"
+                    "use_restriction_date": null
+                },
+                {
+                    "use_restriction_type": "PROCESS_LIMITATIONS",
+                    "use_restriction_date": null
+                },
+                {
+                    "use_restriction_type": "SECONDARY_USE_RESTRICTIONS",
+                    "use_restriction_date": null
                 }
             ],
             "custom_type": null,
@@ -88,7 +96,7 @@
             "file_path": "/Users/rlj/datadoc-editor/tests/resources/klargjorte_data copy/person_testdata_p2021-12-31_p2021-12-31_v1.parquet",
             "metadata_created_date": "2022-09-05T11:07:14Z",
             "metadata_created_by": "default_user@ssb.no",
-            "metadata_last_updated_date": "2025-09-09T08:30:21.856202Z",
+            "metadata_last_updated_date": "2025-09-10T08:40:57.904029Z",
             "metadata_last_updated_by": null,
             "contains_data_from": "2010-09-05",
             "contains_data_until": "2022-09-05"

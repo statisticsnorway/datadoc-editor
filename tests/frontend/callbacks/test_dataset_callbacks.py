@@ -168,22 +168,12 @@ def file_path_without_dates():
         ),
         (DatasetIdentifiers.CONTAINS_PERSONAL_DATA, True, True),
         (
-            DatasetIdentifiers.USE_RESTRICTION,
-            enums.UseRestriction.PROCESS_LIMITATIONS,
-            "PROCESS_LIMITATIONS",
-        ),
-        (
-            DatasetIdentifiers.USE_RESTRICTION_DATE,
-            "2024-12-31T23:59:59Z",
-            datetime.datetime(
-                2024,
-                12,
-                31,
-                23,
-                59,
-                59,
-                tzinfo=datetime.UTC,
-            ),
+            DatasetIdentifiers.USE_RESTRICTIONS,
+            {
+                "use_restriction_type": enums.UseRestrictionType.PROCESS_LIMITATIONS,
+                "use_restriction_date": "2024-12-31",
+            },
+            {"PROCESS_LIMITATIONS", datetime.date(2024, 12, 31)},
         ),
         (
             DatasetIdentifiers.ID,

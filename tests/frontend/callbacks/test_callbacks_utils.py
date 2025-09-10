@@ -5,9 +5,11 @@ import dash_bootstrap_components as dbc
 import pytest
 from dapla_metadata.datasets import model
 from dash import html
+from pydantic import ValidationError
 
 from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.utils import check_variable_names
+from datadoc_editor.frontend.callbacks.utils import find_and_update_multidropdown_list
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
@@ -129,3 +131,69 @@ def test_legal_shortname(shortname: str):
 
     mock_metadata = mock.Mock(variables=[MockVariable(short_name=shortname)])
     assert check_variable_names(mock_metadata.variables) is None
+
+
+import pytest
+
+
+@pytest.mark.parametrize(
+    ("initial_value", "field", "index", "expected"),
+    [
+        (
+            "DELETION_ANONYMIZATION",
+            "type",
+            0,
+            model.UseRestrictionItem(
+                use_restriction_type="DELETION_ANONYMIZATION", use_restriction_date=None
+            ),
+        ),
+        (
+            "PROCESS_LIMITATIONS",
+            "type",
+            0,
+            model.UseRestrictionItem(
+                use_restriction_type="PROCESS_LIMITATIONS", use_restriction_date=None
+            ),
+        ),
+        (
+            "2024-12-31",
+            "date",
+            1,
+            model.UseRestrictionItem(
+                use_restriction_type=None, use_restriction_date="2024-12-31"
+            ),
+        ),
+        (
+            "2025-12-31",
+            "date",
+            0,
+            model.UseRestrictionItem(
+                use_restriction_type=None, use_restriction_date="2025-12-31"
+            ),
+        ),
+    ],
+)
+def test_find_and_update_multidropdown_list(initial_value, field, index, expected):
+    dataset_metadata = model.Dataset()
+
+    if index > 0:
+        find_and_update_multidropdown_list(
+            dataset_metadata, "DELETION_ANONYMIZATION", "use_restrictions", "type", 0
+        )
+
+    result = find_and_update_multidropdown_list(
+        dataset_metadata, initial_value, "use_restrictions", field, index
+    )
+
+    if isinstance(result, list) and index < len(result):
+        assert result[index] == expected
+    else:
+        assert result == [expected]
+
+
+def test_find_existing_use_restriction_illegal_input():
+    dataset_metadata = model.Dataset()
+    with pytest.raises(ValidationError):
+        find_and_update_multidropdown_list(
+            dataset_metadata, "NOT_A_USE_RESTRICTION", "use_restrictions", "type", 0
+        )

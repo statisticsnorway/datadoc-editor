@@ -12,6 +12,7 @@ from datadoc_editor import state
 from datadoc_editor.enums import Assessment
 from datadoc_editor.enums import DataSetState
 from datadoc_editor.enums import DataSetStatus
+from datadoc_editor.enums import TemporalityTypeType
 from datadoc_editor.enums import UseRestrictionType
 from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
 from datadoc_editor.frontend.fields.display_base import (
@@ -22,6 +23,7 @@ from datadoc_editor.frontend.fields.display_base import (
 )
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import FieldTypes
+from datadoc_editor.frontend.fields.display_base import MetadataCheckboxField
 from datadoc_editor.frontend.fields.display_base import MetadataDateField
 from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
 from datadoc_editor.frontend.fields.display_base import MetadataInputField
@@ -29,6 +31,7 @@ from datadoc_editor.frontend.fields.display_base import MetadataMultiDropdownFie
 from datadoc_editor.frontend.fields.display_base import MetadataMultiLanguageField
 from datadoc_editor.frontend.fields.display_base import MetadataPeriodField
 from datadoc_editor.frontend.fields.display_base import get_comma_separated_string
+from datadoc_editor.frontend.fields.display_base import get_data_source_options
 from datadoc_editor.frontend.fields.display_base import get_enum_options
 
 logger = logging.getLogger(__name__)
@@ -116,12 +119,12 @@ DISPLAY_DATASET: dict[
         obligatory=True,
         id_type=DATASET_METADATA_MULTILANGUAGE_INPUT,
     ),
-    # DatasetIdentifiers.CONTAINS_PERSONAL_DATA: MetadataCheckboxField(
-    #     identifier=DatasetIdentifiers.CONTAINS_PERSONAL_DATA.value,
-    #     display_name="Inneholder personopplysninger",
-    #     description="Oppgi om datasettet inneholder personopplysninger. All informasjon som entydig kan knyttes til en fysisk person (f.eks. fødselsnummer og adresse), er personopplysninger. Pseudonymiserte personopplysninger er fortsatt personopplysninger. Næringsdata om enkeltpersonforetak (ENK) skal imidlertid ikke regnes som personopplysninger.",
-    #     obligatory=True,
-    # ),
+    DatasetIdentifiers.CONTAINS_PERSONAL_DATA: MetadataCheckboxField(
+        identifier=DatasetIdentifiers.CONTAINS_PERSONAL_DATA.value,
+        display_name="Inneholder personopplysninger",
+        description="Oppgi om datasettet inneholder personopplysninger. All informasjon som entydig kan knyttes til en fysisk person (f.eks. fødselsnummer og adresse), er personopplysninger. Pseudonymiserte personopplysninger er fortsatt personopplysninger. Næringsdata om enkeltpersonforetak (ENK) skal imidlertid ikke regnes som personopplysninger.",
+        obligatory=True,
+    ),
     DatasetIdentifiers.DESCRIPTION: MetadataMultiLanguageField(
         identifier=DatasetIdentifiers.DESCRIPTION.value,
         display_name="Beskrivelse",
@@ -151,9 +154,10 @@ DISPLAY_DATASET: dict[
         display_name="Bruksrestriksjon",
         description="Velg hvilken bruksrestriksjon som gjelder.",
         options_getter=functools.partial(get_enum_options, UseRestrictionType),
-        # date_identifier="",
-        # date_display_name="Dato for restriksjon",
-        # date_description="Oppgi datoen når restriksjonen gjelder fra.",
+        type_display_name="Bruksrestriksjon",
+        type_description="Oppgi om det er knyttet noen bruksrestriksjoner til datasettet, f.eks. krav om sletting/anonymisering.",
+        date_display_name="Dato for restriksjon",
+        date_description='Oppgi ev. "tiltaksdato" for bruksrestriksjoner, f.eks. frist for sletting/anonymisering. Noen bruksrestriksjoner vil ikke ha en slik dato, f.eks. vil en behandlingsbegrensning normalt være permanent/tidsuavhengig.',
         id_type=DATASET_METADATA_MULTIDROPDOWN_INPUT,
     ),
     DatasetIdentifiers.DATASET_STATE: MetadataDropdownField(
@@ -176,13 +180,13 @@ DISPLAY_DATASET: dict[
         ),
         obligatory=True,
     ),
-    # DatasetIdentifiers.UNIT_TYPE: MetadataDropdownField(
-    #     identifier=DatasetIdentifiers.UNIT_TYPE.value,
-    #     display_name="Enhetstype",
-    #     description="Den eller de enhetstypen(e) datasettet inneholder informasjon om. Eksempler på enhetstyper er person, foretak og eiendom.",
-    #     options_getter=get_unit_type_options,
-    #     obligatory=True,
-    # ),
+    DatasetIdentifiers.UNIT_TYPE: MetadataDropdownField(
+        identifier=DatasetIdentifiers.UNIT_TYPE.value,
+        display_name="Enhetstype",
+        description="Den eller de enhetstypen(e) datasettet inneholder informasjon om. Eksempler på enhetstyper er person, foretak og eiendom.",
+        options_getter=get_unit_type_options,
+        obligatory=True,
+    ),
     DatasetIdentifiers.CONTAINS_DATA_FROM: MetadataPeriodField(
         identifier=DatasetIdentifiers.CONTAINS_DATA_FROM.value,
         display_name="Inneholder data f.o.m.",
@@ -199,23 +203,23 @@ DISPLAY_DATASET: dict[
         editable=True,
         id_type=DATASET_METADATA_DATE_INPUT,
     ),
-    # DatasetIdentifiers.DATA_SOURCE: MetadataDropdownField(
-    #     identifier=DatasetIdentifiers.DATA_SOURCE.value,
-    #     display_name="Datakilde",
-    #     description="Oppgi kilden til datasettet (på etat-/organisasjonsnivå). Dersom flere variabler i datasettet har ulik datakilde, kan disse dokumenteres på variabelnivå.",
-    #     obligatory=True,
-    #     options_getter=get_data_source_options,
-    # ),
-    # DatasetIdentifiers.TEMPORALITY_TYPE: MetadataDropdownField(
-    #     identifier=DatasetIdentifiers.TEMPORALITY_TYPE.value,
-    #     display_name="Temporalitetstype",
-    #     description="Temporalitetstypen sier noe om tidsdimensjonen i datasettet. Fast er data med verdi som ikke endres over tid (f.eks. fødselsdato), tverrsnitt er data som er målt på et gitt tidspunkt, akkumulert er data som er samlet over en viss tidsperiode (f.eks. inntekt gjennom et år) og hendelse/forløp registrerer tidspunkt og tidsperiode for ulike hendelser /tilstander, f.eks. (skifte av) bosted.",
-    #     options_getter=functools.partial(
-    #         get_enum_options,
-    #         TemporalityTypeType,
-    #     ),
-    #     obligatory=True,
-    # ),
+    DatasetIdentifiers.DATA_SOURCE: MetadataDropdownField(
+        identifier=DatasetIdentifiers.DATA_SOURCE.value,
+        display_name="Datakilde",
+        description="Oppgi kilden til datasettet (på etat-/organisasjonsnivå). Dersom flere variabler i datasettet har ulik datakilde, kan disse dokumenteres på variabelnivå.",
+        obligatory=True,
+        options_getter=get_data_source_options,
+    ),
+    DatasetIdentifiers.TEMPORALITY_TYPE: MetadataDropdownField(
+        identifier=DatasetIdentifiers.TEMPORALITY_TYPE.value,
+        display_name="Temporalitetstype",
+        description="Temporalitetstypen sier noe om tidsdimensjonen i datasettet. Fast er data med verdi som ikke endres over tid (f.eks. fødselsdato), tverrsnitt er data som er målt på et gitt tidspunkt, akkumulert er data som er samlet over en viss tidsperiode (f.eks. inntekt gjennom et år) og hendelse/forløp registrerer tidspunkt og tidsperiode for ulike hendelser /tilstander, f.eks. (skifte av) bosted.",
+        options_getter=functools.partial(
+            get_enum_options,
+            TemporalityTypeType,
+        ),
+        obligatory=True,
+    ),
     DatasetIdentifiers.SUBJECT_FIELD: MetadataDropdownField(
         identifier=DatasetIdentifiers.SUBJECT_FIELD.value,
         display_name="Statistikkområde",

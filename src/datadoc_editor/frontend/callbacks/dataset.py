@@ -207,9 +207,9 @@ def process_special_cases(
     elif metadata_identifier in MULTIPLE_DROPDOWN_DATASET_IDENTIFIERS:
         updated_value = find_and_update_multidropdown_list(
             state.metadata.dataset,
+            value,
             metadata_identifier,
             language,
-            value,
             index,
         )
     elif metadata_identifier in DROPDOWN_DATASET_METADATA_IDENTIFIERS and value == "":
