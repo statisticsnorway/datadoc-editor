@@ -23,24 +23,19 @@ from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_date_input
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
-from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
-from datadoc_editor.frontend.callbacks.utils import (
-    map_selected_algorithm_to_pseudo_fields,
-)
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
 from datadoc_editor.frontend.callbacks.variables import (
     accept_pseudo_variable_metadata_input,
-    populate_pseudo_workspace,
 )
 from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
 )
 from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
+from datadoc_editor.frontend.callbacks.variables import populate_pseudo_workspace
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
 from datadoc_editor.frontend.components.builders import build_dataset_edit_section
 from datadoc_editor.frontend.components.builders import build_dataset_machine_section
-from datadoc_editor.frontend.components.builders import build_pseudo_field_section
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
