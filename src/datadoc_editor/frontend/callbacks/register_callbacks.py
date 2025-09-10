@@ -476,8 +476,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
     ) -> dbc.Form:
         """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
         logger.debug("Selected algorithm: %s", selected_algorithm)
-        variable_short_name = dropdown_id["variable"]
-        variable = state.metadata.variables_lookup.get(variable_short_name)
+        variable = state.metadata.variables_lookup.get(dropdown_id["variable"])
 
         if variable is None:
             logger.info("Variable not found in lookup!")
