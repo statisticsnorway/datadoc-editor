@@ -3,11 +3,15 @@ import ssb_dash_components as ssb  # type: ignore[import-untyped]
 from dapla_metadata.datasets import model
 from dash import html
 
-from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo, map_selected_algorithm_to_pseudo_fields
+from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
+from datadoc_editor.frontend.callbacks.utils import (
+    map_selected_algorithm_to_pseudo_fields,
+)
+from datadoc_editor.frontend.components.builders import build_pseudo_field_section
 from datadoc_editor.frontend.components.builders import (
-    build_pseudo_field_section,
     build_variables_pseudonymization_section,
 )
+
 
 @pytest.mark.parametrize(
     ("expected_algorithm", "variable", "num_editable_fields"),
@@ -62,7 +66,9 @@ from datadoc_editor.frontend.components.builders import (
             "",
             model.Variable(
                 short_name="helse",
-                pseudonymization=model.Pseudonymization(stable_identifier_type="FREG_SNR"),
+                pseudonymization=model.Pseudonymization(
+                    stable_identifier_type="FREG_SNR"
+                ),
             ),
             0,
         ),
@@ -73,14 +79,10 @@ from datadoc_editor.frontend.components.builders import (
         "standard_dapla",
         "custom_algorithm",
         "no_pseudonymization",
-        "not_required_encryption_algorithm"
+        "not_required_encryption_algorithm",
     ],
 )
-def test_build_pseudo_input_section(
-    expected_algorithm,
-    variable,
-    num_editable_fields
-):
+def test_build_pseudo_input_section(expected_algorithm, variable, num_editable_fields):
     pseudo_section = build_variables_pseudonymization_section(
         "Pseudonymisert", variable, map_dropdown_to_pseudo(variable)
     )
@@ -98,8 +100,8 @@ def test_build_pseudo_input_section(
         if isinstance(c, html.Div) and c.id.get("variable") == variable.short_name
     ]
     assert len(container_divs) == 1
-    
-    pseudo_metadata_list =  map_selected_algorithm_to_pseudo_fields(expected_algorithm)
+
+    pseudo_metadata_list = map_selected_algorithm_to_pseudo_fields(expected_algorithm)
     input_section = build_pseudo_field_section(
         pseudo_metadata_list,
         "left",
@@ -118,5 +120,3 @@ def test_build_pseudo_input_section(
                 strict=False,
             )
         )
-
-
