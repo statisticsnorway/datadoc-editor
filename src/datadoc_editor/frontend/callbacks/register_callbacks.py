@@ -65,6 +65,8 @@ from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
 from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     import dash_bootstrap_components as dbc
 
     from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
@@ -72,7 +74,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def register_callbacks(app: Dash) -> None:
+def register_callbacks(app: Dash) -> None:  # noqa: PLR0915 TODO: Jorgen-5, we should split this up after the tasks are finished
     """Define and register callbacks."""
 
     @app.callback(
@@ -302,7 +304,7 @@ def register_callbacks(app: Dash) -> None:
         State("use-restriction-store", "data"),
         prevent_initial_call=True,
     )
-    def update_use_restrictions(add_clicks, current_list):
+    def update_use_restrictions(add_clicks: int, current_list: list):  # noqa: ANN202, ARG001
         if current_list is None:
             current_list = []
 
@@ -326,7 +328,12 @@ def register_callbacks(app: Dash) -> None:
         Input("use-restriction-id-store", "data"),
         Input("use-restriction-display-values-store", "data"),
     )
-    def render_use_restriction_list(current_list, options, idx, display_values):
+    def render_use_restriction_list(  # noqa: ANN202
+        current_list: list,
+        options: Callable[[], list[dict[str, str]]],
+        idx: dict[str, str | int],
+        display_values: dict[str, str],
+    ):
         items = []
         for i, item in enumerate(current_list):
             dropdown_id = {**idx, "index": i}

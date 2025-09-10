@@ -133,9 +133,6 @@ def test_legal_shortname(shortname: str):
     assert check_variable_names(mock_metadata.variables) is None
 
 
-import pytest
-
-
 @pytest.mark.parametrize(
     ("initial_value", "field", "index", "expected"),
     [

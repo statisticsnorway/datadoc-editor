@@ -380,6 +380,7 @@ class MetadataMultiDropdownField(DisplayMetadata):
         component_id: dict,
         metadata: BaseModel,
     ) -> html.Fieldset:
+        """Build fieldset group."""
         use_restrictions: list[model.UseRestrictionItem] = (
             get_standard_metadata(metadata, self.identifier) or []
         )
