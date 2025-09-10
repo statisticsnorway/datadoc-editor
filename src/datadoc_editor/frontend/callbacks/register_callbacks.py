@@ -483,7 +483,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             return []
 
         saved_pseudo = variable.pseudonymization
-        logger.debug("Saved pseudo for %s: %s", variable.short_name, saved_pseudo)
+        logger.debug("Variable %s has pseudo info: %s", variable.short_name, saved_pseudo)
 
         if selected_algorithm == "":
             selected_algorithm = None
