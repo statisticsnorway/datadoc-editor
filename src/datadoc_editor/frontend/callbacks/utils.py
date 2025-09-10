@@ -466,22 +466,20 @@ def map_selected_algorithm_to_pseudo_fields(
 
 
 def map_dropdown_to_pseudo(variable: model.Variable) -> str:
-    """Helper."""
+    """Return dropdown algorithm value for a variable's pseudonymization."""
     pseudonym_obj = variable.pseudonymization
-    selected_algorithm = ""
+    
     if pseudonym_obj is None:
-        return selected_algorithm
-    if pseudonym_obj.encryption_algorithm == PAPIS_ALGORITHM_ENCRYPTION:
+        return ""
+    
+    encryption_algorithm = pseudonym_obj.encryption_algorithm
+    if encryption_algorithm == PAPIS_ALGORITHM_ENCRYPTION:
         if pseudonym_obj.stable_identifier_type == PAPIS_ALGORITHM_WITH_STABIL_ID_TYPE:
-            selected_algorithm = str(
-                PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABIL_ID.value
-            )
+            return str(PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABIL_ID.value)
         else:
-            selected_algorithm = str(
-                PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABIL_ID.value
-            )
-    if pseudonym_obj.encryption_algorithm == STANDARD_ALGORITM_DAPLA_ENCRYPTION:
-        selected_algorithm = str(
-            PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA.value
-        )
-    return selected_algorithm
+            return str(PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABIL_ID.value)
+    if encryption_algorithm == STANDARD_ALGORITM_DAPLA_ENCRYPTION:
+        return str(PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA.value)
+    if encryption_algorithm:
+        return str(PseudonymizationAlgorithmsEnum.CUSTOM.value)
+    return ""
