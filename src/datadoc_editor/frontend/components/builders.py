@@ -187,7 +187,9 @@ def build_variables_machine_section(
 
 
 def build_variables_pseudonymization_section(
-    title: str, variable: model.Variable, selected_algorithm: str
+    title: str,
+    variable: model.Variable,
+    selected_algorithm: PseudonymizationAlgorithmsEnum,
 ) -> html.Section:
     """Create input section for pseudonymization with dropdown for selecting pseudo algorithm."""
     return html.Section(
