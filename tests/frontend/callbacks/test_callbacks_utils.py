@@ -141,7 +141,7 @@ def test_legal_shortname(shortname: str):
                     stable_identifier_type="FREG_SNR", encryption_algorithm="TINK-FPE"
                 ),
             ),
-            "PAPIS_ALGORITHM_WITH_STABIL_ID",
+            "PAPIS_ALGORITHM_WITH_STABLE_ID",
         ),
         (
             model.Variable(pseudonymization=None),
@@ -155,7 +155,7 @@ def test_legal_shortname(shortname: str):
                     stable_identifier_version="2023-01-01",
                 ),
             ),
-            "PAPIS_ALGORITHM_WITH_STABIL_ID",
+            "PAPIS_ALGORITHM_WITH_STABLE_ID",
         ),
         (
             model.Variable(
@@ -165,7 +165,7 @@ def test_legal_shortname(shortname: str):
                     pseudonymization_time="2025-08-10",
                 ),
             ),
-            "PAPIS_ALGORITHM_WITH_STABIL_ID",
+            "PAPIS_ALGORITHM_WITH_STABLE_ID",
         ),
         (
             model.Variable(
@@ -173,7 +173,7 @@ def test_legal_shortname(shortname: str):
                     encryption_algorithm="TINK-FPE"
                 ),
             ),
-            "PAPIS_ALGORITHM_WITHOUT_STABIL_ID",
+            "PAPIS_ALGORITHM_WITHOUT_STABLE_ID",
         ),
         (
             model.Variable(
@@ -182,7 +182,7 @@ def test_legal_shortname(shortname: str):
                     pseudonymization_time="2000-12-03",
                 ),
             ),
-            "PAPIS_ALGORITHM_WITHOUT_STABIL_ID",
+            "PAPIS_ALGORITHM_WITHOUT_STABLE_ID",
         ),
         (
             model.Variable(
@@ -219,12 +219,12 @@ def test_legal_shortname(shortname: str):
         ),
     ],
     ids=[
-        "papis_with_stabile_id",
+        "papis_with_stable_id",
         "without_pseudonymization",
-        "papis_with_stabile_id_and_identifier_version",
-        "papis_with_stabile_id_and_pseudonymization_time",
-        "papis_without_stabile_id",
-        "papis_without_stabile_id_and_pseudonymization_time",
+        "papis_with_stable_id_and_identifier_version",
+        "papis_with_stable_id_and_pseudonymization_time",
+        "papis_without_stable_id",
+        "papis_without_stable_id_and_pseudonymization_time",
         "standard_algorithm_dapla",
         "standard_algorithm_dapla_and_pseudonymization_time",
         "custom_algorithm",

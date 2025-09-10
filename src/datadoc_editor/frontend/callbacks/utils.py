@@ -31,7 +31,7 @@ from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
 from datadoc_editor.frontend.constants import PAPIS_ALGORITHM_ENCRYPTION
-from datadoc_editor.frontend.constants import PAPIS_ALGORITHM_WITH_STABIL_ID_TYPE
+from datadoc_editor.frontend.constants import PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE
 from datadoc_editor.frontend.constants import STANDARD_ALGORITM_DAPLA_ENCRYPTION
 from datadoc_editor.frontend.fields.display_dataset import (
     OBLIGATORY_DATASET_METADATA_IDENTIFIERS_AND_DISPLAY_NAME,
@@ -43,10 +43,10 @@ from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PSEUDONYMIZATION_METADATA,
 )
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
-    PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID_METADATA,
+    PSEUDONYMIZATION_PAPIS_WITH_STABLE_ID_METADATA,
 )
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
-    PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID_METADATA,
+    PSEUDONYMIZATION_PAPIS_WITHOUT_STABLE_ID_METADATA,
 )
 from datadoc_editor.frontend.fields.display_variables import (
     OBLIGATORY_VARIABLES_METADATA_IDENTIFIERS_AND_DISPLAY_NAME,
@@ -457,10 +457,10 @@ def map_selected_algorithm_to_pseudo_fields(
     """Map a PseudonymizationAlgorithms enum value to the correct pseudonymization input list.
 
     Examples:
-    >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields("PAPIS_ALGORITHM_WITHOUT_STABIL_ID")
+    >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields("PAPIS_ALGORITHM_WITHOUT_STABLE_ID")
     >>> len(pseudo_fields)
     1
-    >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields("PAPIS_ALGORITHM_WITH_STABIL_ID")
+    >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields("PAPIS_ALGORITHM_WITH_STABLE_ID")
     >>> len(pseudo_fields)
     2
     >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields("CUSTOM")
@@ -468,8 +468,8 @@ def map_selected_algorithm_to_pseudo_fields(
     5
     """
     mapping = {
-        "PAPIS_ALGORITHM_WITHOUT_STABIL_ID": PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID_METADATA,
-        "PAPIS_ALGORITHM_WITH_STABIL_ID": PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID_METADATA,
+        "PAPIS_ALGORITHM_WITHOUT_STABLE_ID": PSEUDONYMIZATION_PAPIS_WITHOUT_STABLE_ID_METADATA,
+        "PAPIS_ALGORITHM_WITH_STABLE_ID": PSEUDONYMIZATION_PAPIS_WITH_STABLE_ID_METADATA,
         "STANDARD_ALGORITM_DAPLA": PSEUDONYMIZATION_DEAD_METADATA,
         "CUSTOM": PSEUDONYMIZATION_METADATA,
     }
@@ -486,12 +486,12 @@ def map_dropdown_to_pseudo(variable: model.Variable) -> str:
 
     encryption_algorithm = pseudonym_obj.encryption_algorithm
     if encryption_algorithm == PAPIS_ALGORITHM_ENCRYPTION:
-        if pseudonym_obj.stable_identifier_type == PAPIS_ALGORITHM_WITH_STABIL_ID_TYPE:
+        if pseudonym_obj.stable_identifier_type == PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE:
             return str(
-                PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABIL_ID.value
+                PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID.value
             )
         return str(
-            PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABIL_ID.value
+            PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID.value
         )
     if encryption_algorithm == STANDARD_ALGORITM_DAPLA_ENCRYPTION:
         return str(PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA.value)
