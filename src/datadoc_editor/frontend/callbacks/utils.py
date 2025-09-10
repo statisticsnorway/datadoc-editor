@@ -455,7 +455,7 @@ def map_selected_algorithm_to_pseudo_fields(
     selected_algorithm: str,
 ) -> list:
     """Map a PseudonymizationAlgorithms enum value to the correct pseudonymization input list.
-    
+
     Examples:
     >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields("PAPIS_ALGORITHM_WITHOUT_STABIL_ID")
     >>> len(pseudo_fields)
