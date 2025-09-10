@@ -482,7 +482,11 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             logger.info("Variable not found in lookup!")
             return []
 
-        logger.debug("Variable %s has pseudo info: %s", variable.short_name, variable.pseudonymization)
+        logger.debug(
+            "Variable %s has pseudo info: %s",
+            variable.short_name,
+            variable.pseudonymization,
+        )
 
         if selected_algorithm == "":
             selected_algorithm = None
@@ -502,7 +506,6 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
                 "No pseudonymization for %s, returning empty list", variable.short_name
             )
             return []
-
 
         return build_pseudo_field_section(
             map_selected_algorithm_to_pseudo_fields(selected_algorithm),
