@@ -69,6 +69,3 @@ def test_build_pseudo_input_section(
             strict=False,
         )
     )
-
-
-# build_pseudo_field_section
