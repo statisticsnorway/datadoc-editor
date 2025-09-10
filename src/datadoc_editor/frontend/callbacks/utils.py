@@ -472,10 +472,10 @@ def map_selected_algorithm_to_pseudo_fields(
         PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA: PSEUDONYMIZATION_DEAD_METADATA,
         PseudonymizationAlgorithmsEnum.CUSTOM: PSEUDONYMIZATION_METADATA,
     }
-    
+
     if selected_algorithm is None:
         return []
-    
+
     return mapping.get(selected_algorithm, [])
 
 
