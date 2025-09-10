@@ -12,77 +12,128 @@ from datadoc_editor.frontend.components.builders import (
     build_variables_pseudonymization_section,
 )
 
+TEST_VARIABLES = [
+    (
+        "PAPIS_ALGORITHM_WITH_STABLE_ID",
+        model.Variable(
+            short_name="helse",
+            pseudonymization=model.Pseudonymization(
+                stable_identifier_type="FREG_SNR", encryption_algorithm="TINK-FPE"
+            ),
+        ),
+        2,
+    ),
+    (
+        "PAPIS_ALGORITHM_WITHOUT_STABLE_ID",
+        model.Variable(
+            short_name="helse",
+            pseudonymization=model.Pseudonymization(encryption_algorithm="TINK-FPE"),
+        ),
+        1,
+    ),
+    (
+        "STANDARD_ALGORITM_DAPLA",
+        model.Variable(
+            short_name="helse",
+            pseudonymization=model.Pseudonymization(encryption_algorithm="TINK-DAED"),
+        ),
+        1,
+    ),
+    (
+        "CUSTOM",
+        model.Variable(
+            short_name="helse",
+            pseudonymization=model.Pseudonymization(encryption_algorithm="LOK"),
+        ),
+        5,
+    ),
+    (
+        "",
+        model.Variable(
+            short_name="helse",
+            pseudonymization=None,
+        ),
+        0,
+    ),
+    (
+        "",
+        model.Variable(
+            short_name="helse",
+            pseudonymization=model.Pseudonymization(stable_identifier_type="FREG_SNR"),
+        ),
+        0,
+    ),
+]
+
+TEST_VARIABLES = [
+    (
+        "PAPIS_ALGORITHM_WITH_STABLE_ID",
+        model.Variable(
+            short_name="helse",
+            pseudonymization=model.Pseudonymization(
+                stable_identifier_type="FREG_SNR", encryption_algorithm="TINK-FPE"
+            ),
+        ),
+        2,
+    ),
+    (
+        "PAPIS_ALGORITHM_WITHOUT_STABLE_ID",
+        model.Variable(
+            short_name="helse",
+            pseudonymization=model.Pseudonymization(encryption_algorithm="TINK-FPE"),
+        ),
+        1,
+    ),
+    (
+        "STANDARD_ALGORITM_DAPLA",
+        model.Variable(
+            short_name="helse",
+            pseudonymization=model.Pseudonymization(encryption_algorithm="TINK-DAED"),
+        ),
+        1,
+    ),
+    (
+        "CUSTOM",
+        model.Variable(
+            short_name="helse",
+            pseudonymization=model.Pseudonymization(encryption_algorithm="LOK"),
+        ),
+        5,
+    ),
+    (
+        "",
+        model.Variable(
+            short_name="helse",
+            pseudonymization=None,
+        ),
+        0,
+    ),
+    (
+        "",
+        model.Variable(
+            short_name="helse",
+            pseudonymization=model.Pseudonymization(stable_identifier_type="FREG_SNR"),
+        ),
+        0,
+    ),
+]
+
+TEST_IDS = [
+    "papis_with_stable_id",
+    "papis_without_stable_id",
+    "standard_dapla",
+    "custom_algorithm",
+    "no_pseudonymization",
+    "not_required_encryption_algorithm",
+]
+
 
 @pytest.mark.parametrize(
-    ("expected_algorithm", "variable", "num_editable_fields"),
-    [
-        (
-            "PAPIS_ALGORITHM_WITH_STABLE_ID",
-            model.Variable(
-                short_name="helse",
-                pseudonymization=model.Pseudonymization(
-                    stable_identifier_type="FREG_SNR", encryption_algorithm="TINK-FPE"
-                ),
-            ),
-            2,
-        ),
-        (
-            "PAPIS_ALGORITHM_WITHOUT_STABLE_ID",
-            model.Variable(
-                short_name="helse",
-                pseudonymization=model.Pseudonymization(
-                    encryption_algorithm="TINK-FPE"
-                ),
-            ),
-            1,
-        ),
-        (
-            "STANDARD_ALGORITM_DAPLA",
-            model.Variable(
-                short_name="helse",
-                pseudonymization=model.Pseudonymization(
-                    encryption_algorithm="TINK-DAED"
-                ),
-            ),
-            1,
-        ),
-        (
-            "CUSTOM",
-            model.Variable(
-                short_name="helse",
-                pseudonymization=model.Pseudonymization(encryption_algorithm="LOK"),
-            ),
-            5,
-        ),
-        (
-            "",
-            model.Variable(
-                short_name="helse",
-                pseudonymization=None,
-            ),
-            0,
-        ),
-        (
-            "",
-            model.Variable(
-                short_name="helse",
-                pseudonymization=model.Pseudonymization(
-                    stable_identifier_type="FREG_SNR"
-                ),
-            ),
-            0,
-        ),
-    ],
-    ids=[
-        "papis_with_stable_id",
-        "papis_without_stable_id",
-        "standard_dapla",
-        "custom_algorithm",
-        "no_pseudonymization",
-        "not_required_encryption_algorithm",
-    ],
+    "expected_algorithm, variable, num_editable_fields", TEST_VARIABLES, ids=TEST_IDS
 )
-def test_build_pseudo_input_section(expected_algorithm, variable, num_editable_fields):
+def test_build_variables_pseudonymization_section(
+    expected_algorithm, variable, num_editable_fields
+):
     pseudo_section = build_variables_pseudonymization_section(
         "Pseudonymisert", variable, map_dropdown_to_pseudo(variable)
     )
@@ -101,6 +152,13 @@ def test_build_pseudo_input_section(expected_algorithm, variable, num_editable_f
     ]
     assert len(container_divs) == 1
 
+
+@pytest.mark.parametrize(
+    "expected_algorithm, variable, num_editable_fields", TEST_VARIABLES, ids=TEST_IDS
+)
+def test_build_pseudonymization_field_section(
+    expected_algorithm, variable, num_editable_fields
+):
     pseudo_metadata_list = map_selected_algorithm_to_pseudo_fields(expected_algorithm)
     input_section = build_pseudo_field_section(
         pseudo_metadata_list,
