@@ -7,8 +7,9 @@ from dapla_metadata.datasets import model
 from dash import html
 
 from datadoc_editor import state
-from datadoc_editor.frontend.callbacks.utils import check_variable_names, map_dropdown_to_pseudo
+from datadoc_editor.frontend.callbacks.utils import check_variable_names
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
+from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
@@ -137,16 +138,13 @@ def test_legal_shortname(shortname: str):
         (
             model.Variable(
                 pseudonymization=model.Pseudonymization(
-                    stable_identifier_type="FREG_SNR",
-                    encryption_algorithm="TINK-FPE"
+                    stable_identifier_type="FREG_SNR", encryption_algorithm="TINK-FPE"
                 ),
             ),
             "PAPIS_ALGORITHM_WITH_STABIL_ID",
         ),
         (
-            model.Variable(
-                pseudonymization=None
-            ),
+            model.Variable(pseudonymization=None),
             "",
         ),
         (
@@ -154,7 +152,7 @@ def test_legal_shortname(shortname: str):
                 pseudonymization=model.Pseudonymization(
                     stable_identifier_type="FREG_SNR",
                     encryption_algorithm="TINK-FPE",
-                    stable_identifier_version="2023-01-01"
+                    stable_identifier_version="2023-01-01",
                 ),
             ),
             "PAPIS_ALGORITHM_WITH_STABIL_ID",
@@ -231,7 +229,7 @@ def test_legal_shortname(shortname: str):
         "standard_algorithm_dapla_and_pseudonymization_time",
         "custom_algorithm",
         "not_encryption_algorithm",
-    ]
+    ],
 )
 def test_map_dropdown_value(variable: model.Variable, expected_algorithm: str):
     assert map_dropdown_to_pseudo(variable) == expected_algorithm
