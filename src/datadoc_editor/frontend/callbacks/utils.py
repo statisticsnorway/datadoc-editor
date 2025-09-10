@@ -454,7 +454,19 @@ def save_metadata_and_generate_alerts(metadata: Datadoc) -> list:
 def map_selected_algorithm_to_pseudo_fields(
     selected_algorithm: str,
 ) -> list:
-    """Map a PseudonymizationAlgorithms enum value to the correct pseudonymization input list."""
+    """Map a PseudonymizationAlgorithms enum value to the correct pseudonymization input list.
+    
+    Examples:
+    >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields("PAPIS_ALGORITHM_WITHOUT_STABIL_ID")
+    >>> len(pseudo_fields)
+    1
+    >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields("PAPIS_ALGORITHM_WITH_STABIL_ID")
+    >>> len(pseudo_fields)
+    2
+    >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields("CUSTOM")
+    >>> len(pseudo_fields)
+    5
+    """
     mapping = {
         "PAPIS_ALGORITHM_WITHOUT_STABIL_ID": PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID_METADATA,
         "PAPIS_ALGORITHM_WITH_STABIL_ID": PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID_METADATA,
