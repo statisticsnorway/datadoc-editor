@@ -129,7 +129,9 @@ TEST_IDS = [
 
 
 @pytest.mark.parametrize(
-    "expected_algorithm, variable, num_editable_fields", TEST_VARIABLES, ids=TEST_IDS
+    ("expected_algorithm", "variable", "num_editable_fields"),
+    TEST_VARIABLES,
+    ids=TEST_IDS,
 )
 def test_build_variables_pseudonymization_section(
     expected_algorithm, variable, num_editable_fields
@@ -154,7 +156,9 @@ def test_build_variables_pseudonymization_section(
 
 
 @pytest.mark.parametrize(
-    "expected_algorithm, variable, num_editable_fields", TEST_VARIABLES, ids=TEST_IDS
+    ("expected_algorithm", "variable", "num_editable_fields"),
+    TEST_VARIABLES,
+    ids=TEST_IDS,
 )
 def test_build_pseudonymization_field_section(
     expected_algorithm, variable, num_editable_fields
