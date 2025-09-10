@@ -7,7 +7,6 @@ import urllib.parse
 from typing import TYPE_CHECKING
 
 from datadoc_editor import state
-from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
@@ -39,6 +38,8 @@ from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
     from dapla_metadata.datasets import model
+
+    from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 
 
 logger = logging.getLogger(__name__)
@@ -378,6 +379,7 @@ def set_variables_values_inherit_dataset_derived_date_values() -> None:
 def populate_pseudo_workspace(
     variable: model.Variable, selected_algorithm: PseudonymizationAlgorithmsEnum | None
 ) -> dbc.Form:
+    """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
     if variable is None:
         logger.info("Variable not found in lookup!")
         return []
