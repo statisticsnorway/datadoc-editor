@@ -1,7 +1,7 @@
 import pytest
 import ssb_dash_components as ssb  # type: ignore[import-untyped]
-from datadoc_model.all_optional import model
 from dash import html
+from datadoc_model.all_optional import model
 
 from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
 from datadoc_editor.frontend.callbacks.utils import (
