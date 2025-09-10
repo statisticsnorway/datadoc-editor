@@ -19,6 +19,7 @@ from dash import html
 
 from datadoc_editor import config
 from datadoc_editor import state
+from datadoc_editor import constants
 from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_DATASET_MESSAGE
 from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_VARIABLES_MESSAGE
 from datadoc_editor.constants import ILLEGAL_SHORTNAME_WARNING
@@ -30,9 +31,7 @@ from datadoc_editor.frontend.components.builders import build_ssb_alert
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
-from datadoc_editor.frontend.constants import PAPIS_ALGORITHM_ENCRYPTION
-from datadoc_editor.frontend.constants import PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE
-from datadoc_editor.frontend.constants import STANDARD_ALGORITM_DAPLA_ENCRYPTION
+from datadoc_editor.constants import PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE
 from datadoc_editor.frontend.fields.display_dataset import (
     OBLIGATORY_DATASET_METADATA_IDENTIFIERS_AND_DISPLAY_NAME,
 )
@@ -477,24 +476,23 @@ def map_selected_algorithm_to_pseudo_fields(
     return mapping.get(selected_algorithm, [])
 
 
-def map_dropdown_to_pseudo(variable: model.Variable) -> str:
+def map_dropdown_to_pseudo(variable: model.Variable) -> str | None:
     """Return dropdown algorithm value for a variable's pseudonymization."""
-    pseudonym_obj = variable.pseudonymization
-
-    if pseudonym_obj is None:
-        return ""
-
-    encryption_algorithm = pseudonym_obj.encryption_algorithm
-    if encryption_algorithm == PAPIS_ALGORITHM_ENCRYPTION:
-        if pseudonym_obj.stable_identifier_type == PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE:
-            return str(
-                PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID.value
-            )
-        return str(
-            PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID.value
-        )
-    if encryption_algorithm == STANDARD_ALGORITM_DAPLA_ENCRYPTION:
-        return str(PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA.value)
-    if encryption_algorithm:
-        return str(PseudonymizationAlgorithmsEnum.CUSTOM.value)
-    return ""
+    if variable.pseudonymization:
+        match variable.pseudonymization.encryption_algorithm:
+            case constants.PAPIS_ALGORITHM_ENCRYPTION:
+                if (
+                    variable.pseudonymization.stable_identifier_type
+                    == PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE
+                ):
+                    return str(PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID.value)
+                else:
+                    return str(PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID.value)
+            case constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION:
+                return str(PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA.value)
+            case None:
+                return None
+            case _:
+                return str(PseudonymizationAlgorithmsEnum.CUSTOM.value)
+        return None
+    

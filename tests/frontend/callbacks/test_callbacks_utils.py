@@ -145,7 +145,7 @@ def test_legal_shortname(shortname: str):
         ),
         (
             model.Variable(pseudonymization=None),
-            "",
+            None,
         ),
         (
             model.Variable(
@@ -177,7 +177,7 @@ def test_legal_shortname(shortname: str):
                     encryption_key_reference="custom-common-key-1",
                 ),
             ),
-            "",
+            None,
         ),
     ],
     ids=[

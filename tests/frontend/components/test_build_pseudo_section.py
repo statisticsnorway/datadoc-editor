@@ -101,7 +101,7 @@ TEST_VARIABLES = [
         5,
     ),
     (
-        "",
+        None,
         model.Variable(
             short_name="helse",
             pseudonymization=None,
@@ -109,7 +109,7 @@ TEST_VARIABLES = [
         0,
     ),
     (
-        "",
+        None,
         model.Variable(
             short_name="helse",
             pseudonymization=model.Pseudonymization(stable_identifier_type="FREG_SNR"),
