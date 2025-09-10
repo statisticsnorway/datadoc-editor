@@ -488,10 +488,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             variable.pseudonymization,
         )
 
-        if selected_algorithm == "":
-            selected_algorithm = None
-
-        if selected_algorithm is None and variable.pseudonymization is not None:
+        if not selected_algorithm and variable.pseudonymization is not None:
             selected_algorithm = map_dropdown_to_pseudo(variable)
             logger.debug(
                 "Algorithm inferred for %s: %s", variable.short_name, selected_algorithm
