@@ -274,6 +274,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             "id",
         ),
         State("pseudo-variables-selected-algorithm", "data"),
+        prevent_initial_call=True,
     )
     def callback_accept_pseudo_variable_metadata_input(value, component_id, data):  # noqa: ANN202, ANN001
         if value is None or component_id is None:
@@ -282,14 +283,9 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         variable_short_name = component_id["variable_short_name"]
         input_id = component_id["id"]
         logger.debug(
-            "Callback triggered with value=%s, component_id=%s, data_keys=%s",
+            "Callback triggered with value=%s, component_id=%s",
             value,
             component_id,
-            list(data.keys()) if data else None,
-        )
-        logger.debug(
-            "Value %s",
-            value,
         )
         selected_algorithm = data.get(variable_short_name, {}).get(
             "selected_algorithm", ""
