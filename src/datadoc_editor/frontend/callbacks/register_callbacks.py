@@ -482,35 +482,32 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             logger.info("Variable not found in lookup!")
             return []
 
-        saved_pseudo = variable.pseudonymization
-        logger.debug("Variable %s has pseudo info: %s", variable.short_name, saved_pseudo)
+        logger.debug("Variable %s has pseudo info: %s", variable.short_name, variable.pseudonymization)
 
         if selected_algorithm == "":
             selected_algorithm = None
 
-        if selected_algorithm is None and saved_pseudo is not None:
+        if selected_algorithm is None and variable.pseudonymization is not None:
             selected_algorithm = map_dropdown_to_pseudo(variable)
             logger.debug(
-                "Algorithm inferred for %s: %s", variable_short_name, selected_algorithm
+                "Algorithm inferred for %s: %s", variable.short_name, selected_algorithm
             )
 
-        if selected_algorithm and saved_pseudo is None:
-            state.metadata.add_pseudonymization(variable_short_name)
+        if selected_algorithm and variable.pseudonymization is None:
+            state.metadata.add_pseudonymization(variable.short_name)
             logger.info("Added pseudonymization for %s", variable.short_name)
-            saved_pseudo = variable.pseudonymization
 
-        if saved_pseudo is None:
+        if variable.pseudonymization is None:
             logger.info(
                 "No pseudonymization for %s, returning empty list", variable.short_name
             )
             return []
 
-        pseudo_fields = map_selected_algorithm_to_pseudo_fields(selected_algorithm)
 
         return build_pseudo_field_section(
-            pseudo_fields,
+            map_selected_algorithm_to_pseudo_fields(selected_algorithm),
             "left",
             variable=variable,
-            pseudonymization=saved_pseudo,
+            pseudonymization=variable.pseudonymization,
             field_id="pseudo",
         )
