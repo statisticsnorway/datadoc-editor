@@ -53,8 +53,6 @@ def build_app(app: Dash) -> Dash:
                     dcc.Store(id="pseudo-variables-updated-counter", data=0),
                     build_controls_bar(),
                     html.Div(id="alerts-section"),
-                    dcc.Store(id="use-restriction-store", data=[]),
-                    html.Div(id="dummy-output", style={"display": "none"}),
                     dcc.Tabs(
                         id="tabs",
                         className="ssb-tabs",
