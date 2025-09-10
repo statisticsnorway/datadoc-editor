@@ -467,7 +467,7 @@ def register_callbacks(app: Dash) -> None:
         Input({"type": "pseudonymization-dropdown", "variable": MATCH}, "value"),
         State({"type": "pseudonymization-dropdown", "variable": MATCH}, "id"),
     )
-    def update_pseudo_fields(
+    def callback_populate_pseudo_workspace(
         value,  # noqa: ANN001
         dropdown_id,  # noqa: ANN001
     ) -> dbc.Form:
