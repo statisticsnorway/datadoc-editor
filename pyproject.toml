@@ -18,7 +18,6 @@ dependencies = [
     "pydantic>=2.5.2",
     "python-dotenv>=1.0.1",
     "ssb-dash-components>=0.9.1",
-    "ssb-datadoc-model==7.0.2",
 ]
 
 [project.urls]

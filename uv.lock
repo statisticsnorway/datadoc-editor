@@ -2081,7 +2081,6 @@ dependencies = [
     { name = "pydantic" },
     { name = "python-dotenv" },
     { name = "ssb-dash-components" },
-    { name = "ssb-datadoc-model" },
 ]
 
 [package.dev-dependencies]
@@ -2127,7 +2126,6 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.5.2" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "ssb-dash-components", specifier = ">=0.9.1" },
-    { name = "ssb-datadoc-model", specifier = "==7.0.2" },
 ]
 
 [package.metadata.requires-dev]
