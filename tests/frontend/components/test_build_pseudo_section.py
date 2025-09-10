@@ -134,8 +134,7 @@ TEST_IDS = [
     ids=TEST_IDS,
 )
 def test_build_variables_pseudonymization_section(
-    expected_algorithm,
-    variable,
+    expected_algorithm, variable, num_editable_fields
 ):
     pseudo_section = build_variables_pseudonymization_section(
         "Pseudonymisert", variable, map_dropdown_to_pseudo(variable)
