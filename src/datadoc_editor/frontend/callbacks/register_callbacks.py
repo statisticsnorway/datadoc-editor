@@ -496,7 +496,11 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
                 "Algorithm inferred for %s: %s", variable.short_name, selected_algorithm
             )
 
-        if variable.short_name and selected_algorithm and variable.pseudonymization is None:
+        if (
+            variable.short_name
+            and selected_algorithm
+            and variable.pseudonymization is None
+        ):
             state.metadata.add_pseudonymization(variable.short_name)
             logger.info("Added pseudonymization for %s", variable.short_name)
 
