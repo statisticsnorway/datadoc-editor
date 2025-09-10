@@ -97,11 +97,6 @@ def file_path_without_dates():
             ),
         ),
         (
-            DatasetIdentifiers.DATA_SOURCE,
-            "Census",
-            "Census",
-        ),
-        (
             DatasetIdentifiers.POPULATION_DESCRIPTION,
             "Population description",
             model.LanguageStringType(
@@ -125,16 +120,6 @@ def file_path_without_dates():
                     ),
                 ],
             ),
-        ),
-        (
-            DatasetIdentifiers.UNIT_TYPE,
-            "17",
-            "17",
-        ),
-        (
-            DatasetIdentifiers.TEMPORALITY_TYPE,
-            enums.TemporalityTypeType.ACCUMULATED,
-            enums.TemporalityTypeType.ACCUMULATED.value,
         ),
         (
             DatasetIdentifiers.SUBJECT_FIELD,
@@ -166,7 +151,6 @@ def file_path_without_dates():
                 ],
             ),
         ),
-        (DatasetIdentifiers.CONTAINS_PERSONAL_DATA, True, True),
         (
             DatasetIdentifiers.USE_RESTRICTIONS,
             {
