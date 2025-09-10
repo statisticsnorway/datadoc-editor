@@ -497,4 +497,4 @@ def map_dropdown_to_pseudo(variable: model.Variable) -> str | None:
                 return None
             case _:
                 return str(PseudonymizationAlgorithmsEnum.CUSTOM.value)
-        return None
+    return None
