@@ -510,55 +510,41 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
     def update_pseudo_fields(
         selected_algorithm,  # noqa: ANN001
         dropdown_id,  # noqa: ANN001
-    ) -> list[dbc.Form]:
+    ) -> dbc.Form:
         """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
         logger.debug("Selected algorithm: %s", selected_algorithm)
         variable_short_name = dropdown_id["variable"]
         variable = state.metadata.variables_lookup.get(variable_short_name)
+        
         if variable is None:
             logger.info("Variable not found in lookup!")
             return []
-        logger.debug(
-            "This is saved pseudo %s for %s",
-            variable.pseudonymization,
-            variable.short_name,
-        )
+        
+        saved_pseudo = variable.pseudonymization
+        logger.debug("Saved pseudo for %s: %s", variable.short_name, saved_pseudo)
+
         if selected_algorithm == "":
             selected_algorithm = None
-
-        if selected_algorithm is None and variable.pseudonymization is not None:
+        
+        if selected_algorithm is None and saved_pseudo is not None:
             selected_algorithm = map_dropdown_to_pseudo(variable)
-            filtered_pseudo_fields = map_selected_algorithm_to_pseudo_fields(
-                selected_algorithm
-            )
-            logger.debug(
-                "Selected algorithm %s for %s", selected_algorithm, variable_short_name
-            )
-            logger.debug(
-                "Save algorithm selected %s for %s",
-                filtered_pseudo_fields,
-                variable_short_name,
-            )
+            logger.debug("Algorithm inferred for %s: %s", variable_short_name, selected_algorithm)
 
-        elif selected_algorithm and not variable.pseudonymization:
+        if selected_algorithm and saved_pseudo is None:
             state.metadata.add_pseudonymization(variable_short_name)
             logger.info("Added pseudonymization for %s", variable.short_name)
-
-        # Mypy
-        if variable.pseudonymization is None:
-            logger.info(
-                "No pseudonymization for %s, returning empty list", variable.short_name
-            )
+            saved_pseudo = variable.pseudonymization
+            
+        if saved_pseudo is None:
+            logger.info("No pseudonymization for %s, returning empty list", variable.short_name)
             return []
-
-        filtered_pseudo_fields = map_selected_algorithm_to_pseudo_fields(
-            selected_algorithm
-        )
+            
+        pseudo_fields = map_selected_algorithm_to_pseudo_fields(selected_algorithm)
 
         return build_pseudo_field_section(
-            filtered_pseudo_fields,
+            pseudo_fields,
             "left",
             variable=variable,
-            pseudonymization=variable.pseudonymization,
+            pseudonymization=saved_pseudo,
             field_id="pseudo",
         )
