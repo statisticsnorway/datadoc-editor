@@ -133,11 +133,10 @@ def find_and_update_multidropdown_list(
     language: str,
     index: int,
 ) -> list:
-    """Retrieve a list from a Pydantic metadata model and update or remove items.
+    """Retrieve a list from the metadata model and updates it.
 
     This function retrieves a list attribute from the metadata model using the provided
     `metadata_identifier`. It updates the item's `type` or `date` at the specified index.
-    If the resulting item has both `type` and `date` as None, it removes the item completely.
 
     Args:
         metadata_model_object (pydantic.BaseModel): The metadata model instance.
