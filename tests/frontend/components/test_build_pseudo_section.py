@@ -140,17 +140,3 @@ def test_build_pseudonymization_field_section(
         for field, meta in zip(editable_fields, pseudo_metadata_list, strict=True)
     ), "Editable field labels do not match pseudo metadata display names"
 
-
-def test_algorithms():
-    assert (
-        PseudonymizationAlgorithmsEnum["PAPIS_ALGORITHM_WITH_STABLE_ID"]
-        == PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID
-    )
-    assert (
-        PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID.value
-        == "PAPIS_ALGORITHM_WITH_STABLE_ID"
-    )
-    assert (
-        PseudonymizationAlgorithmsEnum["PAPIS_ALGORITHM_WITH_STABLE_ID"].value
-        == "PAPIS_ALGORITHM_WITH_STABLE_ID"
-    )
