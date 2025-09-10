@@ -451,34 +451,37 @@ def save_metadata_and_generate_alerts(metadata: Datadoc) -> list:
 
 
 def map_selected_algorithm_to_pseudo_fields(
-    selected_algorithm: str,
+    selected_algorithm: PseudonymizationAlgorithmsEnum | None,
 ) -> list:
     """Map a PseudonymizationAlgorithms enum value to the correct pseudonymization input list.
 
     Examples:
-    >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields("PAPIS_ALGORITHM_WITHOUT_STABLE_ID")
+    >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields(PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID)
     >>> len(pseudo_fields)
     1
-    >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields("PAPIS_ALGORITHM_WITH_STABLE_ID")
+    >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields(PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID)
     >>> len(pseudo_fields)
     2
-    >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields("CUSTOM")
+    >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields(PseudonymizationAlgorithmsEnum.CUSTOM)
     >>> len(pseudo_fields)
     5
     """
     mapping = {
-        "PAPIS_ALGORITHM_WITHOUT_STABLE_ID": PSEUDONYMIZATION_PAPIS_WITHOUT_STABLE_ID_METADATA,
-        "PAPIS_ALGORITHM_WITH_STABLE_ID": PSEUDONYMIZATION_PAPIS_WITH_STABLE_ID_METADATA,
-        "STANDARD_ALGORITM_DAPLA": PSEUDONYMIZATION_DEAD_METADATA,
-        "CUSTOM": PSEUDONYMIZATION_METADATA,
+        PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID: PSEUDONYMIZATION_PAPIS_WITHOUT_STABLE_ID_METADATA,
+        PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID: PSEUDONYMIZATION_PAPIS_WITH_STABLE_ID_METADATA,
+        PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA: PSEUDONYMIZATION_DEAD_METADATA,
+        PseudonymizationAlgorithmsEnum.CUSTOM: PSEUDONYMIZATION_METADATA,
     }
-
+    
+    if selected_algorithm is None:
+        return []
+    
     return mapping.get(selected_algorithm, [])
 
 
 def map_dropdown_to_pseudo(
     variable: model.Variable,
-) -> str | None:
+) -> PseudonymizationAlgorithmsEnum | None:
     """Return dropdown algorithm value for a variable's pseudonymization."""
     if variable.pseudonymization:
         match variable.pseudonymization.encryption_algorithm:
@@ -487,16 +490,12 @@ def map_dropdown_to_pseudo(
                     variable.pseudonymization.stable_identifier_type
                     == PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE
                 ):
-                    return str(
-                        PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID.value
-                    )
-                return str(
-                    PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID.value
-                )
+                    return PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID
+                return PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID
             case constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION:
-                return str(PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA.value)
+                return PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA
             case None:
                 return None
             case _:
-                return str(PseudonymizationAlgorithmsEnum.CUSTOM.value)
+                return PseudonymizationAlgorithmsEnum.CUSTOM
     return None

@@ -7,6 +7,7 @@ from dash import html
 from datadoc_model.all_optional import model
 
 from datadoc_editor import state
+from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.utils import check_variable_names
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
@@ -141,7 +142,7 @@ def test_legal_shortname(shortname: str):
                     stable_identifier_type="FREG_SNR", encryption_algorithm="TINK-FPE"
                 ),
             ),
-            "PAPIS_ALGORITHM_WITH_STABLE_ID",
+            PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
         ),
         (
             model.Variable(pseudonymization=None),
@@ -153,7 +154,7 @@ def test_legal_shortname(shortname: str):
                     encryption_algorithm="TINK-FPE"
                 ),
             ),
-            "PAPIS_ALGORITHM_WITHOUT_STABLE_ID",
+            PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID,
         ),
         (
             model.Variable(
@@ -161,7 +162,7 @@ def test_legal_shortname(shortname: str):
                     encryption_algorithm="TINK-DAED",
                 ),
             ),
-            "STANDARD_ALGORITM_DAPLA",
+            PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
         ),
         (
             model.Variable(
@@ -169,7 +170,7 @@ def test_legal_shortname(shortname: str):
                     encryption_algorithm="TINK_PPP",
                 ),
             ),
-            "CUSTOM",
+            PseudonymizationAlgorithmsEnum.CUSTOM,
         ),
         (
             model.Variable(

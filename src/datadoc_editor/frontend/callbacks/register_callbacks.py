@@ -19,6 +19,7 @@ from dash import html
 from dash import no_update
 
 from datadoc_editor import state
+from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_date_input
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
@@ -471,10 +472,11 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         State({"type": "pseudonymization-dropdown", "variable": MATCH}, "id"),
     )
     def update_pseudo_fields(
-        selected_algorithm,  # noqa: ANN001
+        value,  # noqa: ANN001
         dropdown_id,  # noqa: ANN001
     ) -> dbc.Form:
         """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
+        selected_algorithm = PseudonymizationAlgorithmsEnum[value] if value else None
         logger.debug("Selected algorithm: %s", selected_algorithm)
         variable = state.metadata.variables_lookup.get(dropdown_id["variable"])
 

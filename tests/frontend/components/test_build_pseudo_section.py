@@ -3,6 +3,7 @@ import ssb_dash_components as ssb  # type: ignore[import-untyped]
 from dash import html
 from datadoc_model.all_optional import model
 
+from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
 from datadoc_editor.frontend.callbacks.utils import (
     map_selected_algorithm_to_pseudo_fields,
@@ -15,7 +16,7 @@ from datadoc_editor.frontend.constants import PSEUDONYMIZATION
 
 TEST_VARIABLES = [
     (
-        "PAPIS_ALGORITHM_WITH_STABLE_ID",
+        PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
         model.Variable(
             short_name="helse",
             pseudonymization=model.Pseudonymization(
@@ -25,7 +26,7 @@ TEST_VARIABLES = [
         2,
     ),
     (
-        "PAPIS_ALGORITHM_WITHOUT_STABLE_ID",
+        PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID,
         model.Variable(
             short_name="helse",
             pseudonymization=model.Pseudonymization(encryption_algorithm="TINK-FPE"),
@@ -33,7 +34,7 @@ TEST_VARIABLES = [
         1,
     ),
     (
-        "STANDARD_ALGORITM_DAPLA",
+        PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
         model.Variable(
             short_name="helse",
             pseudonymization=model.Pseudonymization(encryption_algorithm="TINK-DAED"),
@@ -41,60 +42,7 @@ TEST_VARIABLES = [
         1,
     ),
     (
-        "CUSTOM",
-        model.Variable(
-            short_name="helse",
-            pseudonymization=model.Pseudonymization(encryption_algorithm="LOK"),
-        ),
-        5,
-    ),
-    (
-        None,
-        model.Variable(
-            short_name="helse",
-            pseudonymization=None,
-        ),
-        0,
-    ),
-    (
-        "",
-        model.Variable(
-            short_name="helse",
-            pseudonymization=model.Pseudonymization(stable_identifier_type="FREG_SNR"),
-        ),
-        0,
-    ),
-]
-
-TEST_VARIABLES = [
-    (
-        "PAPIS_ALGORITHM_WITH_STABLE_ID",
-        model.Variable(
-            short_name="helse",
-            pseudonymization=model.Pseudonymization(
-                stable_identifier_type="FREG_SNR", encryption_algorithm="TINK-FPE"
-            ),
-        ),
-        2,
-    ),
-    (
-        "PAPIS_ALGORITHM_WITHOUT_STABLE_ID",
-        model.Variable(
-            short_name="helse",
-            pseudonymization=model.Pseudonymization(encryption_algorithm="TINK-FPE"),
-        ),
-        1,
-    ),
-    (
-        "STANDARD_ALGORITM_DAPLA",
-        model.Variable(
-            short_name="helse",
-            pseudonymization=model.Pseudonymization(encryption_algorithm="TINK-DAED"),
-        ),
-        1,
-    ),
-    (
-        "CUSTOM",
+        PseudonymizationAlgorithmsEnum.CUSTOM,
         model.Variable(
             short_name="helse",
             pseudonymization=model.Pseudonymization(encryption_algorithm="LOK"),
@@ -142,13 +90,16 @@ def test_build_variables_pseudonymization_section(
     pseudo_section = build_variables_pseudonymization_section(
         PSEUDONYMIZATION, variable, map_dropdown_to_pseudo(variable)
     )
-    assert pseudo_section is not None
+
     assert isinstance(pseudo_section, html.Section)
     assert pseudo_section.id["title"] == PSEUDONYMIZATION
 
-    children = [c for c in pseudo_section.children if isinstance(c, ssb.Dropdown)]
-    dropdown = children[0]
-    assert dropdown.value == expected_algorithm
+    dropdowns = [c for c in pseudo_section.children if isinstance(c, ssb.Dropdown)]
+    assert len(dropdowns) == 1
+    dropdown = dropdowns[0]
+    assert (dropdown.value or None) == (
+        expected_algorithm.value if expected_algorithm else None
+    )
 
     container_divs = [
         c
@@ -167,21 +118,39 @@ def test_build_pseudonymization_field_section(
     expected_algorithm, variable, num_editable_fields
 ):
     pseudo_metadata_list = map_selected_algorithm_to_pseudo_fields(expected_algorithm)
-    input_section = build_pseudo_field_section(
+
+    pseudo_edit_section = build_pseudo_field_section(
         pseudo_metadata_list,
         "left",
         variable,
         variable.pseudonymization,
     )
-    editable_fields = input_section.children
-    assert len(editable_fields) == num_editable_fields
-    if editable_fields:
-        assert all(isinstance(field, ssb.Input) for field in editable_fields)
-        assert all(
-            item1.label == item2.display_name
-            for item1, item2 in zip(
-                editable_fields,
-                pseudo_metadata_list,
-                strict=False,
-            )
-        )
+    editable_fields = pseudo_edit_section.children
+
+    assert len(editable_fields) == num_editable_fields, (
+        f"Expected {num_editable_fields} editable fields, got {len(editable_fields)}"
+    )
+
+    assert all(isinstance(field, ssb.Input) for field in editable_fields), (
+        "All editable fields should be ssb.Input components"
+    )
+
+    assert all(
+        field.label == meta.display_name
+        for field, meta in zip(editable_fields, pseudo_metadata_list, strict=True)
+    ), "Editable field labels do not match pseudo metadata display names"
+
+
+def test_algorithms():
+    assert (
+        PseudonymizationAlgorithmsEnum["PAPIS_ALGORITHM_WITH_STABLE_ID"]
+        == PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID
+    )
+    assert (
+        PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID.value
+        == "PAPIS_ALGORITHM_WITH_STABLE_ID"
+    )
+    assert (
+        PseudonymizationAlgorithmsEnum["PAPIS_ALGORITHM_WITH_STABLE_ID"].value
+        == "PAPIS_ALGORITHM_WITH_STABLE_ID"
+    )
