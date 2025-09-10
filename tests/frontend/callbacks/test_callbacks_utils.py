@@ -3,8 +3,8 @@ from unittest import mock
 
 import dash_bootstrap_components as dbc
 import pytest
-from dapla_metadata.datasets import model
 from dash import html
+from datadoc_model.all_optional import model
 
 from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.utils import check_variable_names
@@ -150,26 +150,6 @@ def test_legal_shortname(shortname: str):
         (
             model.Variable(
                 pseudonymization=model.Pseudonymization(
-                    stable_identifier_type="FREG_SNR",
-                    encryption_algorithm="TINK-FPE",
-                    stable_identifier_version="2023-01-01",
-                ),
-            ),
-            "PAPIS_ALGORITHM_WITH_STABLE_ID",
-        ),
-        (
-            model.Variable(
-                pseudonymization=model.Pseudonymization(
-                    stable_identifier_type="FREG_SNR",
-                    encryption_algorithm="TINK-FPE",
-                    pseudonymization_time="2025-08-10",
-                ),
-            ),
-            "PAPIS_ALGORITHM_WITH_STABLE_ID",
-        ),
-        (
-            model.Variable(
-                pseudonymization=model.Pseudonymization(
                     encryption_algorithm="TINK-FPE"
                 ),
             ),
@@ -178,25 +158,7 @@ def test_legal_shortname(shortname: str):
         (
             model.Variable(
                 pseudonymization=model.Pseudonymization(
-                    encryption_algorithm="TINK-FPE",
-                    pseudonymization_time="2000-12-03",
-                ),
-            ),
-            "PAPIS_ALGORITHM_WITHOUT_STABLE_ID",
-        ),
-        (
-            model.Variable(
-                pseudonymization=model.Pseudonymization(
                     encryption_algorithm="TINK-DAED",
-                ),
-            ),
-            "STANDARD_ALGORITM_DAPLA",
-        ),
-        (
-            model.Variable(
-                pseudonymization=model.Pseudonymization(
-                    encryption_algorithm="TINK-DAED",
-                    pseudonymization_time="2026-01-23",
                 ),
             ),
             "STANDARD_ALGORITM_DAPLA",
@@ -221,12 +183,8 @@ def test_legal_shortname(shortname: str):
     ids=[
         "papis_with_stable_id",
         "without_pseudonymization",
-        "papis_with_stable_id_and_identifier_version",
-        "papis_with_stable_id_and_pseudonymization_time",
         "papis_without_stable_id",
-        "papis_without_stable_id_and_pseudonymization_time",
         "standard_algorithm_dapla",
-        "standard_algorithm_dapla_and_pseudonymization_time",
         "custom_algorithm",
         "not_encryption_algorithm",
     ],
