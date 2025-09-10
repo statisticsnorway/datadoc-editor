@@ -476,7 +476,9 @@ def map_selected_algorithm_to_pseudo_fields(
     return mapping.get(selected_algorithm, [])
 
 
-def map_dropdown_to_pseudo(variable: model.Variable) -> str | None:
+def map_dropdown_to_pseudo(
+    variable: model.Variable,
+) -> str | None:
     """Return dropdown algorithm value for a variable's pseudonymization."""
     if variable.pseudonymization:
         match variable.pseudonymization.encryption_algorithm:
