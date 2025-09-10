@@ -476,7 +476,6 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         dropdown_id,  # noqa: ANN001
     ) -> dbc.Form:
         """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
-        selected_algorithm = PseudonymizationAlgorithmsEnum[selected_algorithm]
         logger.debug("Selected algorithm: %s", selected_algorithm)
         variable = state.metadata.variables_lookup.get(dropdown_id["variable"])
 
