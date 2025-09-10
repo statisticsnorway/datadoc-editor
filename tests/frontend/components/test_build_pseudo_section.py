@@ -1,10 +1,23 @@
 import pytest
-from datadoc_editor.frontend.components.builders import build_variables_pseudonymization_section
-from datadoc_editor.frontend.fields.display_base import MetadataInputField
-from datadoc_editor.frontend.fields.display_pseudo_variables import PSEUDONYMIZATION_DEAD_METADATA, PSEUDONYMIZATION_METADATA, PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID_METADATA, PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID_METADATA
 import ssb_dash_components as ssb  # type: ignore[import-untyped]
 from dapla_metadata.datasets import model
 
+from datadoc_editor.frontend.components.builders import (
+    build_variables_pseudonymization_section,
+)
+from datadoc_editor.frontend.fields.display_base import MetadataInputField
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PSEUDONYMIZATION_DEAD_METADATA,
+)
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PSEUDONYMIZATION_METADATA,
+)
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PSEUDONYMIZATION_PAPIS_WITH_STABILE_ID_METADATA,
+)
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PSEUDONYMIZATION_PAPIS_WITHOUT_STABILE_ID_METADATA,
+)
 
 PSEDUO_VARIABLES_METADATA = PSEUDONYMIZATION_METADATA
 
@@ -56,6 +69,6 @@ def test_build_pseudo_input_section(
             strict=False,
         )
     )
-    
-    
+
+
 # build_pseudo_field_section
