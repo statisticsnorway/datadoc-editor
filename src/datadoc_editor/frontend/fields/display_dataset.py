@@ -12,7 +12,6 @@ from datadoc_editor import state
 from datadoc_editor.enums import Assessment
 from datadoc_editor.enums import DataSetState
 from datadoc_editor.enums import DataSetStatus
-from datadoc_editor.enums import TemporalityTypeType
 from datadoc_editor.enums import UseRestriction
 from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
 from datadoc_editor.frontend.fields.display_base import (
@@ -20,14 +19,12 @@ from datadoc_editor.frontend.fields.display_base import (
 )
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import FieldTypes
-from datadoc_editor.frontend.fields.display_base import MetadataCheckboxField
 from datadoc_editor.frontend.fields.display_base import MetadataDateField
 from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
 from datadoc_editor.frontend.fields.display_base import MetadataInputField
 from datadoc_editor.frontend.fields.display_base import MetadataMultiLanguageField
 from datadoc_editor.frontend.fields.display_base import MetadataPeriodField
 from datadoc_editor.frontend.fields.display_base import get_comma_separated_string
-from datadoc_editor.frontend.fields.display_base import get_data_source_options
 from datadoc_editor.frontend.fields.display_base import get_enum_options
 
 logger = logging.getLogger(__name__)
@@ -42,19 +39,6 @@ def get_statistical_subject_options() -> list[dict[str, str]]:
         }
         for primary in state.statistic_subject_mapping.primary_subjects
         for secondary in primary.secondary_subjects
-    ]
-    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": ""})
-    return dropdown_options
-
-
-def get_unit_type_options() -> list[dict[str, str]]:
-    """Collect the unit type options."""
-    dropdown_options = [
-        {
-            "title": unit_type.get_title(enums.SupportedLanguages.NORSK_BOKMÅL),
-            "id": unit_type.code,
-        }
-        for unit_type in state.unit_types.classifications
     ]
     dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": ""})
     return dropdown_options
@@ -82,16 +66,12 @@ class DatasetIdentifiers(str, Enum):
     DATASET_STATE = "dataset_state"
     NAME = "name"
     DESCRIPTION = "description"
-    DATA_SOURCE = "data_source"
     POPULATION_DESCRIPTION = "population_description"
     VERSION = "version"
     VERSION_DESCRIPTION = "version_description"
-    UNIT_TYPE = "unit_type"
-    TEMPORALITY_TYPE = "temporality_type"
     SUBJECT_FIELD = "subject_field"
     KEYWORD = "keyword"
     SPATIAL_COVERAGE_DESCRIPTION = "spatial_coverage_description"
-    CONTAINS_PERSONAL_DATA = "contains_personal_data"
     USE_RESTRICTION = "use_restriction"
     USE_RESTRICTION_DATE = "use_restriction_date"
     ID = "id"
@@ -115,12 +95,6 @@ DISPLAY_DATASET: dict[
         description="Oppgi navn på datasettet. Navnet skal være forståelig for mennesker slik at det er søkbart.",
         obligatory=True,
         id_type=DATASET_METADATA_MULTILANGUAGE_INPUT,
-    ),
-    DatasetIdentifiers.CONTAINS_PERSONAL_DATA: MetadataCheckboxField(
-        identifier=DatasetIdentifiers.CONTAINS_PERSONAL_DATA.value,
-        display_name="Inneholder personopplysninger",
-        description="Oppgi om datasettet inneholder personopplysninger. All informasjon som entydig kan knyttes til en fysisk person (f.eks. fødselsnummer og adresse), er personopplysninger. Pseudonymiserte personopplysninger er fortsatt personopplysninger. Næringsdata om enkeltpersonforetak (ENK) skal imidlertid ikke regnes som personopplysninger.",
-        obligatory=True,
     ),
     DatasetIdentifiers.DESCRIPTION: MetadataMultiLanguageField(
         identifier=DatasetIdentifiers.DESCRIPTION.value,
@@ -180,13 +154,6 @@ DISPLAY_DATASET: dict[
         ),
         obligatory=True,
     ),
-    DatasetIdentifiers.UNIT_TYPE: MetadataDropdownField(
-        identifier=DatasetIdentifiers.UNIT_TYPE.value,
-        display_name="Enhetstype",
-        description="Den eller de enhetstypen(e) datasettet inneholder informasjon om. Eksempler på enhetstyper er person, foretak og eiendom.",
-        options_getter=get_unit_type_options,
-        obligatory=True,
-    ),
     DatasetIdentifiers.CONTAINS_DATA_FROM: MetadataPeriodField(
         identifier=DatasetIdentifiers.CONTAINS_DATA_FROM.value,
         display_name="Inneholder data f.o.m.",
@@ -202,23 +169,6 @@ DISPLAY_DATASET: dict[
         obligatory=True,
         editable=True,
         id_type=DATASET_METADATA_DATE_INPUT,
-    ),
-    DatasetIdentifiers.DATA_SOURCE: MetadataDropdownField(
-        identifier=DatasetIdentifiers.DATA_SOURCE.value,
-        display_name="Datakilde",
-        description="Oppgi kilden til datasettet (på etat-/organisasjonsnivå). Dersom flere variabler i datasettet har ulik datakilde, kan disse dokumenteres på variabelnivå.",
-        obligatory=True,
-        options_getter=get_data_source_options,
-    ),
-    DatasetIdentifiers.TEMPORALITY_TYPE: MetadataDropdownField(
-        identifier=DatasetIdentifiers.TEMPORALITY_TYPE.value,
-        display_name="Temporalitetstype",
-        description="Temporalitetstypen sier noe om tidsdimensjonen i datasettet. Fast er data med verdi som ikke endres over tid (f.eks. fødselsdato), tverrsnitt er data som er målt på et gitt tidspunkt, akkumulert er data som er samlet over en viss tidsperiode (f.eks. inntekt gjennom et år) og hendelse/forløp registrerer tidspunkt og tidsperiode for ulike hendelser /tilstander, f.eks. (skifte av) bosted.",
-        options_getter=functools.partial(
-            get_enum_options,
-            TemporalityTypeType,
-        ),
-        obligatory=True,
     ),
     DatasetIdentifiers.SUBJECT_FIELD: MetadataDropdownField(
         identifier=DatasetIdentifiers.SUBJECT_FIELD.value,

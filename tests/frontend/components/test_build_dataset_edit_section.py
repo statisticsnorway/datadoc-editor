@@ -23,7 +23,6 @@ NON_ATYPICAL_DROPDOWNS = [
     if m.editable
     and m.identifier
     not in (
-        DatasetIdentifiers.UNIT_TYPE.value,
         DatasetIdentifiers.SUBJECT_FIELD.value,
         DatasetIdentifiers.OWNER.value,
     )
@@ -99,7 +98,7 @@ def test_build_dataset_section_is_html_section(
                 {"type": "dataset-edit-section", "id": "dataset-nb"},
             ),
             6,
-            13,
+            9,
         ),
     ],
 )

@@ -11,6 +11,7 @@ from datadoc_editor import state
 from datadoc_editor.enums import DataType
 from datadoc_editor.enums import TemporalityTypeType
 from datadoc_editor.enums import VariableRole
+from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
 from datadoc_editor.frontend.fields.display_base import (
     VARIABLES_METADATA_MULTILANGUAGE_INPUT,
@@ -38,6 +39,19 @@ def get_measurement_unit_options() -> list[dict[str, str]]:
     return dropdown_options
 
 
+def get_unit_type_options() -> list[dict[str, str]]:
+    """Collect the unit type options."""
+    dropdown_options = [
+        {
+            "title": unit_type.get_title(enums.SupportedLanguages.NORSK_BOKMÅL),
+            "id": unit_type.code,
+        }
+        for unit_type in state.unit_types.classifications
+    ]
+    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": ""})
+    return dropdown_options
+
+
 class VariableIdentifiers(str, Enum):
     """As defined here: https://statistics-norway.atlassian.net/wiki/spaces/MPD/pages/3042869256/Variabelforekomst."""
 
@@ -47,6 +61,7 @@ class VariableIdentifiers(str, Enum):
     VARIABLE_ROLE = "variable_role"
     DEFINITION_URI = "definition_uri"
     IS_PERSONAL_DATA = "is_personal_data"
+    UNIT_TYPE = "unit_type"
     DATA_SOURCE = "data_source"
     POPULATION_DESCRIPTION = "population_description"
     COMMENT = "comment"
@@ -69,26 +84,33 @@ DISPLAY_VARIABLES: dict[
     VariableIdentifiers.NAME: MetadataMultiLanguageField(
         identifier=VariableIdentifiers.NAME.value,
         display_name="Navn",
-        description="Variabelnavn som er forståelig for mennesker. Navnet kan arves fra  lenket VarDef-variabel eller endres her (ev. oppgis her i tilfeller der variabelen ikke skal lenkes til VarDef).",
+        description="Variabelnavn som er forståelig for mennesker. Navnet kan arves fra lenket Vardef-variabel eller endres her (ev. oppgis her i tilfeller der variabelen ikke skal lenkes til Vardef).",
         obligatory=True,
         id_type=VARIABLES_METADATA_MULTILANGUAGE_INPUT,
     ),
     VariableIdentifiers.DEFINITION_URI: MetadataInputField(
         identifier=VariableIdentifiers.DEFINITION_URI.value,
         display_name="Definition URI",
-        description="Oppgi lenke (URI) til tilhørende variabel i VarDef.",
+        description="Oppgi lenke (URI) til tilhørende variabel i Vardef.",
         obligatory=False,
     ),
     VariableIdentifiers.COMMENT: MetadataMultiLanguageField(
         identifier=VariableIdentifiers.COMMENT.value,
         display_name="Kommentar",
-        description="Kommentaren har to funksjoner. Den skal brukes til å beskrive variabelforekomsten dersom denne ikke har lenke til VarDef (gjelder klargjorte data, statistikk og utdata), og den kan brukes til å gi ytterligere presiseringer av variabelforekomstens definisjon dersom variabelforekomsten er lenket til VarDef",
+        description="Kommentaren har to funksjoner. Den skal brukes til å beskrive variabelforekomsten dersom denne ikke har lenke til Vardef (gjelder klargjorte data, statistikk og utdata), og den kan brukes til å gi ytterligere presiseringer av variabelforekomstens definisjon dersom variabelforekomsten er lenket til Vardef",
         id_type=VARIABLES_METADATA_MULTILANGUAGE_INPUT,
     ),
     VariableIdentifiers.IS_PERSONAL_DATA: MetadataCheckboxField(
         identifier=VariableIdentifiers.IS_PERSONAL_DATA.value,
         display_name="Er personopplysning",
         description="Dersom variabelen er en personopplysning, skal denne sjekkboksen være avkrysset. Dersom den ikke er en personopplysning, lar en bare defaultsvaret bli stående. All informasjon som entydig kan knyttes til en fysisk person (f.eks. fødselsnummer eller adresse) er personopplysninger. Næringsdata om enkeltpersonforetak (ENK) skal imidlertid ikke regnes som personopplysninger.",
+        obligatory=True,
+    ),
+    VariableIdentifiers.UNIT_TYPE: MetadataDropdownField(
+        identifier=VariableIdentifiers.UNIT_TYPE.value,
+        display_name="Enhetstype",
+        description="Den enhetstypen variabelen inneholder informasjon om. Eksempler på enhetstyper er person, foretak og eiendom.",
+        options_getter=get_unit_type_options,
         obligatory=True,
     ),
     VariableIdentifiers.POPULATION_DESCRIPTION: MetadataMultiLanguageField(
@@ -133,13 +155,13 @@ DISPLAY_VARIABLES: dict[
     VariableIdentifiers.DATA_SOURCE: MetadataDropdownField(
         identifier=VariableIdentifiers.DATA_SOURCE.value,
         display_name="Datakilde",
-        description="Oppgi datakilden til variabelen (på etat-/organisasjonsnivå) dersom denne ikke allerede er satt på  datasettnivå. Brukes hovedsakelig når variabler i et datasett har ulike datakilder.",
+        description="Datakilden til variabelen (på etat-/organisasjonsnivå).",
         options_getter=get_data_source_options,
     ),
     VariableIdentifiers.TEMPORALITY_TYPE: MetadataDropdownField(
         identifier=VariableIdentifiers.TEMPORALITY_TYPE.value,
         display_name="Temporalitetstype",
-        description="Temporalitetstypen settes vanligvis på datasettnivå, men dersom datasettet består av variabler med ulike temporalitetstyper, kan den settes på variabelnivå. Temporalitet sier noe om tidsdimensjonen i datasettet. Fast er data med verdi som ikke endres over tid (f.eks. fødselsdato), tverrsnitt er data som er målt på et gitt tidspunkt, akkumulert er data som  er samlet over en viss tidsperiode (f.eks. inntekt gjennom et år) og  hendelse/forløp registrerer tidspunkt og tidsperiode for ulike hendelser /tilstander, f.eks. (skifte av) bosted.",
+        description="Temporalitet sier noe om tidsdimensjonen for variabelen. Fast er data med verdi som ikke endres over tid (f.eks. fødselsdato), tverrsnitt er data som er målt på et gitt tidspunkt, akkumulert er data som  er samlet over en viss tidsperiode (f.eks. inntekt gjennom et år) og  hendelse/forløp registrerer tidspunkt og tidsperiode for ulike hendelser /tilstander, f.eks. (skifte av) bosted.",
         options_getter=functools.partial(
             get_enum_options,
             TemporalityTypeType,
