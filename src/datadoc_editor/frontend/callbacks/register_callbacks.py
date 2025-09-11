@@ -9,11 +9,7 @@ import logging
 from typing import TYPE_CHECKING
 from typing import Any
 
-<<<<<<< HEAD
 import ssb_dash_components as ssb
-from dash import ALL
-=======
->>>>>>> origin/master
 from dash import MATCH
 from dash import Dash
 from dash import Input
