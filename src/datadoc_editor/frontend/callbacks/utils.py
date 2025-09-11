@@ -32,6 +32,8 @@ from datadoc_editor.frontend.components.builders import build_ssb_alert
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
+from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
+from datadoc_editor.frontend.fields.display_dataset import DISPLAY_DATASET
 from datadoc_editor.frontend.fields.display_dataset import (
     OBLIGATORY_DATASET_METADATA_IDENTIFIERS_AND_DISPLAY_NAME,
 )
@@ -303,6 +305,33 @@ def render_tabs(tab: str) -> html.Article | None:
         )
 
     return None
+
+
+def render_multidropdown_row(item, dropdown_id, date_id, options):
+    return html.Div(
+        [
+            ssb.Dropdown(
+                header=DISPLAY_DATASET["use_restrictions"].type_display_name,
+                items=options,
+                placeholder=DROPDOWN_DESELECT_OPTION,
+                value=item.get("use_restriction_type"),
+                id=dropdown_id,
+                className="dropdown-component",
+                showDescription=True,
+                description=DISPLAY_DATASET["use_restrictions"].type_description,
+            ),
+            ssb.Input(
+                label=DISPLAY_DATASET["use_restrictions"].date_display_name,
+                value=item.get("use_restriction_date"),
+                id=date_id,
+                className="input-component",
+                type="date",
+                showDescription=True,
+                description=DISPLAY_DATASET["use_restrictions"].date_description,
+            ),
+        ],
+        className="input-group-row",
+    )
 
 
 def _has_exact_word(word: str, text: str) -> bool:

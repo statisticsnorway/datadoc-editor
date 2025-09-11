@@ -9,7 +9,6 @@ import logging
 from typing import TYPE_CHECKING
 from typing import Any
 
-import ssb_dash_components as ssb
 from dash import MATCH
 from dash import Dash
 from dash import Input
@@ -25,6 +24,7 @@ from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_da
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_multidropdown_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
+from datadoc_editor.frontend.callbacks.utils import render_multidropdown_row
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
 from datadoc_editor.frontend.callbacks.variables import (
@@ -39,6 +39,7 @@ from datadoc_editor.frontend.callbacks.variables import populate_variables_works
 from datadoc_editor.frontend.components.builders import build_dataset_edit_section
 from datadoc_editor.frontend.components.builders import build_dataset_machine_section
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
+from datadoc_editor.frontend.components.identifiers import ADD_USE_RESTRICTION_BUTTON
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
 from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
@@ -49,7 +50,6 @@ from datadoc_editor.frontend.fields.display_base import (
 from datadoc_editor.frontend.fields.display_base import (
     DATASET_METADATA_MULTILANGUAGE_INPUT,
 )
-from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
 from datadoc_editor.frontend.fields.display_base import (
@@ -275,12 +275,12 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915 TODO: Jorgen-5, we s
 
     @app.callback(
         Output("use-restriction-store", "data"),
-        Input("add-use-restriction-button", "n_clicks"),
+        Input(ADD_USE_RESTRICTION_BUTTON, "n_clicks"),
         State("use-restriction-store", "data"),
         prevent_initial_call=True,
     )
     def update_use_restrictions(add_clicks: int, current_list: list):  # noqa: ANN202, ARG001
-        if ctx.triggered_id == "add-use-restriction-button":
+        if ctx.triggered_id == ADD_USE_RESTRICTION_BUTTON:
             current_list.append(
                 {"use_restriction_type": None, "use_restriction_date": None}
             )
@@ -291,45 +291,18 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915 TODO: Jorgen-5, we s
         Input("use-restriction-store", "data"),
         Input("use-restriction-options-store", "data"),
         Input("use-restriction-id-store", "data"),
-        Input("use-restriction-display-values-store", "data"),
     )
     def render_use_restriction_list(  # noqa: ANN202
         current_list: list,
         options: Callable[[], list[dict[str, str]]],
         idx: dict[str, str | int],
-        display_values: dict[str, str],
     ):
         items = []
         for i, item in enumerate(current_list):
             dropdown_id = {**idx, "index": i}
             date_id = {**idx, "index": i, "field": "date"}
 
-            items.append(
-                html.Div(
-                    [
-                        ssb.Dropdown(
-                            header=display_values["type_display_name"],
-                            items=options,
-                            placeholder=DROPDOWN_DESELECT_OPTION,
-                            value=item.get("use_restriction_type"),
-                            id=dropdown_id,
-                            className="dropdown-component",
-                            showDescription=True,
-                            description=display_values["type_description"],
-                        ),
-                        ssb.Input(
-                            label=display_values["date_display_name"],
-                            value=item.get("use_restriction_date"),
-                            id=date_id,
-                            className="input-component",
-                            type="date",
-                            showDescription=True,
-                            description=display_values["date_description"],
-                        ),
-                    ],
-                    className="input-group-row",
-                )
-            )
+            items.append(render_multidropdown_row(item, dropdown_id, date_id, options))
         return items
 
     @app.callback(

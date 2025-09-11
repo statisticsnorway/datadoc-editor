@@ -394,16 +394,6 @@ class MetadataMultiDropdownField(DisplayMetadata):
             for i in use_restrictions
         ]
 
-        display_values = {
-            key: getattr(self, key)
-            for key in [
-                "type_display_name",
-                "date_display_name",
-                "type_description",
-                "date_description",
-            ]
-        }
-
         idx = {"type": self.id_type, "id": component_id["id"], "field": "type"}
 
         children = [
@@ -418,7 +408,6 @@ class MetadataMultiDropdownField(DisplayMetadata):
             dcc.Store(id="use-restriction-store", data=initial_data),
             dcc.Store(id="use-restriction-options-store", data=self.options_getter()),
             dcc.Store(id="use-restriction-id-store", data=idx),
-            dcc.Store(id="use-restriction-display-values-store", data=display_values),
             ssb.Button("Legg til bruksretriksjon", id="add-use-restriction-button"),
         ]
 
