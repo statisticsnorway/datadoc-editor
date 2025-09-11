@@ -98,7 +98,7 @@ def test_build_dataset_section_is_html_section(
                 {"type": "dataset-edit-section", "id": "dataset-nb"},
             ),
             6,
-            9,
+            8,
         ),
     ],
 )

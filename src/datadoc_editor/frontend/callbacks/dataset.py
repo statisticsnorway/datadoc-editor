@@ -17,10 +17,12 @@ from datadoc_editor import config
 from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.utils import VALIDATION_ERROR
 from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
-from datadoc_editor.frontend.callbacks.utils import find_and_update_multidropdown_list
+from datadoc_editor.frontend.callbacks.utils import MultidropdownInputTypes
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import get_dataset_path
 from datadoc_editor.frontend.callbacks.utils import parse_and_validate_dates
+from datadoc_editor.frontend.callbacks.utils import update_use_restriction_date
+from datadoc_editor.frontend.callbacks.utils import update_use_restriction_type
 from datadoc_editor.frontend.callbacks.variables import (
     set_variables_value_multilanguage_inherit_dataset_values,
 )
@@ -37,9 +39,6 @@ from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.fields.display_dataset import DISPLAY_DATASET
 from datadoc_editor.frontend.fields.display_dataset import (
     DROPDOWN_DATASET_METADATA_IDENTIFIERS,
-)
-from datadoc_editor.frontend.fields.display_dataset import (
-    MULTIPLE_DROPDOWN_DATASET_IDENTIFIERS,
 )
 from datadoc_editor.frontend.fields.display_dataset import (
     MULTIPLE_LANGUAGE_DATASET_IDENTIFIERS,
@@ -204,14 +203,6 @@ def process_special_cases(
                 metadata_identifier,
                 language,
             )
-    elif metadata_identifier in MULTIPLE_DROPDOWN_DATASET_IDENTIFIERS:
-        updated_value = find_and_update_multidropdown_list(
-            state.metadata.dataset,
-            value,
-            metadata_identifier,
-            language,
-            index,
-        )
     elif metadata_identifier in DROPDOWN_DATASET_METADATA_IDENTIFIERS and value == "":
         updated_value = None
     elif metadata_identifier in TIMEZONE_AWARE_METADATA_IDENTIFIERS and isinstance(
@@ -261,6 +252,50 @@ def accept_dataset_metadata_input(
             "Updated dataset %s with value %s",
             metadata_identifier,
             value,
+        )
+
+    return show_error, error_explanation
+
+
+def accept_dataset_multidropdown_input(
+    updated_value: MultidropdownInputTypes,
+    metadata_identifier: str,
+    field: str,
+    index: int,
+) -> tuple[bool, str]:
+    """Handle user inputs of dataset multidropdown values."""
+    logger.debug(
+        "Received updated value = %s for metadata_identifier = %s",
+        updated_value,
+        metadata_identifier,
+    )
+    try:
+        if field == "type":
+            updated_multidropdown_list = update_use_restriction_type(
+                state.metadata.dataset, updated_value, metadata_identifier, index
+            )
+        elif field == "date":
+            updated_multidropdown_list = update_use_restriction_date(
+                state.metadata.dataset, updated_value, metadata_identifier, index
+            )
+        else:
+            raise ValueError("Input field must be either type or date")
+        setattr(
+            state.metadata.dataset,
+            metadata_identifier,
+            updated_multidropdown_list,
+        )
+    except ValueError:
+        show_error = True
+        error_explanation = INVALID_VALUE
+        logger.exception("Error while reading in value for %s", metadata_identifier)
+    else:
+        show_error = False
+        error_explanation = ""
+        logger.info(
+            "Updated dataset %s with value %s",
+            metadata_identifier,
+            updated_multidropdown_list,
         )
 
     return show_error, error_explanation

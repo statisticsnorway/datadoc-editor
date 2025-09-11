@@ -9,6 +9,7 @@ from abc import abstractmethod
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from typing import Any
+from typing import cast
 
 import ssb_dash_components as ssb
 from dapla_metadata.datasets import enums
@@ -381,8 +382,9 @@ class MetadataMultiDropdownField(DisplayMetadata):
         metadata: BaseModel,
     ) -> html.Fieldset:
         """Build fieldset group."""
-        use_restrictions: list[model.UseRestrictionItem] = (
-            get_standard_metadata(metadata, self.identifier) or []
+        use_restrictions: list[model.UseRestrictionItem] = cast(
+            "list[model.UseRestrictionItem]",
+            get_standard_metadata(metadata, self.identifier) or [],
         )
         initial_data = [
             {
@@ -452,4 +454,5 @@ FieldTypes = (
     | MetadataCheckboxField
     | MetadataPeriodField
     | MetadataMultiLanguageField
+    | MetadataMultiDropdownField
 )

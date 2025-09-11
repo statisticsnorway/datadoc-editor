@@ -23,6 +23,7 @@ from dash import no_update
 from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_date_input
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
+from datadoc_editor.frontend.callbacks.dataset import accept_dataset_multidropdown_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
@@ -205,7 +206,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915 TODO: Jorgen-5, we s
         """
         if ctx.triggered_id is None:
             return False, ""
-        return accept_dataset_metadata_input(
+        return accept_dataset_multidropdown_input(
             ctx.triggered[0]["value"],
             ctx.triggered_id["id"],
             ctx.triggered_id["field"],
@@ -305,9 +306,6 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915 TODO: Jorgen-5, we s
         prevent_initial_call=True,
     )
     def update_use_restrictions(add_clicks: int, current_list: list):  # noqa: ANN202, ARG001
-        if current_list is None:
-            current_list = []
-
         triggered = ctx.triggered_id
 
         if triggered is None:

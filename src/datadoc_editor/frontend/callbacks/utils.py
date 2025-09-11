@@ -47,7 +47,10 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-MetadataInputTypes = str | list[str] | int | float | bool | datetime.date | None
+MetadataInputTypes = (
+    str | list[str] | list[dict] | int | float | bool | datetime.date | None
+)
+MultidropdownInputTypes = str | None
 
 
 def _check_if_language_string_item_exists(
@@ -126,41 +129,47 @@ def find_existing_language_string(
     return language_strings
 
 
-def find_and_update_multidropdown_list(
+def update_use_restriction_type(
     metadata_model_object: pydantic.BaseModel,
-    value: str,
+    value: MultidropdownInputTypes,
     metadata_identifier: str,
-    language: str,
     index: int,
-) -> list:
-    """Retrieve a list from the metadata model and updates it.
+) -> list[model.UseRestrictionItem]:
+    """Updates the type filed on the in the multidropdown component."""
+    items: list[model.UseRestrictionItem] = (
+        getattr(metadata_model_object, metadata_identifier, []) or []
+    )
 
-    This function retrieves a list attribute from the metadata model using the provided
-    `metadata_identifier`. It updates the item's `type` or `date` at the specified index.
+    while len(items) <= index:
+        items.append(model.UseRestrictionItem())
 
-    Args:
-        metadata_model_object (pydantic.BaseModel): The metadata model instance.
-        metadata_identifier (str): Name of the attribute in the model that holds the list.
-        value (str): The new value to set on the item's attribute.
-        language (str): Determines which attribute to update; should be "type" or "date".
-        index (int): The index of the item in the list to update.
+    items[index].use_restriction_type = (
+        model.UseRestrictionType(value) if value else None
+    )
 
-    Returns:
-        list: The updated list after modification or removal of the specified item.
-    """
-    multidropdown_list = getattr(metadata_model_object, metadata_identifier) or []
-    setattr(metadata_model_object, metadata_identifier, multidropdown_list)
+    setattr(metadata_model_object, metadata_identifier, items)
+    return items
 
-    while len(multidropdown_list) <= index:
-        multidropdown_list.append(model.UseRestrictionItem())
 
-    item = multidropdown_list[index]
-    if language == "type":
-        item.use_restriction_type = value
-    elif language == "date":
-        item.use_restriction_date = value
+def update_use_restriction_date(
+    metadata_model_object: pydantic.BaseModel,
+    value: MultidropdownInputTypes,
+    metadata_identifier: str,
+    index: int,
+) -> list[model.UseRestrictionItem]:
+    items: list[model.UseRestrictionItem] = (
+        getattr(metadata_model_object, metadata_identifier, []) or []
+    )
 
-    return multidropdown_list
+    while len(items) <= index:
+        items.append(model.UseRestrictionItem())
+
+    items[index].use_restriction_date = (
+        datetime.datetime.strptime(value, "%Y-%m-%d").date() if value else None  # noqa: DTZ007
+    )
+
+    setattr(metadata_model_object, metadata_identifier, items)
+    return items
 
 
 def get_dataset_path() -> pathlib.Path | CloudPath | str:

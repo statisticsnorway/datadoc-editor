@@ -1,3 +1,4 @@
+import datetime
 from dataclasses import dataclass
 from unittest import mock
 
@@ -5,14 +6,14 @@ import dash_bootstrap_components as dbc
 import pytest
 from dapla_metadata.datasets import model
 from dash import html
-from pydantic import ValidationError
 
 from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.utils import check_variable_names
-from datadoc_editor.frontend.callbacks.utils import find_and_update_multidropdown_list
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
+from datadoc_editor.frontend.callbacks.utils import update_use_restriction_date
+from datadoc_editor.frontend.callbacks.utils import update_use_restriction_type
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 
@@ -141,7 +142,8 @@ def test_legal_shortname(shortname: str):
             "type",
             0,
             model.UseRestrictionItem(
-                use_restriction_type="DELETION_ANONYMIZATION", use_restriction_date=None
+                use_restriction_type=model.UseRestrictionType.DELETION_ANONYMIZATION,
+                use_restriction_date=None,
             ),
         ),
         (
@@ -149,7 +151,8 @@ def test_legal_shortname(shortname: str):
             "type",
             0,
             model.UseRestrictionItem(
-                use_restriction_type="PROCESS_LIMITATIONS", use_restriction_date=None
+                use_restriction_type=model.UseRestrictionType.PROCESS_LIMITATIONS,
+                use_restriction_date=None,
             ),
         ),
         (
@@ -157,7 +160,8 @@ def test_legal_shortname(shortname: str):
             "date",
             1,
             model.UseRestrictionItem(
-                use_restriction_type=None, use_restriction_date="2024-12-31"
+                use_restriction_type=None,
+                use_restriction_date=datetime.date(2024, 12, 31),
             ),
         ),
         (
@@ -165,32 +169,35 @@ def test_legal_shortname(shortname: str):
             "date",
             0,
             model.UseRestrictionItem(
-                use_restriction_type=None, use_restriction_date="2025-12-31"
+                use_restriction_type=None,
+                use_restriction_date=datetime.date(2025, 12, 31),
             ),
         ),
     ],
 )
-def test_find_and_update_multidropdown_list(initial_value, field, index, expected):
+def test_update_use_restriction(initial_value, field, index, expected):
     dataset_metadata = model.Dataset()
 
     if index > 0:
-        find_and_update_multidropdown_list(
-            dataset_metadata, "DELETION_ANONYMIZATION", "use_restrictions", "type", 0
+        update_use_restriction_type(
+            dataset_metadata, "DELETION_ANONYMIZATION", "use_restrictions", 0
         )
 
-    result = find_and_update_multidropdown_list(
-        dataset_metadata, initial_value, "use_restrictions", field, index
-    )
+    if field == "type":
+        result = update_use_restriction_type(
+            dataset_metadata, initial_value, "use_restrictions", index
+        )
+    elif field == "date":
+        result = update_use_restriction_date(
+            dataset_metadata, initial_value, "use_restrictions", index
+        )
 
-    if isinstance(result, list) and index < len(result):
-        assert result[index] == expected
-    else:
-        assert result == [expected]
+    assert result[index] == expected
 
 
 def test_find_existing_use_restriction_illegal_input():
     dataset_metadata = model.Dataset()
-    with pytest.raises(ValidationError):
-        find_and_update_multidropdown_list(
-            dataset_metadata, "NOT_A_USE_RESTRICTION", "use_restrictions", "type", 0
+    with pytest.raises(ValueError, match="is not a valid UseRestrictionType"):
+        update_use_restriction_type(
+            dataset_metadata, "NOT_A_USE_RESTRICTION", "use_restrictions", 0
         )
