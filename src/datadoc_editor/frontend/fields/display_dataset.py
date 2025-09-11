@@ -12,8 +12,11 @@ from datadoc_editor import state
 from datadoc_editor.enums import Assessment
 from datadoc_editor.enums import DataSetState
 from datadoc_editor.enums import DataSetStatus
-from datadoc_editor.enums import UseRestriction
+from datadoc_editor.enums import UseRestrictionType
 from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
+from datadoc_editor.frontend.fields.display_base import (
+    DATASET_METADATA_MULTIDROPDOWN_INPUT,
+)
 from datadoc_editor.frontend.fields.display_base import (
     DATASET_METADATA_MULTILANGUAGE_INPUT,
 )
@@ -22,6 +25,7 @@ from datadoc_editor.frontend.fields.display_base import FieldTypes
 from datadoc_editor.frontend.fields.display_base import MetadataDateField
 from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
 from datadoc_editor.frontend.fields.display_base import MetadataInputField
+from datadoc_editor.frontend.fields.display_base import MetadataMultiDropdownField
 from datadoc_editor.frontend.fields.display_base import MetadataMultiLanguageField
 from datadoc_editor.frontend.fields.display_base import MetadataPeriodField
 from datadoc_editor.frontend.fields.display_base import get_comma_separated_string
@@ -72,8 +76,7 @@ class DatasetIdentifiers(str, Enum):
     SUBJECT_FIELD = "subject_field"
     KEYWORD = "keyword"
     SPATIAL_COVERAGE_DESCRIPTION = "spatial_coverage_description"
-    USE_RESTRICTION = "use_restriction"
-    USE_RESTRICTION_DATE = "use_restriction_date"
+    USE_RESTRICTIONS = "use_restrictions"
     ID = "id"
     OWNER = "owner"
     FILE_PATH = "file_path"
@@ -120,19 +123,16 @@ DISPLAY_DATASET: dict[
         obligatory=True,
         id_type=DATASET_METADATA_MULTILANGUAGE_INPUT,
     ),
-    DatasetIdentifiers.USE_RESTRICTION: MetadataDropdownField(
-        identifier=DatasetIdentifiers.USE_RESTRICTION.value,
+    DatasetIdentifiers.USE_RESTRICTIONS: MetadataMultiDropdownField(
+        identifier=DatasetIdentifiers.USE_RESTRICTIONS.value,
         display_name="Bruksrestriksjon",
-        description="Oppgi om det er knyttet noen bruksrestriksjoner til datasettet, f.eks. krav om sletting/anonymisering.",
-        options_getter=functools.partial(
-            get_enum_options,
-            UseRestriction,
-        ),
-    ),
-    DatasetIdentifiers.USE_RESTRICTION_DATE: MetadataDateField(
-        identifier=DatasetIdentifiers.USE_RESTRICTION_DATE.value,
-        display_name="Bruksrestriksjonsdato",
-        description='Oppgi ev. "tiltaksdato" for bruksrestriksjoner, f.eks. frist for sletting/anonymisering. Noen bruksrestriksjoner vil ikke ha en slik dato, f.eks. vil en behandlingsbegrensning normalt være permanent/tidsuavhengig.',
+        description="Velg hvilken bruksrestriksjon som gjelder.",
+        options_getter=functools.partial(get_enum_options, UseRestrictionType),
+        type_display_name="Bruksrestriksjon",
+        type_description="Oppgi om det er knyttet noen bruksrestriksjoner til datasettet, f.eks. krav om sletting/anonymisering.",
+        date_display_name="Dato for restriksjon",
+        date_description='Oppgi ev. "tiltaksdato" for bruksrestriksjoner, f.eks. frist for sletting/anonymisering. Noen bruksrestriksjoner vil ikke ha en slik dato, f.eks. vil en behandlingsbegrensning normalt være permanent/tidsuavhengig.',
+        id_type=DATASET_METADATA_MULTIDROPDOWN_INPUT,
     ),
     DatasetIdentifiers.DATASET_STATE: MetadataDropdownField(
         identifier=DatasetIdentifiers.DATASET_STATE.value,
@@ -266,6 +266,12 @@ MULTIPLE_LANGUAGE_DATASET_IDENTIFIERS = [
     m.identifier
     for m in DISPLAY_DATASET.values()
     if isinstance(m, MetadataMultiLanguageField)
+]
+
+MULTIPLE_DROPDOWN_DATASET_IDENTIFIERS = [
+    m.identifier
+    for m in DISPLAY_DATASET.values()
+    if isinstance(m, MetadataMultiDropdownField)
 ]
 
 EDITABLE_DATASET_METADATA_LEFT = [

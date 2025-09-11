@@ -17,9 +17,12 @@ from datadoc_editor import config
 from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.utils import VALIDATION_ERROR
 from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
+from datadoc_editor.frontend.callbacks.utils import MultidropdownInputTypes
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import get_dataset_path
 from datadoc_editor.frontend.callbacks.utils import parse_and_validate_dates
+from datadoc_editor.frontend.callbacks.utils import update_use_restriction_date
+from datadoc_editor.frontend.callbacks.utils import update_use_restriction_type
 from datadoc_editor.frontend.callbacks.variables import (
     set_variables_value_multilanguage_inherit_dataset_values,
 )
@@ -247,6 +250,48 @@ def accept_dataset_metadata_input(
             "Updated dataset %s with value %s",
             metadata_identifier,
             value,
+        )
+
+    return show_error, error_explanation
+
+
+def accept_dataset_multidropdown_input(
+    updated_value: MultidropdownInputTypes,
+    metadata_identifier: str,
+    field: str,
+    index: int,
+) -> tuple[bool, str]:
+    """Handle user inputs of dataset multidropdown values."""
+    logger.debug(
+        "Received updated value = %s for metadata_identifier = %s",
+        updated_value,
+        metadata_identifier,
+    )
+    try:
+        if field == "type":
+            updated_multidropdown_list = update_use_restriction_type(
+                state.metadata.dataset, updated_value, metadata_identifier, index
+            )
+        elif field == "date":
+            updated_multidropdown_list = update_use_restriction_date(
+                state.metadata.dataset, updated_value, metadata_identifier, index
+            )
+        setattr(
+            state.metadata.dataset,
+            metadata_identifier,
+            updated_multidropdown_list,
+        )
+    except ValueError:
+        show_error = True
+        error_explanation = INVALID_VALUE
+        logger.exception("Error while reading in value for %s", metadata_identifier)
+    else:
+        show_error = False
+        error_explanation = ""
+        logger.info(
+            "Updated dataset %s with value %s",
+            metadata_identifier,
+            updated_multidropdown_list,
         )
 
     return show_error, error_explanation

@@ -19,8 +19,10 @@ from datadoc_editor import enums
 from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_date_input
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
+from datadoc_editor.frontend.callbacks.dataset import accept_dataset_multidropdown_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
 from datadoc_editor.frontend.callbacks.dataset import process_special_cases
+from datadoc_editor.frontend.callbacks.utils import MultidropdownInputTypes
 from datadoc_editor.frontend.callbacks.utils import dataset_control
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
@@ -152,24 +154,6 @@ def file_path_without_dates():
             ),
         ),
         (
-            DatasetIdentifiers.USE_RESTRICTION,
-            enums.UseRestriction.PROCESS_LIMITATIONS,
-            "PROCESS_LIMITATIONS",
-        ),
-        (
-            DatasetIdentifiers.USE_RESTRICTION_DATE,
-            "2024-12-31T23:59:59Z",
-            datetime.datetime(
-                2024,
-                12,
-                31,
-                23,
-                59,
-                59,
-                tzinfo=datetime.UTC,
-            ),
-        ),
-        (
             DatasetIdentifiers.ID,
             "2f72477a-f051-43ee-bf8b-0d8f47b5e0a7",
             UUID("2f72477a-f051-43ee-bf8b-0d8f47b5e0a7"),
@@ -189,6 +173,52 @@ def test_accept_dataset_metadata_input_valid_data(
 ):
     state.metadata = metadata
     output = accept_dataset_metadata_input(provided_value, metadata_identifier, "nb")
+    assert output[0] is False
+    assert output[1] == ""
+    assert (
+        getattr(state.metadata.dataset, metadata_identifier.value)
+        == expected_model_value
+    )
+
+
+@pytest.mark.parametrize(
+    ("metadata_identifier", "provided_value", "field", "expected_model_value"),
+    [
+        (
+            DatasetIdentifiers.USE_RESTRICTIONS,
+            "PROCESS_LIMITATIONS",
+            "type",
+            [
+                model.UseRestrictionItem(
+                    use_restriction_type="PROCESS_LIMITATIONS",
+                    use_restriction_date=None,
+                )
+            ],
+        ),
+        (
+            DatasetIdentifiers.USE_RESTRICTIONS,
+            "2024-12-31",
+            "date",
+            [
+                model.UseRestrictionItem(
+                    use_restriction_type=None,
+                    use_restriction_date=datetime.date(2024, 12, 31),
+                )
+            ],
+        ),
+    ],
+)
+def test_accept_dataset_multidropdown_input_valid_data(
+    metadata_identifier: DatasetIdentifiers,
+    provided_value: MultidropdownInputTypes,
+    expected_model_value: str,
+    field: str,
+    metadata: Datadoc,
+):
+    state.metadata = metadata
+    output = accept_dataset_multidropdown_input(
+        provided_value, metadata_identifier, field, 0
+    )
     assert output[0] is False
     assert output[1] == ""
     assert (

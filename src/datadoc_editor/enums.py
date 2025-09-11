@@ -347,14 +347,14 @@ class VariableRole(LanguageStringsEnum):
     )
 
 
-class UseRestriction(LanguageStringsEnum):
+class UseRestrictionType(LanguageStringsEnum):
     """Lifecycle status of a dataset."""
 
     DELETION_ANONYMIZATION = model.LanguageStringType(
         [
             model.LanguageStringTypeItem(
                 languageCode="en",
-                languageText=model.UseRestriction.DELETION_ANONYMIZATION.value,
+                languageText=model.UseRestrictionType.DELETION_ANONYMIZATION.value,
             ),
             model.LanguageStringTypeItem(
                 languageCode="nn",
@@ -370,7 +370,7 @@ class UseRestriction(LanguageStringsEnum):
         [
             model.LanguageStringTypeItem(
                 languageCode="en",
-                languageText=model.UseRestriction.PROCESS_LIMITATIONS.value,
+                languageText=model.UseRestrictionType.PROCESS_LIMITATIONS.value,
             ),
             model.LanguageStringTypeItem(
                 languageCode="nn",
@@ -386,7 +386,7 @@ class UseRestriction(LanguageStringsEnum):
         [
             model.LanguageStringTypeItem(
                 languageCode="en",
-                languageText=model.UseRestriction.SECONDARY_USE_RESTRICTIONS.value,
+                languageText=model.UseRestrictionType.SECONDARY_USE_RESTRICTIONS.value,
             ),
             model.LanguageStringTypeItem(
                 languageCode="nn",

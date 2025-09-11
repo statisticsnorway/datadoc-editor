@@ -9,9 +9,12 @@ from abc import abstractmethod
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from typing import Any
+from typing import cast
 
 import ssb_dash_components as ssb
 from dapla_metadata.datasets import enums
+from dapla_metadata.datasets import model
+from dash import dcc
 from dash import html
 
 from datadoc_editor import state
@@ -19,7 +22,6 @@ from datadoc_editor import state
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from dapla_metadata.datasets import model
     from dash.development.base_component import Component
     from pydantic import BaseModel
 
@@ -31,6 +33,7 @@ logger = logging.getLogger(__name__)
 DATASET_METADATA_INPUT = "dataset-metadata-input"
 DATASET_METADATA_DATE_INPUT = "dataset-metadata-date-input"
 DATASET_METADATA_MULTILANGUAGE_INPUT = "dataset-metadata-multilanguage-input"
+DATASET_METADATA_MULTIDROPDOWN_INPUT = "dataset-metadata-multidropdown-input"
 
 PSEUDO_METADATA_INPUT = "pseudo-metadata-input"
 VARIABLES_METADATA_INPUT = "variables-metadata-input"
@@ -358,6 +361,60 @@ class MetadataMultiLanguageField(DisplayMetadata):
 
 
 @dataclass
+class MetadataMultiDropdownField(DisplayMetadata):
+    """Controls how fields which support multi-dropdown values are displayed.
+
+    These are a special case since they return a group of both dropdown and date fields.
+    This current version is only compatible with the use restriction field.
+    """
+
+    id_type: str = ""
+    type: str = "text"
+    options_getter: Callable[[], list[dict[str, str]]] = list
+    type_display_name: str = ""
+    date_display_name: str = ""
+    type_description: str = ""
+    date_description: str = ""
+
+    def render(
+        self,
+        component_id: dict,
+        metadata: BaseModel,
+    ) -> html.Fieldset:
+        """Build fieldset group."""
+        use_restrictions: list[model.UseRestrictionItem] = cast(
+            "list[model.UseRestrictionItem]",
+            get_standard_metadata(metadata, self.identifier) or [],
+        )
+        initial_data = [
+            {
+                "use_restriction_type": i.use_restriction_type,
+                "use_restriction_date": i.use_restriction_date,
+            }
+            for i in use_restrictions
+        ]
+
+        idx = {"type": self.id_type, "id": component_id["id"], "field": "type"}
+
+        children = [
+            ssb.Glossary(
+                children=[
+                    html.Legend(self.display_name, className="multilanguage-legend")
+                ],
+                explanation=self.description,
+                className="legend-glossary",
+            ),
+            html.Div(id="use-restriction-list-container"),
+            dcc.Store(id="use-restriction-store", data=initial_data),
+            dcc.Store(id="use-restriction-options-store", data=self.options_getter()),
+            dcc.Store(id="use-restriction-id-store", data=idx),
+            ssb.Button("Legg til bruksretriksjon", id="add-use-restriction-button"),
+        ]
+
+        return html.Fieldset(children=children, className="multidropdown-fieldset")
+
+
+@dataclass
 class MetadataCheckboxField(DisplayMetadata):
     """Controls for how a checkbox metadata field should be displayed."""
 
@@ -386,4 +443,5 @@ FieldTypes = (
     | MetadataCheckboxField
     | MetadataPeriodField
     | MetadataMultiLanguageField
+    | MetadataMultiDropdownField
 )

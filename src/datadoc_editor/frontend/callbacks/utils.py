@@ -8,6 +8,7 @@ import logging
 import re
 import warnings
 from typing import TYPE_CHECKING
+from typing import cast
 
 import arrow
 import ssb_dash_components as ssb
@@ -32,9 +33,13 @@ from datadoc_editor.frontend.components.builders import build_ssb_alert
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
+from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
+from datadoc_editor.frontend.fields.display_base import MetadataMultiDropdownField
+from datadoc_editor.frontend.fields.display_dataset import DISPLAY_DATASET
 from datadoc_editor.frontend.fields.display_dataset import (
     OBLIGATORY_DATASET_METADATA_IDENTIFIERS_AND_DISPLAY_NAME,
 )
+from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PSEUDONYMIZATION_DEAD_METADATA,
 )
@@ -53,6 +58,7 @@ from datadoc_editor.frontend.fields.display_variables import (
 
 if TYPE_CHECKING:
     import pathlib
+    from collections.abc import Callable
 
     import dash_bootstrap_components as dbc
     import pydantic
@@ -62,7 +68,10 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-MetadataInputTypes = str | list[str] | int | float | bool | datetime.date | None
+MetadataInputTypes = (
+    str | list[str] | list[dict] | int | float | bool | datetime.date | None
+)
+MultidropdownInputTypes = str | None
 
 
 def _check_if_language_string_item_exists(
@@ -139,6 +148,50 @@ def find_existing_language_string(
         # Don't create an item if the value is empty
         return None
     return language_strings
+
+
+def update_use_restriction_type(
+    metadata_model_object: pydantic.BaseModel,
+    value: MultidropdownInputTypes,
+    metadata_identifier: str,
+    index: int,
+) -> list[model.UseRestrictionItem]:
+    """Updates the type filed on the in the multidropdown component."""
+    items: list[model.UseRestrictionItem] = (
+        getattr(metadata_model_object, metadata_identifier, []) or []
+    )
+
+    while len(items) <= index:
+        items.append(model.UseRestrictionItem())
+
+    items[index].use_restriction_type = (
+        model.UseRestrictionType(value) if value else None
+    )
+
+    setattr(metadata_model_object, metadata_identifier, items)
+    return items
+
+
+def update_use_restriction_date(
+    metadata_model_object: pydantic.BaseModel,
+    value: MultidropdownInputTypes,
+    metadata_identifier: str,
+    index: int,
+) -> list[model.UseRestrictionItem]:
+    """Updates the date filed on the in the multidropdown component."""
+    items: list[model.UseRestrictionItem] = (
+        getattr(metadata_model_object, metadata_identifier, []) or []
+    )
+
+    while len(items) <= index:
+        items.append(model.UseRestrictionItem())
+
+    items[index].use_restriction_date = (
+        datetime.datetime.strptime(value, "%Y-%m-%d").date() if value else None  # noqa: DTZ007
+    )
+
+    setattr(metadata_model_object, metadata_identifier, items)
+    return items
 
 
 def get_dataset_path() -> pathlib.Path | CloudPath | str:
@@ -256,6 +309,44 @@ def render_tabs(tab: str) -> html.Article | None:
         )
 
     return None
+
+
+def render_multidropdown_row(
+    item: dict,
+    dropdown_id: dict[str, str | int],
+    date_id: dict[str, str | int],
+    options: Callable[[], list[dict[str, str]]],
+) -> html.Div:
+    """Renders a row in the multidropdown component."""
+    field = cast(
+        "MetadataMultiDropdownField",
+        DISPLAY_DATASET[DatasetIdentifiers.USE_RESTRICTIONS],
+    )
+
+    return html.Div(
+        [
+            ssb.Dropdown(
+                header=field.type_display_name,
+                items=options,
+                placeholder=DROPDOWN_DESELECT_OPTION,
+                value=item["use_restriction_type"],
+                id=dropdown_id,
+                className="dropdown-component",
+                showDescription=True,
+                description=field.type_description,
+            ),
+            ssb.Input(
+                label=field.date_display_name,
+                value=item["use_restriction_date"],
+                id=date_id,
+                className="input-component",
+                type="date",
+                showDescription=True,
+                description=field.date_description,
+            ),
+        ],
+        className="input-group-row",
+    )
 
 
 def _has_exact_word(word: str, text: str) -> bool:

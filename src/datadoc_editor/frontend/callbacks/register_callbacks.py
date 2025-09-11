@@ -22,7 +22,9 @@ from datadoc_editor import state
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_date_input
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
+from datadoc_editor.frontend.callbacks.dataset import accept_dataset_multidropdown_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
+from datadoc_editor.frontend.callbacks.utils import render_multidropdown_row
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
 from datadoc_editor.frontend.callbacks.variables import (
@@ -37,10 +39,14 @@ from datadoc_editor.frontend.callbacks.variables import populate_variables_works
 from datadoc_editor.frontend.components.builders import build_dataset_edit_section
 from datadoc_editor.frontend.components.builders import build_dataset_machine_section
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
+from datadoc_editor.frontend.components.identifiers import ADD_USE_RESTRICTION_BUTTON
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
 from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
 from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
+from datadoc_editor.frontend.fields.display_base import (
+    DATASET_METADATA_MULTIDROPDOWN_INPUT,
+)
 from datadoc_editor.frontend.fields.display_base import (
     DATASET_METADATA_MULTILANGUAGE_INPUT,
 )
@@ -60,6 +66,8 @@ from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
 from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     import dash_bootstrap_components as dbc
 
     from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
@@ -67,7 +75,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def register_callbacks(app: Dash) -> None:
+def register_callbacks(app: Dash) -> None:  # noqa: PLR0915 TODO: Jorgen-5, we should split this up after the tasks are finished
     """Define and register callbacks."""
 
     @app.callback(
@@ -161,6 +169,51 @@ def register_callbacks(app: Dash) -> None:
         )
 
     @app.callback(
+        Output(
+            {
+                "type": DATASET_METADATA_MULTIDROPDOWN_INPUT,
+                "id": MATCH,
+                "field": MATCH,
+                "index": MATCH,
+            },
+            "error",
+        ),
+        Output(
+            {
+                "type": DATASET_METADATA_MULTIDROPDOWN_INPUT,
+                "id": MATCH,
+                "field": MATCH,
+                "index": MATCH,
+            },
+            "errorMessage",
+        ),
+        Input(
+            {
+                "type": DATASET_METADATA_MULTIDROPDOWN_INPUT,
+                "id": MATCH,
+                "field": MATCH,
+                "index": MATCH,
+            },
+            "value",
+        ),
+    )
+    def callback_accept_dataset_metadata_multidropdown_input(
+        value: MetadataInputTypes,  # noqa: ARG001 argument required by Dash
+    ) -> tuple[bool, str]:
+        """Save updated dataset metadata values.
+
+        Will display an alert if validation fails.
+        """
+        if ctx.triggered_id is None:
+            return False, ""
+        return accept_dataset_multidropdown_input(
+            ctx.triggered[0]["value"],
+            ctx.triggered_id["id"],
+            ctx.triggered_id["field"],
+            ctx.triggered_id["index"],
+        )
+
+    @app.callback(
         Output("alerts-section", "children", allow_duplicate=True),
         Output("dataset-opened-counter", "data"),  # Used to force reload of metadata
         Input("open-button", "n_clicks"),
@@ -219,6 +272,37 @@ def register_callbacks(app: Dash) -> None:
             search_query,
             dataset_opened_counter,
         )
+
+    @app.callback(
+        Output("use-restriction-store", "data"),
+        Input(ADD_USE_RESTRICTION_BUTTON, "n_clicks"),
+        State("use-restriction-store", "data"),
+        prevent_initial_call=True,
+    )
+    def update_use_restrictions(add_clicks: int, current_list: list):  # noqa: ANN202, ARG001
+        if ctx.triggered_id == ADD_USE_RESTRICTION_BUTTON:
+            current_list.append(
+                {"use_restriction_type": None, "use_restriction_date": None}
+            )
+        return current_list
+
+    @app.callback(
+        Output("use-restriction-list-container", "children"),
+        Input("use-restriction-store", "data"),
+        Input("use-restriction-options-store", "data"),
+        Input("use-restriction-id-store", "data"),
+    )
+    def render_use_restriction_list(  # noqa: ANN202
+        current_list: list,
+        options: Callable[[], list[dict[str, str]]],
+        idx: dict[str, str | int],
+    ):
+        items = []
+        for i, item in enumerate(current_list):
+            dropdown_id = {**idx, "index": i}
+            date_id = {**idx, "index": i, "field": "date"}
+            items.append(render_multidropdown_row(item, dropdown_id, date_id, options))
+        return items
 
     @app.callback(
         Output(SECTION_WRAPPER_ID, "children"),
