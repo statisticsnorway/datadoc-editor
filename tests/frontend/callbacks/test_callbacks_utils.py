@@ -3,12 +3,14 @@ from unittest import mock
 
 import dash_bootstrap_components as dbc
 import pytest
-from dapla_metadata.datasets import model
 from dash import html
+from datadoc_model.all_optional import model
 
 from datadoc_editor import state
+from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.utils import check_variable_names
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
+from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
@@ -129,3 +131,64 @@ def test_legal_shortname(shortname: str):
 
     mock_metadata = mock.Mock(variables=[MockVariable(short_name=shortname)])
     assert check_variable_names(mock_metadata.variables) is None
+
+
+@pytest.mark.parametrize(
+    ("variable", "expected_algorithm"),
+    [
+        (
+            model.Variable(
+                pseudonymization=model.Pseudonymization(
+                    stable_identifier_type="FREG_SNR", encryption_algorithm="TINK-FPE"
+                ),
+            ),
+            PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
+        ),
+        (
+            model.Variable(pseudonymization=None),
+            None,
+        ),
+        (
+            model.Variable(
+                pseudonymization=model.Pseudonymization(
+                    encryption_algorithm="TINK-FPE"
+                ),
+            ),
+            PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID,
+        ),
+        (
+            model.Variable(
+                pseudonymization=model.Pseudonymization(
+                    encryption_algorithm="TINK-DAED",
+                ),
+            ),
+            PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
+        ),
+        (
+            model.Variable(
+                pseudonymization=model.Pseudonymization(
+                    encryption_algorithm="TINK_PPP",
+                ),
+            ),
+            PseudonymizationAlgorithmsEnum.CUSTOM,
+        ),
+        (
+            model.Variable(
+                pseudonymization=model.Pseudonymization(
+                    encryption_key_reference="custom-common-key-1",
+                ),
+            ),
+            None,
+        ),
+    ],
+    ids=[
+        "papis_with_stable_id",
+        "without_pseudonymization",
+        "papis_without_stable_id",
+        "standard_algorithm_dapla",
+        "custom_algorithm",
+        "not_encryption_algorithm",
+    ],
+)
+def test_map_dropdown_value(variable: model.Variable, expected_algorithm: str):
+    assert map_dropdown_to_pseudo(variable) == expected_algorithm

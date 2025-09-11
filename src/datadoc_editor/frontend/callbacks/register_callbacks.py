@@ -9,7 +9,6 @@ import logging
 from typing import TYPE_CHECKING
 from typing import Any
 
-from dash import ALL
 from dash import MATCH
 from dash import Dash
 from dash import Input
@@ -20,6 +19,7 @@ from dash import html
 from dash import no_update
 
 from datadoc_editor import state
+from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_date_input
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
@@ -32,6 +32,7 @@ from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
 )
 from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
+from datadoc_editor.frontend.callbacks.variables import populate_pseudo_workspace
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
 from datadoc_editor.frontend.components.builders import build_dataset_edit_section
 from datadoc_editor.frontend.components.builders import build_dataset_machine_section
@@ -45,7 +46,6 @@ from datadoc_editor.frontend.fields.display_base import (
 )
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
-from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import (
     VARIABLES_METADATA_MULTILANGUAGE_INPUT,
 )
@@ -207,44 +207,18 @@ def register_callbacks(app: Dash) -> None:
         Output(ACCORDION_WRAPPER_ID, "children"),
         Input("dataset-opened-counter", "data"),
         Input("search-variables", "value"),
-        Input("pseudo-variables-updated-counter", "data"),
     )
     def callback_populate_variables_workspace(
         dataset_opened_counter: int,
         search_query: str,
-        pseudo_updated_counter: int,  # noqa: ARG001
     ) -> list:
         """Create variable workspace with accordions for variables."""
         logger.debug("Populating variables workspace. Search query: %s", search_query)
-
         return populate_variables_workspace(
             state.metadata.variables,
             search_query,
             dataset_opened_counter,
         )
-
-    @app.callback(
-        Output({"type": "pseudo-output", "short_name": MATCH}, "children"),
-        Input({"type": "pseudo-button", "short_name": MATCH}, "n_clicks"),
-        prevent_initial_call=True,
-    )
-    def callback_update_pseudo_output(n_clicks: int) -> None:  # noqa: ARG001
-        """Adding a pseudo variable when the add pseudo variable is clicked."""
-        short_name = ctx.triggered_id["short_name"]
-        state.metadata.add_pseudonymization(short_name)
-
-    @app.callback(
-        Output("pseudo-variables-updated-counter", "data"),
-        Input({"type": "pseudo-button", "short_name": ALL}, "n_clicks"),
-        State("pseudo-variables-updated-counter", "data"),
-        prevent_initial_call=True,
-    )
-    def callback_update_pseudo_counter(
-        n_clicks_list: list,  # noqa: ARG001
-        current_counter: int,
-    ) -> int:
-        """Counter for the pseudo variable button."""
-        return current_counter + 1
 
     @app.callback(
         Output(SECTION_WRAPPER_ID, "children"),
@@ -280,84 +254,45 @@ def register_callbacks(app: Dash) -> None:
 
     @app.callback(
         Output(
-            {
-                "type": PSEUDO_METADATA_INPUT,
-                "variable_short_name": MATCH,
-                "id": MATCH,
-            },
+            {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
             "error",
         ),
         Output(
-            {
-                "type": PSEUDO_METADATA_INPUT,
-                "variable_short_name": MATCH,
-                "id": MATCH,
-            },
+            {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
             "errorMessage",
         ),
         Input(
-            {
-                "type": PSEUDO_METADATA_INPUT,
-                "variable_short_name": MATCH,
-                "id": MATCH,
-            },
+            {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
             "value",
+        ),
+        State(
+            {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
+            "id",
         ),
         prevent_initial_call=True,
     )
-    def callback_accept_pseudo_variable_metadata_input(
-        value: MetadataInputTypes,  # noqa: ARG001 argument required by Dash
-    ) -> dbc.Alert:
-        """Save updated variable metadata values."""
-        message = accept_pseudo_variable_metadata_input(
-            ctx.triggered[0]["value"],
-            ctx.triggered_id["variable_short_name"],
-            ctx.triggered_id["id"],
-        )
-        if not message:
-            # No error to display.
+    def callback_accept_pseudo_variable_metadata_input(value, component_id):  # noqa: ANN202, ANN001
+        if value is None or component_id is None:
+            # Nothing to do if deselected or missing
             return False, ""
-
-        return True, message
-
-    @app.callback(
-        Output(
-            {
-                "type": VARIABLES_METADATA_INPUT,
-                "variable_short_name": MATCH,
-                "id": MATCH,
-            },
-            "error",
-        ),
-        Output(
-            {
-                "type": VARIABLES_METADATA_INPUT,
-                "variable_short_name": MATCH,
-                "id": MATCH,
-            },
-            "errorMessage",
-        ),
-        Input(
-            {
-                "type": VARIABLES_METADATA_INPUT,
-                "variable_short_name": MATCH,
-                "id": MATCH,
-            },
-            "value",
-        ),
-        prevent_initial_call=True,
-    )
-    def callback_accept_variable_metadata_input(
-        value: MetadataInputTypes,  # noqa: ARG001 argument required by Dash
-    ) -> dbc.Alert:
-        """Save updated variable metadata values."""
-        message = accept_variable_metadata_input(
-            ctx.triggered[0]["value"],
-            ctx.triggered_id["variable_short_name"],
-            ctx.triggered_id["id"],
+        variable_short_name = component_id["variable_short_name"]
+        input_id = component_id["id"]
+        logger.debug(
+            "Callback triggered with value=%s, component_id=%s",
+            value,
+            component_id,
         )
+        # Safely get variable from state
+        variable = state.metadata.variables_lookup.get(variable_short_name)
+        if not variable:
+            logger.info("Variable not found: %s", variable_short_name)
+            return False, "Variable not found."
+
+        message = accept_pseudo_variable_metadata_input(
+            value, variable_short_name, input_id
+        )
+
         if not message:
-            # No error to display.
             return False, ""
 
         return True, message
@@ -526,3 +461,28 @@ def register_callbacks(app: Dash) -> None:
             contains_data_from,
             contains_data_until,
         )
+
+    @app.callback(
+        Output({"type": "pseudo-field-container", "variable": MATCH}, "children"),
+        Input({"type": "pseudonymization-dropdown", "variable": MATCH}, "value"),
+        State({"type": "pseudonymization-dropdown", "variable": MATCH}, "id"),
+    )
+    def callback_populate_pseudo_workspace(
+        value,  # noqa: ANN001
+        dropdown_id,  # noqa: ANN001
+    ) -> dbc.Form:
+        """Create pseudonymization workspace dynamically based on selected pseudo algorithm."""
+        selected_algorithm = PseudonymizationAlgorithmsEnum[value] if value else None
+        logger.debug("Selected algorithm: %s", selected_algorithm)
+        variable = state.metadata.variables_lookup.get(dropdown_id["variable"])
+
+        if variable is None:
+            logger.info("Variable not found in lookup!")
+            return []
+
+        logger.debug(
+            "Variable %s has pseudo info: %s",
+            variable.short_name,
+            variable.pseudonymization,
+        )
+        return populate_pseudo_workspace(variable, selected_algorithm)
