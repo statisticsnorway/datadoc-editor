@@ -24,19 +24,19 @@ PSEUDO_FIELDS: dict[
         identifier=PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME.value,
         display_name="Pseudonymiseringstidspunkt",
         description="Tidspunktet datasettet ble pseudonymisert.",
-        obligatory=True,
+        obligatory=False,
     ),
     PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION: MetadataInputField(
         identifier=PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
-        display_name="Stabil identifikator type",
-        description="Type stabil identifikator som er benyttet før pseudonymisering (krypteirng), eksempelvis at fødselsnummer er byttet ut med SNR fra SNR-katalogen i FREG.",
-        obligatory=True,
+        display_name="Stabil identifikator versjon",
+        description="Det skal brukes den type versjonering som er brukt for stabil identifikator katalogen, eksempler kan være dato eller semantisk versjonering.",
+        obligatory=False,
     ),
     PseudoVariableIdentifiers.STABLE_IDENTIFIER_TYPE: MetadataInputField(
         identifier=PseudoVariableIdentifiers.STABLE_IDENTIFIER_TYPE.value,
-        display_name="Stabil identifikator versjon",
-        description="Det skal brukes den type versjonering som er brukt for stabil identifikator katalogen, eksempler kan være dato eller semantisk versjonering.",
-        obligatory=True,
+        display_name="Stabil identifikator type",
+        description="Type stabil identifikator som er benyttet før pseudonymisering (kryptering), eksempelvis at fødselsnummer er byttet ut med SNR fra SNR-katalogen i FREG.",
+        obligatory=False,
     ),
     PseudoVariableIdentifiers.ENCRYPTION_ALGORITHM: MetadataInputField(
         identifier=PseudoVariableIdentifiers.ENCRYPTION_ALGORITHM.value,
@@ -54,9 +54,37 @@ PSEUDO_FIELDS: dict[
         identifier=PseudoVariableIdentifiers.ENCRYPTION_ALGORITHM_PARAMETERS.value,
         display_name="Krypteringsalgoritme-parametere",
         description="Eventuelle krypteringsalgoritme-parametere som er benyttet utover “encryption_key_reference” nevnt over.",
-        obligatory=True,
+        obligatory=False,
         editable=False,
     ),
 }
 
-PSEUDONYMIZATION_METADATA = list(PSEUDO_FIELDS.values())
+PSEUDONYMIZATION_METADATA = [m for m in PSEUDO_FIELDS.values() if m.editable]
+PSEUDONYMIZATION_PAPIS_WITH_STABLE_ID_METADATA = [
+    m
+    for m in PSEUDO_FIELDS.values()
+    if (
+        m.identifier
+        in (
+            PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME.value,
+            PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
+        )
+        and m.editable
+    )
+]
+PSEUDONYMIZATION_PAPIS_WITHOUT_STABLE_ID_METADATA = [
+    m
+    for m in PSEUDO_FIELDS.values()
+    if (
+        m.identifier in (PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME.value)
+        and m.editable
+    )
+]
+PSEUDONYMIZATION_DEAD_METADATA = [
+    m
+    for m in PSEUDO_FIELDS.values()
+    if (
+        m.identifier in (PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME.value)
+        and m.editable
+    )
+]

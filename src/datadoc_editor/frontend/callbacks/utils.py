@@ -18,12 +18,15 @@ from dapla_metadata.datasets import model
 from dash import html
 
 from datadoc_editor import config
+from datadoc_editor import constants
 from datadoc_editor import state
 from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_DATASET_MESSAGE
 from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_VARIABLES_MESSAGE
 from datadoc_editor.constants import ILLEGAL_SHORTNAME_WARNING
 from datadoc_editor.constants import ILLEGAL_SHORTNAME_WARNING_MESSAGE
 from datadoc_editor.constants import MISSING_METADATA_WARNING
+from datadoc_editor.constants import PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE
+from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.components.builders import AlertTypes
 from datadoc_editor.frontend.components.builders import build_ssb_alert
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
@@ -31,6 +34,18 @@ from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
 from datadoc_editor.frontend.fields.display_dataset import (
     OBLIGATORY_DATASET_METADATA_IDENTIFIERS_AND_DISPLAY_NAME,
+)
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PSEUDONYMIZATION_DEAD_METADATA,
+)
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PSEUDONYMIZATION_METADATA,
+)
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PSEUDONYMIZATION_PAPIS_WITH_STABLE_ID_METADATA,
+)
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PSEUDONYMIZATION_PAPIS_WITHOUT_STABLE_ID_METADATA,
 )
 from datadoc_editor.frontend.fields.display_variables import (
     OBLIGATORY_VARIABLES_METADATA_IDENTIFIERS_AND_DISPLAY_NAME,
@@ -479,3 +494,54 @@ def save_metadata_and_generate_alerts(metadata: Datadoc) -> list:
         variables_control(missing_obligatory_variables, metadata.variables),
         check_variable_names(metadata.variables),
     ]
+
+
+def map_selected_algorithm_to_pseudo_fields(
+    selected_algorithm: PseudonymizationAlgorithmsEnum | None,
+) -> list:
+    """Map a PseudonymizationAlgorithms enum value to the correct pseudonymization input list.
+
+    Examples:
+    >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields(PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID)
+    >>> len(pseudo_fields)
+    1
+    >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields(PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID)
+    >>> len(pseudo_fields)
+    2
+    >>> pseudo_fields = map_selected_algorithm_to_pseudo_fields(PseudonymizationAlgorithmsEnum.CUSTOM)
+    >>> len(pseudo_fields)
+    5
+    """
+    mapping = {
+        PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID: PSEUDONYMIZATION_PAPIS_WITHOUT_STABLE_ID_METADATA,
+        PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID: PSEUDONYMIZATION_PAPIS_WITH_STABLE_ID_METADATA,
+        PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA: PSEUDONYMIZATION_DEAD_METADATA,
+        PseudonymizationAlgorithmsEnum.CUSTOM: PSEUDONYMIZATION_METADATA,
+    }
+
+    if selected_algorithm is None:
+        return []
+
+    return mapping.get(selected_algorithm, [])
+
+
+def map_dropdown_to_pseudo(
+    variable: model.Variable,
+) -> PseudonymizationAlgorithmsEnum | None:
+    """Return dropdown algorithm value for a variable's pseudonymization."""
+    if variable.pseudonymization:
+        match variable.pseudonymization.encryption_algorithm:
+            case constants.PAPIS_ALGORITHM_ENCRYPTION:
+                if (
+                    variable.pseudonymization.stable_identifier_type
+                    == PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE
+                ):
+                    return PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID
+                return PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID
+            case constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION:
+                return PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA
+            case None:
+                return None
+            case _:
+                return PseudonymizationAlgorithmsEnum.CUSTOM
+    return None

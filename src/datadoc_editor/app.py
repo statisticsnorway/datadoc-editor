@@ -50,7 +50,6 @@ def build_app(app: Dash) -> Dash:
                         data=0,
                         storage_type="session",
                     ),
-                    dcc.Store(id="pseudo-variables-updated-counter", data=0),
                     build_controls_bar(),
                     html.Div(id="alerts-section"),
                     dcc.Tabs(

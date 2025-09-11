@@ -2,7 +2,7 @@
     "document_version": "1.0.0",
     "datadoc": {
         "percentage_complete": 98,
-        "document_version": "6.1.0",
+        "document_version": "6.0.0",
         "dataset": {
             "short_name": "person_testdata_p2021-12-31_p2021-12-31",
             "assessment": "PROTECTED",
@@ -84,14 +84,15 @@
                     "languageText": "Norge"
                 }
             ],
-            "use_restrictions": [],
+            "use_restriction": null,
+            "use_restriction_date": null,
             "custom_type": null,
             "id": "2f72477a-f051-43ee-bf8b-0d8f47b5e0a7",
             "owner": "",
-            "file_path": "/Users/rlj/datadoc-editor/tests/resources/klargjorte_data/person_testdata_p2021-12-31_p2021-12-31_v1.parquet",
+            "file_path": "None",
             "metadata_created_date": "2022-10-07T07:35:01Z",
             "metadata_created_by": "default_user@ssb.no",
-            "metadata_last_updated_date": "2025-09-08T08:22:28.304642Z",
+            "metadata_last_updated_date": "2025-09-10T14:28:12.454951Z",
             "metadata_last_updated_by": null,
             "contains_data_from": "2021-12-31",
             "contains_data_until": "2021-12-31"
@@ -118,7 +119,14 @@
                 "variable_role": "IDENTIFIER",
                 "definition_uri": "https://www.ssb.no/a/metadata/conceptvariable/vardok/26/nb",
                 "is_personal_data": true,
-                "pseudonymization": null,
+                "pseudonymization": {
+                    "pseudonymization_time": null,
+                    "stable_identifier_type": "FREG_SNR",
+                    "stable_identifier_version": null,
+                    "encryption_algorithm": "TINK-FPE",
+                    "encryption_key_reference": "papis-common-key-1",
+                    "encryption_algorithm_parameters": null
+                },
                 "unit_type": "PERSON",
                 "data_source": null,
                 "population_description": null,
@@ -131,7 +139,7 @@
                 "special_value": null,
                 "invalid_value_description": null,
                 "custom_type": null,
-                "id": "6b6763ee-089c-4695-b24a-24460ace5986",
+                "id": "1285808e-e7ac-42d7-ba65-5209277d52db",
                 "contains_data_from": "2021-12-31",
                 "contains_data_until": "2021-12-31"
             },
@@ -155,8 +163,15 @@
                 "data_type": "STRING",
                 "variable_role": "MEASURE",
                 "definition_uri": "https://www.ssb.no/a/metadata/conceptvariable/vardok/91/nb",
-                "is_personal_data": false,
-                "pseudonymization": null,
+                "is_personal_data": true,
+                "pseudonymization": {
+                    "pseudonymization_time": null,
+                    "stable_identifier_type": null,
+                    "stable_identifier_version": null,
+                    "encryption_algorithm": "TINK-FPE",
+                    "encryption_key_reference": "papis-common-key-1",
+                    "encryption_algorithm_parameters": null
+                },
                 "unit_type": "PERSON",
                 "data_source": null,
                 "population_description": null,
@@ -169,7 +184,7 @@
                 "special_value": null,
                 "invalid_value_description": null,
                 "custom_type": null,
-                "id": "d3a31b49-5ac3-4aef-b669-179082879528",
+                "id": "cdca3f6c-38fb-4bb2-90bf-b39637012826",
                 "contains_data_from": "2021-12-31",
                 "contains_data_until": "2021-12-31"
             },
@@ -193,8 +208,15 @@
                 "data_type": "STRING",
                 "variable_role": "MEASURE",
                 "definition_uri": "https://www.ssb.no/a/metadata/conceptvariable/vardok/94/nb",
-                "is_personal_data": false,
-                "pseudonymization": null,
+                "is_personal_data": true,
+                "pseudonymization": {
+                    "pseudonymization_time": null,
+                    "stable_identifier_type": null,
+                    "stable_identifier_version": null,
+                    "encryption_algorithm": "TINK-DAED",
+                    "encryption_key_reference": "ssb-common-key-1",
+                    "encryption_algorithm_parameters": null
+                },
                 "unit_type": "PERSON",
                 "data_source": null,
                 "population_description": null,
@@ -207,7 +229,7 @@
                 "special_value": null,
                 "invalid_value_description": null,
                 "custom_type": null,
-                "id": "760a2405-504d-488e-b1da-97b5d89dd5c0",
+                "id": "1485d92e-dcfd-421b-b938-1578732fb8dd",
                 "contains_data_from": "2021-12-31",
                 "contains_data_until": "2021-12-31"
             },
@@ -231,8 +253,15 @@
                 "data_type": "INTEGER",
                 "variable_role": "MEASURE",
                 "definition_uri": "https://www.ssb.no/a/metadata/conceptvariable/vardok/3495/nb",
-                "is_personal_data": false,
-                "pseudonymization": null,
+                "is_personal_data": true,
+                "pseudonymization": {
+                    "pseudonymization_time": null,
+                    "stable_identifier_type": null,
+                    "stable_identifier_version": null,
+                    "encryption_algorithm": "PPP",
+                    "encryption_key_reference": "common-ppp-1",
+                    "encryption_algorithm_parameters": null
+                },
                 "unit_type": "PERSON",
                 "data_source": null,
                 "population_description": null,
@@ -245,7 +274,7 @@
                 "special_value": null,
                 "invalid_value_description": null,
                 "custom_type": null,
-                "id": "da2f047f-ecbb-4c98-8003-25ae8bc5a912",
+                "id": "524da062-0a4b-44d5-a51f-50d9831c947d",
                 "contains_data_from": "2021-12-31",
                 "contains_data_until": "2021-12-31"
             },
@@ -283,7 +312,7 @@
                 "special_value": null,
                 "invalid_value_description": null,
                 "custom_type": null,
-                "id": "2361325c-5d7f-4a86-8aef-bcffad1fbf06",
+                "id": "93ee74c9-7494-408e-8168-5c54d7551a6a",
                 "contains_data_from": "2021-12-31",
                 "contains_data_until": "2021-12-31"
             },
@@ -334,7 +363,7 @@
                 "special_value": null,
                 "invalid_value_description": null,
                 "custom_type": null,
-                "id": "2f7be882-242b-40a5-ba2e-0219dde51e4b",
+                "id": "bf06fbb5-c016-48e0-8bd5-894a7a9abb78",
                 "contains_data_from": "2021-12-31",
                 "contains_data_until": "2021-12-31"
             }

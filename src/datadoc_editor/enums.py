@@ -398,3 +398,72 @@ class UseRestrictionType(LanguageStringsEnum):
             ),
         ],
     )
+
+
+class PseudonymizationAlgorithmsEnum(LanguageStringsEnum):
+    """Standard pseudonymization algorithms."""
+
+    PAPIS_ALGORITHM_WITHOUT_STABLE_ID = model.LanguageStringType(
+        [
+            model.LanguageStringTypeItem(
+                languageCode="en",
+                languageText="PAPIS-algorithm without stable ID",
+            ),
+            model.LanguageStringTypeItem(
+                languageCode="nn",
+                languageText="PAPIS-algoritme uten stabil ID",
+            ),
+            model.LanguageStringTypeItem(
+                languageCode="nb",
+                languageText="PAPIS-algoritme uten stabil ID",
+            ),
+        ]
+    )
+    PAPIS_ALGORITHM_WITH_STABLE_ID = model.LanguageStringType(
+        [
+            model.LanguageStringTypeItem(
+                languageCode="en",
+                languageText="PAPIS-algorithm with stable ID",
+            ),
+            model.LanguageStringTypeItem(
+                languageCode="nn",
+                languageText="PAPIS-algoritme med stabil ID",
+            ),
+            model.LanguageStringTypeItem(
+                languageCode="nb",
+                languageText="PAPIS-algoritme med stabil ID",
+            ),
+        ]
+    )
+    STANDARD_ALGORITM_DAPLA = model.LanguageStringType(
+        [
+            model.LanguageStringTypeItem(
+                languageCode="en",
+                languageText="Standard algorithm on Dapla (DAEAD)",
+            ),
+            model.LanguageStringTypeItem(
+                languageCode="nn",
+                languageText="Standard algoritme på Dapla (DAEAD)",
+            ),
+            model.LanguageStringTypeItem(
+                languageCode="nb",
+                languageText="Standard algoritme på Dapla (DAEAD)",
+            ),
+        ]
+    )
+    CUSTOM = model.LanguageStringType(
+        [
+            model.LanguageStringTypeItem(
+                languageCode="en",
+                languageText="Other",
+            ),
+            model.LanguageStringTypeItem(
+                languageCode="nn",
+                languageText="Annen",
+            ),
+            model.LanguageStringTypeItem(
+                languageCode="nb",
+                languageText="Annen",
+            ),
+        ]
+    )
