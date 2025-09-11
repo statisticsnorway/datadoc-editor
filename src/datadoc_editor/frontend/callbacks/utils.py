@@ -55,6 +55,7 @@ from datadoc_editor.frontend.fields.display_variables import (
 
 if TYPE_CHECKING:
     import pathlib
+    from collections.abc import Callable
 
     import dash_bootstrap_components as dbc
     import pydantic
@@ -307,7 +308,13 @@ def render_tabs(tab: str) -> html.Article | None:
     return None
 
 
-def render_multidropdown_row(item, dropdown_id, date_id, options):
+def render_multidropdown_row(
+    item: model.UseRestrictionItem,
+    dropdown_id: dict[str, str | int],
+    date_id: dict[str, str | int],
+    options: Callable[[], list[dict[str, str]]],
+) -> html.Div:
+    """Renders a row in the multidropdown component."""
     return html.Div(
         [
             ssb.Dropdown(
