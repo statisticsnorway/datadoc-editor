@@ -223,7 +223,6 @@ def accept_dataset_metadata_input(
     value: MetadataInputTypes | model.LanguageStringType,
     metadata_identifier: str,
     language: str | None = None,
-    index: str | None = None,
 ) -> tuple[bool, str]:
     """Handle user inputs of dataset metadata values."""
     logger.debug(
@@ -232,7 +231,7 @@ def accept_dataset_metadata_input(
         metadata_identifier,
     )
     try:
-        value = process_special_cases(value, metadata_identifier, language, index)
+        value = process_special_cases(value, metadata_identifier, language)
         # Update the value in the model
         setattr(
             state.metadata.dataset,
