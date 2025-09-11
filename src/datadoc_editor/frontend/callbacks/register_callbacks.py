@@ -280,17 +280,10 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915 TODO: Jorgen-5, we s
         prevent_initial_call=True,
     )
     def update_use_restrictions(add_clicks: int, current_list: list):  # noqa: ANN202, ARG001
-        triggered = ctx.triggered_id
-
-        if triggered is None:
-            return current_list
-
-        if triggered == "add-use-restriction-button":
+        if ctx.triggered_id == "add-use-restriction-button":
             current_list.append(
                 {"use_restriction_type": None, "use_restriction_date": None}
             )
-            return current_list
-
         return current_list
 
     @app.callback(
