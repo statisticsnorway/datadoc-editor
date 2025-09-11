@@ -329,7 +329,7 @@ def render_multidropdown_row(
                 header=field.type_display_name,
                 items=options,
                 placeholder=DROPDOWN_DESELECT_OPTION,
-                value=item["use_restriction_date"],
+                value=item["use_restriction_type"],
                 id=dropdown_id,
                 className="dropdown-component",
                 showDescription=True,
