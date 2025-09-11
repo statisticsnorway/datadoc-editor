@@ -22,6 +22,7 @@ from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_in
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_multidropdown_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
 from datadoc_editor.frontend.callbacks.dataset import process_special_cases
+from datadoc_editor.frontend.callbacks.utils import MultidropdownInputTypes
 from datadoc_editor.frontend.callbacks.utils import dataset_control
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
@@ -209,7 +210,7 @@ def test_accept_dataset_metadata_input_valid_data(
 )
 def test_accept_dataset_multidropdown_input_valid_data(
     metadata_identifier: DatasetIdentifiers,
-    provided_value: MetadataInputTypes,
+    provided_value: MultidropdownInputTypes,
     expected_model_value: str,
     field: str,
     metadata: Datadoc,
