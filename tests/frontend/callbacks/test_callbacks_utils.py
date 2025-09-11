@@ -12,6 +12,7 @@ from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.utils import check_variable_names
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
+from datadoc_editor.frontend.callbacks.utils import render_multidropdown_row
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
 from datadoc_editor.frontend.callbacks.utils import update_use_restriction_date
@@ -79,6 +80,27 @@ def test_render_tabs(tab: str, identifier: str):
     result = render_tabs(tab)
     assert isinstance(result, html.Article)
     assert result.children[-1].id == identifier
+
+
+def test_render_multidropdown_row_simple():
+    row = render_multidropdown_row(
+        {
+            "use_restriction_type": "DELETION_ANONYMIZATION",
+            "use_restriction_date": "2025-09-11",
+        },
+        {"component": "dropdown_test"},
+        {"component": "date_test"},
+        lambda: [{"label": "Option", "value": "option"}],
+    )
+
+    assert isinstance(row, html.Div)
+    dropdown, date_input = row.children
+
+    assert dropdown.value == "DELETION_ANONYMIZATION"
+    assert dropdown.id == {"component": "dropdown_test"}
+
+    assert date_input.value == "2025-09-11"
+    assert date_input.id == {"component": "date_test"}
 
 
 def test_save_and_generate_alerts():

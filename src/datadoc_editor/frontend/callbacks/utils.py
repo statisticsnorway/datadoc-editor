@@ -8,6 +8,7 @@ import logging
 import re
 import warnings
 from typing import TYPE_CHECKING
+from typing import cast
 
 import arrow
 import ssb_dash_components as ssb
@@ -33,10 +34,12 @@ from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
+from datadoc_editor.frontend.fields.display_base import MetadataMultiDropdownField
 from datadoc_editor.frontend.fields.display_dataset import DISPLAY_DATASET
 from datadoc_editor.frontend.fields.display_dataset import (
     OBLIGATORY_DATASET_METADATA_IDENTIFIERS_AND_DISPLAY_NAME,
 )
+from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PSEUDONYMIZATION_DEAD_METADATA,
 )
@@ -309,32 +312,37 @@ def render_tabs(tab: str) -> html.Article | None:
 
 
 def render_multidropdown_row(
-    item: model.UseRestrictionItem,
+    item: dict,
     dropdown_id: dict[str, str | int],
     date_id: dict[str, str | int],
     options: Callable[[], list[dict[str, str]]],
 ) -> html.Div:
     """Renders a row in the multidropdown component."""
+    field = cast(
+        "MetadataMultiDropdownField",
+        DISPLAY_DATASET[DatasetIdentifiers.USE_RESTRICTIONS],
+    )
+
     return html.Div(
         [
             ssb.Dropdown(
-                header=DISPLAY_DATASET["use_restrictions"].type_display_name,
+                header=field.type_display_name,
                 items=options,
                 placeholder=DROPDOWN_DESELECT_OPTION,
-                value=item.get("use_restriction_type"),
+                value=item["use_restriction_date"],
                 id=dropdown_id,
                 className="dropdown-component",
                 showDescription=True,
-                description=DISPLAY_DATASET["use_restrictions"].type_description,
+                description=field.type_description,
             ),
             ssb.Input(
-                label=DISPLAY_DATASET["use_restrictions"].date_display_name,
-                value=item.get("use_restriction_date"),
+                label=field.date_display_name,
+                value=item["use_restriction_date"],
                 id=date_id,
                 className="input-component",
                 type="date",
                 showDescription=True,
-                description=DISPLAY_DATASET["use_restrictions"].date_description,
+                description=field.date_description,
             ),
         ],
         className="input-group-row",
