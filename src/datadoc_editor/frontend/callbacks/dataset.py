@@ -171,7 +171,6 @@ def process_special_cases(
     value: MetadataInputTypes | model.LanguageStringType,
     metadata_identifier: str,
     language: str | None = None,
-    index: str | None = None,
 ) -> MetadataInputTypes | model.LanguageStringType:
     """Pre-process metadata where needed.
 
@@ -278,8 +277,6 @@ def accept_dataset_multidropdown_input(
             updated_multidropdown_list = update_use_restriction_date(
                 state.metadata.dataset, updated_value, metadata_identifier, index
             )
-        else:
-            raise ValueError("Input field must be either type or date")
         setattr(
             state.metadata.dataset,
             metadata_identifier,

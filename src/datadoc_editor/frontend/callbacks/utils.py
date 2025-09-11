@@ -172,6 +172,7 @@ def update_use_restriction_date(
     metadata_identifier: str,
     index: int,
 ) -> list[model.UseRestrictionItem]:
+    """Updates the date filed on the in the multidropdown component."""
     items: list[model.UseRestrictionItem] = (
         getattr(metadata_model_object, metadata_identifier, []) or []
     )
