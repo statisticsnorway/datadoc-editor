@@ -299,9 +299,8 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915 TODO: Jorgen-5, we s
     ):
         items = []
         for i, item in enumerate(current_list):
-            dropdown_id = {**idx, "index": i}
-            date_id = {**idx, "index": i, "field": "date"}
-            items.append(render_multidropdown_row(item, dropdown_id, date_id, options))
+            row_id = {**idx, "index": i}
+            items.append(render_multidropdown_row(item, row_id, options))
         return items
 
     @app.callback(

@@ -394,7 +394,7 @@ class MetadataMultiDropdownField(DisplayMetadata):
             for i in use_restrictions
         ]
 
-        idx = {"type": self.id_type, "id": component_id["id"], "field": "type"}
+        idx = {"type": self.id_type, "id": component_id["id"]}
 
         children = [
             ssb.Glossary(
