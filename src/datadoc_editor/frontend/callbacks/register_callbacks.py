@@ -77,7 +77,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def register_callbacks(app: Dash) -> None:
+def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
     """Define and register callbacks."""
 
     @app.callback(
