@@ -22,6 +22,7 @@ from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_in
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_multidropdown_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
 from datadoc_editor.frontend.callbacks.dataset import process_special_cases
+from datadoc_editor.frontend.callbacks.dataset import remove_dataset_multidropdown_input
 from datadoc_editor.frontend.callbacks.utils import MultidropdownInputTypes
 from datadoc_editor.frontend.callbacks.utils import dataset_control
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
@@ -225,6 +226,120 @@ def test_accept_dataset_multidropdown_input_valid_data(
         getattr(state.metadata.dataset, metadata_identifier.value)
         == expected_model_value
     )
+
+
+@pytest.mark.parametrize(
+    ("initial_list", "index_to_remove", "expected_list"),
+    [
+        (
+            [
+                model.UseRestrictionItem(
+                    use_restriction_type=enums.UseRestrictionType.PROCESS_LIMITATIONS.value,
+                    use_restriction_date=None,
+                )
+            ],
+            10,
+            [
+                model.UseRestrictionItem(
+                    use_restriction_type=enums.UseRestrictionType.PROCESS_LIMITATIONS.value,
+                    use_restriction_date=None,
+                )
+            ],
+        ),
+        (
+            [
+                model.UseRestrictionItem(
+                    use_restriction_type=enums.UseRestrictionType.DELETION_ANONYMIZATION.value,
+                    use_restriction_date=datetime.date(2025, 9, 1),
+                ),
+                model.UseRestrictionItem(
+                    use_restriction_type=enums.UseRestrictionType.PROCESS_LIMITATIONS.value,
+                    use_restriction_date=datetime.date(2023, 9, 1),
+                ),
+                model.UseRestrictionItem(
+                    use_restriction_type=enums.UseRestrictionType.DELETION_ANONYMIZATION.value,
+                    use_restriction_date=datetime.date(2022, 9, 1),
+                ),
+            ],
+            1,
+            [
+                model.UseRestrictionItem(
+                    use_restriction_type=enums.UseRestrictionType.DELETION_ANONYMIZATION.value,
+                    use_restriction_date=datetime.date(2025, 9, 1),
+                ),
+                model.UseRestrictionItem(
+                    use_restriction_type=enums.UseRestrictionType.DELETION_ANONYMIZATION.value,
+                    use_restriction_date=datetime.date(2022, 9, 1),
+                ),
+            ],
+        ),
+        ([], 0, []),
+        (None, 0, None),
+        (
+            [
+                model.UseRestrictionItem(
+                    use_restriction_type=enums.UseRestrictionType.DELETION_ANONYMIZATION.value,
+                    use_restriction_date=None,
+                )
+            ],
+            -1,
+            [
+                model.UseRestrictionItem(
+                    use_restriction_type=enums.UseRestrictionType.DELETION_ANONYMIZATION.value,
+                    use_restriction_date=None,
+                )
+            ],
+        ),
+        (
+            [
+                model.UseRestrictionItem(
+                    use_restriction_type=enums.UseRestrictionType.DELETION_ANONYMIZATION.value,
+                    use_restriction_date=None,
+                ),
+                model.UseRestrictionItem(
+                    use_restriction_type=enums.UseRestrictionType.PROCESS_LIMITATIONS.value,
+                    use_restriction_date=None,
+                ),
+            ],
+            0,
+            [
+                model.UseRestrictionItem(
+                    use_restriction_type=enums.UseRestrictionType.PROCESS_LIMITATIONS.value,
+                    use_restriction_date=None,
+                ),
+            ],
+        ),
+        (
+            [
+                model.UseRestrictionItem(
+                    use_restriction_type=enums.UseRestrictionType.DELETION_ANONYMIZATION.value,
+                    use_restriction_date=None,
+                ),
+                model.UseRestrictionItem(
+                    use_restriction_type=enums.UseRestrictionType.PROCESS_LIMITATIONS.value,
+                    use_restriction_date=None,
+                ),
+            ],
+            1,
+            [
+                model.UseRestrictionItem(
+                    use_restriction_type=enums.UseRestrictionType.DELETION_ANONYMIZATION.value,
+                    use_restriction_date=None,
+                ),
+            ],
+        ),
+    ],
+)
+def test_remove_dataset_multidropdown_input_parametrized(
+    metadata: model.Datadoc, initial_list, index_to_remove, expected_list
+):
+    state.metadata = metadata
+    state.metadata.dataset.use_restrictions = initial_list
+    remove_dataset_multidropdown_input(
+        metadata_identifier="use_restrictions", index=index_to_remove
+    )
+    actual_list = state.metadata.dataset.use_restrictions
+    assert actual_list == expected_list
 
 
 def test_accept_dataset_metadata_input_incorrect_data_type(metadata: Datadoc):

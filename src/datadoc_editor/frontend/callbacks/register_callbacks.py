@@ -298,7 +298,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         add_clicks: int,  # noqa: ARG001
         delete_clicks: list[int],
         current_list: list[dict[str, Any]],
-        counter: list[int],
+        counter: int | None,
     ) -> tuple[list[dict[str, Any]], int]:
         """Handles additions to the multidropdown component and removals."""
         triggered = ctx.triggered_id

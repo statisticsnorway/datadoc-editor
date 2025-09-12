@@ -351,10 +351,8 @@ def render_multidropdown_row(
             ssb.Button("x", id=button_id),
         ],
         className="input-group-row",
+        key=key,
     )
-
-    if key:
-        row_component.key = key
     return row_component
 
 
