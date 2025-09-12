@@ -297,6 +297,34 @@ def accept_dataset_multidropdown_input(
     return show_error, error_explanation
 
 
+def remove_dataset_multidropdown_input(
+    metadata_identifier: str,
+    index: int,
+) -> tuple[bool, str]:
+    """Handle a row in the multidropdown component"""
+    # logger.debug(
+    #     "Removing row = %s for metadata_identifier = %s",
+    #     index,
+    #     metadata_identifier,
+    # )
+    try:
+        state.metadata.dataset.use_restrictions.pop(index)
+    except ValueError:
+        show_error = True
+        error_explanation = INVALID_VALUE
+        logger.exception("Error while reading in value for %s", metadata_identifier)
+    else:
+        show_error = False
+        error_explanation = ""
+        # logger.info(
+        #     "Updated dataset %s with value %s",
+        #     metadata_identifier,
+        #     updated_multidropdown_list,
+        # )
+
+    return show_error, error_explanation
+
+
 def accept_dataset_metadata_date_input(
     dataset_identifier: DatasetIdentifiers,
     contains_data_from: str | None,

@@ -9,12 +9,14 @@ import logging
 from typing import TYPE_CHECKING
 from typing import Any
 
+from dash import ALL
 from dash import MATCH
 from dash import Dash
 from dash import Input
 from dash import Output
 from dash import State
 from dash import ctx
+from dash import exceptions
 from dash import html
 from dash import no_update
 
@@ -24,6 +26,7 @@ from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_da
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_multidropdown_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
+from datadoc_editor.frontend.callbacks.dataset import remove_dataset_multidropdown_input
 from datadoc_editor.frontend.callbacks.utils import render_multidropdown_row
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
@@ -39,7 +42,6 @@ from datadoc_editor.frontend.callbacks.variables import populate_variables_works
 from datadoc_editor.frontend.components.builders import build_dataset_edit_section
 from datadoc_editor.frontend.components.builders import build_dataset_machine_section
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
-from datadoc_editor.frontend.components.identifiers import ADD_USE_RESTRICTION_BUTTON
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
 from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
@@ -75,7 +77,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def register_callbacks(app: Dash) -> None:  # noqa: PLR0915 TODO: Jorgen-5, we should split this up after the tasks are finished
+def register_callbacks(app: Dash) -> None:
     """Define and register callbacks."""
 
     @app.callback(
@@ -274,33 +276,75 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915 TODO: Jorgen-5, we s
         )
 
     @app.callback(
-        Output("use-restriction-store", "data"),
-        Input(ADD_USE_RESTRICTION_BUTTON, "n_clicks"),
+        [
+            Output("use-restriction-store", "data"),
+            Output("force-rerender-counter", "data"),
+        ],
+        Input("add-use-restriction-button", "n_clicks"),
+        Input(
+            {
+                "type": DATASET_METADATA_MULTIDROPDOWN_INPUT,
+                "id": ALL,
+                "index": ALL,
+                "field": "delete",
+            },
+            "n_clicks",
+        ),
         State("use-restriction-store", "data"),
+        State("force-rerender-counter", "data"),
         prevent_initial_call=True,
     )
-    def update_use_restrictions(add_clicks: int, current_list: list):  # noqa: ANN202, ARG001
-        if ctx.triggered_id == ADD_USE_RESTRICTION_BUTTON:
+    def handle_add_and_delete(
+        add_clicks: int,
+        delete_clicks: list[int],
+        current_list: list[dict[str, Any]],
+        counter: list[int],
+    ) -> tuple[list[dict[str, Any]], int]:
+        """Handles additions to the multidropdown component and removals."""
+        triggered = ctx.triggered_id
+        new_counter = (counter or 0) + 1
+
+        if triggered == "add-use-restriction-button":
             current_list.append(
                 {"use_restriction_type": None, "use_restriction_date": None}
             )
-        return current_list
+
+        elif isinstance(triggered, dict) and triggered.get("field") == "delete":
+            row_index = triggered["index"]
+            if all(dc is None for dc in delete_clicks):
+                raise exceptions.PreventUpdate
+            if 0 <= row_index < len(current_list):
+                remove_dataset_multidropdown_input(
+                    DATASET_METADATA_MULTIDROPDOWN_INPUT, row_index
+                )
+                current_list.pop(row_index)
+
+        return current_list, new_counter
 
     @app.callback(
         Output("use-restriction-list-container", "children"),
         Input("use-restriction-store", "data"),
         Input("use-restriction-options-store", "data"),
         Input("use-restriction-id-store", "data"),
+        Input("force-rerender-counter", "data"),
     )
-    def render_use_restriction_list(  # noqa: ANN202
+    def render_use_restriction_list(
         current_list: list,
         options: Callable[[], list[dict[str, str]]],
         idx: dict[str, str | int],
-    ):
+        rerender_counter: int,
+    ) -> list:
+        if not current_list:
+            return []
+
         items = []
         for i, item in enumerate(current_list):
             row_id = {**idx, "index": i}
-            items.append(render_multidropdown_row(item, row_id, options))
+            items.append(
+                render_multidropdown_row(
+                    item, row_id, options, key=f"{rerender_counter}-{i}"
+                )
+            )
         return items
 
     @app.callback(

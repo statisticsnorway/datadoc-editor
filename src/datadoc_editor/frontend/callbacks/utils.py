@@ -315,6 +315,7 @@ def render_multidropdown_row(
     item: dict,
     row_id: dict[str, str | int],
     options: Callable[[], list[dict[str, str]]],
+    key: str | None = None,
 ) -> html.Div:
     """Renders a row in the multidropdown component."""
     field = cast(
@@ -324,9 +325,9 @@ def render_multidropdown_row(
 
     dropdown_id = {**row_id, "field": "type"}
     date_id = {**row_id, "field": "date"}
-    # button_id = {**row_id, "field": "delete"}
+    button_id = {**row_id, "field": "delete"}
 
-    return html.Div(
+    row_component = html.Div(
         [
             ssb.Dropdown(
                 header=field.type_display_name,
@@ -347,9 +348,14 @@ def render_multidropdown_row(
                 showDescription=True,
                 description=field.date_description,
             ),
+            ssb.Button("x", id=button_id),
         ],
         className="input-group-row",
     )
+
+    if key:
+        row_component.key = key
+    return row_component
 
 
 def _has_exact_word(word: str, text: str) -> bool:
