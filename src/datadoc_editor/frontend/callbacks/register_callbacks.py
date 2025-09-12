@@ -295,7 +295,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         prevent_initial_call=True,
     )
     def handle_add_and_delete(
-        add_clicks: int,
+        add_clicks: int,  # noqa: ARG001
         delete_clicks: list[int],
         current_list: list[dict[str, Any]],
         counter: list[int],
