@@ -331,7 +331,10 @@ def test_accept_dataset_multidropdown_input_valid_data(
     ],
 )
 def test_remove_dataset_multidropdown_input_parametrized(
-    metadata: Datadoc, initial_list, index_to_remove, expected_list
+    metadata: Datadoc,
+    initial_list: list[model.UseRestrictionItem],
+    index_to_remove: int,
+    expected_list: list[model.UseRestrictionItem],
 ):
     state.metadata = metadata
     state.metadata.dataset.use_restrictions = initial_list
