@@ -88,19 +88,21 @@ def test_render_multidropdown_row_simple():
             "use_restriction_type": "DELETION_ANONYMIZATION",
             "use_restriction_date": "2025-09-11",
         },
-        {"component": "dropdown_test"},
-        {"component": "date_test"},
+        {"component": "row_test"},
         lambda: [{"label": "Option", "value": "option"}],
+        key="",
     )
 
     assert isinstance(row, html.Div)
-    dropdown, date_input = row.children
+    dropdown, date_input, button = row.children
 
     assert dropdown.value == "DELETION_ANONYMIZATION"
-    assert dropdown.id == {"component": "dropdown_test"}
+    assert dropdown.id == {"component": "row_test", "field": "type"}
 
     assert date_input.value == "2025-09-11"
-    assert date_input.id == {"component": "date_test"}
+    assert date_input.id == {"component": "row_test", "field": "date"}
+
+    assert button.id == {"component": "row_test", "field": "delete"}
 
 
 def test_save_and_generate_alerts():

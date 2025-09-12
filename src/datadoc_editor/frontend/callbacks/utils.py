@@ -313,15 +313,19 @@ def render_tabs(tab: str) -> html.Article | None:
 
 def render_multidropdown_row(
     item: dict,
-    dropdown_id: dict[str, str | int],
-    date_id: dict[str, str | int],
+    row_id: dict[str, str | int],
     options: Callable[[], list[dict[str, str]]],
+    key: str | None = None,
 ) -> html.Div:
     """Renders a row in the multidropdown component."""
     field = cast(
         "MetadataMultiDropdownField",
         DISPLAY_DATASET[DatasetIdentifiers.USE_RESTRICTIONS],
     )
+
+    dropdown_id = {**row_id, "field": "type"}
+    date_id = {**row_id, "field": "date"}
+    button_id = {**row_id, "field": "delete"}
 
     return html.Div(
         [
@@ -344,8 +348,10 @@ def render_multidropdown_row(
                 showDescription=True,
                 description=field.date_description,
             ),
+            ssb.Button("x", id=button_id),
         ],
         className="input-group-row",
+        key=key,
     )
 
 

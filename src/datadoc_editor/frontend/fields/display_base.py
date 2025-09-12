@@ -401,7 +401,7 @@ class MetadataMultiDropdownField(DisplayMetadata):
             for i in use_restrictions
         ]
 
-        idx = {"type": self.id_type, "id": component_id["id"], "field": "type"}
+        idx = {"type": self.id_type, "id": component_id["id"]}
 
         children = [
             ssb.Glossary(
@@ -415,6 +415,7 @@ class MetadataMultiDropdownField(DisplayMetadata):
             dcc.Store(id="use-restriction-store", data=initial_data),
             dcc.Store(id="use-restriction-options-store", data=self.options_getter()),
             dcc.Store(id="use-restriction-id-store", data=idx),
+            dcc.Store(id="force-rerender-counter", data=0),
             ssb.Button("Legg til bruksretriksjon", id="add-use-restriction-button"),
         ]
 
