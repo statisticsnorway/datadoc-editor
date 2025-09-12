@@ -327,7 +327,7 @@ def render_multidropdown_row(
     date_id = {**row_id, "field": "date"}
     button_id = {**row_id, "field": "delete"}
 
-    row_component = html.Div(
+    return html.Div(
         [
             ssb.Dropdown(
                 header=field.type_display_name,
@@ -353,7 +353,6 @@ def render_multidropdown_row(
         className="input-group-row",
         key=key,
     )
-    return row_component
 
 
 def _has_exact_word(word: str, text: str) -> bool:
