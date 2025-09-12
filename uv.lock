@@ -2061,10 +2061,14 @@ wheels = [
 
 [[package]]
 name = "ssb-dash-components"
-version = "0.10.0"
-source = { git = "https://github.com/statisticsnorway/ssb-dash-components.git#f249959f6d3c381f6cbdbdda1dd745e45d05f2c7" }
+version = "0.11.0"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "dash" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6c/44/d10dac8062dc9e1c8ec075d7a786fd980204785da6109a69fe59cbe5d831/ssb_dash_components-0.11.0.tar.gz", hash = "sha256:2f27d26ad8c42a932ec96e17e8ceef637e6f6c0cd1cbd9839590a863766a3be4", size = 118568, upload-time = "2025-09-12T13:29:53.59Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e7/08/d8a8210e08507f824c9f62069d02903ca927583e8378a86c3ebe4f959c8f/ssb_dash_components-0.11.0-py3-none-any.whl", hash = "sha256:d15b523a6da9eccd1c1aae6ba5cd43c004345137711a6931bb4bda582ca064fb", size = 134971, upload-time = "2025-09-12T13:29:52.077Z" },
 ]
 
 [[package]]
@@ -2125,7 +2129,7 @@ requires-dist = [
     { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "pydantic", specifier = ">=2.5.2" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
-    { name = "ssb-dash-components", git = "https://github.com/statisticsnorway/ssb-dash-components.git" },
+    { name = "ssb-dash-components", specifier = ">=0.11.0" },
 ]
 
 [package.metadata.requires-dev]
