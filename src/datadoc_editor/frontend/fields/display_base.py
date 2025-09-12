@@ -187,6 +187,7 @@ class MetadataInputField(DisplayMetadata):
             readOnly=not self.editable,
             value=self.value_getter(metadata, self.identifier),
             className="input-component",
+            required=self.obligatory and self.editable,
         )
 
 
@@ -212,6 +213,7 @@ class MetadataDropdownField(DisplayMetadata):
             className="dropdown-component",
             showDescription=True,
             description=self.description,
+            required=self.obligatory and self.editable,
         )
 
 
@@ -236,6 +238,7 @@ class MetadataDateField(DisplayMetadata):
             description=self.description,
             value=get_metadata_and_stringify(metadata, self.identifier),
             className="input-component",
+            required=self.obligatory and self.editable,
         )
 
 
@@ -266,6 +269,7 @@ class MetadataPeriodField(DisplayMetadata):
             description=self.description,
             value=get_metadata_and_stringify(metadata, self.identifier),
             className="input-component",
+            required=self.obligatory and self.editable,
         )
 
 
@@ -345,7 +349,10 @@ class MetadataMultiLanguageField(DisplayMetadata):
                             html.Legend(
                                 self.display_name,
                                 className="multilanguage-legend",
-                            )
+                            ),
+                            ssb.RequiredAsterisk()
+                            if self.obligatory and self.editable
+                            else None,
                         ),
                         explanation=self.description,
                         className="legend-glossary",
@@ -433,6 +440,7 @@ class MetadataCheckboxField(DisplayMetadata):
             showDescription=True,
             description=self.description,
             className="metadata-checkbox-field",
+            required=self.obligatory and self.editable,
         )
 
 

@@ -77,6 +77,9 @@ pythonpath = ["src/datadoc_editor"]
 [tool.uv]
 required-version = ">=0.6.17"
 
+[tool.uv.sources]
+ssb-dash-components = { git = "https://github.com/statisticsnorway/ssb-dash-components.git", branch = "dpmeta-1067-show-obligatory-fields" }
+
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
 tests = ["tests", "*/tests"]
