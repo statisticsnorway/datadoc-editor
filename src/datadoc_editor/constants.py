@@ -10,6 +10,6 @@ ILLEGAL_SHORTNAME_WARNING = (
 )
 ILLEGAL_SHORTNAME_WARNING_MESSAGE = "Følgende navnestandard er utarbeidet for variabler: Alfanumerisk begrenset til a-z (kun små bokstaver), 0-9 og _ (understrek). Kortnavn som ikke følger standarden:"
 
-STANDARD_ALGORITM_DAPLA_ENCRYPTION = "TINK-DAED"
+STANDARD_ALGORITM_DAPLA_ENCRYPTION = "TINK-DAEAD"
 PAPIS_ALGORITHM_ENCRYPTION = "TINK-FPE"
 PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE = "FREG_SNR"
