@@ -184,7 +184,7 @@ def test_legal_shortname(shortname: str):
         (
             model.Variable(
                 pseudonymization=model.Pseudonymization(
-                    encryption_algorithm="TINK-DAED",
+                    encryption_algorithm="TINK-DAEAD",
                 ),
             ),
             PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
