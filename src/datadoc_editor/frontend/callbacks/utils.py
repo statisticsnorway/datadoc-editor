@@ -590,3 +590,34 @@ def map_dropdown_to_pseudo(
             case _:
                 return PseudonymizationAlgorithmsEnum.CUSTOM
     return None
+
+
+def apply_pseudonymization(
+    short_name, selected_algorithm: PseudonymizationAlgorithmsEnum
+) -> None:
+    """Set value."""
+    match selected_algorithm:
+        case PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID:
+            state.metadata.add_pseudonymization(
+                short_name,
+                model.Pseudonymization(
+                    encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION
+                ),
+            )
+        case PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID:
+            state.metadata.add_pseudonymization(
+                short_name,
+                model.Pseudonymization(
+                    encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION,
+                    stable_identifier_type=constants.PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE,
+                ),
+            )
+        case PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA:
+            state.metadata.add_pseudonymization(
+                short_name,
+                model.Pseudonymization(
+                    encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION
+                ),
+            )
+        case PseudonymizationAlgorithmsEnum.CUSTOM:
+            state.metadata.add_pseudonymization(short_name)
