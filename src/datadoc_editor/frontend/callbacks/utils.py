@@ -593,9 +593,9 @@ def map_dropdown_to_pseudo(
 
 
 def apply_pseudonymization(
-    short_name, selected_algorithm: PseudonymizationAlgorithmsEnum
+    short_name: str, selected_algorithm: PseudonymizationAlgorithmsEnum
 ) -> None:
-    """Set value."""
+    """Apply pseudonymization value based on selected algorithm."""
     match selected_algorithm:
         case PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID:
             state.metadata.add_pseudonymization(
