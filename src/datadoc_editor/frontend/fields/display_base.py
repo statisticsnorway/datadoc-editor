@@ -350,9 +350,6 @@ class MetadataMultiLanguageField(DisplayMetadata):
                                 self.display_name,
                                 className="multilanguage-legend",
                             ),
-                            ssb.RequiredAsterisk()
-                            if self.obligatory and self.editable
-                            else None,
                         ),
                         explanation=self.description,
                         className="legend-glossary",
