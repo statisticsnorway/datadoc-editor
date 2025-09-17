@@ -6,8 +6,12 @@ import logging
 import urllib.parse
 from typing import TYPE_CHECKING
 
+from dapla_metadata.datasets import model
+
 from datadoc_editor import state
+from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
+from datadoc_editor.frontend.callbacks.utils import apply_pseudonymization
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
 from datadoc_editor.frontend.callbacks.utils import (
@@ -387,7 +391,7 @@ def populate_pseudo_workspace(
         )
 
     if variable.short_name and selected_algorithm and variable.pseudonymization is None:
-        state.metadata.add_pseudonymization(variable.short_name)
+        apply_pseudonymization(variable.short_name, selected_algorithm)
         logger.info("Added pseudonymization for %s", variable.short_name)
 
     if variable.pseudonymization is None:
