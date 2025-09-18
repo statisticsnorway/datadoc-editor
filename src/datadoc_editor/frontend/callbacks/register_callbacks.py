@@ -16,7 +16,6 @@ from dash import Input
 from dash import Output
 from dash import State
 from dash import ctx
-from dash import exceptions
 from dash import html
 from dash import no_update
 
@@ -284,50 +283,73 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         )
 
     @app.callback(
+        [Output(USE_RESTRICTION_STORE, "data"), Output(FORCE_RERENDER_COUNTER, "data")],
         [
-            Output(USE_RESTRICTION_STORE, "data"),
-            Output(FORCE_RERENDER_COUNTER, "data"),
+            Input(ADD_USE_RESTRICTION_BUTTON, "n_clicks"),
+            Input(
+                {
+                    "type": DATASET_METADATA_MULTIDROPDOWN_INPUT,
+                    "id": ALL,
+                    "index": ALL,
+                    "field": "type",
+                },
+                "value",
+            ),
+            Input(
+                {
+                    "type": DATASET_METADATA_MULTIDROPDOWN_INPUT,
+                    "id": ALL,
+                    "index": ALL,
+                    "field": "date",
+                },
+                "date",
+            ),
+            Input(
+                {
+                    "type": DATASET_METADATA_MULTIDROPDOWN_INPUT,
+                    "id": ALL,
+                    "index": ALL,
+                    "field": "delete",
+                },
+                "n_clicks",
+            ),
         ],
-        Input(ADD_USE_RESTRICTION_BUTTON, "n_clicks"),
-        Input(
-            {
-                "type": DATASET_METADATA_MULTIDROPDOWN_INPUT,
-                "id": ALL,
-                "index": ALL,
-                "field": "delete",
-            },
-            "n_clicks",
-        ),
-        State(USE_RESTRICTION_STORE, "data"),
-        State(FORCE_RERENDER_COUNTER, "data"),
+        [State(USE_RESTRICTION_STORE, "data"), State(FORCE_RERENDER_COUNTER, "data")],
         prevent_initial_call=True,
     )
     def handle_add_and_delete(
-        add_clicks: int,  # noqa: ARG001
+        add_clicks: int,
+        type_values: list[str],
+        date_values: list[str],
         delete_clicks: list[int],
-        current_list: list[dict[str, Any]],
-        counter: int | None,
-    ) -> tuple[list[dict[str, Any]], int]:
-        """Handles additions to the multidropdown component and removals."""
+        store_data: list | None,
+        counter: int,
+    ):
         triggered = ctx.triggered_id
-        new_counter = (counter or 0) + 1
+        counter = counter + 1
+        store_data = store_data or []
+
+        if type_values and date_values:
+            for item, type_val, date_val in zip(
+                store_data, type_values, date_values, strict=False
+            ):
+                item["use_restriction_type"] = type_val
+                item["use_restriction_date"] = date_val
 
         if triggered == ADD_USE_RESTRICTION_BUTTON:
-            current_list.append(
+            store_data.append(
                 {"use_restriction_type": None, "use_restriction_date": None}
             )
 
         elif isinstance(triggered, dict) and triggered.get("field") == "delete":
-            row_index = triggered["index"]
-            if all(dc is None for dc in delete_clicks):
-                raise exceptions.PreventUpdate
-            if 0 <= row_index < len(current_list):
+            idx = triggered.get("index")
+            if isinstance(idx, int) and 0 <= idx < len(store_data):
                 remove_dataset_multidropdown_input(
-                    DATASET_METADATA_MULTIDROPDOWN_INPUT, row_index
+                    DATASET_METADATA_MULTIDROPDOWN_INPUT, idx
                 )
-                current_list.pop(row_index)
+                store_data.pop(idx)
 
-        return current_list, new_counter
+        return store_data, counter
 
     @app.callback(
         Output(USE_RESTRICTION_LIST_CONTAINER, "children"),
