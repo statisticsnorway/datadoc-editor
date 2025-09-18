@@ -667,14 +667,29 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
             ),
         ),
         (
+            PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME,
+            "",
+            None,
+        ),
+        (
+            PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME,
+            None,
+            None,
+        ),
+        (
+            PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION,
+            "stable identifier ",
+            "stable identifier",
+        ),
+        (
             PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION,
             "stable identifier ",
             "stable identifier",
         ),
         (
             PseudoVariableIdentifiers.STABLE_IDENTIFIER_TYPE,
-            "  stable identifier type",
-            "stable identifier type",
+            "",
+            None,
         ),
         (
             PseudoVariableIdentifiers.ENCRYPTION_ALGORITHM,
@@ -691,7 +706,7 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
 def test_accept_pseudo_variable_metadata_input_valid(
     metadata: Datadoc,
     metadata_field: PseudoVariableIdentifiers,
-    value: MetadataInputTypes,
+    value: str| datetime.datetime | None,
     expected_model_value: Any,  # noqa: ANN401
 ):
     state.metadata = metadata
@@ -784,6 +799,7 @@ def test_populate_pseudonymization_workspace(
     state.metadata = metadata
     first_var_short_name = metadata.variables[0].short_name
     variable = state.metadata.variables_lookup.get(first_var_short_name)
+    assert variable is not None
     pseudonymization_workspace = populate_pseudo_workspace(
         variable, case.selected_algorithm
     )

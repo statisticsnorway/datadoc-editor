@@ -661,7 +661,7 @@ def parse_and_validate_pseudonymization_time(
         return None
     parsed_date = None
     try:
-        if pseudo_date != "None":
+        if pseudo_date:
             parsed_date = arrow.get(pseudo_date)
     except arrow.parser.ParserError as e:
         raise ValueError(VALIDATION_ERROR + str(e)) from e

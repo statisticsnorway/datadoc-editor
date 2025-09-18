@@ -184,7 +184,7 @@ def accept_variable_metadata_input(
 
 
 def accept_pseudo_variable_metadata_input(
-    value: MetadataInputTypes,
+    value: str | datetime.datetime | None,
     variable_short_name: str,
     metadata_field: str,
 ) -> str | None:
@@ -205,11 +205,19 @@ def accept_pseudo_variable_metadata_input(
         urllib.parse.unquote(variable_short_name)
     ].pseudonymization
     try:
-        if metadata_field == PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME and (isinstance(value, datetime.datetime) or isinstance(value, str)) :
+        parsed_value: str | datetime.datetime | None
+        if not value:
+            return None
+        if (
+            metadata_field == PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME
+            and isinstance(value, (datetime.datetime, str))
+        ):
             parsed_value = parse_and_validate_pseudonymization_time(value)
         else:
-            value = str(value)
-            parsed_value = value.strip()
+            if isinstance(value, str):
+                parsed_value = value.strip()
+            else:
+                parsed_value = value
         setattr(
             variable_pseudonymization,
             metadata_field,
