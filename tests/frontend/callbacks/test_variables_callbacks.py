@@ -649,8 +649,6 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
         == "Format value"
     )
 
-# parse time
-# parse string fields
 @pytest.mark.parametrize(
     ("metadata_field", "value", "expected_model_value"),
     [
