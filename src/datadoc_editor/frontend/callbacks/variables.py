@@ -414,16 +414,15 @@ def populate_pseudo_workspace(
         )
 
     if selected_algorithm and variable.pseudonymization is not None:
-        saved_algo = map_dropdown_to_pseudo(variable)
-        logger.info("enum saved %s", saved_algo)
-        logger.info("saved algorithme %s and new elected %s", variable.pseudonymization.encryption_algorithm, selected_algorithm)
-        if saved_algo != selected_algorithm:
+        saved_algorithm = map_dropdown_to_pseudo(variable)
+        logger.debug("Saved algorithm %s", saved_algorithm)
+        if saved_algorithm != selected_algorithm:
             state.metadata.remove_pseudonymization(
                 variable.short_name,
             )
-            logger.info("Removed pseudo for %s", variable.short_name)
+            logger.debug("Removed pseudonymization for %s", variable.short_name)
             apply_pseudonymization(variable.short_name, selected_algorithm)
-            logger.info("Added pseudonymization for %s", variable.short_name)
+            logger.info("Variable %s selected new pseudonymization. Previous: %s. New: %s", variable.short_name, saved_algorithm, selected_algorithm)
 
     if variable.short_name and selected_algorithm and variable.pseudonymization is None:
         apply_pseudonymization(variable.short_name, selected_algorithm)
