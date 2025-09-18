@@ -317,14 +317,14 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         [State(USE_RESTRICTION_STORE, "data"), State(FORCE_RERENDER_COUNTER, "data")],
         prevent_initial_call=True,
     )
-    def handle_add_and_delete(
-        add_clicks: int,
+    def handle_add_and_delete(  # noqa: PLR0913
+        add_clicks: int,  # noqa: ARG001
         type_values: list[str],
         date_values: list[str],
-        delete_clicks: list[int],
+        delete_clicks: list[int],  # noqa: ARG001
         store_data: list | None,
         counter: int,
-    ):
+    ) -> tuple[list, int]:
         triggered = ctx.triggered_id
         counter = counter + 1
         store_data = store_data or []
@@ -340,10 +340,9 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             store_data.append(
                 {"use_restriction_type": None, "use_restriction_date": None}
             )
-
-        elif isinstance(triggered, dict) and triggered.get("field") == "delete":
-            idx = triggered.get("index")
-            if isinstance(idx, int) and 0 <= idx < len(store_data):
+        elif triggered.get("field") == "delete":
+            idx = triggered["index"]
+            if 0 <= idx < len(store_data):
                 remove_dataset_multidropdown_input(
                     DATASET_METADATA_MULTIDROPDOWN_INPUT, idx
                 )
