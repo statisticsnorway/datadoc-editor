@@ -348,7 +348,7 @@ def render_multidropdown_row(
                 showDescription=True,
                 description=field.date_description,
             ),
-            ssb.Button("x", id=button_id),
+            html.Button("", id=button_id, className="multidropdown-delete-button"),
         ],
         className="input-group-row",
         key=key,

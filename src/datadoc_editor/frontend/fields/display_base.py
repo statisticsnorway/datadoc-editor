@@ -18,6 +18,7 @@ from dash import dcc
 from dash import html
 
 from datadoc_editor import state
+from datadoc_editor.frontend.components.identifiers import ADD_USE_RESTRICTION_BUTTON
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -409,7 +410,7 @@ class MetadataMultiDropdownField(DisplayMetadata):
             dcc.Store(id="use-restriction-options-store", data=self.options_getter()),
             dcc.Store(id="use-restriction-id-store", data=idx),
             dcc.Store(id="force-rerender-counter", data=0),
-            ssb.Button("Legg til bruksretriksjon", id="add-use-restriction-button"),
+            ssb.Button("Legg til bruksretriksjon", id=ADD_USE_RESTRICTION_BUTTON),
         ]
 
         return html.Fieldset(children=children, className="multidropdown-fieldset")

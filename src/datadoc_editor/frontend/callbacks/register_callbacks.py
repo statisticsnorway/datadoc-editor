@@ -42,6 +42,7 @@ from datadoc_editor.frontend.callbacks.variables import populate_variables_works
 from datadoc_editor.frontend.components.builders import build_dataset_edit_section
 from datadoc_editor.frontend.components.builders import build_dataset_machine_section
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
+from datadoc_editor.frontend.components.identifiers import ADD_USE_RESTRICTION_BUTTON
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
 from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
@@ -280,7 +281,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             Output("use-restriction-store", "data"),
             Output("force-rerender-counter", "data"),
         ],
-        Input("add-use-restriction-button", "n_clicks"),
+        Input(ADD_USE_RESTRICTION_BUTTON, "n_clicks"),
         Input(
             {
                 "type": DATASET_METADATA_MULTIDROPDOWN_INPUT,
@@ -304,7 +305,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         triggered = ctx.triggered_id
         new_counter = (counter or 0) + 1
 
-        if triggered == "add-use-restriction-button":
+        if triggered == ADD_USE_RESTRICTION_BUTTON:
             current_list.append(
                 {"use_restriction_type": None, "use_restriction_date": None}
             )
