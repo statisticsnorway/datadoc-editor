@@ -21,12 +21,11 @@ from dash import html
 from datadoc_editor import config
 from datadoc_editor import constants
 from datadoc_editor import state
-from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_DATASET_MESSAGE
+from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_DATASET_MESSAGE, PAPIS_STABLE_IDENTIFIER_TYPE
 from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_VARIABLES_MESSAGE
 from datadoc_editor.constants import ILLEGAL_SHORTNAME_WARNING
 from datadoc_editor.constants import ILLEGAL_SHORTNAME_WARNING_MESSAGE
 from datadoc_editor.constants import MISSING_METADATA_WARNING
-from datadoc_editor.constants import PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.components.builders import AlertTypes
 from datadoc_editor.frontend.components.builders import build_ssb_alert
@@ -579,7 +578,7 @@ def map_dropdown_to_pseudo(
             case constants.PAPIS_ALGORITHM_ENCRYPTION:
                 if (
                     variable.pseudonymization.stable_identifier_type
-                    == PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE
+                    == PAPIS_STABLE_IDENTIFIER_TYPE 
                 ):
                     return PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID
                 return PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID
@@ -620,7 +619,7 @@ def apply_pseudonymization(
                 short_name,
                 model.Pseudonymization(
                     encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION,
-                    stable_identifier_type=constants.PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE,
+                    stable_identifier_type=constants.PAPIS_STABLE_IDENTIFIER_TYPE,
                 ),
             )
         case PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA:

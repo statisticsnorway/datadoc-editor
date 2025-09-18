@@ -322,7 +322,7 @@ class PseudoCase:
         ),
         PseudoCase(
             selected_algorithm=enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
-            expected_stable_type=constants.PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE,
+            expected_stable_type=constants.PAPIS_STABLE_IDENTIFIER_TYPE,
             expected_encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION,
             expected_encryption_key_reference=constants.PAPIS_ENCRYPTION_KEY_REFERENCE,
             expected_algorithm_parameters=[
