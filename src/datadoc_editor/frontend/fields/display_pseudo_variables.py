@@ -1,12 +1,11 @@
 from enum import Enum
 
-from datadoc_editor.frontend.fields.display_base import FieldTypes
-from datadoc_editor.frontend.fields.display_base import MetadataDateField
+from datadoc_editor.frontend.fields.display_base import FieldTypes, MetadataDateTimeField
 from datadoc_editor.frontend.fields.display_base import MetadataInputField
 
 
 class PseudoVariableIdentifiers(str, Enum):
-    """Pseudo fileds."""
+    """Pseudo files."""
 
     PSEUDONYMIZATION_TIME = "pseudonymization_time"
     STABLE_IDENTIFIER_TYPE = "stable_identifier_type"
@@ -20,7 +19,7 @@ PSEUDO_FIELDS: dict[
     PseudoVariableIdentifiers,
     FieldTypes,
 ] = {
-    PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME: MetadataDateField(
+    PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME: MetadataDateTimeField(
         identifier=PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME.value,
         display_name="Pseudonymiseringstidspunkt",
         description="Tidspunktet datasettet ble pseudonymisert.",
