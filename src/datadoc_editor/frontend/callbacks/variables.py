@@ -412,7 +412,12 @@ def populate_pseudo_workspace(
         logger.debug(
             "Algorithm inferred for %s: %s", variable.short_name, selected_algorithm
         )
-
+        # active add default values if None?
+    if selected_algorithm is None:
+        state.metadata.remove_pseudonymization(
+                variable.short_name,
+        )
+        logger.debug("Removed pseudonymization for %s", variable.short_name)
     if selected_algorithm and variable.pseudonymization is not None:
         saved_algorithm = map_dropdown_to_pseudo(variable)
         logger.debug("Saved algorithm %s", saved_algorithm)
