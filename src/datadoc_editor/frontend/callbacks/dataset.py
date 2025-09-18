@@ -137,9 +137,9 @@ def open_dataset_handling(
                 dataset_opened_counter,
             )
         failed_items = [
-            item["name"]
+            item["name"] # type: ignore[index]
             for item in state.metadata.dataset_consistency_status or []
-            if not item["success"]
+            if not item["success"] # type: ignore[index]
         ]
         if failed_items:
             return (
