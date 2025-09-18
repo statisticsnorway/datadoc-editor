@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 
 from dapla_metadata.datasets import model
 
-from datadoc_editor import constants, state
+from datadoc_editor import state
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 from datadoc_editor.frontend.callbacks.utils import apply_pseudonymization
@@ -413,12 +413,12 @@ def populate_pseudo_workspace(
             "Algorithm inferred for %s: %s", variable.short_name, selected_algorithm
         )
         # active add default values if None?
-    if selected_algorithm is None:
+    if selected_algorithm is None and variable.short_name:
         state.metadata.remove_pseudonymization(
-                variable.short_name,
+            variable.short_name,
         )
         logger.debug("Removed pseudonymization for %s", variable.short_name)
-    if selected_algorithm and variable.pseudonymization is not None:
+    if selected_algorithm and variable.short_name and variable.pseudonymization is not None:
         saved_algorithm = map_dropdown_to_pseudo(variable)
         logger.debug("Saved algorithm %s", saved_algorithm)
         if saved_algorithm != selected_algorithm:
@@ -427,7 +427,12 @@ def populate_pseudo_workspace(
             )
             logger.debug("Removed pseudonymization for %s", variable.short_name)
             apply_pseudonymization(variable.short_name, selected_algorithm)
-            logger.info("Variable %s selected new pseudonymization. Previous: %s. New: %s", variable.short_name, saved_algorithm, selected_algorithm)
+            logger.info(
+                "Variable %s selected new pseudonymization. Previous: %s. New: %s",
+                variable.short_name,
+                saved_algorithm,
+                selected_algorithm,
+            )
 
     if variable.short_name and selected_algorithm and variable.pseudonymization is None:
         apply_pseudonymization(variable.short_name, selected_algorithm)
