@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 
 from dapla_metadata.datasets import model
 
-from datadoc_editor import state
+from datadoc_editor import constants, state
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 from datadoc_editor.frontend.callbacks.utils import apply_pseudonymization
@@ -412,6 +412,18 @@ def populate_pseudo_workspace(
         logger.debug(
             "Algorithm inferred for %s: %s", variable.short_name, selected_algorithm
         )
+
+    if selected_algorithm and variable.pseudonymization is not None:
+        saved_algo = map_dropdown_to_pseudo(variable)
+        logger.info("enum saved %s", saved_algo)
+        logger.info("saved algorithme %s and new elected %s", variable.pseudonymization.encryption_algorithm, selected_algorithm)
+        if saved_algo != selected_algorithm:
+            state.metadata.remove_pseudonymization(
+                variable.short_name,
+            )
+            logger.info("Removed pseudo for %s", variable.short_name)
+            apply_pseudonymization(variable.short_name, selected_algorithm)
+            logger.info("Added pseudonymization for %s", variable.short_name)
 
     if variable.short_name and selected_algorithm and variable.pseudonymization is None:
         apply_pseudonymization(variable.short_name, selected_algorithm)
