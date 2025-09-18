@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import datetime
 import warnings
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from typing import Any
 from uuid import UUID
@@ -21,12 +21,12 @@ from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.utils import variables_control
 from datadoc_editor.frontend.callbacks.variables import (
     accept_pseudo_variable_metadata_input,
-    populate_pseudo_workspace,
 )
 from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
 )
 from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
+from datadoc_editor.frontend.callbacks.variables import populate_pseudo_workspace
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
 from datadoc_editor.frontend.callbacks.variables import (
     set_variables_value_multilanguage_inherit_dataset_values,
@@ -649,6 +649,7 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
         == "Format value"
     )
 
+
 @pytest.mark.parametrize(
     ("metadata_field", "value", "expected_model_value"),
     [
@@ -714,52 +715,56 @@ def test_accept_pseudo_variable_metadata_input_valid(
         == expected_model_value
     )
 
+
 @dataclass
 class PseudoCase:
     selected_algorithm: enums.PseudonymizationAlgorithmsEnum | None
-    expected_workspace_type: dbc.Form | list 
-    expected_number_editable_inputs: int 
+    expected_workspace_type: dbc.Form | list
+    expected_number_editable_inputs: int
     expected_identifiers_in_workspace: list | None
     expected_variable_pseudonymization: bool
+
 
 @pytest.mark.parametrize(
     "case",
     [
         PseudoCase(
-            selected_algorithm = enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID,
+            selected_algorithm=enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID,
             expected_workspace_type=dbc.Form,
             expected_number_editable_inputs=1,
-            expected_identifiers_in_workspace= ["pseudonymization_time"],
-            expected_variable_pseudonymization=True
+            expected_identifiers_in_workspace=["pseudonymization_time"],
+            expected_variable_pseudonymization=True,
         ),
         PseudoCase(
-            selected_algorithm = enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
+            selected_algorithm=enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
             expected_workspace_type=dbc.Form,
             expected_number_editable_inputs=2,
-            expected_identifiers_in_workspace= ["pseudonymization_time", "stable_identifier_version"],
-            expected_variable_pseudonymization=True
+            expected_identifiers_in_workspace=[
+                "pseudonymization_time",
+                "stable_identifier_version",
+            ],
+            expected_variable_pseudonymization=True,
         ),
         PseudoCase(
-            selected_algorithm = enums.PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
+            selected_algorithm=enums.PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
             expected_workspace_type=dbc.Form,
             expected_number_editable_inputs=1,
-            expected_identifiers_in_workspace= ["pseudonymization_time"],
-            expected_variable_pseudonymization=True
+            expected_identifiers_in_workspace=["pseudonymization_time"],
+            expected_variable_pseudonymization=True,
         ),
         PseudoCase(
-            selected_algorithm = enums.PseudonymizationAlgorithmsEnum.CUSTOM,
+            selected_algorithm=enums.PseudonymizationAlgorithmsEnum.CUSTOM,
             expected_workspace_type=dbc.Form,
             expected_number_editable_inputs=5,
-            expected_identifiers_in_workspace= ["pseudonymization_time"],
-            expected_variable_pseudonymization=True
+            expected_identifiers_in_workspace=["pseudonymization_time"],
+            expected_variable_pseudonymization=True,
         ),
         PseudoCase(
-            selected_algorithm = None,
+            selected_algorithm=None,
             expected_workspace_type=list,
             expected_number_editable_inputs=0,
-            expected_identifiers_in_workspace= None,
-            expected_variable_pseudonymization=False
-            
+            expected_identifiers_in_workspace=None,
+            expected_variable_pseudonymization=False,
         ),
     ],
     ids=[
@@ -777,11 +782,16 @@ def test_populate_pseudonymization_workspace(
     state.metadata = metadata
     first_var_short_name = metadata.variables[0].short_name
     variable = state.metadata.variables_lookup.get(first_var_short_name)
-    pseudonymization_workspace = populate_pseudo_workspace(variable, case.selected_algorithm)
+    pseudonymization_workspace = populate_pseudo_workspace(
+        variable, case.selected_algorithm
+    )
     assert pseudonymization_workspace is not None
     assert isinstance(pseudonymization_workspace, case.expected_workspace_type)
     if case.expected_number_editable_inputs > 0:
-        assert len(pseudonymization_workspace.children) == case.expected_number_editable_inputs
+        assert (
+            len(pseudonymization_workspace.children)
+            == case.expected_number_editable_inputs
+        )
         ids = [child.id["id"] for child in pseudonymization_workspace.children]
         for id in case.expected_identifiers_in_workspace:
             assert id in ids
@@ -789,4 +799,3 @@ def test_populate_pseudonymization_workspace(
         assert variable.pseudonymization is not None
     else:
         assert variable.pseudonymization is None
-    

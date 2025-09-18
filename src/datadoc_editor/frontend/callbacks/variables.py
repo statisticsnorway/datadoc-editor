@@ -10,7 +10,7 @@ from dapla_metadata.datasets import model
 
 from datadoc_editor import state
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
-from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes, parse_and_validate_pseudonymization_time
+from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 from datadoc_editor.frontend.callbacks.utils import apply_pseudonymization
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
@@ -18,6 +18,9 @@ from datadoc_editor.frontend.callbacks.utils import (
     map_selected_algorithm_to_pseudo_fields,
 )
 from datadoc_editor.frontend.callbacks.utils import parse_and_validate_dates
+from datadoc_editor.frontend.callbacks.utils import (
+    parse_and_validate_pseudonymization_time,
+)
 from datadoc_editor.frontend.components.builders import build_edit_section
 from datadoc_editor.frontend.components.builders import build_pseudo_field_section
 from datadoc_editor.frontend.components.builders import build_ssb_accordion
@@ -28,7 +31,9 @@ from datadoc_editor.frontend.components.builders import (
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
-from datadoc_editor.frontend.fields.display_pseudo_variables import PseudoVariableIdentifiers
+from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    PseudoVariableIdentifiers,
+)
 from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
 from datadoc_editor.frontend.fields.display_variables import (
     MULTIPLE_LANGUAGE_VARIABLES_METADATA,
@@ -184,7 +189,7 @@ def accept_pseudo_variable_metadata_input(
 ) -> str | None:
     """Validate and save the value when a pseudo variable metadata is updated.
 
-    If metadata field is 'pseudonymization_time' date is parsed and validated, else value 
+    If metadata field is 'pseudonymization_time' date is parsed and validated, else value
     is stripped from all whitespace.
 
     Returns an error message if an exception was raised, otherwise returns None.

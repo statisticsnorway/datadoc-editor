@@ -1,6 +1,7 @@
 from enum import Enum
 
-from datadoc_editor.frontend.fields.display_base import FieldTypes, MetadataDateTimeField
+from datadoc_editor.frontend.fields.display_base import FieldTypes
+from datadoc_editor.frontend.fields.display_base import MetadataDateTimeField
 from datadoc_editor.frontend.fields.display_base import MetadataInputField
 
 

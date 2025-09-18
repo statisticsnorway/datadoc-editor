@@ -598,8 +598,8 @@ def apply_pseudonymization(
     """Apply a pseudonymization algorithm to a given variable and update metadata.
 
     Based on the selected algorithm, this function creates a corresponding
-    `Pseudonymization`. 
-    
+    `Pseudonymization`.
+
     Args:
         short_name (str): The identifier of the variable to pseudonymize.
         selected_algorithm (PseudonymizationAlgorithmsEnum): The pseudonymization algorithm to apply.
@@ -632,7 +632,6 @@ def apply_pseudonymization(
             )
         case PseudonymizationAlgorithmsEnum.CUSTOM:
             state.metadata.add_pseudonymization(short_name)
-            
 
 
 def parse_and_validate_pseudonymization_time(
@@ -654,7 +653,7 @@ def parse_and_validate_pseudonymization_time(
     Traceback (most recent call last):
     ...
     ValueError: Validation error: Expected an ISO 8601-like string, but was given '1st January 2021'. Try passing in a format string to resolve this.
-    
+
     >>> parse_and_validate_pseudonymization_time(None)
     None
     """

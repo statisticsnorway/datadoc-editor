@@ -103,12 +103,14 @@ def get_metadata_and_stringify(metadata: BaseModel, identifier: str) -> str | No
         return ""
     return str(value)
 
+
 def get_datetime_and_stringify(metadata: BaseModel, identifier: str) -> str | None:
     """Get a metadata datetime value from the model and cast date to string."""
     value = get_standard_metadata(metadata, identifier)
     if not value:
         return ""
     return arrow.get(str(value)).format("YYYY-MM-DD")
+
 
 def _get_string_type_item(
     language_strings: model.LanguageStringType,
@@ -197,6 +199,7 @@ class MetadataInputField(DisplayMetadata):
             required=self.obligatory and self.editable,
         )
 
+
 @dataclass
 class MetadataDropdownField(DisplayMetadata):
     """Controls how a Dropdown should be displayed."""
@@ -246,7 +249,8 @@ class MetadataDateField(DisplayMetadata):
             className="input-component",
             required=self.obligatory and self.editable,
         )
-        
+
+
 @dataclass
 class MetadataDateTimeField(DisplayMetadata):
     """Controls how fields which define a single date are displayed."""
@@ -266,7 +270,7 @@ class MetadataDateTimeField(DisplayMetadata):
             disabled=not self.editable,
             showDescription=True,
             description=self.description,
-            value=get_datetime_and_stringify(metadata,self.identifier),
+            value=get_datetime_and_stringify(metadata, self.identifier),
             className="input-component",
             required=self.obligatory and self.editable,
         )
