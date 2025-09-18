@@ -43,7 +43,14 @@ from datadoc_editor.frontend.components.builders import build_dataset_edit_secti
 from datadoc_editor.frontend.components.builders import build_dataset_machine_section
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import ADD_USE_RESTRICTION_BUTTON
+from datadoc_editor.frontend.components.identifiers import FORCE_RERENDER_COUNTER
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
+from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_ID_STORE
+from datadoc_editor.frontend.components.identifiers import (
+    USE_RESTRICTION_LIST_CONTAINER,
+)
+from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_OPTION_STORE
+from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_STORE
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
 from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
 from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
@@ -278,8 +285,8 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
 
     @app.callback(
         [
-            Output("use-restriction-store", "data"),
-            Output("force-rerender-counter", "data"),
+            Output(USE_RESTRICTION_STORE, "data"),
+            Output(FORCE_RERENDER_COUNTER, "data"),
         ],
         Input(ADD_USE_RESTRICTION_BUTTON, "n_clicks"),
         Input(
@@ -291,8 +298,8 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             },
             "n_clicks",
         ),
-        State("use-restriction-store", "data"),
-        State("force-rerender-counter", "data"),
+        State(USE_RESTRICTION_STORE, "data"),
+        State(FORCE_RERENDER_COUNTER, "data"),
         prevent_initial_call=True,
     )
     def handle_add_and_delete(
@@ -323,11 +330,11 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         return current_list, new_counter
 
     @app.callback(
-        Output("use-restriction-list-container", "children"),
-        Input("use-restriction-store", "data"),
-        Input("use-restriction-options-store", "data"),
-        Input("use-restriction-id-store", "data"),
-        Input("force-rerender-counter", "data"),
+        Output(USE_RESTRICTION_LIST_CONTAINER, "children"),
+        Input(USE_RESTRICTION_STORE, "data"),
+        Input(USE_RESTRICTION_OPTION_STORE, "data"),
+        Input(USE_RESTRICTION_ID_STORE, "data"),
+        Input(FORCE_RERENDER_COUNTER, "data"),
     )
     def render_use_restriction_list(
         current_list: list,
