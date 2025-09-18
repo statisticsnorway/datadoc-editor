@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import datetime
 import logging
 import urllib.parse
 from typing import TYPE_CHECKING
@@ -204,9 +205,10 @@ def accept_pseudo_variable_metadata_input(
         urllib.parse.unquote(variable_short_name)
     ].pseudonymization
     try:
-        if metadata_field == PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME:
+        if metadata_field == PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME and (isinstance(value, datetime.datetime) or isinstance(value, str)) :
             parsed_value = parse_and_validate_pseudonymization_time(value)
         else:
+            value = str(value)
             parsed_value = value.strip()
         setattr(
             variable_pseudonymization,

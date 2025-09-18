@@ -482,6 +482,7 @@ FieldTypes = (
     MetadataInputField
     | MetadataDropdownField
     | MetadataDateField
+    | MetadataDateTimeField
     | MetadataCheckboxField
     | MetadataPeriodField
     | MetadataMultiLanguageField
