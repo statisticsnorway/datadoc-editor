@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING
 from typing import Any
 from typing import cast
 
+import arrow
 import ssb_dash_components as ssb
 from dapla_metadata.datasets import enums
 from dapla_metadata.datasets import model
@@ -102,6 +103,12 @@ def get_metadata_and_stringify(metadata: BaseModel, identifier: str) -> str | No
         return ""
     return str(value)
 
+def get_datetime_and_stringify(metadata: BaseModel, identifier: str) -> str | None:
+    """Get a metadata datetime value from the model and cast date to string."""
+    value = get_standard_metadata(metadata, identifier)
+    if not value:
+        return ""
+    return arrow.get(str(value)).format("YYYY-MM-DD")
 
 def _get_string_type_item(
     language_strings: model.LanguageStringType,
@@ -190,7 +197,6 @@ class MetadataInputField(DisplayMetadata):
             required=self.obligatory and self.editable,
         )
 
-
 @dataclass
 class MetadataDropdownField(DisplayMetadata):
     """Controls how a Dropdown should be displayed."""
@@ -237,6 +243,30 @@ class MetadataDateField(DisplayMetadata):
             showDescription=True,
             description=self.description,
             value=get_metadata_and_stringify(metadata, self.identifier),
+            className="input-component",
+            required=self.obligatory and self.editable,
+        )
+        
+@dataclass
+class MetadataDateTimeField(DisplayMetadata):
+    """Controls how fields which define a single date are displayed."""
+
+    def render(
+        self,
+        component_id: dict,
+        metadata: BaseModel,
+    ) -> ssb.Input:
+        """Build Input date component."""
+        self.url_encode_shortname_ids(component_id)
+        return ssb.Input(
+            label=self.display_name,
+            id=component_id,
+            debounce=False,
+            type="date",
+            disabled=not self.editable,
+            showDescription=True,
+            description=self.description,
+            value=get_datetime_and_stringify(metadata,self.identifier),
             className="input-component",
             required=self.obligatory and self.editable,
         )
