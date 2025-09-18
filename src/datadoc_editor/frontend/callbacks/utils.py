@@ -633,3 +633,40 @@ def apply_pseudonymization(
         case PseudonymizationAlgorithmsEnum.CUSTOM:
             state.metadata.add_pseudonymization(short_name)
             
+
+
+def parse_and_validate_pseudonymization_time(
+    pseudo_date: str | datetime.datetime | None,
+) -> datetime.datetime | None:
+    """Parse and validate the given date.
+
+    Validate that:
+        - The date is in YYYY-MM-DD format
+
+    Examples:
+    >>> parse_and_validate_pseudonymization_time("2021-01-01")
+    datetime.datetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc)
+
+    >>> parse_and_validate_pseudonymization_time("1990-01-01")
+    datetime.datetime(1990, 1, 1, 0, 0, tzinfo=datetime.timezone.utc)
+
+    >>> parse_and_validate_pseudonymization_time("1st January 2021")
+    Traceback (most recent call last):
+    ...
+    ValueError: Validation error: Expected an ISO 8601-like string, but was given '1st January 2021'. Try passing in a format string to resolve this.
+    
+    >>> parse_and_validate_pseudonymization_time(None)
+    None
+    """
+    if pseudo_date == None:
+        return None
+    parsed_date = None
+    try:
+        if pseudo_date != "None":
+            parsed_date = arrow.get(pseudo_date)
+    except arrow.parser.ParserError as e:
+        raise ValueError(VALIDATION_ERROR + str(e)) from e
+
+    date_output = parsed_date.astimezone(tz=datetime.UTC) if parsed_date else None
+
+    return date_output
