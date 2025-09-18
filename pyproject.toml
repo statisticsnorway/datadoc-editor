@@ -74,7 +74,8 @@ packages = ["src/datadoc_editor"]
 [tool.pytest.ini_options]
 pythonpath = ["src/datadoc_editor"]
 
-
+[tool.uv]
+required-version = ">=0.6.17"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
