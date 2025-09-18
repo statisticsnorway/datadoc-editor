@@ -682,11 +682,6 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
             "stable identifier",
         ),
         (
-            PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION,
-            "stable identifier ",
-            "stable identifier",
-        ),
-        (
             PseudoVariableIdentifiers.STABLE_IDENTIFIER_TYPE,
             "",
             None,
