@@ -718,6 +718,8 @@ def test_accept_pseudo_variable_metadata_input_valid(
 
 @dataclass
 class PseudoCase:
+    """Test cases Pseudonymization."""
+
     selected_algorithm: enums.PseudonymizationAlgorithmsEnum | None
     expected_workspace_type: dbc.Form | list
     expected_number_editable_inputs: int
@@ -792,9 +794,9 @@ def test_populate_pseudonymization_workspace(
             len(pseudonymization_workspace.children)
             == case.expected_number_editable_inputs
         )
-        ids = [child.id["id"] for child in pseudonymization_workspace.children]
-        for id in case.expected_identifiers_in_workspace:
-            assert id in ids
+        all_ids = [child.id["id"] for child in pseudonymization_workspace.children]
+        for ids in case.expected_identifiers_in_workspace:
+            assert ids in all_ids
     if case.expected_variable_pseudonymization is True:
         assert variable.pseudonymization is not None
     else:

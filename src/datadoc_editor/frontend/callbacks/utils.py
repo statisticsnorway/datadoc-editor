@@ -657,7 +657,7 @@ def parse_and_validate_pseudonymization_time(
     >>> parse_and_validate_pseudonymization_time(None)
     None
     """
-    if pseudo_date == None:
+    if pseudo_date is None:
         return None
     parsed_date = None
     try:
@@ -666,6 +666,4 @@ def parse_and_validate_pseudonymization_time(
     except arrow.parser.ParserError as e:
         raise ValueError(VALIDATION_ERROR + str(e)) from e
 
-    date_output = parsed_date.astimezone(tz=datetime.UTC) if parsed_date else None
-
-    return date_output
+    return parsed_date.astimezone(tz=datetime.UTC) if parsed_date else None
