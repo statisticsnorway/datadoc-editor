@@ -654,25 +654,25 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
     [
         (
             PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME,
-            "2024-12-31T23:59:59Z",
+            "2024-12-31",
             datetime.datetime(
                 2024,
                 12,
                 31,
-                23,
-                59,
-                59,
+                0,
+                0,
+                0,
                 tzinfo=datetime.UTC,
             ),
         ),
         (
             PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION,
-            "stable identifier",
+            "stable identifier ",
             "stable identifier",
         ),
         (
             PseudoVariableIdentifiers.STABLE_IDENTIFIER_TYPE,
-            "stable identifier type",
+            "  stable identifier type",
             "stable identifier type",
         ),
         (
