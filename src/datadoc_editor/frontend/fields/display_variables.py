@@ -118,6 +118,7 @@ DISPLAY_VARIABLES: dict[
         display_name="Populasjonen",
         description="Populasjonen settes på datasettnivå, men kan spesifiseres eller overskrives (hvis variabelen har en annen populasjon enn de fleste andre variablene i datasettet) her.",
         id_type=VARIABLES_METADATA_MULTILANGUAGE_INPUT,
+        obligatory=True,
     ),
     VariableIdentifiers.MEASUREMENT_UNIT: MetadataDropdownField(
         identifier=VariableIdentifiers.MEASUREMENT_UNIT.value,
@@ -157,6 +158,7 @@ DISPLAY_VARIABLES: dict[
         display_name="Datakilde",
         description="Datakilden til variabelen (på etat-/organisasjonsnivå).",
         options_getter=get_data_source_options,
+        obligatory=True,
     ),
     VariableIdentifiers.TEMPORALITY_TYPE: MetadataDropdownField(
         identifier=VariableIdentifiers.TEMPORALITY_TYPE.value,
@@ -166,6 +168,7 @@ DISPLAY_VARIABLES: dict[
             get_enum_options,
             TemporalityTypeType,
         ),
+        obligatory=True,
     ),
     VariableIdentifiers.FORMAT: MetadataInputField(
         identifier=VariableIdentifiers.FORMAT.value,
