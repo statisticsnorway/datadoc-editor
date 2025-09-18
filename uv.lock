@@ -291,7 +291,7 @@ wheels = [
 
 [[package]]
 name = "dapla-toolbelt-metadata"
-version = "0.9.1"
+version = "0.9.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "arrow" },
@@ -309,9 +309,9 @@ dependencies = [
     { name = "ssb-klass-python" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ae/16/51d75102946dd843eec155004c971ad70543161831b1a6dab5343c043a21/dapla_toolbelt_metadata-0.9.1.tar.gz", hash = "sha256:a30449f4f970fab4439e01214ec69a47ac18637b58ba6dc184cb27420a1d31e2", size = 355758, upload-time = "2025-09-10T13:27:33.019Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/17/1c/69aae9632981f54183d6181a61641b32837a78fbf44f5bdc5a9143abfb94/dapla_toolbelt_metadata-0.9.2.tar.gz", hash = "sha256:542d716fa2adadbfb915d6d519be6991791c5217fb8b6330c517fe744f0b9102", size = 356784, upload-time = "2025-09-15T07:42:11.353Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/15/90/2cecfd26a3029c94ecbe30c7f647628adda3e2068a8bcd75c023c48da07b/dapla_toolbelt_metadata-0.9.1-py3-none-any.whl", hash = "sha256:a813d7c983ab9ccd3da988653be99b92bd83eafaee111e9256c2d1dc22909037", size = 174719, upload-time = "2025-09-10T13:27:31.32Z" },
+    { url = "https://files.pythonhosted.org/packages/8c/0e/2454dc35387b207b38d25042c30c6d1b499b4769613055f811837a0a5249/dapla_toolbelt_metadata-0.9.2-py3-none-any.whl", hash = "sha256:a449838b9e280843e41d7a02c07990a5caa4841c271a6633aa55372f31d6ef60", size = 176507, upload-time = "2025-09-15T07:42:10.01Z" },
 ]
 
 [[package]]
@@ -2061,14 +2061,14 @@ wheels = [
 
 [[package]]
 name = "ssb-dash-components"
-version = "0.11.0"
+version = "0.11.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "dash" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/6c/44/d10dac8062dc9e1c8ec075d7a786fd980204785da6109a69fe59cbe5d831/ssb_dash_components-0.11.0.tar.gz", hash = "sha256:2f27d26ad8c42a932ec96e17e8ceef637e6f6c0cd1cbd9839590a863766a3be4", size = 118568, upload-time = "2025-09-12T13:29:53.59Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7f/65/5231f55c1bc7eeecb15aa9eca52658c0b674de0f8fe68860e22da56d57af/ssb_dash_components-0.11.1.tar.gz", hash = "sha256:4e239a38e134e3ff6e8aa65f3b8a2bb954ec7aec05b92ac957bd101dee7970fd", size = 118559, upload-time = "2025-09-18T07:26:33.11Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e7/08/d8a8210e08507f824c9f62069d02903ca927583e8378a86c3ebe4f959c8f/ssb_dash_components-0.11.0-py3-none-any.whl", hash = "sha256:d15b523a6da9eccd1c1aae6ba5cd43c004345137711a6931bb4bda582ca064fb", size = 134971, upload-time = "2025-09-12T13:29:52.077Z" },
+    { url = "https://files.pythonhosted.org/packages/9d/e0/81df8021ee500154e924a19692ca94239679ba7e7ef1b0795364bbecc3c6/ssb_dash_components-0.11.1-py3-none-any.whl", hash = "sha256:3c95f3df1e22f9548dfeb3b1795187466f00ade5f0a82a03263424d87ed0a824", size = 134976, upload-time = "2025-09-18T07:26:31.388Z" },
 ]
 
 [[package]]
@@ -2129,7 +2129,7 @@ requires-dist = [
     { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "pydantic", specifier = ">=2.5.2" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
-    { name = "ssb-dash-components", specifier = ">=0.11.0" },
+    { name = "ssb-dash-components", specifier = ">=0.11.1" },
 ]
 
 [package.metadata.requires-dev]
