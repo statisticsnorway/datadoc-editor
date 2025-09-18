@@ -706,7 +706,7 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
 def test_accept_pseudo_variable_metadata_input_valid(
     metadata: Datadoc,
     metadata_field: PseudoVariableIdentifiers,
-    value: str| datetime.datetime | None,
+    value: str | datetime.datetime | None,
     expected_model_value: Any,  # noqa: ANN401
 ):
     state.metadata = metadata

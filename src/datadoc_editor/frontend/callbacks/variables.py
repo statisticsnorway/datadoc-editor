@@ -213,11 +213,10 @@ def accept_pseudo_variable_metadata_input(
             and isinstance(value, (datetime.datetime, str))
         ):
             parsed_value = parse_and_validate_pseudonymization_time(value)
+        elif isinstance(value, str):
+            parsed_value = value.strip()
         else:
-            if isinstance(value, str):
-                parsed_value = value.strip()
-            else:
-                parsed_value = value
+            parsed_value = value
         setattr(
             variable_pseudonymization,
             metadata_field,
