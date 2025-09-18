@@ -94,9 +94,9 @@
   padding-bottom: 0.8rem;
 }
 
-.dropdown-component,
-.input-component {
-  flex: 1;
+.ssb-input.input-component:has(input[id*="date-use_restrictions"]) {
+  max-width: 200px;
+  flex: none;
 }
 
 .multidropdown-delete-button {
