@@ -418,7 +418,11 @@ def populate_pseudo_workspace(
             variable.short_name,
         )
         logger.debug("Removed pseudonymization for %s", variable.short_name)
-    if selected_algorithm and variable.short_name and variable.pseudonymization is not None:
+    if (
+        selected_algorithm
+        and variable.short_name is not None
+        and variable.pseudonymization is not None
+    ):
         saved_algorithm = map_dropdown_to_pseudo(variable)
         logger.debug("Saved algorithm %s", saved_algorithm)
         if saved_algorithm != selected_algorithm:
