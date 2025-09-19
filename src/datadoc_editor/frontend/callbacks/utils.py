@@ -311,6 +311,17 @@ def render_tabs(tab: str) -> html.Article | None:
     return None
 
 
+def update_store_data_with_inputs(
+    store_data: list[dict], type_values: list[str], date_values: list[str]
+) -> list[dict]:
+    """Update each use restriction in store_data with the latest type/date values."""
+    for item, type_val, date_val in zip(
+        store_data, type_values, date_values, strict=False
+    ):
+        item.update(use_restriction_type=type_val, use_restriction_date=date_val)
+    return store_data
+
+
 def render_multidropdown_row(
     item: dict,
     row_id: dict[str, str | int],

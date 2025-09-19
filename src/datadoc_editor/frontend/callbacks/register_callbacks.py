@@ -29,6 +29,7 @@ from datadoc_editor.frontend.callbacks.dataset import remove_dataset_multidropdo
 from datadoc_editor.frontend.callbacks.utils import render_multidropdown_row
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
+from datadoc_editor.frontend.callbacks.utils import update_store_data_with_inputs
 from datadoc_editor.frontend.callbacks.variables import (
     accept_pseudo_variable_metadata_input,
 )
@@ -326,23 +327,17 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         counter: int,
     ) -> tuple[list, int]:
         triggered = ctx.triggered_id
-        counter = counter + 1
-        store_data = store_data or []
-
-        if type_values and date_values:
-            for item, type_val, date_val in zip(
-                store_data, type_values, date_values, strict=False
-            ):
-                item["use_restriction_type"] = type_val
-                item["use_restriction_date"] = date_val
+        counter += 1
+        store_data = update_store_data_with_inputs(store_data, type_values, date_values)
 
         if triggered == ADD_USE_RESTRICTION_BUTTON:
             store_data.append(
                 {"use_restriction_type": None, "use_restriction_date": None}
             )
-        elif triggered.get("field") == "delete":
-            idx = triggered["index"]
-            if 0 <= idx < len(store_data):
+
+        elif isinstance(triggered, dict) and triggered.get("field") == "delete":
+            idx = triggered.get("index")
+            if isinstance(idx, int) and 0 <= idx < len(store_data):
                 remove_dataset_multidropdown_input(
                     DATASET_METADATA_MULTIDROPDOWN_INPUT, idx
                 )
