@@ -11,7 +11,7 @@ from dapla_metadata.datasets import model
 
 from datadoc_editor import state
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
-from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
+from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes, delete_pseudonymization
 from datadoc_editor.frontend.callbacks.utils import apply_pseudonymization
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
@@ -32,6 +32,7 @@ from datadoc_editor.frontend.components.builders import (
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
+from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PseudoVariableIdentifiers,
 )
@@ -407,24 +408,27 @@ def populate_pseudo_workspace(
     variable: model.Variable, selected_algorithm: PseudonymizationAlgorithmsEnum | None
 ) -> dbc.Form:
     """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
+    if selected_algorithm is None and variable.pseudonymization:
+        delete_pseudonymization(variable.short_name)
+    #if selected_algorithm is None and variable.short_name:
+    #    state.metadata.remove_pseudonymization(
+    #        variable.short_name,
+    #    )
+    #    logger.debug("Removed pseudonymization for %s", variable.short_name)
     if not selected_algorithm and variable.pseudonymization is not None:
         selected_algorithm = map_dropdown_to_pseudo(variable)
         logger.debug(
             "Algorithm inferred for %s: %s", variable.short_name, selected_algorithm
         )
-        # active add default values if None?
-    if selected_algorithm is None and variable.short_name:
-        state.metadata.remove_pseudonymization(
-            variable.short_name,
-        )
-        logger.debug("Removed pseudonymization for %s", variable.short_name)
+    #if selected_algorithm is None:
+    #    delete_pseudonymization(variable)
+   
     if (
         selected_algorithm
         and variable.short_name is not None
         and variable.pseudonymization is not None
     ):
         saved_algorithm = map_dropdown_to_pseudo(variable)
-        logger.debug("Saved algorithm %s", saved_algorithm)
         if saved_algorithm != selected_algorithm:
             state.metadata.remove_pseudonymization(
                 variable.short_name,

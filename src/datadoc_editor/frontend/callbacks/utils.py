@@ -667,3 +667,16 @@ def parse_and_validate_pseudonymization_time(
         raise ValueError(VALIDATION_ERROR + str(e)) from e
 
     return parsed_date.astimezone(tz=datetime.UTC) if parsed_date else None
+
+def update_selected_pseudonymization():
+    """N"""
+    pass
+
+def delete_pseudonymization(short_name: str)-> list | None:
+    """b."""
+    # check pseudo
+    # return list always
+    state.metadata.remove_pseudonymization(
+            short_name,
+        ) if short_name else logger.info("Could not delete pseudonymization for %s", short_name)
+    logger.debug("Removed pseudonymization for %s", short_name)

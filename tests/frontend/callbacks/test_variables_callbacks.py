@@ -800,6 +800,16 @@ class PseudoCase:
                 encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION
             ),
         ),
+        PseudoCase(
+            selected_algorithm=None,
+            expected_workspace_type=list,
+            expected_number_editable_inputs=0,
+            expected_identifiers_in_workspace=None,
+            expected_variable_pseudonymization=False,
+            saved_pseudonymization=model.Pseudonymization(
+                encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION
+            ),
+        ),
     ],
     ids=[
         "PAPIS without stable ID",
@@ -809,6 +819,7 @@ class PseudoCase:
         "No algorithm selected",
         "Change from PAPIS without stable ID to DAEAD",
         "Change from DAEAD TO PAPIS with stable ID",
+        "Delete",
     ],
 )
 def test_populate_pseudonymization_workspace(
