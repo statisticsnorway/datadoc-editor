@@ -16,7 +16,8 @@ from dapla_metadata.datasets import ObligatoryVariableWarning
 from dapla_metadata.datasets import model
 from pydantic import AnyUrl
 
-from datadoc_editor import constants, enums
+from datadoc_editor import constants
+from datadoc_editor import enums
 from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.utils import variables_control
 from datadoc_editor.frontend.callbacks.variables import (
@@ -729,6 +730,7 @@ def test_accept_pseudo_variable_metadata_input_valid(
 @dataclass
 class PseudoCase:
     """Test cases Pseudonymization."""
+
     selected_algorithm: enums.PseudonymizationAlgorithmsEnum | None
     expected_workspace_type: dbc.Form | list
     expected_number_editable_inputs: int
@@ -786,7 +788,7 @@ class PseudoCase:
             expected_variable_pseudonymization=True,
             saved_pseudonymization=model.Pseudonymization(
                 encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION
-            )
+            ),
         ),
         PseudoCase(
             selected_algorithm=enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
@@ -796,7 +798,7 @@ class PseudoCase:
             expected_variable_pseudonymization=True,
             saved_pseudonymization=model.Pseudonymization(
                 encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION
-            )
+            ),
         ),
     ],
     ids=[
@@ -806,7 +808,7 @@ class PseudoCase:
         "Custom",
         "No algorithm selected",
         "Change from PAPIS without stable ID to DAEAD",
-        "Change from DAEAD TO PAPIS with stable ID"
+        "Change from DAEAD TO PAPIS with stable ID",
     ],
 )
 def test_populate_pseudonymization_workspace(
