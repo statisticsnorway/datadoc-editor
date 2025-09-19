@@ -410,17 +410,15 @@ def populate_pseudo_workspace(
     """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
     if selected_algorithm is None and variable.pseudonymization:
         delete_pseudonymization(variable)
-    if (
-        selected_algorithm
-        #and variable.short_name 
-        and variable.pseudonymization
-    ):
+        
+    if selected_algorithm and variable.pseudonymization:
         inferred_algorithm = map_dropdown_to_pseudo(variable)
+        
         if inferred_algorithm != selected_algorithm:
-            update_selected_pseudonymization(variable.short_name, inferred_algorithm, selected_algorithm)
+            update_selected_pseudonymization(variable, inferred_algorithm, selected_algorithm)
 
-    if variable.short_name and selected_algorithm and not variable.pseudonymization:
-        apply_pseudonymization(variable.short_name, selected_algorithm)
+    if selected_algorithm and not variable.pseudonymization:
+        apply_pseudonymization(variable, selected_algorithm)
         logger.info("Added pseudonymization for %s", variable.short_name)
 
     if variable.pseudonymization is None:

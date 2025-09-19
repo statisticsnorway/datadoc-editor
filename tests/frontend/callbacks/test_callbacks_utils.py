@@ -365,11 +365,11 @@ class PseudoCase:
 )
 def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Datadoc):
     state.metadata = metadata
+    variable = state.metadata.variables_lookup["sykepenger"]
     apply_pseudonymization(
-        "sykepenger",
+        variable,
         case.selected_algorithm,
     )
-    variable = state.metadata.variables_lookup["sykepenger"]
     assert variable.pseudonymization is not None
     assert (
         variable.pseudonymization.encryption_algorithm

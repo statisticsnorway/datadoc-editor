@@ -593,7 +593,7 @@ def map_dropdown_to_pseudo(
 
 
 def apply_pseudonymization(
-    short_name: str, selected_algorithm: PseudonymizationAlgorithmsEnum
+    variable: model.Variable, selected_algorithm: PseudonymizationAlgorithmsEnum
 ) -> None:
     """Apply a pseudonymization algorithm to a given variable and update metadata.
 
@@ -607,32 +607,32 @@ def apply_pseudonymization(
     Returns:
         None
     """
-    # short_name: str = variable.short_name
-    match selected_algorithm:
-        case PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID:
-            state.metadata.add_pseudonymization(
-                short_name,
-                model.Pseudonymization(
-                    encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION
-                ),
-            )
-        case PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID:
-            state.metadata.add_pseudonymization(
-                short_name,
-                model.Pseudonymization(
-                    encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION,
-                    stable_identifier_type=constants.PAPIS_STABLE_IDENTIFIER_TYPE,
-                ),
-            )
-        case PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA:
-            state.metadata.add_pseudonymization(
-                short_name,
-                model.Pseudonymization(
-                    encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION
-                ),
-            )
-        case PseudonymizationAlgorithmsEnum.CUSTOM:
-            state.metadata.add_pseudonymization(short_name)
+    if variable.short_name:
+        match selected_algorithm:
+            case PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID:
+                state.metadata.add_pseudonymization(
+                    variable.short_name,
+                    model.Pseudonymization(
+                        encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION
+                    ),
+                )
+            case PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID:
+                state.metadata.add_pseudonymization(
+                    variable.short_name,
+                    model.Pseudonymization(
+                        encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION,
+                        stable_identifier_type=constants.PAPIS_STABLE_IDENTIFIER_TYPE,
+                    ),
+                )
+            case PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA:
+                state.metadata.add_pseudonymization(
+                    variable.short_name,
+                    model.Pseudonymization(
+                        encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION
+                    ),
+                )
+            case PseudonymizationAlgorithmsEnum.CUSTOM:
+                state.metadata.add_pseudonymization(variable.short_name)
 
 
 def parse_and_validate_pseudonymization_time(
@@ -669,17 +669,18 @@ def parse_and_validate_pseudonymization_time(
 
     return parsed_date.astimezone(tz=datetime.UTC) if parsed_date else None
 
-def update_selected_pseudonymization(short_name: str, old_algorithm, new_algorithm):
+def update_selected_pseudonymization(variable: model.Variable, old_algorithm, new_algorithm):
     """N"""
-    state.metadata.remove_pseudonymization(short_name)
-    logger.debug("Updating pseuonymization step 1: Remove pseudonymization for %s", short_name)
-    apply_pseudonymization(short_name, new_algorithm)
-    logger.debug("Updating pseuonymization step 2: Add new pseudonymization for %s.", short_name)
-    logger.info("Updating pseudonymization algorithm for %s from %s to %s.",
-                short_name,
-                old_algorithm,
-                new_algorithm,
-    )
+    if variable.short_name:
+        state.metadata.remove_pseudonymization(variable.short_name)
+        logger.debug("Updating pseuonymization step 1: Remove pseudonymization for %s", variable.short_name)
+        apply_pseudonymization(variable, new_algorithm)
+        logger.debug("Updating pseuonymization step 2: Add new pseudonymization for %s.", variable.short_name)
+        logger.info("Updating pseudonymization algorithm for %s from %s to %s.",
+                    variable.short_name,
+                    old_algorithm,
+                    new_algorithm,
+        )
 
 def delete_pseudonymization(variable: model.Variable)-> None:
     """b."""
