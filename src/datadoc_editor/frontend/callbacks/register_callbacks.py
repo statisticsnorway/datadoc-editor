@@ -328,7 +328,9 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
     ) -> tuple[list, int]:
         triggered = ctx.triggered_id
         counter += 1
-        store_data = update_store_data_with_inputs(store_data, type_values, date_values)
+        store_data = update_store_data_with_inputs(
+            store_data or [], type_values, date_values
+        )
 
         if triggered == ADD_USE_RESTRICTION_BUTTON:
             store_data.append(
