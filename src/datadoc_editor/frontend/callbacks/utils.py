@@ -607,6 +607,7 @@ def apply_pseudonymization(
     Returns:
         None
     """
+    # short_name: str = variable.short_name
     match selected_algorithm:
         case PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID:
             state.metadata.add_pseudonymization(
@@ -668,15 +669,21 @@ def parse_and_validate_pseudonymization_time(
 
     return parsed_date.astimezone(tz=datetime.UTC) if parsed_date else None
 
-def update_selected_pseudonymization():
+def update_selected_pseudonymization(short_name: str, old_algorithm, new_algorithm):
     """N"""
-    pass
+    state.metadata.remove_pseudonymization(short_name)
+    logger.debug("Updating pseuonymization step 1: Remove pseudonymization for %s", short_name)
+    apply_pseudonymization(short_name, new_algorithm)
+    logger.debug("Updating pseuonymization step 2: Add new pseudonymization for %s.", short_name)
+    logger.info("Updating pseudonymization algorithm for %s from %s to %s.",
+                short_name,
+                old_algorithm,
+                new_algorithm,
+    )
 
-def delete_pseudonymization(short_name: str)-> list | None:
+def delete_pseudonymization(variable: model.Variable)-> None:
     """b."""
-    # check pseudo
-    # return list always
     state.metadata.remove_pseudonymization(
-            short_name,
-        ) if short_name else logger.info("Could not delete pseudonymization for %s", short_name)
-    logger.debug("Removed pseudonymization for %s", short_name)
+            variable.short_name,
+        ) if variable.short_name else logger.debug("Could not delete pseudonymization for %s", variable.short_name)
+    logger.info("Removed pseudonymization for %s", variable.short_name)
