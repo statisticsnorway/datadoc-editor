@@ -37,7 +37,7 @@ TEST_VARIABLES = [
         PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
         model.Variable(
             short_name="helse",
-            pseudonymization=model.Pseudonymization(encryption_algorithm="TINK-DAED"),
+            pseudonymization=model.Pseudonymization(encryption_algorithm="TINK-DAEAD"),
         ),
         1,
     ),
