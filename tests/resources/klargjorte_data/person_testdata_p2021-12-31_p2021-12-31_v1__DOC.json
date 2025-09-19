@@ -2,7 +2,7 @@
     "document_version": "1.0.0",
     "datadoc": {
         "percentage_complete": 98,
-        "document_version": "6.0.0",
+        "document_version": "6.1.0",
         "dataset": {
             "short_name": "person_testdata_p2021-12-31_p2021-12-31",
             "assessment": "PROTECTED",
@@ -84,15 +84,19 @@
                     "languageText": "Norge"
                 }
             ],
-            "use_restriction": null,
-            "use_restriction_date": null,
+            "use_restrictions": [
+                {
+                    "use_restriction_type": "DELETION_ANONYMIZATION",
+                    "use_restriction_date": "2025-09-01"
+                }
+            ],
             "custom_type": null,
             "id": "2f72477a-f051-43ee-bf8b-0d8f47b5e0a7",
             "owner": "",
-            "file_path": "None",
+            "file_path": null,
             "metadata_created_date": "2022-10-07T07:35:01Z",
             "metadata_created_by": "default_user@ssb.no",
-            "metadata_last_updated_date": "2025-09-10T14:28:12.454951Z",
+            "metadata_last_updated_date": "2025-09-12T10:09:32.974914Z",
             "metadata_last_updated_by": null,
             "contains_data_from": "2021-12-31",
             "contains_data_until": "2021-12-31"
