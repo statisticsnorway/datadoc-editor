@@ -407,7 +407,8 @@ def set_variables_values_inherit_dataset_derived_date_values() -> None:
 
 
 def populate_pseudo_workspace(
-    variable: model.Variable, selected_algorithm: PseudonymizationAlgorithmsEnum | None
+    variable: model.Variable, 
+    selected_algorithm: PseudonymizationAlgorithmsEnum | None,
 ) -> dbc.Form:
     """Create pseudonymization workspace.
 
@@ -431,7 +432,7 @@ def populate_pseudo_workspace(
     if selected_algorithm and variable.pseudonymization:
         inferred_algorithm = map_dropdown_to_pseudo(variable)
 
-        if inferred_algorithm != selected_algorithm:
+        if inferred_algorithm and inferred_algorithm != selected_algorithm:
             update_selected_pseudonymization(
                 variable, inferred_algorithm, selected_algorithm
             )
