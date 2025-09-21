@@ -407,7 +407,22 @@ def set_variables_values_inherit_dataset_derived_date_values() -> None:
 def populate_pseudo_workspace(
     variable: model.Variable, selected_algorithm: PseudonymizationAlgorithmsEnum | None
 ) -> dbc.Form:
-    """Build editable pseudonymization fields dynamically based on selected pseudo algorithm."""
+    """Create pseudonymization workspace.
+    
+    Adds, updates or delete variable pseudonymization. 
+    Display pseudonymization fields dynamically based on selected pseudo algorithm.
+    
+    Args:
+        variable (model.Variable): 
+            The variable to apply pseudonymization logic to.
+        selected_algorithm (PseudonymizationAlgorithmsEnum | None): 
+            The pseudonymization algorithm selected by the user. 
+            If user deselects pseudonymization the value is 'None'.
+
+    Returns:
+        dbc.Form | list:
+            Pseudonymization fields based on selection if pseudonymization; otherwise, an empty list.
+    """
     if selected_algorithm is None and variable.pseudonymization:
         delete_pseudonymization(variable)
         

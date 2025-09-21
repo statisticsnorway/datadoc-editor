@@ -670,7 +670,19 @@ def parse_and_validate_pseudonymization_time(
     return parsed_date.astimezone(tz=datetime.UTC) if parsed_date else None
 
 def update_selected_pseudonymization(variable: model.Variable, old_algorithm, new_algorithm):
-    """N"""
+    """Update the pseudonymization algorithm for a variable.
+    
+    This function replaces the variable's existing pseudonymization with a new one:
+        - Removes the pseudonymization defined by the old algorithm.
+        - Applies a new pseudonymization based on the newly selected algorithm.
+    Args:
+        variable (model.Variable): 
+            The variable whose pseudonymization is being updated.
+        old_algorithm (PseudonymizationAlgorithmsEnum): 
+            The previously applied pseudonymization algorithm.
+        new_algorithm (PseudonymizationAlgorithmsEnum): 
+            The newly selected pseudonymization algorithm.
+    """
     if variable.short_name:
         state.metadata.remove_pseudonymization(variable.short_name)
         logger.debug("Updating pseuonymization step 1: Remove pseudonymization for %s", variable.short_name)
@@ -683,7 +695,7 @@ def update_selected_pseudonymization(variable: model.Variable, old_algorithm, ne
         )
 
 def delete_pseudonymization(variable: model.Variable)-> None:
-    """b."""
+    """Remove pseudonymization for a Variable.."""
     state.metadata.remove_pseudonymization(
             variable.short_name,
         ) if variable.short_name else logger.debug("Could not delete pseudonymization for %s", variable.short_name)
