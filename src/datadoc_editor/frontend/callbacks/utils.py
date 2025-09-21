@@ -594,7 +594,8 @@ def map_dropdown_to_pseudo(
 
 
 def apply_pseudonymization(
-    variable: model.Variable, selected_algorithm: PseudonymizationAlgorithmsEnum
+    variable: model.Variable,
+    selected_algorithm: PseudonymizationAlgorithmsEnum,
 ) -> None:
     """Apply a pseudonymization algorithm to a given variable and update metadata.
 
@@ -602,7 +603,7 @@ def apply_pseudonymization(
     `Pseudonymization`.
 
     Args:
-        short_name (str): The identifier of the variable to pseudonymize.
+        variable (model.Variable): The variable to pseudonymize.
         selected_algorithm (PseudonymizationAlgorithmsEnum): The pseudonymization algorithm to apply.
 
     Returns:
@@ -675,7 +676,7 @@ def update_selected_pseudonymization(
     variable: model.Variable,
     old_algorithm: PseudonymizationAlgorithmsEnum,
     new_algorithm: PseudonymizationAlgorithmsEnum,
-)-> None:
+) -> None:
     """Update the pseudonymization algorithm for a variable.
 
     This function replaces the variable's existing pseudonymization with a new one:
