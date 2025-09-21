@@ -670,34 +670,48 @@ def parse_and_validate_pseudonymization_time(
 
     return parsed_date.astimezone(tz=datetime.UTC) if parsed_date else None
 
-def update_selected_pseudonymization(variable: model.Variable, old_algorithm, new_algorithm):
+
+def update_selected_pseudonymization(
+    variable: model.Variable, old_algorithm, new_algorithm
+):
     """Update the pseudonymization algorithm for a variable.
-    
+
     This function replaces the variable's existing pseudonymization with a new one:
         - Removes the pseudonymization defined by the old algorithm.
         - Applies a new pseudonymization based on the newly selected algorithm.
+
     Args:
-        variable (model.Variable): 
+        variable (model.Variable):
             The variable whose pseudonymization is being updated.
-        old_algorithm (PseudonymizationAlgorithmsEnum): 
+        old_algorithm (PseudonymizationAlgorithmsEnum):
             The previously applied pseudonymization algorithm.
-        new_algorithm (PseudonymizationAlgorithmsEnum): 
+        new_algorithm (PseudonymizationAlgorithmsEnum):
             The newly selected pseudonymization algorithm.
     """
     if variable.short_name:
         state.metadata.remove_pseudonymization(variable.short_name)
-        logger.debug("Updating pseuonymization step 1: Remove pseudonymization for %s", variable.short_name)
+        logger.debug(
+            "Updating pseuonymization step 1: Remove pseudonymization for %s",
+            variable.short_name,
+        )
         apply_pseudonymization(variable, new_algorithm)
-        logger.debug("Updating pseuonymization step 2: Add new pseudonymization for %s.", variable.short_name)
-        logger.info("Updating pseudonymization algorithm for %s from %s to %s.",
-                    variable.short_name,
-                    old_algorithm,
-                    new_algorithm,
+        logger.debug(
+            "Updating pseuonymization step 2: Add new pseudonymization for %s.",
+            variable.short_name,
+        )
+        logger.info(
+            "Updating pseudonymization algorithm for %s from %s to %s.",
+            variable.short_name,
+            old_algorithm,
+            new_algorithm,
         )
 
-def delete_pseudonymization(variable: model.Variable)-> None:
+
+def delete_pseudonymization(variable: model.Variable) -> None:
     """Remove pseudonymization for a Variable.."""
     state.metadata.remove_pseudonymization(
-            variable.short_name,
-        ) if variable.short_name else logger.debug("Could not delete pseudonymization for %s", variable.short_name)
+        variable.short_name,
+    ) if variable.short_name else logger.debug(
+        "Could not delete pseudonymization for %s", variable.short_name
+    )
     logger.info("Removed pseudonymization for %s", variable.short_name)

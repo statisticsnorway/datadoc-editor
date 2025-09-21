@@ -11,8 +11,10 @@ from dapla_metadata.datasets import model
 
 from datadoc_editor import state
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
-from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes, PseudonymizationInputTypes, delete_pseudonymization, update_selected_pseudonymization
+from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
+from datadoc_editor.frontend.callbacks.utils import PseudonymizationInputTypes
 from datadoc_editor.frontend.callbacks.utils import apply_pseudonymization
+from datadoc_editor.frontend.callbacks.utils import delete_pseudonymization
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
 from datadoc_editor.frontend.callbacks.utils import (
@@ -22,6 +24,7 @@ from datadoc_editor.frontend.callbacks.utils import parse_and_validate_dates
 from datadoc_editor.frontend.callbacks.utils import (
     parse_and_validate_pseudonymization_time,
 )
+from datadoc_editor.frontend.callbacks.utils import update_selected_pseudonymization
 from datadoc_editor.frontend.components.builders import build_edit_section
 from datadoc_editor.frontend.components.builders import build_pseudo_field_section
 from datadoc_editor.frontend.components.builders import build_ssb_accordion
@@ -32,7 +35,6 @@ from datadoc_editor.frontend.components.builders import (
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
-from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PseudoVariableIdentifiers,
 )
@@ -408,15 +410,15 @@ def populate_pseudo_workspace(
     variable: model.Variable, selected_algorithm: PseudonymizationAlgorithmsEnum | None
 ) -> dbc.Form:
     """Create pseudonymization workspace.
-    
-    Adds, updates or delete variable pseudonymization. 
+
+    Adds, updates or delete variable pseudonymization.
     Display pseudonymization fields dynamically based on selected pseudo algorithm.
-    
+
     Args:
-        variable (model.Variable): 
+        variable (model.Variable):
             The variable to apply pseudonymization logic to.
-        selected_algorithm (PseudonymizationAlgorithmsEnum | None): 
-            The pseudonymization algorithm selected by the user. 
+        selected_algorithm (PseudonymizationAlgorithmsEnum | None):
+            The pseudonymization algorithm selected by the user.
             If user deselects pseudonymization the value is 'None'.
 
     Returns:
@@ -425,12 +427,14 @@ def populate_pseudo_workspace(
     """
     if selected_algorithm is None and variable.pseudonymization:
         delete_pseudonymization(variable)
-        
+
     if selected_algorithm and variable.pseudonymization:
         inferred_algorithm = map_dropdown_to_pseudo(variable)
-        
+
         if inferred_algorithm != selected_algorithm:
-            update_selected_pseudonymization(variable, inferred_algorithm, selected_algorithm)
+            update_selected_pseudonymization(
+                variable, inferred_algorithm, selected_algorithm
+            )
 
     if selected_algorithm and not variable.pseudonymization:
         apply_pseudonymization(variable, selected_algorithm)

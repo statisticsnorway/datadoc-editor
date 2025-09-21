@@ -333,7 +333,11 @@ class PseudoCase:
                     constants.ENCRYPTION_PARAMETER_STRATEGY: constants.ENCRYPTION_PARAMETER_STRATEGY_SKIP
                 },
                 {
-                    constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE: datetime.datetime.now(datetime.timezone.utc).date().isoformat()
+                    constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE: datetime.datetime.now(
+                        datetime.UTC
+                    )
+                    .date()
+                    .isoformat()
                 },
             ],
         ),
