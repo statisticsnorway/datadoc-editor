@@ -407,7 +407,7 @@ def set_variables_values_inherit_dataset_derived_date_values() -> None:
 
 
 def populate_pseudo_workspace(
-    variable: model.Variable, 
+    variable: model.Variable,
     selected_algorithm: PseudonymizationAlgorithmsEnum | None,
 ) -> dbc.Form:
     """Create pseudonymization workspace.
