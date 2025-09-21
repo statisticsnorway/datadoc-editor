@@ -11,7 +11,7 @@ from dapla_metadata.datasets import model
 
 from datadoc_editor import state
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
-from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes, delete_pseudonymization, update_selected_pseudonymization
+from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes, PseudonymizationInputTypes, delete_pseudonymization, update_selected_pseudonymization
 from datadoc_editor.frontend.callbacks.utils import apply_pseudonymization
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
@@ -185,7 +185,7 @@ def accept_variable_metadata_input(
 
 
 def accept_pseudo_variable_metadata_input(
-    value: str | datetime.datetime | None,
+    value: PseudonymizationInputTypes,
     variable_short_name: str,
     metadata_field: str,
 ) -> str | None:

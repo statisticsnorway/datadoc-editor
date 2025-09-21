@@ -72,6 +72,7 @@ MetadataInputTypes = (
     str | list[str] | list[dict] | int | float | bool | datetime.date | None
 )
 MultidropdownInputTypes = str | None
+PseudonymizationInputTypes = str | datetime.datetime | None
 
 
 def _check_if_language_string_item_exists(
