@@ -672,7 +672,9 @@ def parse_and_validate_pseudonymization_time(
 
 
 def update_selected_pseudonymization(
-    variable: model.Variable, old_algorithm, new_algorithm
+    variable: model.Variable, 
+    old_algorithm: PseudonymizationAlgorithmsEnum, 
+    new_algorithm:PseudonymizationAlgorithmsEnum,
 ):
     """Update the pseudonymization algorithm for a variable.
 
