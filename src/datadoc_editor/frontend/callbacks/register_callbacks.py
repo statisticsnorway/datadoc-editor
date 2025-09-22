@@ -34,6 +34,7 @@ from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
 )
 from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
+from datadoc_editor.frontend.callbacks.variables import mutate_variable_pseudonymization
 from datadoc_editor.frontend.callbacks.variables import populate_pseudo_workspace
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
 from datadoc_editor.frontend.components.builders import build_dataset_edit_section
@@ -549,21 +550,28 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915 TODO: Jorgen-5, we s
     @app.callback(
         Output({"type": "pseudo-field-container", "variable": MATCH}, "children"),
         Input({"type": "pseudonymization-dropdown", "variable": MATCH}, "value"),
+        Input("save-button", "n_clicks"),
         State({"type": "pseudonymization-dropdown", "variable": MATCH}, "id"),
     )
     def callback_populate_pseudo_workspace(
         value,  # noqa: ANN001
+        n_clicks: int,
         dropdown_id,  # noqa: ANN001
     ) -> dbc.Form:
         """Create pseudonymization workspace dynamically based on selected pseudo algorithm."""
-        selected_algorithm = PseudonymizationAlgorithmsEnum[value] if value in PseudonymizationAlgorithmsEnum.__members__ else value
+        selected_algorithm = (
+            PseudonymizationAlgorithmsEnum[value]
+            if value in PseudonymizationAlgorithmsEnum.__members__
+            else value
+        )
         logger.debug("Selected algorithm: %s", selected_algorithm)
         variable = state.metadata.variables_lookup.get(dropdown_id["variable"])
 
         if variable is None:
             logger.info("Variable not found in lookup!")
             return []
-        
+        if n_clicks and n_clicks > 0:
+            mutate_variable_pseudonymization(variable, selected_algorithm)
         logger.debug(
             "Variable %s has pseudo info: %s",
             variable.short_name,
