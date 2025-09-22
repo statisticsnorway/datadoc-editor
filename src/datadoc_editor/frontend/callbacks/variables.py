@@ -411,17 +411,18 @@ def populate_pseudo_workspace(
     variable: model.Variable,
     selected_algorithm: PseudonymizationAlgorithmsEnum | None,
 ) -> dbc.Form:
-    """Create pseudonymization workspace.
+    """Build pseudonymization workspace for a variable.
 
-    Adds or infers variable pseudonymization.
-    Display pseudonymization fields dynamically based on selected pseudo algorithm.
+    Infers or applies variable pseudonymization.
+    Builds pseudonymization workspace dynamically based on selected pseudo algorithm.
 
     Args:
         variable (model.Variable):
-            The variable to apply pseudonymization logic to.
+            The variable to build the pseudonymization workspace for.
         selected_algorithm (PseudonymizationAlgorithmsEnum | str | None):
             The pseudonymization algorithm selected by the user.
-            If user deselects pseudonymization the value is 'delete_selected'.
+            If None and the variable already has pseudonymization, the algorithm
+            is inferred from the existing state.
 
     Returns:
         dbc.Form | list:
@@ -453,14 +454,23 @@ def mutate_variable_pseudonymization(
     variable: model.Variable,
     selected_algorithm: PseudonymizationAlgorithmsEnum | str | None,
 ) -> None:
-    """Updates or delete variable pseudonymization."""
+    """Updates or delete variable pseudonymization.
+
+    Depending on the selected algorithm, this function will update the existing
+    pseudonymization or delete it. 
+
+    Args:
+        variable (model.Variable):
+            The variable whose pseudonymization should be mutated.
+        selected_algorithm (PseudonymizationAlgorithmsEnum | str | None):
+            The pseudonymization algorithm selected by the user. If equal to
+            "delete_selected", the pseudonymization is removed. If an algorithm is
+            provided and differs from the inferred algorithm, the pseudonymization
+            is updated accordingly.
+    """
     if selected_algorithm == DELETE_SELECTED and variable.pseudonymization:
         delete_pseudonymization(variable)
         return
-
-    # if not selected_algorithm and variable.pseudonymization:
-    #    # Infer algorithm from existing pseudonymization
-    #    return
 
     if (
         isinstance(selected_algorithm, PseudonymizationAlgorithmsEnum)
