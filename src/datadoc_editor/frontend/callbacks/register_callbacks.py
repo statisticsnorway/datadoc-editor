@@ -556,14 +556,14 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915 TODO: Jorgen-5, we s
         dropdown_id,  # noqa: ANN001
     ) -> dbc.Form:
         """Create pseudonymization workspace dynamically based on selected pseudo algorithm."""
-        selected_algorithm = PseudonymizationAlgorithmsEnum[value] if value else None
+        selected_algorithm = PseudonymizationAlgorithmsEnum[value] if value in PseudonymizationAlgorithmsEnum.__members__ else value
         logger.debug("Selected algorithm: %s", selected_algorithm)
         variable = state.metadata.variables_lookup.get(dropdown_id["variable"])
 
         if variable is None:
             logger.info("Variable not found in lookup!")
             return []
-
+        
         logger.debug(
             "Variable %s has pseudo info: %s",
             variable.short_name,
