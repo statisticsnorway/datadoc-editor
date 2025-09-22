@@ -7,6 +7,7 @@ import pytest
 from dash import html
 from datadoc_model.all_optional import model
 
+from datadoc_editor import enums
 from datadoc_editor import state
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.utils import check_variable_names
@@ -15,6 +16,7 @@ from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
 from datadoc_editor.frontend.callbacks.utils import render_multidropdown_row
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
+from datadoc_editor.frontend.callbacks.utils import update_store_data_with_inputs
 from datadoc_editor.frontend.callbacks.utils import update_use_restriction_date
 from datadoc_editor.frontend.callbacks.utils import update_use_restriction_type
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
@@ -280,6 +282,84 @@ def test_update_use_restriction(initial_value, field, index, expected):
         )
 
     assert result[index] == expected
+
+
+@pytest.mark.parametrize(
+    ("type_value", "expected_type", "date_value", "expected_date"),
+    [
+        (
+            enums.UseRestrictionType.DELETION_ANONYMIZATION.value,
+            enums.UseRestrictionType.DELETION_ANONYMIZATION.value,
+            "2025-01-01",
+            "2025-01-01",
+        ),
+        (None, None, None, None),
+    ],
+)
+def test_valid_type_values_update(type_value, expected_type, date_value, expected_date):
+    store_data = [{"use_restriction_type": None, "use_restriction_date": None}]
+    type_values = [type_value]
+    date_values = [date_value]
+
+    result = update_store_data_with_inputs(store_data, type_values, date_values)
+
+    assert result == [
+        {
+            "use_restriction_type": expected_type,
+            "use_restriction_date": expected_date,
+        }
+    ]
+
+
+@pytest.mark.parametrize(
+    ("store_data", "type_values", "date_values", "expected"),
+    [
+        (
+            [
+                {
+                    "use_restriction_type": enums.UseRestrictionType.DELETION_ANONYMIZATION.value,
+                    "use_restriction_date": "2025-01-01",
+                }
+            ],
+            [enums.UseRestrictionType.PROCESS_LIMITATIONS.value],
+            ["2026-01-01"],
+            [
+                {
+                    "use_restriction_type": enums.UseRestrictionType.PROCESS_LIMITATIONS.value,
+                    "use_restriction_date": "2026-01-01",
+                }
+            ],
+        ),
+        (
+            [
+                {
+                    "use_restriction_type": enums.UseRestrictionType.DELETION_ANONYMIZATION.value,
+                    "use_restriction_date": "2025-01-01",
+                },
+                {"use_restriction_type": None, "use_restriction_date": None},
+            ],
+            [
+                enums.UseRestrictionType.DELETION_ANONYMIZATION.value,
+                enums.UseRestrictionType.PROCESS_LIMITATIONS.value,
+            ],
+            ["2025-01-01", "2026-01-01"],
+            [
+                {
+                    "use_restriction_type": enums.UseRestrictionType.DELETION_ANONYMIZATION.value,
+                    "use_restriction_date": "2025-01-01",
+                },
+                {
+                    "use_restriction_type": enums.UseRestrictionType.PROCESS_LIMITATIONS.value,
+                    "use_restriction_date": "2026-01-01",
+                },
+            ],
+        ),
+    ],
+)
+def test_update_store_data_with_inputs(store_data, type_values, date_values, expected):
+    assert (
+        update_store_data_with_inputs(store_data, type_values, date_values) == expected
+    )
 
 
 def test_find_existing_use_restriction_illegal_input():
