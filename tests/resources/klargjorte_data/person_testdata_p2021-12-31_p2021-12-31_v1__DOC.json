@@ -1,8 +1,8 @@
 {
     "document_version": "1.0.0",
     "datadoc": {
-        "percentage_complete": 98,
-        "document_version": "6.0.0",
+        "percentage_complete": 79,
+        "document_version": "6.1.0",
         "dataset": {
             "short_name": "person_testdata_p2021-12-31_p2021-12-31",
             "assessment": "PROTECTED",
@@ -84,15 +84,14 @@
                     "languageText": "Norge"
                 }
             ],
-            "use_restriction": null,
-            "use_restriction_date": null,
+            "use_restrictions": [],
             "custom_type": null,
             "id": "2f72477a-f051-43ee-bf8b-0d8f47b5e0a7",
             "owner": "",
             "file_path": "None",
             "metadata_created_date": "2022-10-07T07:35:01Z",
             "metadata_created_by": "default_user@ssb.no",
-            "metadata_last_updated_date": "2025-09-10T14:28:12.454951Z",
+            "metadata_last_updated_date": "2025-09-21T22:05:09.823427Z",
             "metadata_last_updated_by": null,
             "contains_data_from": "2021-12-31",
             "contains_data_until": "2021-12-31"
@@ -120,12 +119,19 @@
                 "definition_uri": "https://www.ssb.no/a/metadata/conceptvariable/vardok/26/nb",
                 "is_personal_data": true,
                 "pseudonymization": {
-                    "pseudonymization_time": null,
-                    "stable_identifier_type": "FREG_SNR",
+                    "pseudonymization_time": "2025-10-05T00:00:00Z",
+                    "stable_identifier_type": null,
                     "stable_identifier_version": null,
                     "encryption_algorithm": "TINK-FPE",
                     "encryption_key_reference": "papis-common-key-1",
-                    "encryption_algorithm_parameters": null
+                    "encryption_algorithm_parameters": [
+                        {
+                            "keyId": "papis-common-key-1"
+                        },
+                        {
+                            "strategy": "skip"
+                        }
+                    ]
                 },
                 "unit_type": "PERSON",
                 "data_source": null,
@@ -166,11 +172,21 @@
                 "is_personal_data": true,
                 "pseudonymization": {
                     "pseudonymization_time": null,
-                    "stable_identifier_type": null,
-                    "stable_identifier_version": null,
+                    "stable_identifier_type": "FREG_SNR",
+                    "stable_identifier_version": "gh-hj",
                     "encryption_algorithm": "TINK-FPE",
                     "encryption_key_reference": "papis-common-key-1",
-                    "encryption_algorithm_parameters": null
+                    "encryption_algorithm_parameters": [
+                        {
+                            "keyId": "papis-common-key-1"
+                        },
+                        {
+                            "strategy": "skip"
+                        },
+                        {
+                            "snapshotDate": "2025-09-21"
+                        }
+                    ]
                 },
                 "unit_type": "PERSON",
                 "data_source": null,
@@ -210,9 +226,9 @@
                 "definition_uri": "https://www.ssb.no/a/metadata/conceptvariable/vardok/94/nb",
                 "is_personal_data": true,
                 "pseudonymization": {
-                    "pseudonymization_time": null,
-                    "stable_identifier_type": null,
-                    "stable_identifier_version": null,
+                    "pseudonymization_time": "2025-09-07T00:00:00Z",
+                    "stable_identifier_type": "pkpk",
+                    "stable_identifier_version": "bkhbhj",
                     "encryption_algorithm": "TINK-DAED",
                     "encryption_key_reference": "ssb-common-key-1",
                     "encryption_algorithm_parameters": null
@@ -255,12 +271,16 @@
                 "definition_uri": "https://www.ssb.no/a/metadata/conceptvariable/vardok/3495/nb",
                 "is_personal_data": true,
                 "pseudonymization": {
-                    "pseudonymization_time": null,
+                    "pseudonymization_time": "2025-09-28T00:00:00Z",
                     "stable_identifier_type": null,
                     "stable_identifier_version": null,
-                    "encryption_algorithm": "PPP",
-                    "encryption_key_reference": "common-ppp-1",
-                    "encryption_algorithm_parameters": null
+                    "encryption_algorithm": "TINK-DAEAD",
+                    "encryption_key_reference": "ssb-common-key-1",
+                    "encryption_algorithm_parameters": [
+                        {
+                            "keyId": "ssb-common-key-1"
+                        }
+                    ]
                 },
                 "unit_type": "PERSON",
                 "data_source": null,
@@ -299,7 +319,18 @@
                 "variable_role": "MEASURE",
                 "definition_uri": "https://www.ssb.no/a/metadata/conceptvariable/vardok/591/nb",
                 "is_personal_data": false,
-                "pseudonymization": null,
+                "pseudonymization": {
+                    "pseudonymization_time": "2025-04-04T00:00:00Z",
+                    "stable_identifier_type": null,
+                    "stable_identifier_version": null,
+                    "encryption_algorithm": "TINK-DAEAD",
+                    "encryption_key_reference": "ssb-common-key-1",
+                    "encryption_algorithm_parameters": [
+                        {
+                            "keyId": "ssb-common-key-1"
+                        }
+                    ]
+                },
                 "unit_type": "PERSON",
                 "data_source": null,
                 "population_description": null,
@@ -337,7 +368,14 @@
                 "variable_role": "START_TIME",
                 "definition_uri": null,
                 "is_personal_data": false,
-                "pseudonymization": null,
+                "pseudonymization": {
+                    "pseudonymization_time": null,
+                    "stable_identifier_type": null,
+                    "stable_identifier_version": null,
+                    "encryption_algorithm": "TINK-FPE",
+                    "encryption_key_reference": null,
+                    "encryption_algorithm_parameters": null
+                },
                 "unit_type": "PERSON",
                 "data_source": null,
                 "population_description": null,
