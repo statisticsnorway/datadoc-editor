@@ -297,6 +297,24 @@ def accept_dataset_multidropdown_input(
     return show_error, error_explanation
 
 
+def remove_dataset_multidropdown_input(metadata_identifier: str, index: int) -> None:
+    """Remove a row from the multidropdown component."""
+    logger.debug(
+        "Removing row %d for metadata_identifier = %s", index, metadata_identifier
+    )
+
+    restrictions = state.metadata.dataset.use_restrictions
+    if restrictions is None:
+        logger.error("use_restrictions is None for %s", metadata_identifier)
+        return
+
+    if 0 <= index < len(restrictions):
+        restrictions.pop(index)
+        logger.info("Removed row %d from dataset %s", index, metadata_identifier)
+    else:
+        logger.warning("Invalid index %d for %s", index, metadata_identifier)
+
+
 def accept_dataset_metadata_date_input(
     dataset_identifier: DatasetIdentifiers,
     contains_data_from: str | None,

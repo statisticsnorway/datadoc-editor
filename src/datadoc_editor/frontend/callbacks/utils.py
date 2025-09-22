@@ -311,11 +311,22 @@ def render_tabs(tab: str) -> html.Article | None:
     return None
 
 
+def update_store_data_with_inputs(
+    store_data: list[dict], type_values: list[str], date_values: list[str]
+) -> list[dict]:
+    """Update each use restriction in store_data with the latest type/date values."""
+    for item, type_val, date_val in zip(
+        store_data, type_values, date_values, strict=False
+    ):
+        item.update(use_restriction_type=type_val, use_restriction_date=date_val)
+    return store_data
+
+
 def render_multidropdown_row(
     item: dict,
-    dropdown_id: dict[str, str | int],
-    date_id: dict[str, str | int],
+    row_id: dict[str, str | int],
     options: Callable[[], list[dict[str, str]]],
+    key: str | None = None,
 ) -> html.Div:
     """Renders a row in the multidropdown component."""
     field = cast(
@@ -323,13 +334,17 @@ def render_multidropdown_row(
         DISPLAY_DATASET[DatasetIdentifiers.USE_RESTRICTIONS],
     )
 
+    dropdown_id = {**row_id, "field": "type"}
+    date_id = {**row_id, "field": "date"}
+    button_id = {**row_id, "field": "delete"}
+
     return html.Div(
         [
             ssb.Dropdown(
                 header=field.type_display_name,
                 items=options,
                 placeholder=DROPDOWN_DESELECT_OPTION,
-                value=item["use_restriction_type"],
+                value=item.get("use_restriction_type"),
                 id=dropdown_id,
                 className="dropdown-component",
                 showDescription=True,
@@ -337,15 +352,17 @@ def render_multidropdown_row(
             ),
             ssb.Input(
                 label=field.date_display_name,
-                value=item["use_restriction_date"],
+                value=item.get("use_restriction_date"),
                 id=date_id,
                 className="input-component",
                 type="date",
                 showDescription=True,
                 description=field.date_description,
             ),
+            html.Button("", id=button_id, className="multidropdown-delete-button"),
         ],
         className="input-group-row",
+        key=key,
     )
 
 
