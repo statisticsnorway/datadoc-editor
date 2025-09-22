@@ -420,7 +420,7 @@ def test_open_dataset_handling_no_metadata_inconsistency(
     path_info_mock.return_value.path_complies_with_naming_standard.return_value = True
     mock_metadata = Mock()
     mock_metadata.dataset_consistency_status = [
-        DatasetConsistencyStatus(**status)
+        DatasetConsistencyStatus(**status)  # type: ignore [arg-type]
         for status in [
             {"name": "Bucket name", "success": True},
             {"name": "Data product name", "success": True},
