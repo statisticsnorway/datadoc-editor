@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 from dapla_metadata.datasets import model
 
 from datadoc_editor import state
+from datadoc_editor.constants import DELETE_SELECTED
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 from datadoc_editor.frontend.callbacks.utils import PseudonymizationInputTypes
@@ -408,34 +409,26 @@ def set_variables_values_inherit_dataset_derived_date_values() -> None:
 
 def populate_pseudo_workspace(
     variable: model.Variable,
-    selected_algorithm: PseudonymizationAlgorithmsEnum | None,
+    selected_algorithm: PseudonymizationAlgorithmsEnum | str,
 ) -> dbc.Form:
     """Create pseudonymization workspace.
 
-    Adds, updates or delete variable pseudonymization.
+    Adds or infers variable pseudonymization.
     Display pseudonymization fields dynamically based on selected pseudo algorithm.
 
     Args:
         variable (model.Variable):
             The variable to apply pseudonymization logic to.
-        selected_algorithm (PseudonymizationAlgorithmsEnum | None):
+        selected_algorithm (PseudonymizationAlgorithmsEnum | str | None):
             The pseudonymization algorithm selected by the user.
-            If user deselects pseudonymization the value is 'None'.
+            If user deselects pseudonymization the value is 'delete_selected'.
 
     Returns:
         dbc.Form | list:
             Pseudonymization fields based on selection if pseudonymization; otherwise, an empty list.
     """
-    if selected_algorithm is None and variable.pseudonymization:
-        delete_pseudonymization(variable)
-
-    if selected_algorithm and variable.pseudonymization:
-        inferred_algorithm = map_dropdown_to_pseudo(variable)
-
-        if inferred_algorithm and inferred_algorithm != selected_algorithm:
-            update_selected_pseudonymization(
-                variable, inferred_algorithm, selected_algorithm
-            )
+    if not selected_algorithm and variable.pseudonymization:
+        selected_algorithm = map_dropdown_to_pseudo(variable)
 
     if selected_algorithm and not variable.pseudonymization:
         apply_pseudonymization(variable, selected_algorithm)
@@ -454,3 +447,28 @@ def populate_pseudo_workspace(
         pseudonymization=variable.pseudonymization,
         field_id="pseudo",
     )
+
+
+def mutate_variable_pseudonymization(
+    variable: model.Variable, selected_algorithm: PseudonymizationAlgorithmsEnum | str
+) -> None:
+    """Updates or delete variable pseudonymization."""
+    if selected_algorithm == DELETE_SELECTED and variable.pseudonymization:
+        delete_pseudonymization(variable)
+        return
+
+    if not selected_algorithm and variable.pseudonymization:
+        # Infer algorithm from existing pseudonymization
+        return
+
+    if (
+        selected_algorithm
+        and variable.pseudonymization
+        and selected_algorithm != DELETE_SELECTED
+    ):
+        inferred_algorithm = map_dropdown_to_pseudo(variable)
+        if inferred_algorithm and inferred_algorithm != selected_algorithm:
+            update_selected_pseudonymization(
+                variable, inferred_algorithm, selected_algorithm
+            )
+        return
