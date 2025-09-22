@@ -21,6 +21,14 @@ from dash import html
 from datadoc_editor import state
 from datadoc_editor.constants import DELETE_SELECTED
 from datadoc_editor.constants import DROPDOWN_DELETE_OPTION
+from datadoc_editor.frontend.components.identifiers import ADD_USE_RESTRICTION_BUTTON
+from datadoc_editor.frontend.components.identifiers import FORCE_RERENDER_COUNTER
+from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_ID_STORE
+from datadoc_editor.frontend.components.identifiers import (
+    USE_RESTRICTION_LIST_CONTAINER,
+)
+from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_OPTION_STORE
+from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_STORE
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -453,7 +461,7 @@ class MetadataMultiDropdownField(DisplayMetadata):
             for i in use_restrictions
         ]
 
-        idx = {"type": self.id_type, "id": component_id["id"], "field": "type"}
+        idx = {"type": self.id_type, "id": component_id["id"]}
 
         children = [
             ssb.Glossary(
@@ -463,11 +471,12 @@ class MetadataMultiDropdownField(DisplayMetadata):
                 explanation=self.description,
                 className="legend-glossary",
             ),
-            html.Div(id="use-restriction-list-container"),
-            dcc.Store(id="use-restriction-store", data=initial_data),
-            dcc.Store(id="use-restriction-options-store", data=self.options_getter()),
-            dcc.Store(id="use-restriction-id-store", data=idx),
-            ssb.Button("Legg til bruksretriksjon", id="add-use-restriction-button"),
+            html.Div(id=USE_RESTRICTION_LIST_CONTAINER),
+            dcc.Store(id=USE_RESTRICTION_STORE, data=initial_data),
+            dcc.Store(id=USE_RESTRICTION_OPTION_STORE, data=self.options_getter()),
+            dcc.Store(id=USE_RESTRICTION_ID_STORE, data=idx),
+            dcc.Store(id=FORCE_RERENDER_COUNTER, data=0),
+            ssb.Button("Legg til bruksrestriksjon", id=ADD_USE_RESTRICTION_BUTTON),
         ]
 
         return html.Fieldset(children=children, className="multidropdown-fieldset")
