@@ -424,7 +424,7 @@ class MetadataMultiDropdownField(DisplayMetadata):
             dcc.Store(id=USE_RESTRICTION_OPTION_STORE, data=self.options_getter()),
             dcc.Store(id=USE_RESTRICTION_ID_STORE, data=idx),
             dcc.Store(id=FORCE_RERENDER_COUNTER, data=0),
-            ssb.Button("Legg til bruksretriksjon", id=ADD_USE_RESTRICTION_BUTTON),
+            ssb.Button("Legg til bruksrestriksjon", id=ADD_USE_RESTRICTION_BUTTON),
         ]
 
         return html.Fieldset(children=children, className="multidropdown-fieldset")
