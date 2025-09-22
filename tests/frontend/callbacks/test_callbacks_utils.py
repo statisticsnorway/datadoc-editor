@@ -377,9 +377,13 @@ class PseudoCase:
             saved_pseudonymization=model.Pseudonymization(
                 encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION,
                 encryption_key_reference=constants.DAEAD_ENCRYPTION_KEY_REFERENCE,
-                pseudonymization_time=datetime.datetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc)
+                pseudonymization_time=datetime.datetime(
+                    2021, 1, 1, 0, 0, tzinfo=datetime.UTC
+                ),
             ),
-            expected_pseudonymization_time=datetime.datetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc),
+            expected_pseudonymization_time=datetime.datetime(
+                2021, 1, 1, 0, 0, tzinfo=datetime.UTC
+            ),
         ),
     ],
     ids=[
@@ -387,7 +391,7 @@ class PseudoCase:
         "Selected PAPIS with stable ID",
         "Selected DAEAD",
         "Selected custom",
-        "Reselect: from DAEAD to PAPIS without stable ID"
+        "Reselect: from DAEAD to PAPIS without stable ID",
     ],
 )
 def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Datadoc):
@@ -414,4 +418,7 @@ def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Data
         == case.expected_algorithm_parameters
     )
     assert variable.pseudonymization.stable_identifier_type == case.expected_stable_type
-    assert variable.pseudonymization.pseudonymization_time == case.expected_pseudonymization_time
+    assert (
+        variable.pseudonymization.pseudonymization_time
+        == case.expected_pseudonymization_time
+    )
