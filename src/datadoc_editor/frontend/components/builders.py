@@ -13,12 +13,14 @@ from dash import html
 
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
-from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT, get_enum_options_with_delete_option
+from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import FieldTypes
-from datadoc_editor.frontend.fields.display_base import get_enum_options
+from datadoc_editor.frontend.fields.display_base import (
+    get_enum_options_with_delete_option,
+)
 
 if TYPE_CHECKING:
     from dapla_metadata.datasets import model
@@ -205,7 +207,9 @@ def build_variables_pseudonymization_section(
                     "type": "pseudonymization-dropdown",
                     "variable": variable.short_name,
                 },
-                items=get_enum_options_with_delete_option(PseudonymizationAlgorithmsEnum),
+                items=get_enum_options_with_delete_option(
+                    PseudonymizationAlgorithmsEnum
+                ),
                 value=selected_algorithm.value if selected_algorithm else None,
             ),
             html.Div(
