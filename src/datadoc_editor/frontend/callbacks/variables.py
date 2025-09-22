@@ -54,8 +54,6 @@ if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
     from dapla_metadata.datasets import model
 
-    from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
-
 
 logger = logging.getLogger(__name__)
 
