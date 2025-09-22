@@ -430,7 +430,7 @@ def populate_pseudo_workspace(
         selected_algorithm = map_dropdown_to_pseudo(variable)
 
     if selected_algorithm and not variable.pseudonymization:
-        apply_pseudonymization(variable, selected_algorithm)
+        apply_pseudonymization(variable, selected_algorithm, None)
         logger.info("Added pseudonymization for %s", variable.short_name)
 
     if variable.pseudonymization is None:
