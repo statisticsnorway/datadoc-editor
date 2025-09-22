@@ -301,6 +301,8 @@ class PseudoCase:
     expected_encryption_algorithm: str | None
     expected_encryption_key_reference: str | None
     expected_algorithm_parameters: list | None
+    saved_pseudonymization: model.Pseudonymization | None = None
+    expected_pseudonymization_time: datetime.datetime | None = None
 
 
 @pytest.mark.parametrize(
@@ -359,12 +361,33 @@ class PseudoCase:
             expected_encryption_key_reference=None,
             expected_algorithm_parameters=None,
         ),
+        PseudoCase(
+            selected_algorithm=enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID,
+            expected_stable_type=None,
+            expected_encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION,
+            expected_encryption_key_reference=constants.PAPIS_ENCRYPTION_KEY_REFERENCE,
+            expected_algorithm_parameters=[
+                {
+                    constants.ENCRYPTION_PARAMETER_KEY_ID: constants.PAPIS_ENCRYPTION_KEY_REFERENCE
+                },
+                {
+                    constants.ENCRYPTION_PARAMETER_STRATEGY: constants.ENCRYPTION_PARAMETER_STRATEGY_SKIP
+                },
+            ],
+            saved_pseudonymization=model.Pseudonymization(
+                encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION,
+                encryption_key_reference=constants.DAEAD_ENCRYPTION_KEY_REFERENCE,
+                pseudonymization_time=datetime.datetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc)
+            ),
+            expected_pseudonymization_time=datetime.datetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc),
+        ),
     ],
     ids=[
         "Selected PAPIS without stable ID",
         "Selected PAPIS with stable ID",
         "Selected DAEAD",
         "Selected custom",
+        "Reselect: from DAEAD to PAPIS without stable ID"
     ],
 )
 def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Datadoc):
@@ -373,6 +396,7 @@ def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Data
     apply_pseudonymization(
         variable,
         case.selected_algorithm,
+        case.saved_pseudonymization,
     )
     assert variable.pseudonymization is not None
     assert (
@@ -390,3 +414,4 @@ def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Data
         == case.expected_algorithm_parameters
     )
     assert variable.pseudonymization.stable_identifier_type == case.expected_stable_type
+    assert variable.pseudonymization.pseudonymization_time == case.expected_pseudonymization_time
