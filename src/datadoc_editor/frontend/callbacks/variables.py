@@ -457,7 +457,7 @@ def mutate_variable_pseudonymization(
     """Updates or delete variable pseudonymization.
 
     Depending on the selected algorithm, this function will update the existing
-    pseudonymization or delete it. 
+    pseudonymization or delete it.
 
     Args:
         variable (model.Variable):

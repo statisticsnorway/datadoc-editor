@@ -559,7 +559,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915 TODO: Jorgen-5, we s
         dropdown_id,  # noqa: ANN001
     ) -> dbc.Form:
         """Dynamically create pseudonymization workspace.
-        
+
         - The dropdown value updates the displayed pseudonymization fields immediately.
         - The Save button applies permanent changes (update or deletion) to the variable.
         """
