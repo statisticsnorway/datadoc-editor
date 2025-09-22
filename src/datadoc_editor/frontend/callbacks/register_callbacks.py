@@ -24,7 +24,7 @@ from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_da
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_multidropdown_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
-from datadoc_editor.frontend.callbacks.utils import render_multidropdown_row
+from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo, render_multidropdown_row
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
 from datadoc_editor.frontend.callbacks.variables import (
@@ -564,10 +564,11 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915 TODO: Jorgen-5, we s
         - The Save button applies permanent changes (update or deletion) to the variable.
         """
         # Map dropdown value to enum if possible
-        if value and value in PseudonymizationAlgorithmsEnum.__members__:
-            selected_algorithm = PseudonymizationAlgorithmsEnum[value]
-        else:
-            selected_algorithm = value
+        selected_algorithm = (
+            PseudonymizationAlgorithmsEnum[value]
+            if value and value in PseudonymizationAlgorithmsEnum.__members__
+            else value
+        )
 
         logger.debug("Selected algorithm: %s", selected_algorithm)
         variable = state.metadata.variables_lookup.get(dropdown_id["variable"])
@@ -575,7 +576,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915 TODO: Jorgen-5, we s
         if variable is None:
             logger.info("Variable not found in lookup!")
             return []
-
+        
         # Persist update and deletion only on save
         if n_clicks and n_clicks > 0:
             mutate_variable_pseudonymization(variable, selected_algorithm)
