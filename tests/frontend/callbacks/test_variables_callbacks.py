@@ -22,12 +22,12 @@ from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.utils import variables_control
 from datadoc_editor.frontend.callbacks.variables import (
     accept_pseudo_variable_metadata_input,
-    mutate_variable_pseudonymization,
 )
 from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
 )
 from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
+from datadoc_editor.frontend.callbacks.variables import mutate_variable_pseudonymization
 from datadoc_editor.frontend.callbacks.variables import populate_pseudo_workspace
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
 from datadoc_editor.frontend.callbacks.variables import (
@@ -851,17 +851,17 @@ def test_populate_pseudonymization_workspace(
     else:
         assert variable.pseudonymization is None
 
+
 def test_delete_pseudonymization(
-        metadata: Datadoc,
+    metadata: Datadoc,
 ):
     state.metadata = metadata
     first_var_short_name = metadata.variables[0].short_name
     variable = state.metadata.variables_lookup.get(first_var_short_name)
     assert variable is not None
     variable.pseudonymization = model.Pseudonymization(
-                encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION
-            )
+        encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION
+    )
     assert variable.pseudonymization.encryption_algorithm == "TINK-DAEAD"
-    mutate_variable_pseudonymization(variable,constants.DELETE_SELECTED)
+    mutate_variable_pseudonymization(variable, constants.DELETE_SELECTED)
     assert variable.pseudonymization is None
-    

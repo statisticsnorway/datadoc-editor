@@ -450,7 +450,7 @@ def populate_pseudo_workspace(
 
 
 def mutate_variable_pseudonymization(
-    variable: model.Variable, 
+    variable: model.Variable,
     selected_algorithm: PseudonymizationAlgorithmsEnum | str | None,
 ) -> None:
     """Updates or delete variable pseudonymization."""
@@ -458,9 +458,9 @@ def mutate_variable_pseudonymization(
         delete_pseudonymization(variable)
         return
 
-    if not selected_algorithm and variable.pseudonymization:
-        # Infer algorithm from existing pseudonymization
-        return
+    # if not selected_algorithm and variable.pseudonymization:
+    #    # Infer algorithm from existing pseudonymization
+    #    return
 
     if (
         isinstance(selected_algorithm, PseudonymizationAlgorithmsEnum)
