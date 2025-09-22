@@ -52,6 +52,7 @@ from datadoc_editor.utils import METADATA_DOCUMENT_FILE_SUFFIX
 if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
     from dapla_metadata.datasets import model
+    from dapla_metadata.datasets._merge import DatasetConsistencyStatus
 
 logger = logging.getLogger(__name__)
 
@@ -136,11 +137,10 @@ def open_dataset_handling(
                 ),
                 dataset_opened_counter,
             )
-        failed_items = [
-            item["name"]
-            for item in state.metadata.dataset_consistency_status or []
-            if not item["success"]
-        ]
+        status: list[DatasetConsistencyStatus] = (
+            state.metadata.dataset_consistency_status
+        )
+        failed_items = [item.message for item in status or [] if not item.success]
         if failed_items:
             return (
                 build_ssb_alert(

@@ -14,6 +14,7 @@ import dash_bootstrap_components as dbc
 import pytest
 from dapla_metadata.datasets import ObligatoryDatasetWarning
 from dapla_metadata.datasets import model
+from dapla_metadata.datasets._merge import DatasetConsistencyStatus
 
 from datadoc_editor import enums
 from datadoc_editor import state
@@ -506,12 +507,15 @@ def test_open_dataset_handling_metadata_inconsistency(
     path_info_mock.return_value.path_complies_with_naming_standard.return_value = True
     mock_metadata = Mock()
     mock_metadata.dataset_consistency_status = [
-        {"name": "Bucket name", "success": True},
-        {"name": "Data product name", "success": True},
-        {"name": "Dataset state", "success": False},
-        {"name": "Dataset short name", "success": True},
-        {"name": "Variable names", "success": True},
-        {"name": "Variable datatypes", "success": True},
+        DatasetConsistencyStatus(**status)  # type: ignore [arg-type]
+        for status in [
+            {"message": "Bucket name", "success": True},
+            {"message": "Data product name", "success": True},
+            {"message": "Dataset state", "success": False},
+            {"message": "Dataset short name", "success": True},
+            {"message": "Variable names", "success": True},
+            {"message": "Variable datatypes", "success": True},
+        ]
     ]
     open_file_mock.return_value = mock_metadata
     alert, counter = open_dataset_handling(
@@ -537,12 +541,15 @@ def test_open_dataset_handling_no_metadata_inconsistency(
     path_info_mock.return_value.path_complies_with_naming_standard.return_value = True
     mock_metadata = Mock()
     mock_metadata.dataset_consistency_status = [
-        {"name": "Bucket name", "success": True},
-        {"name": "Data product name", "success": True},
-        {"name": "Dataset state", "success": True},
-        {"name": "Dataset short name", "success": True},
-        {"name": "Variable names", "success": True},
-        {"name": "Variable datatypes", "success": True},
+        DatasetConsistencyStatus(**status)  # type: ignore [arg-type]
+        for status in [
+            {"message": "Bucket name", "success": True},
+            {"message": "Data product name", "success": True},
+            {"message": "Dataset state", "success": True},
+            {"message": "Dataset short name", "success": True},
+            {"message": "Variable names", "success": True},
+            {"message": "Variable datatypes", "success": True},
+        ]
     ]
     open_file_mock.return_value = mock_metadata
     alert, counter = open_dataset_handling(
