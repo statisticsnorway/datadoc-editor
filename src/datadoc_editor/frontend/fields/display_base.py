@@ -19,6 +19,7 @@ from dash import dcc
 from dash import html
 
 from datadoc_editor import state
+from datadoc_editor.constants import DELETE_SELECTED, DROPDOWN_DELETE_OPTION
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -77,6 +78,20 @@ def get_enum_options(
     dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": ""})
     return dropdown_options
 
+def get_enum_options_with_delete_option(
+    enum: type[LanguageStringsEnum],
+) -> list[dict[str, str]]:
+    """Generate the list of options based on the currently chosen language."""
+    dropdown_options = [
+        {
+            "title": i.get_value_for_language(enums.SupportedLanguages.NORSK_BOKMÅL)
+            or "",
+            "id": i.name,
+        }
+        for i in enum  # type: ignore [attr-defined]
+    ]
+    dropdown_options.insert(0, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
+    return dropdown_options
 
 def get_data_source_options() -> list[dict[str, str]]:
     """Collect the unit type options."""
