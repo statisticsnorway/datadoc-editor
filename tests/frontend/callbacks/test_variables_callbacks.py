@@ -22,6 +22,7 @@ from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.utils import variables_control
 from datadoc_editor.frontend.callbacks.variables import (
     accept_pseudo_variable_metadata_input,
+    mutate_variable_pseudonymization,
 )
 from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
@@ -731,7 +732,7 @@ def test_accept_pseudo_variable_metadata_input_valid(
 class PseudoCase:
     """Test cases Pseudonymization."""
 
-    selected_algorithm: enums.PseudonymizationAlgorithmsEnum | None
+    selected_algorithm: enums.PseudonymizationAlgorithmsEnum | None | str
     expected_workspace_type: dbc.Form | list
     expected_number_editable_inputs: int
     expected_identifiers_in_workspace: list | None
@@ -802,10 +803,10 @@ class PseudoCase:
         ),
         PseudoCase(
             selected_algorithm=None,
-            expected_workspace_type=list,
-            expected_number_editable_inputs=0,
-            expected_identifiers_in_workspace=None,
-            expected_variable_pseudonymization=False,
+            expected_workspace_type=dbc.Form,
+            expected_number_editable_inputs=1,
+            expected_identifiers_in_workspace=["pseudonymization_time"],
+            expected_variable_pseudonymization=True,
             saved_pseudonymization=model.Pseudonymization(
                 encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION
             ),
@@ -819,7 +820,7 @@ class PseudoCase:
         "No algorithm selected",
         "Change from PAPIS without stable ID to DAEAD",
         "Change from DAEAD TO PAPIS with stable ID",
-        "Delete",
+        "None",
     ],
 )
 def test_populate_pseudonymization_workspace(
@@ -849,3 +850,18 @@ def test_populate_pseudonymization_workspace(
         assert variable.pseudonymization is not None
     else:
         assert variable.pseudonymization is None
+
+def test_delete_pseudonymization(
+        metadata: Datadoc,
+):
+    state.metadata = metadata
+    first_var_short_name = metadata.variables[0].short_name
+    variable = state.metadata.variables_lookup.get(first_var_short_name)
+    assert variable is not None
+    variable.pseudonymization = model.Pseudonymization(
+                encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION
+            )
+    assert variable.pseudonymization.encryption_algorithm == "TINK-DAEAD"
+    mutate_variable_pseudonymization(variable,constants.DELETE_SELECTED)
+    assert variable.pseudonymization is None
+    
