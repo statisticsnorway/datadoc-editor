@@ -303,7 +303,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
                     "index": ALL,
                     "field": "date",
                 },
-                "date",
+                "value",
             ),
             Input(
                 {
