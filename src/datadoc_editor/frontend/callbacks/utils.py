@@ -26,7 +26,7 @@ from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_VARIABLES_MESSAGE
 from datadoc_editor.constants import ILLEGAL_SHORTNAME_WARNING
 from datadoc_editor.constants import ILLEGAL_SHORTNAME_WARNING_MESSAGE
 from datadoc_editor.constants import MISSING_METADATA_WARNING
-from datadoc_editor.constants import PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE
+from datadoc_editor.constants import PAPIS_STABLE_IDENTIFIER_TYPE
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.components.builders import AlertTypes
 from datadoc_editor.frontend.components.builders import build_ssb_alert
@@ -72,6 +72,7 @@ MetadataInputTypes = (
     str | list[str] | list[dict] | int | float | bool | datetime.date | None
 )
 MultidropdownInputTypes = str | None
+PseudonymizationInputTypes = str | datetime.datetime | None
 
 
 def _check_if_language_string_item_exists(
@@ -596,7 +597,7 @@ def map_dropdown_to_pseudo(
             case constants.PAPIS_ALGORITHM_ENCRYPTION:
                 if (
                     variable.pseudonymization.stable_identifier_type
-                    == PAPIS_ALGORITHM_WITH_STABLE_ID_TYPE
+                    == PAPIS_STABLE_IDENTIFIER_TYPE
                 ):
                     return PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID
                 return PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID
@@ -607,3 +608,155 @@ def map_dropdown_to_pseudo(
             case _:
                 return PseudonymizationAlgorithmsEnum.CUSTOM
     return None
+
+
+def apply_pseudonymization(
+    variable: model.Variable,
+    selected_algorithm: PseudonymizationAlgorithmsEnum,
+    transfer_pseudonymzation: model.Pseudonymization | None,
+) -> None:
+    """Apply a pseudonymization algorithm to a variable and update its metadata.
+
+    Depending on the selected algorithm, this function creates and assigns a
+    corresponding `Pseudonymization` object. If previously stored values exist
+    for algorithm-specific optional fields, they are transferred to the new
+    `Pseudonymization`. If the selected algorithm is `CUSTOM`, all available
+    values are transferred.
+
+    Args:
+        variable (model.Variable): The variable to pseudonymize.
+        selected_algorithm (PseudonymizationAlgorithmsEnum): The pseudonymization algorithm to apply.
+        transfer_pseudonymzation (model.Pseudonymization | None): Existing
+            pseudonymization data to transfer, if applicable.
+
+    Returns:
+        None
+    """
+    if variable.short_name:
+        match selected_algorithm:
+            case PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID:
+                state.metadata.add_pseudonymization(
+                    variable.short_name,
+                    model.Pseudonymization(
+                        encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION,
+                        pseudonymization_time=transfer_pseudonymzation.pseudonymization_time
+                        if transfer_pseudonymzation
+                        else None,
+                    ),
+                )
+            case PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID:
+                state.metadata.add_pseudonymization(
+                    variable.short_name,
+                    model.Pseudonymization(
+                        encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION,
+                        stable_identifier_type=constants.PAPIS_STABLE_IDENTIFIER_TYPE,
+                        pseudonymization_time=transfer_pseudonymzation.pseudonymization_time
+                        if transfer_pseudonymzation
+                        else None,
+                        stable_identifier_version=transfer_pseudonymzation.stable_identifier_version
+                        if transfer_pseudonymzation
+                        else None,
+                    ),
+                )
+            case PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA:
+                state.metadata.add_pseudonymization(
+                    variable.short_name,
+                    model.Pseudonymization(
+                        encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION,
+                        pseudonymization_time=transfer_pseudonymzation.pseudonymization_time
+                        if transfer_pseudonymzation
+                        else None,
+                    ),
+                )
+            case PseudonymizationAlgorithmsEnum.CUSTOM:
+                state.metadata.add_pseudonymization(
+                    variable.short_name,
+                    transfer_pseudonymzation if transfer_pseudonymzation else None,
+                )
+
+
+def parse_and_validate_pseudonymization_time(
+    pseudo_date: str | datetime.datetime | None,
+) -> datetime.datetime | None:
+    """Parse and validate the given date.
+
+    Validate that:
+        - The date is in YYYY-MM-DD format
+
+    Examples:
+    >>> parse_and_validate_pseudonymization_time("2021-01-01")
+    datetime.datetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc)
+
+    >>> parse_and_validate_pseudonymization_time("1990-01-01")
+    datetime.datetime(1990, 1, 1, 0, 0, tzinfo=datetime.timezone.utc)
+
+    >>> parse_and_validate_pseudonymization_time("1st January 2021")
+    Traceback (most recent call last):
+    ...
+    ValueError: Validation error: Expected an ISO 8601-like string, but was given '1st January 2021'. Try passing in a format string to resolve this.
+
+    >>> parse_and_validate_pseudonymization_time(None)
+    None
+    """
+    if pseudo_date is None:
+        return None
+    parsed_date = None
+    try:
+        if pseudo_date:
+            parsed_date = arrow.get(pseudo_date)
+    except arrow.parser.ParserError as e:
+        raise ValueError(VALIDATION_ERROR + str(e)) from e
+
+    return parsed_date.astimezone(tz=datetime.UTC) if parsed_date else None
+
+
+def update_selected_pseudonymization(
+    variable: model.Variable,
+    old_algorithm: PseudonymizationAlgorithmsEnum,
+    new_algorithm: PseudonymizationAlgorithmsEnum,
+) -> None:
+    """Update the pseudonymization algorithm for a variable.
+
+    This function replaces the variable's existing pseudonymization with a new one:
+        - Removes the pseudonymization defined by the old algorithm.
+        - Transfers old pseudonymization values to 'apply_pseudonymization'
+        - Applies a new pseudonymization based on the newly selected algorithm.
+
+    Args:
+        variable (model.Variable):
+            The variable whose pseudonymization is being updated.
+        old_algorithm (PseudonymizationAlgorithmsEnum):
+            The previously applied pseudonymization algorithm.
+        new_algorithm (PseudonymizationAlgorithmsEnum):
+            The newly selected pseudonymization algorithm.
+    """
+    if variable.short_name:
+        transfer_pseudonymization = (
+            variable.pseudonymization if variable.pseudonymization else None
+        )
+        state.metadata.remove_pseudonymization(variable.short_name)
+        logger.debug(
+            "Updating pseuonymization step 1: Remove pseudonymization for %s",
+            variable.short_name,
+        )
+        apply_pseudonymization(variable, new_algorithm, transfer_pseudonymization)
+        logger.debug(
+            "Updating pseuonymization step 2: Add new pseudonymization for %s.",
+            variable.short_name,
+        )
+        logger.info(
+            "Updating pseudonymization algorithm for %s from %s to %s.",
+            variable.short_name,
+            old_algorithm,
+            new_algorithm,
+        )
+
+
+def delete_pseudonymization(variable: model.Variable) -> None:
+    """Remove pseudonymization for a Variable.."""
+    state.metadata.remove_pseudonymization(
+        variable.short_name,
+    ) if variable.short_name else logger.debug(
+        "Could not delete pseudonymization for %s", variable.short_name
+    )
+    logger.info("Removed pseudonymization for %s", variable.short_name)

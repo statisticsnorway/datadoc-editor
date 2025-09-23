@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING
 from typing import Any
 from typing import cast
 
+import arrow
 import ssb_dash_components as ssb
 from dapla_metadata.datasets import enums
 from dapla_metadata.datasets import model
@@ -18,6 +19,8 @@ from dash import dcc
 from dash import html
 
 from datadoc_editor import state
+from datadoc_editor.constants import DELETE_SELECTED
+from datadoc_editor.constants import DROPDOWN_DELETE_OPTION
 from datadoc_editor.frontend.components.identifiers import ADD_USE_RESTRICTION_BUTTON
 from datadoc_editor.frontend.components.identifiers import FORCE_RERENDER_COUNTER
 from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_ID_STORE
@@ -85,6 +88,22 @@ def get_enum_options(
     return dropdown_options
 
 
+def get_enum_options_with_delete_option(
+    enum: type[LanguageStringsEnum],
+) -> list[dict[str, str]]:
+    """Generate the list of options based on the currently chosen language."""
+    dropdown_options = [
+        {
+            "title": i.get_value_for_language(enums.SupportedLanguages.NORSK_BOKMÅL)
+            or "",
+            "id": i.name,
+        }
+        for i in enum  # type: ignore [attr-defined]
+    ]
+    dropdown_options.append({"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
+    return dropdown_options
+
+
 def get_data_source_options() -> list[dict[str, str]]:
     """Collect the unit type options."""
     dropdown_options = [
@@ -109,6 +128,14 @@ def get_metadata_and_stringify(metadata: BaseModel, identifier: str) -> str | No
     if value is None:
         return ""
     return str(value)
+
+
+def get_datetime_and_stringify(metadata: BaseModel, identifier: str) -> str | None:
+    """Get a metadata datetime value from the model and cast date to string."""
+    value = get_standard_metadata(metadata, identifier)
+    if not value:
+        return ""
+    return arrow.get(str(value)).format("YYYY-MM-DD")
 
 
 def _get_string_type_item(
@@ -245,6 +272,31 @@ class MetadataDateField(DisplayMetadata):
             showDescription=True,
             description=self.description,
             value=get_metadata_and_stringify(metadata, self.identifier),
+            className="input-component",
+            required=self.obligatory and self.editable,
+        )
+
+
+@dataclass
+class MetadataDateTimeField(DisplayMetadata):
+    """Controls how fields which define a single date are displayed."""
+
+    def render(
+        self,
+        component_id: dict,
+        metadata: BaseModel,
+    ) -> ssb.Input:
+        """Build Input date component."""
+        self.url_encode_shortname_ids(component_id)
+        return ssb.Input(
+            label=self.display_name,
+            id=component_id,
+            debounce=False,
+            type="date",
+            disabled=not self.editable,
+            showDescription=True,
+            description=self.description,
+            value=get_datetime_and_stringify(metadata, self.identifier),
             className="input-component",
             required=self.obligatory and self.editable,
         )
@@ -457,6 +509,7 @@ FieldTypes = (
     MetadataInputField
     | MetadataDropdownField
     | MetadataDateField
+    | MetadataDateTimeField
     | MetadataCheckboxField
     | MetadataPeriodField
     | MetadataMultiLanguageField

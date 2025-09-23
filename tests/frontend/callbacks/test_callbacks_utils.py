@@ -4,12 +4,15 @@ from unittest import mock
 
 import dash_bootstrap_components as dbc
 import pytest
+from dapla_metadata.datasets import Datadoc
 from dash import html
 from datadoc_model.all_optional import model
 
+from datadoc_editor import constants
 from datadoc_editor import enums
 from datadoc_editor import state
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
+from datadoc_editor.frontend.callbacks.utils import apply_pseudonymization
 from datadoc_editor.frontend.callbacks.utils import check_variable_names
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
 from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
@@ -188,7 +191,7 @@ def test_legal_shortname(shortname: str):
         (
             model.Variable(
                 pseudonymization=model.Pseudonymization(
-                    encryption_algorithm="TINK-DAED",
+                    encryption_algorithm="TINK-DAEAD",
                 ),
             ),
             PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
@@ -368,3 +371,135 @@ def test_find_existing_use_restriction_illegal_input():
         update_use_restriction_type(
             dataset_metadata, "NOT_A_USE_RESTRICTION", "use_restrictions", 0
         )
+
+
+@dataclass
+class PseudoCase:
+    """Test cases Pseudonymization."""
+
+    selected_algorithm: enums.PseudonymizationAlgorithmsEnum | None
+    expected_stable_type: str | None
+    expected_encryption_algorithm: str | None
+    expected_encryption_key_reference: str | None
+    expected_algorithm_parameters: list | None
+    saved_pseudonymization: model.Pseudonymization | None = None
+    expected_pseudonymization_time: datetime.datetime | None = None
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        PseudoCase(
+            selected_algorithm=enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID,
+            expected_stable_type=None,
+            expected_encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION,
+            expected_encryption_key_reference=constants.PAPIS_ENCRYPTION_KEY_REFERENCE,
+            expected_algorithm_parameters=[
+                {
+                    constants.ENCRYPTION_PARAMETER_KEY_ID: constants.PAPIS_ENCRYPTION_KEY_REFERENCE
+                },
+                {
+                    constants.ENCRYPTION_PARAMETER_STRATEGY: constants.ENCRYPTION_PARAMETER_STRATEGY_SKIP
+                },
+            ],
+        ),
+        PseudoCase(
+            selected_algorithm=enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
+            expected_stable_type=constants.PAPIS_STABLE_IDENTIFIER_TYPE,
+            expected_encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION,
+            expected_encryption_key_reference=constants.PAPIS_ENCRYPTION_KEY_REFERENCE,
+            expected_algorithm_parameters=[
+                {
+                    constants.ENCRYPTION_PARAMETER_KEY_ID: constants.PAPIS_ENCRYPTION_KEY_REFERENCE
+                },
+                {
+                    constants.ENCRYPTION_PARAMETER_STRATEGY: constants.ENCRYPTION_PARAMETER_STRATEGY_SKIP
+                },
+                {
+                    constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE: datetime.datetime.now(
+                        datetime.UTC
+                    )
+                    .date()
+                    .isoformat()
+                },
+            ],
+        ),
+        PseudoCase(
+            selected_algorithm=enums.PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
+            expected_stable_type=None,
+            expected_encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION,
+            expected_encryption_key_reference=constants.DAEAD_ENCRYPTION_KEY_REFERENCE,
+            expected_algorithm_parameters=[
+                {
+                    constants.ENCRYPTION_PARAMETER_KEY_ID: constants.DAEAD_ENCRYPTION_KEY_REFERENCE
+                },
+            ],
+        ),
+        PseudoCase(
+            selected_algorithm=enums.PseudonymizationAlgorithmsEnum.CUSTOM,
+            expected_stable_type=None,
+            expected_encryption_algorithm=None,
+            expected_encryption_key_reference=None,
+            expected_algorithm_parameters=None,
+        ),
+        PseudoCase(
+            selected_algorithm=enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID,
+            expected_stable_type=None,
+            expected_encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION,
+            expected_encryption_key_reference=constants.PAPIS_ENCRYPTION_KEY_REFERENCE,
+            expected_algorithm_parameters=[
+                {
+                    constants.ENCRYPTION_PARAMETER_KEY_ID: constants.PAPIS_ENCRYPTION_KEY_REFERENCE
+                },
+                {
+                    constants.ENCRYPTION_PARAMETER_STRATEGY: constants.ENCRYPTION_PARAMETER_STRATEGY_SKIP
+                },
+            ],
+            saved_pseudonymization=model.Pseudonymization(
+                encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION,
+                encryption_key_reference=constants.DAEAD_ENCRYPTION_KEY_REFERENCE,
+                pseudonymization_time=datetime.datetime(
+                    2021, 1, 1, 0, 0, tzinfo=datetime.UTC
+                ),
+            ),
+            expected_pseudonymization_time=datetime.datetime(
+                2021, 1, 1, 0, 0, tzinfo=datetime.UTC
+            ),
+        ),
+    ],
+    ids=[
+        "Selected PAPIS without stable ID",
+        "Selected PAPIS with stable ID",
+        "Selected DAEAD",
+        "Selected custom",
+        "Reselect: from DAEAD to PAPIS without stable ID",
+    ],
+)
+def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Datadoc):
+    state.metadata = metadata
+    variable = state.metadata.variables_lookup["sykepenger"]
+    apply_pseudonymization(
+        variable,
+        case.selected_algorithm,
+        case.saved_pseudonymization,
+    )
+    assert variable.pseudonymization is not None
+    assert (
+        variable.pseudonymization.encryption_algorithm
+        == case.expected_encryption_algorithm
+    )
+    assert variable.pseudonymization.stable_identifier_type == case.expected_stable_type
+
+    assert (
+        variable.pseudonymization.encryption_key_reference
+        == case.expected_encryption_key_reference
+    )
+    assert (
+        variable.pseudonymization.encryption_algorithm_parameters
+        == case.expected_algorithm_parameters
+    )
+    assert variable.pseudonymization.stable_identifier_type == case.expected_stable_type
+    assert (
+        variable.pseudonymization.pseudonymization_time
+        == case.expected_pseudonymization_time
+    )
