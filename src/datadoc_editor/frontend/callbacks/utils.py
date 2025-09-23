@@ -465,6 +465,7 @@ def variables_control(
         _parse_error_message(str(error_message[0])) if error_message else None
     )
     OBLIGATORY_FIELDS = OBLIGATORY_VARIABLES_METADATA_IDENTIFIERS_AND_DISPLAY_NAME + OBLIGATORY_VARIABLES_METADATA_PSEUDO_IDENTIFIERS_AND_DISPLAY_NAME
+    logger.debug("Obligatory fields: %s", OBLIGATORY_FIELDS)
     for variable in variables:
         if error_message_parsed:
             fields_by_variable = _get_dict_by_key(
