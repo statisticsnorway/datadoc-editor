@@ -611,8 +611,6 @@ def map_dropdown_to_pseudo(
                 return PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID
             case constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION:
                 return PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA
-            case None:
-                return None
             case _:
                 return PseudonymizationAlgorithmsEnum.CUSTOM
     return None
