@@ -441,7 +441,9 @@ def _get_dict_by_key(
     return next((item for item in metadata_list if key in item), None)
 
 
-def variables_control(error_message: str | None, variables: list) -> dbc.Alert | None:
+def variables_control(
+    error_message: list[str] | None, variables: list
+) -> dbc.Alert | None:
     """Check obligatory metadata for variables and return an alert if any metadata is missing.
 
     This function parses an error message to identify missing obligatory metadata
@@ -456,8 +458,11 @@ def variables_control(error_message: str | None, variables: list) -> dbc.Alert |
         An alert object if there are missing metadata fields, otherwise None.
     """
     missing_metadata: list = []
-    error_message_parsed = _parse_error_message(str(error_message))
-    # for variable in state.metadata.variables:
+    # NOTE(tilen1976): This is a bug fix - can be fragile. The bug is probably cause by multiple validations which are triggered by "write_metadata_document()"
+    # Use first element in variables error messages because there is a second validation which overwrites the result
+    error_message_parsed = (
+        _parse_error_message(str(error_message[0])) if error_message else None
+    )
     for variable in variables:
         if error_message_parsed:
             fields_by_variable = _get_dict_by_key(
@@ -518,7 +523,8 @@ def save_metadata_and_generate_alerts(metadata: Datadoc) -> list:
         and success alert if metadata is saved correctly.
     """
     missing_obligatory_dataset = ""
-    missing_obligatory_variables = ""
+    # Use list so the first error message is not overwritten
+    missing_obligatory_variables = []
 
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
@@ -532,7 +538,7 @@ def save_metadata_and_generate_alerts(metadata: Datadoc) -> list:
                 if issubclass(warning.category, ObligatoryDatasetWarning):
                     missing_obligatory_dataset = str(warning.message)
                 elif issubclass(warning.category, ObligatoryVariableWarning):
-                    missing_obligatory_variables = str(warning.message)
+                    missing_obligatory_variables.append(str(warning.message))
                 else:
                     logger.warning(
                         "An unexpected warning was caught: %s",
@@ -550,7 +556,9 @@ def save_metadata_and_generate_alerts(metadata: Datadoc) -> list:
                 AlertTypes.ERROR,
                 "Kunne ikke lagre metadata",
             )
-
+    logger.debug(
+        "Missing variables obligatory fields: %s", missing_obligatory_variables
+    )
     return [
         success_alert,
         dataset_control(missing_obligatory_dataset),
