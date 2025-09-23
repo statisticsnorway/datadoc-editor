@@ -6,7 +6,7 @@ from datadoc_editor.frontend.fields.display_base import MetadataInputField
 
 
 class PseudoVariableIdentifiers(str, Enum):
-    """Pseudo files."""
+    """Pseudo fields."""
 
     PSEUDONYMIZATION_TIME = "pseudonymization_time"
     STABLE_IDENTIFIER_TYPE = "stable_identifier_type"
