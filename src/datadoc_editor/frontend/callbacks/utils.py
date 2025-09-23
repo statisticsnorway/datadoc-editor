@@ -41,6 +41,7 @@ from datadoc_editor.frontend.fields.display_dataset import (
 )
 from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
+    OBLIGATORY_VARIABLES_METADATA_PSEUDO_IDENTIFIERS_AND_DISPLAY_NAME,
     PSEUDONYMIZATION_DEAD_METADATA,
 )
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
@@ -463,6 +464,7 @@ def variables_control(
     error_message_parsed = (
         _parse_error_message(str(error_message[0])) if error_message else None
     )
+    OBLIGATORY_FIELDS = OBLIGATORY_VARIABLES_METADATA_IDENTIFIERS_AND_DISPLAY_NAME + OBLIGATORY_VARIABLES_METADATA_PSEUDO_IDENTIFIERS_AND_DISPLAY_NAME
     for variable in variables:
         if error_message_parsed:
             fields_by_variable = _get_dict_by_key(
@@ -472,7 +474,7 @@ def variables_control(
             if fields_by_variable is not None:
                 missing_metadata_field = [
                     f[1]
-                    for f in OBLIGATORY_VARIABLES_METADATA_IDENTIFIERS_AND_DISPLAY_NAME
+                    for f in OBLIGATORY_FIELDS
                     if error_message and f[0] in fields_by_variable[variable.short_name]
                 ]
                 missing_metadata_fields_to_string = ", ".join(missing_metadata_field)
