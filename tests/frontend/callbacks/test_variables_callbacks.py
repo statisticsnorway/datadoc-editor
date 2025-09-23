@@ -580,19 +580,19 @@ def test_variables_values_inherit_dataset_date_values_not_when_variable_has_valu
 def test_variables_metadata_control_return_alert(metadata: Datadoc):
     """Return alert when obligatory metadata is missing."""
     state.metadata = metadata
-    missing_metadata: str
+    missing_metadata: list = []
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
         state.metadata.write_metadata_document()
         if issubclass(w[1].category, ObligatoryVariableWarning):
-            missing_metadata = str(w[1].message)
+            missing_metadata.append(str(w[1].message))
     result = variables_control(missing_metadata, metadata.variables)
     assert isinstance(result, dbc.Alert)
 
 
 def test_variables_metadata_control_dont_return_alert(metadata: Datadoc):
     state.metadata = metadata
-    missing_metadata: str | None = None
+    missing_metadata: list[str] = []
     for val in state.metadata.variables:
         """Not return alert when all obligatory metadata has value."""
         setattr(
@@ -626,7 +626,7 @@ def test_variables_metadata_control_dont_return_alert(metadata: Datadoc):
         warnings.simplefilter("always")
         state.metadata.write_metadata_document()
         if issubclass(w[0].category, ObligatoryVariableWarning):
-            missing_metadata = str(w[0].message)
+            missing_metadata.append(str(w[0].message))
     result = variables_control(missing_metadata, metadata.variables)
     assert result is None
 
