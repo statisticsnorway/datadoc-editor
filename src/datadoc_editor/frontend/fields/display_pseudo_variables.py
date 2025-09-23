@@ -88,3 +88,9 @@ PSEUDONYMIZATION_DEAD_METADATA = [
         and m.editable
     )
 ]
+
+OBLIGATORY_VARIABLES_METADATA_PSEUDO_IDENTIFIERS_AND_DISPLAY_NAME: list[tuple] = [
+    (m.identifier, m.display_name)
+    for m in PSEUDO_FIELDS.values()
+    if m.obligatory
+]
