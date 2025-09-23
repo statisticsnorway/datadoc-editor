@@ -231,8 +231,6 @@ def accept_pseudo_variable_metadata_input(
         )
         return INVALID_VALUE
     else:
-        if value == "":
-            value = None
         logger.info(
             "Updated %s: %s with value '%s'",
             variable_short_name,
@@ -466,7 +464,6 @@ def mutate_variable_pseudonymization(
     """
     if selected_algorithm == DELETE_SELECTED and variable.pseudonymization:
         delete_pseudonymization(variable)
-        # sjekk
         return
     if (
         isinstance(selected_algorithm, PseudonymizationAlgorithmsEnum)
