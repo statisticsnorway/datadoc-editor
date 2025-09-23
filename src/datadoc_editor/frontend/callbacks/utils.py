@@ -465,14 +465,12 @@ def variables_control(
         _parse_error_message(str(error_message[0])) if error_message else None
     )
     OBLIGATORY_FIELDS = OBLIGATORY_VARIABLES_METADATA_IDENTIFIERS_AND_DISPLAY_NAME + OBLIGATORY_VARIABLES_METADATA_PSEUDO_IDENTIFIERS_AND_DISPLAY_NAME
-    logger.debug("Obligatory fields: %s", OBLIGATORY_FIELDS)
     for variable in variables:
         if error_message_parsed:
             fields_by_variable = _get_dict_by_key(
                 error_message_parsed,
                 variable.short_name,
             )
-            logger.debug("Fields by variable: %s", fields_by_variable)
             if fields_by_variable is not None:
                 missing_metadata_field = [
                     f[1]
@@ -480,7 +478,6 @@ def variables_control(
                     if error_message and f[0] in fields_by_variable[variable.short_name]
                 ]
                 missing_metadata_fields_to_string = ", ".join(missing_metadata_field)
-                logger.debug("Missing: %s", missing_metadata_fields_to_string)
                 missing_metadata.append(
                     f"{variable.short_name}: {missing_metadata_fields_to_string}",
                 )
@@ -616,7 +613,7 @@ def map_dropdown_to_pseudo(
                 return PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID
             case constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION:
                 return PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA
-           # case None:
+           #case None:
             #    return None
             case _:
                 return PseudonymizationAlgorithmsEnum.CUSTOM
@@ -684,16 +681,15 @@ def apply_pseudonymization(
             case PseudonymizationAlgorithmsEnum.CUSTOM:
                 state.metadata.add_pseudonymization(
                     variable.short_name,
-                    pseudonymization=(
-                        model.Pseudonymization(
-                            encryption_algorithm=transfer_pseudonymzation.encryption_algorithm,
-                            encryption_key_reference=transfer_pseudonymzation.encryption_key_reference,
-                            pseudonymization_time=transfer_pseudonymzation.pseudonymization_time,
-                            stable_identifier_type=transfer_pseudonymzation.stable_identifier_type,
-                            stable_identifier_version=transfer_pseudonymzation.stable_identifier_version
-                        )
-                    if transfer_pseudonymzation is not None
-                    else None
+                    pseudonymization=model.Pseudonymization(
+                            encryption_algorithm=None,
+                            encryption_key_reference=None,
+                            pseudonymization_time=transfer_pseudonymzation.pseudonymization_time
+                            if transfer_pseudonymzation
+                            else None,
+                            stable_identifier_type=None,
+                            stable_identifier_version=None,
+                            encryption_algorithm_parameters=None,
                     ),
                 )
 
