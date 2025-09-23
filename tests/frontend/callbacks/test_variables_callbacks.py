@@ -19,6 +19,7 @@ from pydantic import AnyUrl
 from datadoc_editor import constants
 from datadoc_editor import enums
 from datadoc_editor import state
+from datadoc_editor.frontend.callbacks.utils import update_selected_pseudonymization
 from datadoc_editor.frontend.callbacks.utils import variables_control
 from datadoc_editor.frontend.callbacks.variables import (
     accept_pseudo_variable_metadata_input,
@@ -738,6 +739,7 @@ class PseudoCase:
     expected_identifiers_in_workspace: list | None
     expected_variable_pseudonymization: bool
     saved_pseudonymization: model.Pseudonymization | None = None
+    expected_algorithm_parameters_length: int | None = None
 
 
 @pytest.mark.parametrize(
@@ -749,6 +751,7 @@ class PseudoCase:
             expected_number_editable_inputs=1,
             expected_identifiers_in_workspace=["pseudonymization_time"],
             expected_variable_pseudonymization=True,
+            expected_algorithm_parameters_length=2,
         ),
         PseudoCase(
             selected_algorithm=enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
@@ -759,6 +762,7 @@ class PseudoCase:
                 "stable_identifier_version",
             ],
             expected_variable_pseudonymization=True,
+            expected_algorithm_parameters_length=3,
         ),
         PseudoCase(
             selected_algorithm=enums.PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
@@ -766,6 +770,7 @@ class PseudoCase:
             expected_number_editable_inputs=1,
             expected_identifiers_in_workspace=["pseudonymization_time"],
             expected_variable_pseudonymization=True,
+            expected_algorithm_parameters_length=1,
         ),
         PseudoCase(
             selected_algorithm=enums.PseudonymizationAlgorithmsEnum.CUSTOM,
@@ -773,6 +778,7 @@ class PseudoCase:
             expected_number_editable_inputs=5,
             expected_identifiers_in_workspace=["pseudonymization_time"],
             expected_variable_pseudonymization=True,
+            expected_algorithm_parameters_length=None,
         ),
         PseudoCase(
             selected_algorithm=None,
@@ -780,26 +786,6 @@ class PseudoCase:
             expected_number_editable_inputs=0,
             expected_identifiers_in_workspace=None,
             expected_variable_pseudonymization=False,
-        ),
-        PseudoCase(
-            selected_algorithm=enums.PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
-            expected_workspace_type=dbc.Form,
-            expected_number_editable_inputs=1,
-            expected_identifiers_in_workspace=["pseudonymization_time"],
-            expected_variable_pseudonymization=True,
-            saved_pseudonymization=model.Pseudonymization(
-                encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION
-            ),
-        ),
-        PseudoCase(
-            selected_algorithm=enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
-            expected_workspace_type=dbc.Form,
-            expected_number_editable_inputs=2,
-            expected_identifiers_in_workspace=["pseudonymization_time"],
-            expected_variable_pseudonymization=True,
-            saved_pseudonymization=model.Pseudonymization(
-                encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION
-            ),
         ),
         PseudoCase(
             selected_algorithm=None,
@@ -818,8 +804,6 @@ class PseudoCase:
         "DAEAD",
         "Custom",
         "No algorithm selected",
-        "Change from PAPIS without stable ID to DAEAD",
-        "Change from DAEAD TO PAPIS with stable ID",
         "None",
     ],
 )
@@ -848,8 +832,102 @@ def test_populate_pseudonymization_workspace(
             assert ids in all_ids
     if case.expected_variable_pseudonymization is True:
         assert variable.pseudonymization is not None
+        if variable.pseudonymization.encryption_algorithm_parameters is not None:
+            assert case.expected_algorithm_parameters_length == len(
+                variable.pseudonymization.encryption_algorithm_parameters
+            )
     else:
         assert variable.pseudonymization is None
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        PseudoCase(
+            selected_algorithm=enums.PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
+            expected_workspace_type=dbc.Form,
+            expected_number_editable_inputs=1,
+            expected_identifiers_in_workspace=["pseudonymization_time"],
+            expected_variable_pseudonymization=True,
+            saved_pseudonymization=model.Pseudonymization(
+                encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION,
+                encryption_key_reference=constants.PAPIS_ENCRYPTION_KEY_REFERENCE,
+                encryption_algorithm_parameters=[
+                    {
+                        constants.ENCRYPTION_PARAMETER_KEY_ID: constants.PAPIS_ENCRYPTION_KEY_REFERENCE
+                    },
+                    {
+                        constants.ENCRYPTION_PARAMETER_STRATEGY: constants.ENCRYPTION_PARAMETER_STRATEGY_SKIP
+                    },
+                ],
+            ),
+            expected_algorithm_parameters_length=1,
+        ),
+        PseudoCase(
+            selected_algorithm=enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
+            expected_workspace_type=dbc.Form,
+            expected_number_editable_inputs=2,
+            expected_identifiers_in_workspace=["pseudonymization_time"],
+            expected_variable_pseudonymization=True,
+            saved_pseudonymization=model.Pseudonymization(
+                encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION,
+                encryption_key_reference=constants.DAEAD_ENCRYPTION_KEY_REFERENCE,
+                encryption_algorithm_parameters=[
+                    {
+                        constants.ENCRYPTION_PARAMETER_KEY_ID: constants.DAEAD_ENCRYPTION_KEY_REFERENCE
+                    }
+                ],
+            ),
+            expected_algorithm_parameters_length=3,
+        ),
+        PseudoCase(
+            selected_algorithm=enums.PseudonymizationAlgorithmsEnum.CUSTOM,
+            expected_workspace_type=dbc.Form,
+            expected_number_editable_inputs=5,
+            expected_identifiers_in_workspace=["pseudonymization_time"],
+            expected_variable_pseudonymization=True,
+            saved_pseudonymization=model.Pseudonymization(
+                encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION,
+                pseudonymization_time=datetime.datetime(
+                    2024, 12, 31, 0, 0, 0, tzinfo=datetime.UTC
+                ),
+                encryption_algorithm_parameters=[
+                    {
+                        constants.ENCRYPTION_PARAMETER_KEY_ID: constants.DAEAD_ENCRYPTION_KEY_REFERENCE
+                    }
+                ],
+            ),
+            expected_algorithm_parameters_length=0,
+        ),
+    ],
+    ids=[
+        "Change from PAPIS without stable ID to DAEAD",
+        "Change from DAEAD to PAPIS with stable ID",
+        "Change from DAEAD to CUSTOM",
+    ],
+)
+def test_update_pseudonymization_algorithm(case, metadata: Datadoc):
+    state.metadata = metadata
+    first_var_short_name = metadata.variables[0].short_name
+    variable = state.metadata.variables_lookup.get(first_var_short_name)
+    assert variable is not None
+    if case.saved_pseudonymization:
+        variable.pseudonymization = case.saved_pseudonymization
+    update_selected_pseudonymization(
+        variable,
+        case.saved_pseudonymization.encryption_algorithm,
+        case.selected_algorithm,
+    )
+    if case.expected_variable_pseudonymization is True:
+        assert variable.pseudonymization is not None
+        assert (
+            variable.pseudonymization.pseudonymization_time
+            == case.saved_pseudonymization.pseudonymization_time
+        )
+        if variable.pseudonymization.encryption_algorithm_parameters is not None:
+            assert case.expected_algorithm_parameters_length == len(
+                variable.pseudonymization.encryption_algorithm_parameters
+            )
 
 
 def test_delete_pseudonymization(
