@@ -208,17 +208,15 @@ def accept_pseudo_variable_metadata_input(
     ].pseudonymization
     try:
         parsed_value: str | datetime.datetime | None
-        if not value:
-            return None
         if (
             metadata_field == PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME
             and isinstance(value, (datetime.datetime, str))
         ):
             parsed_value = parse_and_validate_pseudonymization_time(value)
         elif isinstance(value, str):
-            parsed_value = value.strip()
+            parsed_value = value.strip() or None
         else:
-            parsed_value = value
+            parsed_value = value or None
         setattr(
             variable_pseudonymization,
             metadata_field,
@@ -233,8 +231,6 @@ def accept_pseudo_variable_metadata_input(
         )
         return INVALID_VALUE
     else:
-        if value == "":
-            value = None
         logger.info(
             "Updated %s: %s with value '%s'",
             variable_short_name,
