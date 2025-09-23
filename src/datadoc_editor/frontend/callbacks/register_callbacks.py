@@ -63,6 +63,7 @@ from datadoc_editor.frontend.fields.display_base import (
 )
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
+from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import (
     VARIABLES_METADATA_MULTILANGUAGE_INPUT,
 )
@@ -615,6 +616,48 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             contains_data_from,
             contains_data_until,
         )
+
+    @app.callback(
+        Output(
+            {
+                "type": VARIABLES_METADATA_INPUT,
+                "variable_short_name": MATCH,
+                "id": MATCH,
+            },
+            "error",
+        ),
+        Output(
+            {
+                "type": VARIABLES_METADATA_INPUT,
+                "variable_short_name": MATCH,
+                "id": MATCH,
+            },
+            "errorMessage",
+        ),
+        Input(
+            {
+                "type": VARIABLES_METADATA_INPUT,
+                "variable_short_name": MATCH,
+                "id": MATCH,
+            },
+            "value",
+        ),
+        prevent_initial_call=True,
+    )
+    def callback_accept_variable_metadata_input(
+        value: MetadataInputTypes,  # noqa: ARG001 argument required by Dash
+    ) -> dbc.Alert:
+        """Save updated variable metadata values."""
+        message = accept_variable_metadata_input(
+            ctx.triggered[0]["value"],
+            ctx.triggered_id["variable_short_name"],
+            ctx.triggered_id["id"],
+        )
+        if not message:
+            # No error to display.
+            return False, ""
+
+        return True, message
 
     @app.callback(
         Output({"type": "pseudo-field-container", "variable": MATCH}, "children"),
