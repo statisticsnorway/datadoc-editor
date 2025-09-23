@@ -472,6 +472,7 @@ def variables_control(
                 error_message_parsed,
                 variable.short_name,
             )
+            logger.debug("Fields by variable: %s", fields_by_variable)
             if fields_by_variable is not None:
                 missing_metadata_field = [
                     f[1]
@@ -479,6 +480,7 @@ def variables_control(
                     if error_message and f[0] in fields_by_variable[variable.short_name]
                 ]
                 missing_metadata_fields_to_string = ", ".join(missing_metadata_field)
+                logger.debug("Missing: %s", missing_metadata_fields_to_string)
                 missing_metadata.append(
                     f"{variable.short_name}: {missing_metadata_fields_to_string}",
                 )
@@ -614,8 +616,8 @@ def map_dropdown_to_pseudo(
                 return PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID
             case constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION:
                 return PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA
-            case None:
-                return None
+           # case None:
+            #    return None
             case _:
                 return PseudonymizationAlgorithmsEnum.CUSTOM
     return None
@@ -682,7 +684,17 @@ def apply_pseudonymization(
             case PseudonymizationAlgorithmsEnum.CUSTOM:
                 state.metadata.add_pseudonymization(
                     variable.short_name,
-                    transfer_pseudonymzation if transfer_pseudonymzation else None,
+                    pseudonymization=(
+                        model.Pseudonymization(
+                            encryption_algorithm=transfer_pseudonymzation.encryption_algorithm,
+                            encryption_key_reference=transfer_pseudonymzation.encryption_key_reference,
+                            pseudonymization_time=transfer_pseudonymzation.pseudonymization_time,
+                            stable_identifier_type=transfer_pseudonymzation.stable_identifier_type,
+                            stable_identifier_version=transfer_pseudonymzation.stable_identifier_version
+                        )
+                    if transfer_pseudonymzation is not None
+                    else None
+                    ),
                 )
 
 
@@ -745,6 +757,7 @@ def update_selected_pseudonymization(
         transfer_pseudonymization = (
             variable.pseudonymization if variable.pseudonymization else None
         )
+        logger.debug("Reselect with transfer: %s for %s", transfer_pseudonymization, variable.short_name)
         state.metadata.remove_pseudonymization(variable.short_name)
         logger.debug(
             "Updating pseuonymization step 1: Remove pseudonymization for %s",
