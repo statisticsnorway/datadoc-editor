@@ -210,6 +210,12 @@ def test_legal_shortname(shortname: str):
                     encryption_key_reference="custom-common-key-1",
                 ),
             ),
+            PseudonymizationAlgorithmsEnum.CUSTOM,
+        ),
+        (
+            model.Variable(
+                pseudonymization=None,
+            ),
             None,
         ),
     ],
@@ -220,6 +226,7 @@ def test_legal_shortname(shortname: str):
         "standard_algorithm_dapla",
         "custom_algorithm",
         "not_encryption_algorithm",
+        "No pseudonymization",
     ],
 )
 def test_map_dropdown_value(variable: model.Variable, expected_algorithm: str):

@@ -58,12 +58,12 @@ TEST_VARIABLES = [
         0,
     ),
     (
-        None,
+        PseudonymizationAlgorithmsEnum.CUSTOM,
         model.Variable(
             short_name="helse",
             pseudonymization=model.Pseudonymization(stable_identifier_type="FREG_SNR"),
         ),
-        0,
+        5,
     ),
 ]
 
