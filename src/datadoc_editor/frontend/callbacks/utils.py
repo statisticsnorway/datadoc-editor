@@ -678,14 +678,14 @@ def apply_pseudonymization(
                 state.metadata.add_pseudonymization(
                     variable.short_name,
                     pseudonymization=model.Pseudonymization(
-                            encryption_algorithm=None,
-                            encryption_key_reference=None,
-                            pseudonymization_time=transfer_pseudonymzation.pseudonymization_time
-                            if transfer_pseudonymzation
-                            else None,
-                            stable_identifier_type=None,
-                            stable_identifier_version=None,
-                            encryption_algorithm_parameters=None,
+                        encryption_algorithm=None,
+                        encryption_key_reference=None,
+                        pseudonymization_time=transfer_pseudonymzation.pseudonymization_time
+                        if transfer_pseudonymzation
+                        else None,
+                        stable_identifier_type=None,
+                        stable_identifier_version=None,
+                        encryption_algorithm_parameters=None,
                     ),
                 )
 
