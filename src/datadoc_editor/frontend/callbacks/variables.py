@@ -208,17 +208,15 @@ def accept_pseudo_variable_metadata_input(
     ].pseudonymization
     try:
         parsed_value: str | datetime.datetime | None
-        if not value:
-            return None
         if (
             metadata_field == PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME
             and isinstance(value, (datetime.datetime, str))
         ):
             parsed_value = parse_and_validate_pseudonymization_time(value)
         elif isinstance(value, str):
-            parsed_value = value.strip()
+            parsed_value = value.strip() or None
         else:
-            parsed_value = value
+            parsed_value = value or None
         setattr(
             variable_pseudonymization,
             metadata_field,
@@ -468,8 +466,8 @@ def mutate_variable_pseudonymization(
     """
     if selected_algorithm == DELETE_SELECTED and variable.pseudonymization:
         delete_pseudonymization(variable)
+        # sjekk
         return
-
     if (
         isinstance(selected_algorithm, PseudonymizationAlgorithmsEnum)
         and variable.pseudonymization
@@ -479,4 +477,5 @@ def mutate_variable_pseudonymization(
             update_selected_pseudonymization(
                 variable, inferred_algorithm, selected_algorithm
             )
+            logger.debug("Updated variable %s with %s", variable.short_name, variable.pseudonymization)
         return
