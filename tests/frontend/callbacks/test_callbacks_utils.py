@@ -210,7 +210,7 @@ def test_legal_shortname(shortname: str):
                     encryption_key_reference="custom-common-key-1",
                 ),
             ),
-            None,
+            PseudonymizationAlgorithmsEnum.CUSTOM,
         ),
     ],
     ids=[

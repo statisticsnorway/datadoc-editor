@@ -6,7 +6,7 @@ from datadoc_editor.frontend.fields.display_base import MetadataInputField
 
 
 class PseudoVariableIdentifiers(str, Enum):
-    """Pseudo files."""
+    """Pseudo fields."""
 
     PSEUDONYMIZATION_TIME = "pseudonymization_time"
     STABLE_IDENTIFIER_TYPE = "stable_identifier_type"
@@ -87,4 +87,8 @@ PSEUDONYMIZATION_DEAD_METADATA = [
         m.identifier in (PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME.value)
         and m.editable
     )
+]
+
+OBLIGATORY_VARIABLES_METADATA_PSEUDO_IDENTIFIERS_AND_DISPLAY_NAME: list[tuple] = [
+    (m.identifier, m.display_name) for m in PSEUDO_FIELDS.values() if m.obligatory
 ]
