@@ -41,6 +41,7 @@
     padding: 1rem;
     border: 2px solid green;
 }
+
 .edit-section{
     display: flex;
     flex-direction: row;
@@ -52,6 +53,7 @@
 .global-edit-section{
     display: flex;
     flex-direction: column;
+    column-count: 2; 
 }
 .global-paragraph{
     display:block;
@@ -113,4 +115,9 @@
     float: right;
     margin-top: 0.5rem;
     margin-bottom: 1rem;
+}
+
+#global-variables-input-2-editable > .ssb-dropdown.dropdown-component, 
+.ssb-input.input-component{
+    max-width: 400px;
 }
