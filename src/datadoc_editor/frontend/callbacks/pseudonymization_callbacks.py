@@ -1,4 +1,5 @@
 """All callbacks for pseudonymization."""
+
 from __future__ import annotations
 
 import logging
@@ -10,31 +11,25 @@ from dash import Input
 from dash import Output
 from dash import State
 
-
 from datadoc_editor import state
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
-
-from datadoc_editor.frontend.callbacks.variables import accept_pseudo_variable_metadata_input, mutate_variable_pseudonymization
+from datadoc_editor.frontend.callbacks.variables import (
+    accept_pseudo_variable_metadata_input,
+)
+from datadoc_editor.frontend.callbacks.variables import mutate_variable_pseudonymization
 from datadoc_editor.frontend.callbacks.variables import populate_pseudo_workspace
-
-import logging
-from typing import TYPE_CHECKING
-
-from dash import Dash, Output
-
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 
-
 if TYPE_CHECKING:
-
     import dash_bootstrap_components as dbc
 
 
 logger = logging.getLogger(__name__)
 
+
 def register_pseudonymization_callbacks(app: Dash) -> None:
     """Define and register callbacks for pseudonymization."""
-    
+
     @app.callback(
         Output({"type": "pseudo-field-container", "variable": MATCH}, "children"),
         Input({"type": "pseudonymization-dropdown", "variable": MATCH}, "value"),
@@ -75,7 +70,7 @@ def register_pseudonymization_callbacks(app: Dash) -> None:
             variable.pseudonymization,
         )
         return populate_pseudo_workspace(variable, selected_algorithm)  # type: ignore[arg-type]
-    
+
     @app.callback(
         Output(
             {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},

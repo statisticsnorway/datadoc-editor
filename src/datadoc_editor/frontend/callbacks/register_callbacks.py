@@ -9,7 +9,6 @@ import logging
 from typing import TYPE_CHECKING
 from typing import Any
 
-from dash import ALL
 from dash import MATCH
 from dash import Dash
 from dash import Input
@@ -20,19 +19,12 @@ from dash import html
 from dash import no_update
 
 from datadoc_editor import state
-from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_date_input
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
 from datadoc_editor.frontend.callbacks.dataset import accept_dataset_multidropdown_input
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
-from datadoc_editor.frontend.callbacks.dataset import remove_dataset_multidropdown_input
-from datadoc_editor.frontend.callbacks.utils import render_multidropdown_row
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
-from datadoc_editor.frontend.callbacks.utils import update_store_data_with_inputs
-from datadoc_editor.frontend.callbacks.variables import (
-    accept_pseudo_variable_metadata_input,
-)
 from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
 )
@@ -51,7 +43,6 @@ from datadoc_editor.frontend.fields.display_base import (
 from datadoc_editor.frontend.fields.display_base import (
     DATASET_METADATA_MULTILANGUAGE_INPUT,
 )
-from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import (
@@ -68,7 +59,6 @@ from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
 from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
-
     import dash_bootstrap_components as dbc
 
     from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
@@ -76,7 +66,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
+def register_callbacks(app: Dash) -> None:
     """Define and register callbacks."""
 
     @app.callback(
@@ -274,96 +264,6 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             dataset_opened_counter,
         )
 
-    #@app.callback(
-    #    [Output(USE_RESTRICTION_STORE, "data"), Output(FORCE_RERENDER_COUNTER, "data")],
-    #    [
-    #        Input(ADD_USE_RESTRICTION_BUTTON, "n_clicks"),
-    #        Input(
-    #            {
-    #                "type": DATASET_METADATA_MULTIDROPDOWN_INPUT,
-    #                "id": ALL,
-    #                "index": ALL,
-    #                "field": "type",
-    #            },
-    #            "value",
-    #        ),
-    #        Input(
-    #            {
-    #                "type": DATASET_METADATA_MULTIDROPDOWN_INPUT,
-    #                "id": ALL,
-    #                "index": ALL,
-    #                "field": "date",
-    #            },
-    #            "value",
-    #        ),
-    #        Input(
-    #            {
-    #                "type": DATASET_METADATA_MULTIDROPDOWN_INPUT,
-    #                "id": ALL,
-    #                "index": ALL,
-    #                "field": "delete",
-    #            },
-    #            "n_clicks",
-    #        ),
-    #    ],
-    #    [State(USE_RESTRICTION_STORE, "data"), State(FORCE_RERENDER_COUNTER, "data")],
-    #    prevent_initial_call=True,
-    #)
-    #def handle_add_and_delete(  # noqa: PLR0913
-    #    add_clicks: int,  # noqa: ARG001
-    #    type_values: list[str],
-    #    date_values: list[str],
-    #    delete_clicks: list[int],  # noqa: ARG001
-    #    store_data: list | None,
-    #    counter: int,
-    #) -> tuple[list, int]:
-    #    triggered = ctx.triggered_id
-    #    counter += 1
-    #    store_data = update_store_data_with_inputs(
-    #        store_data or [], type_values, date_values
-    #    )
-#
-    #    if triggered == ADD_USE_RESTRICTION_BUTTON:
-    #        store_data.append(
-    #            {"use_restriction_type": None, "use_restriction_date": None}
-    #        )
-#
-    #    elif isinstance(triggered, dict) and triggered.get("field") == "delete":
-    #        idx = triggered.get("index")
-    #        if isinstance(idx, int) and 0 <= idx < len(store_data):
-    #            remove_dataset_multidropdown_input(
-    #                DATASET_METADATA_MULTIDROPDOWN_INPUT, idx
-    #            )
-    #            store_data.pop(idx)
-#
-    #    return store_data, counter
-
-    #@app.callback(
-    #    Output(USE_RESTRICTION_LIST_CONTAINER, "children"),
-    #    Input(USE_RESTRICTION_STORE, "data"),
-    #    Input(USE_RESTRICTION_OPTION_STORE, "data"),
-    #    Input(USE_RESTRICTION_ID_STORE, "data"),
-    #    Input(FORCE_RERENDER_COUNTER, "data"),
-    #)
-    #def render_use_restriction_list(
-    #    current_list: list,
-    #    options: Callable[[], list[dict[str, str]]],
-    #    idx: dict[str, str | int],
-    #    rerender_counter: int,
-    #) -> list:
-    #    if not current_list:
-    #        return []
-#
-    #    items = []
-    #    for i, item in enumerate(current_list):
-    #        row_id = {**idx, "index": i}
-    #        items.append(
-    #            render_multidropdown_row(
-    #                item, row_id, options, key=f"{rerender_counter}-{i}"
-    #            )
-    #        )
-    #    return items
-
     @app.callback(
         Output(SECTION_WRAPPER_ID, "children"),
         Input("dataset-opened-counter", "data"),
@@ -395,7 +295,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
                 },
             ),
         ]
-        
+
     @app.callback(
         Output(
             {

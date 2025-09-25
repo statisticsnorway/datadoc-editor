@@ -1,27 +1,32 @@
 """All callbacks for use_restriction"""
+
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
-from dash import ALL, ctx
+from dash import ALL
 from dash import Dash
 from dash import Input
 from dash import Output
 from dash import State
-
+from dash import ctx
 
 from datadoc_editor.frontend.callbacks.dataset import remove_dataset_multidropdown_input
-from datadoc_editor.frontend.callbacks.utils import render_multidropdown_row, update_store_data_with_inputs
-
-import logging
-from typing import TYPE_CHECKING
-
-from dash import Dash, Output
-
-from datadoc_editor.frontend.components.identifiers import ADD_USE_RESTRICTION_BUTTON, FORCE_RERENDER_COUNTER, USE_RESTRICTION_ID_STORE, USE_RESTRICTION_LIST_CONTAINER, USE_RESTRICTION_OPTION_STORE, USE_RESTRICTION_STORE
-from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_MULTIDROPDOWN_INPUT, PSEUDO_METADATA_INPUT
-
+from datadoc_editor.frontend.callbacks.utils import render_multidropdown_row
+from datadoc_editor.frontend.callbacks.utils import update_store_data_with_inputs
+from datadoc_editor.frontend.components.identifiers import ADD_USE_RESTRICTION_BUTTON
+from datadoc_editor.frontend.components.identifiers import FORCE_RERENDER_COUNTER
+from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_ID_STORE
+from datadoc_editor.frontend.components.identifiers import (
+    USE_RESTRICTION_LIST_CONTAINER,
+)
+from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_OPTION_STORE
+from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_STORE
+from datadoc_editor.frontend.fields.display_base import (
+    DATASET_METADATA_MULTIDROPDOWN_INPUT,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -29,9 +34,10 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+
 def register_use_restriction_callbacks(app: Dash) -> None:
     """Define and register callbacks for use_restriction."""
-    
+
     @app.callback(
         [Output(USE_RESTRICTION_STORE, "data"), Output(FORCE_RERENDER_COUNTER, "data")],
         [
@@ -95,7 +101,7 @@ def register_use_restriction_callbacks(app: Dash) -> None:
                 store_data.pop(idx)
 
         return store_data, counter
-    
+
     @app.callback(
         Output(USE_RESTRICTION_LIST_CONTAINER, "children"),
         Input(USE_RESTRICTION_STORE, "data"),

@@ -21,7 +21,6 @@ from flask_healthz import healthz
 from datadoc_editor import config
 from datadoc_editor import state
 from datadoc_editor.frontend.callbacks import register_all_callbacks
-from datadoc_editor.frontend.callbacks.register_callbacks import register_callbacks
 from datadoc_editor.frontend.components.control_bars import build_controls_bar
 from datadoc_editor.frontend.components.control_bars import build_footer_control_bar
 from datadoc_editor.frontend.components.control_bars import header
