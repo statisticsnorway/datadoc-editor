@@ -195,7 +195,8 @@ def build_global_edit_section(
         id={"type": "edit-section"},
         children=[
             ssb.Paragraph("Hvorfor hva og hvordan", className="global-paragraph"),
-            build_global_input_field_section(all_inputs, field_id="editable")
+            build_global_input_field_section(all_inputs, field_id="editable"),
+            html.Div(id="global-output"),
         ],
         className="global-edit-section",
     )

@@ -709,7 +709,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         return populate_pseudo_workspace(variable, selected_algorithm)
 
     @app.callback(
-        Output("global-values", "children"),
+        Output("global-output", "children"),
         Input({"type": GLOBAL_METADATA_INPUT, "id": ALL},"value"),
         State({"type": GLOBAL_METADATA_INPUT, "id": ALL},"id"),
     )
@@ -718,5 +718,6 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         id,
     ):
         """Save updated variable metadata values."""
-        logger.debug("Global value: %s %s", value, id)
-        return str(value)
+        value_dict = {id_['id']: val for id_, val in zip(id, value)}
+        logger.debug("Global value: %s", value_dict)
+        return str(value_dict)
