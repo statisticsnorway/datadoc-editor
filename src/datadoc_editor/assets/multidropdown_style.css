@@ -172,22 +172,11 @@
     height: 0.1rem;
   }
   #use-restriction-list-container > div > .ssb-dropdown .dropdown-interactive-area button{
-    font-size: 0.8rem;
     word-break: break-word; 
     hyphens: auto;
   }
   .ssb-dropdown.dropdown-component{
     min-width: unset;
 
-  }
-  .date-button-row {
-    flex-direction: column; 
-    gap: 0.6rem;
-  }
-  .use-restriction-list-container > div > .ssb-dropdown .dropdown-interactive-area button {
-    font-size: 0.8rem;
-  }
-  #dataset-metadata-input-right > fieldset > button{
-      font-size: 0.8rem;
   }
 }
