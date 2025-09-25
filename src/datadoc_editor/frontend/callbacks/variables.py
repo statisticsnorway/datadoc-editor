@@ -34,6 +34,7 @@ from datadoc_editor.frontend.components.builders import (
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
+from datadoc_editor.frontend.fields.display_globals import GLOBAL_VARIABLES
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PseudoVariableIdentifiers,
 )
@@ -474,3 +475,14 @@ def mutate_variable_pseudonymization(
                 variable, inferred_algorithm, selected_algorithm
             )
         return
+
+def inherit_global_variable_values(global_values: dict):
+    """Set values if None."""
+    variables: list[model.Variable] = state.metadata.variables
+    fields_to_fill = ["unit_type", "measurement_unit", "multiplication_factor", "variable_role", "data_source", "temporality_type"]
+    
+    for var in variables:
+        lookup = state.metadata.variables_lookup[var.short_name]
+        for field in fields_to_fill:
+            if getattr(var, field) is None:
+                setattr(lookup, field, global_values[field])

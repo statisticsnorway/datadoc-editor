@@ -23,6 +23,7 @@ from datadoc_editor.frontend.callbacks.utils import update_selected_pseudonymiza
 from datadoc_editor.frontend.callbacks.utils import variables_control
 from datadoc_editor.frontend.callbacks.variables import (
     accept_pseudo_variable_metadata_input,
+    inherit_global_variable_values,
 )
 from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
@@ -944,3 +945,14 @@ def test_delete_pseudonymization(
     assert variable.pseudonymization.encryption_algorithm == "TINK-DAEAD"
     mutate_variable_pseudonymization(variable, constants.DELETE_SELECTED)  # type: ignore[arg-type]
     assert variable.pseudonymization is None
+
+
+def test_inherit_globals(metadata: Datadoc):
+    state.metadata = metadata
+    first_var_short_name = metadata.variables[0].short_name
+    variable = state.metadata.variables_lookup.get(first_var_short_name)
+    assert variable is not None
+    assert variable.unit_type is None
+    global_values = {'unit_type': '01', 'measurement_unit': '01.03', 'multiplication_factor': '2', 'variable_role': 'ATTRIBUTE', 'data_source': '04', 'temporality_type': 'STATUS'}
+    inherit_global_variable_values(global_values)
+    assert variable.unit_type == "01"
