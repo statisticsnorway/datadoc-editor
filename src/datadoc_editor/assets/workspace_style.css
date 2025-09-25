@@ -53,7 +53,7 @@
 .global-edit-section{
     display: flex;
     flex-direction: column;
-    column-count: 2; 
+    column-count: 2;
 }
 .global-paragraph{
     display:block;
@@ -117,7 +117,7 @@
     margin-bottom: 1rem;
 }
 
-#global-variables-input-2-editable > .ssb-dropdown.dropdown-component, 
+#global-variables-input-2-editable > .ssb-dropdown.dropdown-component,
 .ssb-input.input-component{
     max-width: 400px;
 }
