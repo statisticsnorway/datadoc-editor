@@ -97,9 +97,13 @@ def test_render_multidropdown_row_simple():
         lambda: [{"label": "Option", "value": "option"}],
         key="",
     )
-
     assert isinstance(row, html.Div)
-    dropdown, date_input, button = row.children
+    # date and button is inside av Div
+    dropdown = row.children[0]
+
+    date_button_div = row.children[1]
+    date_input = date_button_div.children[0]
+    button = date_button_div.children[1] 
 
     assert dropdown.value == "DELETION_ANONYMIZATION"
     assert dropdown.id == {"component": "row_test", "field": "type"}
