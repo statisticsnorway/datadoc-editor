@@ -1,25 +1,44 @@
 """All callbacks dataset tab."""
+
 from __future__ import annotations
 
 import logging
 from typing import TYPE_CHECKING
 
-from dash import MATCH, ctx
+from dash import MATCH
 from dash import Dash
 from dash import Input
 from dash import Output
-from dash import State
+from dash import ctx
 
 from datadoc_editor import state
-from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_date_input, accept_dataset_metadata_input, accept_dataset_multidropdown_input
-from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
-from datadoc_editor.frontend.components.builders import build_dataset_edit_section, build_dataset_machine_section
+from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_date_input
+from datadoc_editor.frontend.callbacks.dataset import accept_dataset_metadata_input
+from datadoc_editor.frontend.callbacks.dataset import accept_dataset_multidropdown_input
+from datadoc_editor.frontend.components.builders import build_dataset_edit_section
+from datadoc_editor.frontend.components.builders import build_dataset_machine_section
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
-from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT, DATASET_METADATA_INPUT, DATASET_METADATA_MULTIDROPDOWN_INPUT, DATASET_METADATA_MULTILANGUAGE_INPUT, PSEUDO_METADATA_INPUT
-from datadoc_editor.frontend.fields.display_dataset import EDITABLE_DATASET_METADATA_LEFT, EDITABLE_DATASET_METADATA_RIGHT, NON_EDITABLE_DATASET_METADATA, DatasetIdentifiers
+from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
+from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
+from datadoc_editor.frontend.fields.display_base import (
+    DATASET_METADATA_MULTIDROPDOWN_INPUT,
+)
+from datadoc_editor.frontend.fields.display_base import (
+    DATASET_METADATA_MULTILANGUAGE_INPUT,
+)
+from datadoc_editor.frontend.fields.display_dataset import (
+    EDITABLE_DATASET_METADATA_LEFT,
+)
+from datadoc_editor.frontend.fields.display_dataset import (
+    EDITABLE_DATASET_METADATA_RIGHT,
+)
+from datadoc_editor.frontend.fields.display_dataset import NON_EDITABLE_DATASET_METADATA
+from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
 
 if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
+
+    from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 
 
 logger = logging.getLogger(__name__)
@@ -27,8 +46,6 @@ logger = logging.getLogger(__name__)
 
 def register_dataset_callbacks(app: Dash) -> None:
     """Define and register callbacks for dataset tab."""
-    
-
 
     @app.callback(
         Output(
@@ -56,7 +73,7 @@ def register_dataset_callbacks(app: Dash) -> None:
             ctx.triggered[0]["value"],
             ctx.triggered_id["id"],
         )
-        
+
     @app.callback(
         Output(
             {
@@ -174,7 +191,7 @@ def register_dataset_callbacks(app: Dash) -> None:
                 },
             ),
         ]
-        
+
     @app.callback(
         Output(
             {

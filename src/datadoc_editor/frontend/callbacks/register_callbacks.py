@@ -13,7 +13,6 @@ from dash import Dash
 from dash import Input
 from dash import Output
 from dash import State
-from dash import ctx
 from dash import html
 from dash import no_update
 

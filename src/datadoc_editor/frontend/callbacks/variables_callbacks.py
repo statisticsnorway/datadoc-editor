@@ -5,26 +5,31 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from dash import MATCH, ctx
+from dash import MATCH
 from dash import Dash
 from dash import Input
 from dash import Output
-from dash import State
+from dash import ctx
 
 from datadoc_editor import state
-from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
-    accept_variable_metadata_input,
-    populate_variables_workspace,
 )
-
-from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID, VARIABLES_INFORMATION_ID
-from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT, VARIABLES_METADATA_INPUT, VARIABLES_METADATA_MULTILANGUAGE_INPUT
+from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
+from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
+from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
+from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
+from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
+from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
+from datadoc_editor.frontend.fields.display_base import (
+    VARIABLES_METADATA_MULTILANGUAGE_INPUT,
+)
 from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
+
+    from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 
 
 logger = logging.getLogger(__name__)
@@ -32,7 +37,7 @@ logger = logging.getLogger(__name__)
 
 def register_variables_callbacks(app: Dash) -> None:
     """Define and register callbacks for variables tab."""
-    
+
     @app.callback(
         Output(ACCORDION_WRAPPER_ID, "children"),
         Input("dataset-opened-counter", "data"),
@@ -49,7 +54,7 @@ def register_variables_callbacks(app: Dash) -> None:
             search_query,
             dataset_opened_counter,
         )
-    
+
     @app.callback(
         Output(VARIABLES_INFORMATION_ID, "children"),
         Input("dataset-opened-counter", "data"),
@@ -170,7 +175,6 @@ def register_variables_callbacks(app: Dash) -> None:
             contains_data_from,
             contains_data_until,
         )
-
 
     @app.callback(
         Output(
