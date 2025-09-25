@@ -90,13 +90,9 @@
   display: flex;
   gap: 1rem;
   align-items: flex-start;
-  padding-bottom: 0.8rem;
+  padding: 0 0.8rem 0.8rem 0;
   margin-bottom: 1rem;
   max-width: 100%;
-  /*flex-direction: column;*/
-  /*flex-wrap: wrap;*/
-  /*border: 1px solid green;
-  padding: 0.8rem;*/
 }
 
 .date-button-row {
@@ -160,13 +156,8 @@
 .input-group-row .ssb-dropdown.dropdown-component {
   width: 60%;
 }
-@media (max-width: 1140px) {
-  #use-restriction-list-container > div > .ssb-dropdown .dropdown-interactive-area button{
-    font-size: 0.9rem;
-  }
-}
-@media (max-width: 990px) {
 
+@media (max-width: 1180px) {
   .input-group-container {
       flex-direction: column;
   }
@@ -194,10 +185,10 @@
   }
 
   #use-restriction-list-container > div > .ssb-dropdown .dropdown-interactive-area button {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
   }
   #dataset-metadata-input-right > fieldset > button{
-      font-size: 0.8rem;
+      font-size: 0.9rem;
   }
 
   .multidropdown-delete-button::before {
