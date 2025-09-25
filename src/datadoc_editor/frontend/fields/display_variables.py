@@ -264,11 +264,11 @@ GLOBAL_VARIABLES = [
     VariableIdentifiers.DATA_SOURCE.value,
     VariableIdentifiers.VARIABLE_ROLE.value,
     VariableIdentifiers.MEASUREMENT_UNIT.value,
-    
-    ]
+]
 GLOBAL_VARIABLES_METADATA2: list[tuple] = [
     (m.identifier, m.display_name)
-    for m in DISPLAY_VARIABLES.values() if m.identifier in GLOBAL_VARIABLES
+    for m in DISPLAY_VARIABLES.values()
+    if m.identifier in GLOBAL_VARIABLES
 ]
 
 GLOBAL_VARIABLES_METADATA = [
