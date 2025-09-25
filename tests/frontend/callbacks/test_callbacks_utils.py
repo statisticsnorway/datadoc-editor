@@ -103,7 +103,7 @@ def test_render_multidropdown_row_simple():
 
     date_button_div = row.children[1]
     date_input = date_button_div.children[0]
-    button = date_button_div.children[1] 
+    button = date_button_div.children[1]
 
     assert dropdown.value == "DELETION_ANONYMIZATION"
     assert dropdown.id == {"component": "row_test", "field": "type"}
