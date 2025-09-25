@@ -120,6 +120,7 @@
   font-weight: bold;
   transition: background-color 0.2s ease, transform 0.1s ease;
   flex-shrink: 0;
+  margin-top: 1rem;
 }
 
 .multidropdown-delete-button::before {
@@ -159,10 +160,11 @@
   }
 }
 @media (max-width: 990px) {
-  .multidropdown-delete-button {
+  .date-button-row > .multidropdown-delete-button {
     width: 1.5rem; 
     height: 1.5rem;
     font-size: 1rem;
+    margin-top: 0;
   }
 
   .multidropdown-delete-button::before {
@@ -180,6 +182,7 @@
   }
   .date-button-row {
     flex-direction: column; 
+    gap: 0.6rem;
   }
   .use-restriction-list-container > div > .ssb-dropdown .dropdown-interactive-area button {
     font-size: 0.8rem;
