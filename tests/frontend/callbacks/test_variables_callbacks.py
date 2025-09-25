@@ -180,7 +180,7 @@ def test_accept_variable_metadata_input_valid(
     assert (
         accept_variable_metadata_input(
             value,
-            metadata.variables[0].short_name, # type: ignore[arg-type]
+            metadata.variables[0].short_name,  # type: ignore[arg-type]
             metadata_field=metadata_field.value,
             language="nb",
         )
@@ -198,7 +198,7 @@ def test_accept_variable_metadata_input_invalid(
     state.metadata = metadata
     message = accept_variable_metadata_input(
         "not a url",
-        metadata.variables[0].short_name, # type: ignore[arg-type]
+        metadata.variables[0].short_name,  # type: ignore[arg-type]
         metadata_field=VariableIdentifiers.DEFINITION_URI.value,
     )
     assert message is not None
@@ -290,7 +290,7 @@ def test_accept_variable_metadata_date_input(
     assert (
         accept_variable_metadata_date_input(
             VariableIdentifiers(variable_identifier),
-            chosen_short_name, # type: ignore[arg-type]
+            chosen_short_name,  # type: ignore[arg-type]
             contains_data_from,
             contains_data_until,
         )
@@ -335,7 +335,7 @@ def test_populate_variables_workspace_filter_variables(
 ):
     assert (
         len(
-            populate_variables_workspace(metadata.variables, search_query, 0), # type: ignore[arg-type]
+            populate_variables_workspace(metadata.variables, search_query, 0),  # type: ignore[arg-type]
         )
         == expected_length
     )
@@ -709,16 +709,16 @@ def test_accept_pseudo_variable_metadata_input_valid(
 ):
     state.metadata = metadata
     first_var_short_name = metadata.variables[0].short_name
-    metadata.add_pseudonymization(first_var_short_name) # type: ignore[arg-type]
+    metadata.add_pseudonymization(first_var_short_name)  # type: ignore[arg-type]
     assert (
         accept_pseudo_variable_metadata_input(
             value,
-            first_var_short_name, # type: ignore[arg-type]
+            first_var_short_name,  # type: ignore[arg-type]
             metadata_field=metadata_field.value,
         )
         is None
     )
-    variable = state.metadata.variables_lookup.get(first_var_short_name) # type: ignore[arg-type]
+    variable = state.metadata.variables_lookup.get(first_var_short_name)  # type: ignore[arg-type]
     assert variable is not None
     assert (
         getattr(
@@ -813,12 +813,13 @@ def test_populate_pseudonymization_workspace(
 ):
     state.metadata = metadata
     first_var_short_name = metadata.variables[0].short_name
-    variable = state.metadata.variables_lookup.get(first_var_short_name) # type: ignore[arg-type]
+    variable = state.metadata.variables_lookup.get(first_var_short_name)  # type: ignore[arg-type]
     assert variable is not None
     if case.saved_pseudonymization:
         variable.pseudonymization = case.saved_pseudonymization
     pseudonymization_workspace = populate_pseudo_workspace(
-        variable, case.selected_algorithm # type: ignore[arg-type]
+        variable,
+        case.selected_algorithm,  # type: ignore[arg-type]
     )
     assert pseudonymization_workspace is not None
     assert isinstance(pseudonymization_workspace, case.expected_workspace_type)
@@ -909,12 +910,12 @@ def test_populate_pseudonymization_workspace(
 def test_update_pseudonymization_algorithm(case, metadata: Datadoc):
     state.metadata = metadata
     first_var_short_name = metadata.variables[0].short_name
-    variable = state.metadata.variables_lookup.get(first_var_short_name) # type: ignore[arg-type]
+    variable = state.metadata.variables_lookup.get(first_var_short_name)  # type: ignore[arg-type]
     assert variable is not None
     if case.saved_pseudonymization:
         variable.pseudonymization = case.saved_pseudonymization
     update_selected_pseudonymization(
-        variable, # type: ignore[arg-type]
+        variable,  # type: ignore[arg-type]
         case.saved_pseudonymization.encryption_algorithm,
         case.selected_algorithm,
     )
@@ -935,11 +936,11 @@ def test_delete_pseudonymization(
 ):
     state.metadata = metadata
     first_var_short_name = metadata.variables[0].short_name
-    variable = state.metadata.variables_lookup.get(first_var_short_name) # type: ignore[arg-type]
+    variable = state.metadata.variables_lookup.get(first_var_short_name)  # type: ignore[arg-type]
     assert variable is not None
     variable.pseudonymization = model.Pseudonymization(
         encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION
     )
     assert variable.pseudonymization.encryption_algorithm == "TINK-DAEAD"
-    mutate_variable_pseudonymization(variable, constants.DELETE_SELECTED) # type: ignore[arg-type]
+    mutate_variable_pseudonymization(variable, constants.DELETE_SELECTED)  # type: ignore[arg-type]
     assert variable.pseudonymization is None

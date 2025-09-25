@@ -287,11 +287,11 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             build_global_ssb_accordion(
                 header="Rediger alle",
                 key={"global": "value"},
-                children=build_global_edit_section(GLOBAL_VARIABLES), # type: ignore[arg-type]
+                children=build_global_edit_section(GLOBAL_VARIABLES),  # type: ignore[arg-type]
             )
         ]
         variables = populate_variables_workspace(
-            state.metadata.variables, # type: ignore[arg-type]
+            state.metadata.variables,  # type: ignore[arg-type]
             search_query,
             dataset_opened_counter,
         )
@@ -703,14 +703,14 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
 
         # Persist update and deletion only on save
         if n_clicks and n_clicks > 0:
-            mutate_variable_pseudonymization(variable, selected_algorithm) # type: ignore[arg-type]
+            mutate_variable_pseudonymization(variable, selected_algorithm)  # type: ignore[arg-type]
 
         logger.debug(
             "Variable %s has pseudo info: %s",
             variable.short_name,
             variable.pseudonymization,
         )
-        return populate_pseudo_workspace(variable, selected_algorithm) # type: ignore[arg-type]
+        return populate_pseudo_workspace(variable, selected_algorithm)  # type: ignore[arg-type]
 
     @app.callback(
         Output("global-output", "children"),

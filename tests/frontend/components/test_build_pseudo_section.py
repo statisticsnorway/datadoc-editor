@@ -1,7 +1,8 @@
 import pytest
 import ssb_dash_components as ssb  # type: ignore[import-untyped]
-from dash import html
 from dapla_metadata.datasets import model
+from dash import html
+
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
 from datadoc_editor.frontend.callbacks.utils import (

@@ -368,11 +368,11 @@ def set_variables_value_multilanguage_inherit_dataset_values(
             update_value = handle_multi_language_metadata(
                 variable,
                 value,
-                val.short_name, # type: ignore[arg-type]
+                val.short_name,  # type: ignore[arg-type]
                 language,
             )
             setattr(
-                state.metadata.variables_lookup[val.short_name], # type: ignore[index]
+                state.metadata.variables_lookup[val.short_name],  # type: ignore[index]
                 variable,
                 update_value,  # type: ignore[index]
             )
@@ -385,13 +385,13 @@ def set_variables_values_inherit_dataset_derived_date_values() -> None:
     and must be set on file opening.
     """
     for val in state.metadata.variables:
-        if state.metadata.variables_lookup[val.short_name].contains_data_from is None: # type: ignore[index]
+        if state.metadata.variables_lookup[val.short_name].contains_data_from is None:  # type: ignore[index]
             setattr(
                 state.metadata.variables_lookup[val.short_name],  # type: ignore[index]
                 VariableIdentifiers.CONTAINS_DATA_FROM,
                 state.metadata.dataset.contains_data_from,  # type: ignore[index]
             )
-        if state.metadata.variables_lookup[val.short_name].contains_data_until is None: # type: ignore[index]
+        if state.metadata.variables_lookup[val.short_name].contains_data_until is None:  # type: ignore[index]
             setattr(
                 state.metadata.variables_lookup[val.short_name],  # type: ignore[index]
                 VariableIdentifiers.CONTAINS_DATA_UNTIL,

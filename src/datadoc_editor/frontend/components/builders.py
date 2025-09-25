@@ -13,12 +13,13 @@ from dash import html
 
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
-from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT, GlobalFieldTypes
+from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import GLOBAL_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import FieldTypes
+from datadoc_editor.frontend.fields.display_base import GlobalFieldTypes
 from datadoc_editor.frontend.fields.display_base import (
     get_enum_options_with_delete_option,
 )
