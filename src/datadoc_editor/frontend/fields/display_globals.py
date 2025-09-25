@@ -83,4 +83,4 @@ DISPLAY_GLOBALS: dict[
 }
 
 
-GLOBAL_VARIABLES_3 = [m for m in DISPLAY_GLOBALS.values()]
+GLOBAL_VARIABLES = list(DISPLAY_GLOBALS.values())

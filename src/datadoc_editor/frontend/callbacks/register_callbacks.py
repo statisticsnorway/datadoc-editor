@@ -78,7 +78,7 @@ from datadoc_editor.frontend.fields.display_dataset import (
 )
 from datadoc_editor.frontend.fields.display_dataset import NON_EDITABLE_DATASET_METADATA
 from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
-from datadoc_editor.frontend.fields.display_globals import GLOBAL_VARIABLES_3
+from datadoc_editor.frontend.fields.display_globals import GLOBAL_VARIABLES
 from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
@@ -287,7 +287,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             build_global_ssb_accordion(
                 header="Rediger alle",
                 key={"global": "value"},
-                children=build_global_edit_section(GLOBAL_VARIABLES_3),
+                children=build_global_edit_section(GLOBAL_VARIABLES),
             )
         ]
         variables = populate_variables_workspace(
@@ -719,9 +719,11 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
     )
     def callback_accept_global_variable_metadata_input(
         value,  # noqa: ANN001
-        component_id,
+        component_id,  # noqa: ANN001
     ) -> str:
         """Save updated variable metadata values."""
-        value_dict = {id_["id"]: val for id_, val in zip(component_id, value, strict=False)}
+        value_dict = {
+            id_["id"]: val for id_, val in zip(component_id, value, strict=False)
+        }
         logger.debug("Global value: %s", value_dict)
         return str(value_dict)

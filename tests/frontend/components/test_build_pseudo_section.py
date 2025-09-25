@@ -13,7 +13,7 @@ from datadoc_editor.frontend.components.builders import (
     build_variables_pseudonymization_section,
 )
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
-from datadoc_editor.frontend.fields.display_variables import GLOBAL_VARIABLES_METADATA
+from datadoc_editor.frontend.fields.display_globals import GLOBAL_VARIABLES
 
 TEST_VARIABLES = [
     (
@@ -143,4 +143,5 @@ def test_build_pseudonymization_field_section(
 
 
 def test_global():
-    assert len(GLOBAL_VARIABLES_METADATA) == 4
+    num_globals = 4
+    assert len(GLOBAL_VARIABLES) == num_globals
