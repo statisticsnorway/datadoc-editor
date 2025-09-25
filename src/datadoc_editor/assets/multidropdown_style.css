@@ -170,12 +170,6 @@
   .input-group-row .ssb-dropdown.dropdown-component {
       width: 100%;
 }
-  .date-button-row > .multidropdown-delete-button {
-    width: 1.5rem;
-    height: 1.5rem;
-    font-size: 1rem;
-    margin-top: 0;
-  }
 
   .date-button-row {
     flex-direction: row;
