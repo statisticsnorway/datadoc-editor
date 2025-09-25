@@ -37,6 +37,10 @@
     padding: 1rem;
 }
 
+.ssb-accordion.global-variable-accordion > .accordion-header {
+    padding: 1rem;
+    border: 2px solid green;
+}
 .edit-section{
     display: flex;
     flex-direction: row;
@@ -45,6 +49,13 @@
     padding: 1rem 0;
 }
 
+.global-edit-section{
+    display: flex;
+    flex-direction: column;
+}
+.global-paragraph{
+    display:block;
+}
 .edit-section-form{
     display: flex;
     flex-wrap: wrap;

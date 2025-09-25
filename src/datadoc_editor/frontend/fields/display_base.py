@@ -48,6 +48,7 @@ DATASET_METADATA_MULTIDROPDOWN_INPUT = "dataset-metadata-multidropdown-input"
 
 PSEUDO_METADATA_INPUT = "pseudo-metadata-input"
 VARIABLES_METADATA_INPUT = "variables-metadata-input"
+GLOBAL_METADATA_INPUT = "global-variables-input"
 VARIABLES_METADATA_DATE_INPUT = "variables-metadata-date-input"
 VARIABLES_METADATA_MULTILANGUAGE_INPUT = "dataset-metadata-multilanguage-input"
 
@@ -170,7 +171,72 @@ def get_comma_separated_string(metadata: BaseModel, identifier: str) -> str:
         # This just means we got None
         return ""
 
+@dataclass
+class DisplayGlobalMetadata(ABC):
+    """Controls how a given global metadata field should be displayed."""
+    identifier: str
+    display_name: str
+    description: str
+    obligatory: bool = False
+    editable: bool = True
+    global_editable: bool = False
+    
+    @abstractmethod
+    def render(
+        self,
+        component_id: dict,
+    ) -> Component:
+        """Build a component."""
+        ...
+        
+@dataclass
+class GlobalDropdownField(DisplayGlobalMetadata):
+    """Controls how a Dropdown should be displayed."""
 
+    options_getter: Callable[[], list[dict[str, str]]] = list
+
+    def render(
+        self,
+        component_id: dict,
+    ) -> ssb.Dropdown:
+        """Build Dropdown component."""
+        return ssb.Dropdown(
+            header=self.display_name,
+            id=component_id,
+            items=self.options_getter(),
+            placeholder=DROPDOWN_DESELECT_OPTION,
+            value="",
+            className="dropdown-component",
+            showDescription=True,
+            description=self.description,
+            required=self.obligatory and self.editable,
+        )
+    
+@dataclass
+class GlobalInputField(DisplayGlobalMetadata):
+    """Controls how an input field should be displayed."""
+
+    type: str = "text"
+    value_getter: Callable[[BaseModel, str], Any] = get_metadata_and_stringify
+
+    def render(
+        self,
+        component_id: dict,
+    ) -> ssb.Input:
+        """Build an Input component."""
+        return ssb.Input(
+            label=self.display_name,
+            id=component_id,
+            debounce=True,
+            type=self.type,
+            showDescription=True,
+            description=self.description,
+            readOnly=not self.editable,
+            value="",
+            className="input-component",
+            required=self.obligatory and self.editable,
+        )
+        
 @dataclass
 class DisplayMetadata(ABC):
     """Controls how a given metadata field should be displayed."""
@@ -515,4 +581,9 @@ FieldTypes = (
     | MetadataPeriodField
     | MetadataMultiLanguageField
     | MetadataMultiDropdownField
+)
+
+GlobalFieldTypes = (
+    GlobalDropdownField
+    | GlobalInputField
 )

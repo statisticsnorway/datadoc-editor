@@ -13,7 +13,7 @@ from dash import html
 
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
-from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
+from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT, GLOBAL_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
@@ -126,6 +126,24 @@ def build_input_field_section(
         className="edit-section-form",
     )
 
+def build_global_input_field_section(
+    metadata_fields: list[FieldTypes],
+    field_id: str = "",
+) -> dbc.Form:
+    """Create form with input fields for variable workspace."""
+    return dbc.Form(
+        [
+            i.render(
+                component_id={
+                    "type": GLOBAL_METADATA_INPUT,
+                    "id": i.identifier,
+                },
+            )
+            for i in metadata_fields
+        ],
+        id=f"{GLOBAL_METADATA_INPUT}-{2}-{field_id}",
+        className="edit-section-form",
+    )
 
 def build_pseudo_field_section(
     metadata_fields: list[FieldTypes],
@@ -166,6 +184,21 @@ def build_edit_section(
         className="edit-section",
     )
 
+def build_global_edit_section(
+    metadata_inputs: list[list[FieldTypes]],
+) -> html.Section:
+    """Create input section without variable or side."""
+    # Flatten all inputs into a single list
+    all_inputs = [field for field in metadata_inputs] 
+
+    return html.Section(
+        id={"type": "edit-section"},
+        children=[
+            ssb.Paragraph("Hvorfor hva og hvordan", className="global-paragraph"),
+            build_global_input_field_section(all_inputs, field_id="editable")
+        ],
+        className="global-edit-section",
+    )
 
 def build_variables_machine_section(
     metadata_inputs: list,
@@ -238,10 +271,32 @@ def build_ssb_accordion(
                 },
                 children=children,
             ),
+            html.Div(
+                id="global-values",
+            ),
         ],
         className="variable-accordion",
     )
 
+def build_global_ssb_accordion(
+    header: str,
+    key: dict,
+    children: list,
+) -> ssb.Accordion:
+    """Build Accordion for one variable in variable workspace."""
+    return ssb.Accordion(
+        header=header,
+        id=key,
+        children=[
+            html.Section(
+                id={
+                    "type": "global-variable-inputs",
+                },
+                children=children,
+            ),
+        ],
+        className="global-variable-accordion",
+    )
 
 def build_dataset_machine_section(
     title: str,
