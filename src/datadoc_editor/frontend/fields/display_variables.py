@@ -125,6 +125,7 @@ DISPLAY_VARIABLES: dict[
         display_name="Måleenhet",
         description="Dersom variabelen er kvantitativ, skal den ha en måleenhet, f.eks. kilo eller kroner.",
         options_getter=get_measurement_unit_options,
+        global_editable=True,
     ),
     VariableIdentifiers.INVALID_VALUE_DESCRIPTION: MetadataMultiLanguageField(
         identifier=VariableIdentifiers.INVALID_VALUE_DESCRIPTION.value,
@@ -137,6 +138,7 @@ DISPLAY_VARIABLES: dict[
         display_name="Multiplikasjonsfaktor",
         description="Multiplikasjonsfaktoren er den numeriske verdien som multipliseres med måleenheten, f.eks. når en skal vise store tall i en tabell, eksempelvis 1000 kroner.",
         type="number",
+        global_editable=True,
     ),
     VariableIdentifiers.VARIABLE_ROLE: MetadataDropdownField(
         identifier=VariableIdentifiers.VARIABLE_ROLE.value,
@@ -147,6 +149,7 @@ DISPLAY_VARIABLES: dict[
             get_enum_options,
             VariableRole,
         ),
+        global_editable=True,
     ),
     VariableIdentifiers.CLASSIFICATION_URI: MetadataInputField(
         identifier=VariableIdentifiers.CLASSIFICATION_URI.value,
@@ -159,6 +162,7 @@ DISPLAY_VARIABLES: dict[
         description="Datakilden til variabelen (på etat-/organisasjonsnivå).",
         options_getter=get_data_source_options,
         obligatory=True,
+        global_editable=True,
     ),
     VariableIdentifiers.TEMPORALITY_TYPE: MetadataDropdownField(
         identifier=VariableIdentifiers.TEMPORALITY_TYPE.value,
@@ -251,4 +255,22 @@ OBLIGATORY_VARIABLES_METADATA_IDENTIFIERS_AND_DISPLAY_NAME: list[tuple] = [
 
 NON_EDITABLE_VARIABLES_METADATA = [
     m for m in DISPLAY_VARIABLES.values() if not m.editable
+]
+
+GLOBAL_VARIABLES = [
+    VariableIdentifiers.MULTIPLICATION_FACTOR.value,
+    VariableIdentifiers.TEMPORALITY_TYPE.value,
+    VariableIdentifiers.UNIT_TYPE.value,
+    VariableIdentifiers.DATA_SOURCE.value,
+    VariableIdentifiers.VARIABLE_ROLE.value,
+    VariableIdentifiers.MEASUREMENT_UNIT.value,
+    
+    ]
+GLOBAL_VARIABLES_METADATA2: list[tuple] = [
+    (m.identifier, m.display_name)
+    for m in DISPLAY_VARIABLES.values() if m.identifier in GLOBAL_VARIABLES
+]
+
+GLOBAL_VARIABLES_METADATA = [
+    m for m in DISPLAY_VARIABLES.values() if m.global_editable is True
 ]
