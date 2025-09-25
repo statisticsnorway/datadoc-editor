@@ -13,7 +13,7 @@ from dash import html
 
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
-from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
+from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT, GlobalFieldTypes
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import GLOBAL_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
@@ -129,7 +129,7 @@ def build_input_field_section(
 
 
 def build_global_input_field_section(
-    metadata_fields: list[FieldTypes],
+    metadata_fields: list[GlobalFieldTypes],
     field_id: str = "",
 ) -> dbc.Form:
     """Create form with input fields for variable workspace."""
@@ -189,7 +189,7 @@ def build_edit_section(
 
 
 def build_global_edit_section(
-    metadata_inputs: list[list[FieldTypes]],
+    metadata_inputs: list[GlobalFieldTypes],
 ) -> html.Section:
     """Create input section without variable or side."""
     return html.Section(

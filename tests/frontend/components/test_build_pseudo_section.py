@@ -1,8 +1,7 @@
 import pytest
 import ssb_dash_components as ssb  # type: ignore[import-untyped]
 from dash import html
-from datadoc_model.all_optional import model
-
+from dapla_metadata.datasets import model
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.utils import map_dropdown_to_pseudo
 from datadoc_editor.frontend.callbacks.utils import (
@@ -143,5 +142,5 @@ def test_build_pseudonymization_field_section(
 
 
 def test_global():
-    num_globals = 4
+    num_globals = 6
     assert len(GLOBAL_VARIABLES) == num_globals

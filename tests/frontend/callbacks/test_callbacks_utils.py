@@ -479,7 +479,7 @@ def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Data
     state.metadata = metadata
     variable = state.metadata.variables_lookup["sykepenger"]
     apply_pseudonymization(
-        variable,
+        variable, # type: ignore[arg-type]
         case.selected_algorithm,
         case.saved_pseudonymization,
     )
