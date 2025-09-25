@@ -1,4 +1,4 @@
-"""All callbacks for use_restriction"""
+"""All callbacks for use_restriction."""
 
 from __future__ import annotations
 
