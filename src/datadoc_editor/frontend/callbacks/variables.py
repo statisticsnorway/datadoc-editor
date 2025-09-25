@@ -26,7 +26,7 @@ from datadoc_editor.frontend.callbacks.utils import (
     parse_and_validate_pseudonymization_time,
 )
 from datadoc_editor.frontend.callbacks.utils import update_selected_pseudonymization
-from datadoc_editor.frontend.components.builders import build_edit_section, build_global_edit_section
+from datadoc_editor.frontend.components.builders import build_edit_section
 from datadoc_editor.frontend.components.builders import build_pseudo_field_section
 from datadoc_editor.frontend.components.builders import build_ssb_accordion
 from datadoc_editor.frontend.components.builders import build_variables_machine_section
@@ -39,7 +39,7 @@ from datadoc_editor.frontend.constants import PSEUDONYMIZATION
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PseudoVariableIdentifiers,
 )
-from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES, GLOBAL_VARIABLES_METADATA, GLOBAL_VARIABLES_METADATA2
+from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
 from datadoc_editor.frontend.fields.display_variables import (
     MULTIPLE_LANGUAGE_VARIABLES_METADATA,
 )

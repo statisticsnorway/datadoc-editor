@@ -13,8 +13,9 @@ from dash import html
 
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
-from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT, GLOBAL_METADATA_INPUT
+from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
+from datadoc_editor.frontend.fields.display_base import GLOBAL_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import FieldTypes
@@ -126,6 +127,7 @@ def build_input_field_section(
         className="edit-section-form",
     )
 
+
 def build_global_input_field_section(
     metadata_fields: list[FieldTypes],
     field_id: str = "",
@@ -144,6 +146,7 @@ def build_global_input_field_section(
         id=f"{GLOBAL_METADATA_INPUT}-{2}-{field_id}",
         className="edit-section-form",
     )
+
 
 def build_pseudo_field_section(
     metadata_fields: list[FieldTypes],
@@ -184,12 +187,13 @@ def build_edit_section(
         className="edit-section",
     )
 
+
 def build_global_edit_section(
     metadata_inputs: list[list[FieldTypes]],
 ) -> html.Section:
     """Create input section without variable or side."""
     # Flatten all inputs into a single list
-    all_inputs = [field for field in metadata_inputs] 
+    all_inputs = [field for field in metadata_inputs]
 
     return html.Section(
         id={"type": "edit-section"},
@@ -200,6 +204,7 @@ def build_global_edit_section(
         ],
         className="global-edit-section",
     )
+
 
 def build_variables_machine_section(
     metadata_inputs: list,
@@ -279,6 +284,7 @@ def build_ssb_accordion(
         className="variable-accordion",
     )
 
+
 def build_global_ssb_accordion(
     header: str,
     key: dict,
@@ -298,6 +304,7 @@ def build_global_ssb_accordion(
         ],
         className="global-variable-accordion",
     )
+
 
 def build_dataset_machine_section(
     title: str,

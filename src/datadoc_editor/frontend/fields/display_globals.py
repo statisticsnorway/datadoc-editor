@@ -1,9 +1,17 @@
-from enum import Enum
 import functools
+from enum import Enum
 
-from datadoc_editor.enums import TemporalityTypeType, VariableRole
-from datadoc_editor.frontend.fields.display_base import FieldTypes, GlobalDropdownField, GlobalFieldTypes, GlobalInputField, MetadataDropdownField, get_data_source_options, get_enum_options
-from datadoc_editor.frontend.fields.display_variables import get_measurement_unit_options, get_unit_type_options
+from datadoc_editor.enums import TemporalityTypeType
+from datadoc_editor.enums import VariableRole
+from datadoc_editor.frontend.fields.display_base import GlobalDropdownField
+from datadoc_editor.frontend.fields.display_base import GlobalFieldTypes
+from datadoc_editor.frontend.fields.display_base import GlobalInputField
+from datadoc_editor.frontend.fields.display_base import get_data_source_options
+from datadoc_editor.frontend.fields.display_base import get_enum_options
+from datadoc_editor.frontend.fields.display_variables import (
+    get_measurement_unit_options,
+)
+from datadoc_editor.frontend.fields.display_variables import get_unit_type_options
 
 
 class GlobalIdentifiers(str, Enum):

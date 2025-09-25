@@ -6,7 +6,7 @@ import functools
 from enum import Enum
 
 from dapla_metadata.datasets import enums
-import ssb_dash_components as ssb
+
 from datadoc_editor import state
 from datadoc_editor.enums import DataType
 from datadoc_editor.enums import TemporalityTypeType
@@ -255,23 +255,4 @@ OBLIGATORY_VARIABLES_METADATA_IDENTIFIERS_AND_DISPLAY_NAME: list[tuple] = [
 
 NON_EDITABLE_VARIABLES_METADATA = [
     m for m in DISPLAY_VARIABLES.values() if not m.editable
-]
-
-GLOBAL_VARIABLES = [
-    VariableIdentifiers.MULTIPLICATION_FACTOR.value,
-    VariableIdentifiers.TEMPORALITY_TYPE.value,
-    VariableIdentifiers.UNIT_TYPE.value,
-    VariableIdentifiers.DATA_SOURCE.value,
-    VariableIdentifiers.VARIABLE_ROLE.value,
-    VariableIdentifiers.MEASUREMENT_UNIT.value,
-]
-GLOBAL_VARIABLES_METADATA2: list[tuple] = [
-    (m.identifier, m.display_name)
-    for m in DISPLAY_VARIABLES.values()
-    if m.identifier in GLOBAL_VARIABLES
-]
-
-GLOBAL_VARIABLES_METADATA = [
-    ssb.Dropdown(header="Måletype"),
-    ssb.Dropdown(header="Enhetstype")
 ]

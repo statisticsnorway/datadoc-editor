@@ -36,13 +36,14 @@ from datadoc_editor.frontend.callbacks.variables import (
 from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
 )
-import ssb_dash_components as ssb
 from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
 from datadoc_editor.frontend.callbacks.variables import mutate_variable_pseudonymization
 from datadoc_editor.frontend.callbacks.variables import populate_pseudo_workspace
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
-from datadoc_editor.frontend.components.builders import build_dataset_edit_section, build_global_edit_section, build_global_ssb_accordion
+from datadoc_editor.frontend.components.builders import build_dataset_edit_section
 from datadoc_editor.frontend.components.builders import build_dataset_machine_section
+from datadoc_editor.frontend.components.builders import build_global_edit_section
+from datadoc_editor.frontend.components.builders import build_global_ssb_accordion
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import ADD_USE_RESTRICTION_BUTTON
 from datadoc_editor.frontend.components.identifiers import FORCE_RERENDER_COUNTER
@@ -54,7 +55,7 @@ from datadoc_editor.frontend.components.identifiers import (
 from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_OPTION_STORE
 from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_STORE
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
-from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT, GLOBAL_METADATA_INPUT
+from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
 from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import (
     DATASET_METADATA_MULTIDROPDOWN_INPUT,
@@ -62,6 +63,7 @@ from datadoc_editor.frontend.fields.display_base import (
 from datadoc_editor.frontend.fields.display_base import (
     DATASET_METADATA_MULTILANGUAGE_INPUT,
 )
+from datadoc_editor.frontend.fields.display_base import GLOBAL_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
@@ -282,7 +284,11 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         """Create variable workspace with accordions for variables."""
         logger.debug("Populating variables workspace. Search query: %s", search_query)
         globals_section = [
-            build_global_ssb_accordion(header="Rediger alle", key={"global": "value"}, children=build_global_edit_section(GLOBAL_VARIABLES_3))
+            build_global_ssb_accordion(
+                header="Rediger alle",
+                key={"global": "value"},
+                children=build_global_edit_section(GLOBAL_VARIABLES_3),
+            )
         ]
         variables = populate_variables_workspace(
             state.metadata.variables,
@@ -290,9 +296,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             dataset_opened_counter,
         )
         return globals_section + variables
-    
-    
-        
+
     @app.callback(
         [Output(USE_RESTRICTION_STORE, "data"), Output(FORCE_RERENDER_COUNTER, "data")],
         [
@@ -710,14 +714,14 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
 
     @app.callback(
         Output("global-output", "children"),
-        Input({"type": GLOBAL_METADATA_INPUT, "id": ALL},"value"),
-        State({"type": GLOBAL_METADATA_INPUT, "id": ALL},"id"),
+        Input({"type": GLOBAL_METADATA_INPUT, "id": ALL}, "value"),
+        State({"type": GLOBAL_METADATA_INPUT, "id": ALL}, "id"),
     )
     def callback_accept_global_variable_metadata_input(
-        value,
-        id,
-    ):
+        value,  # noqa: ANN001
+        component_id,
+    ) -> str:
         """Save updated variable metadata values."""
-        value_dict = {id_['id']: val for id_, val in zip(id, value)}
+        value_dict = {id_["id"]: val for id_, val in zip(component_id, value, strict=False)}
         logger.debug("Global value: %s", value_dict)
         return str(value_dict)

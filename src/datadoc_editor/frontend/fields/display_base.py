@@ -171,16 +171,18 @@ def get_comma_separated_string(metadata: BaseModel, identifier: str) -> str:
         # This just means we got None
         return ""
 
+
 @dataclass
 class DisplayGlobalMetadata(ABC):
     """Controls how a given global metadata field should be displayed."""
+
     identifier: str
     display_name: str
     description: str
     obligatory: bool = False
     editable: bool = True
     global_editable: bool = False
-    
+
     @abstractmethod
     def render(
         self,
@@ -188,7 +190,8 @@ class DisplayGlobalMetadata(ABC):
     ) -> Component:
         """Build a component."""
         ...
-        
+
+
 @dataclass
 class GlobalDropdownField(DisplayGlobalMetadata):
     """Controls how a Dropdown should be displayed."""
@@ -211,7 +214,8 @@ class GlobalDropdownField(DisplayGlobalMetadata):
             description=self.description,
             required=self.obligatory and self.editable,
         )
-    
+
+
 @dataclass
 class GlobalInputField(DisplayGlobalMetadata):
     """Controls how an input field should be displayed."""
@@ -236,7 +240,8 @@ class GlobalInputField(DisplayGlobalMetadata):
             className="input-component",
             required=self.obligatory and self.editable,
         )
-        
+
+
 @dataclass
 class DisplayMetadata(ABC):
     """Controls how a given metadata field should be displayed."""
@@ -583,7 +588,4 @@ FieldTypes = (
     | MetadataMultiDropdownField
 )
 
-GlobalFieldTypes = (
-    GlobalDropdownField
-    | GlobalInputField
-)
+GlobalFieldTypes = GlobalDropdownField | GlobalInputField
