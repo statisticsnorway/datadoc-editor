@@ -123,7 +123,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         ),
         Output(
             {"type": DATASET_METADATA_INPUT, "id": MATCH},
-            "errorMessage",
+            "errormessage",
         ),
         Input(
             {"type": DATASET_METADATA_INPUT, "id": MATCH},
@@ -158,7 +158,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
                 "id": MATCH,
                 "language": MATCH,
             },
-            "errorMessage",
+            "errormessage",
         ),
         Input(
             {
@@ -201,7 +201,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
                 "field": MATCH,
                 "index": MATCH,
             },
-            "errorMessage",
+            "errormessage",
         ),
         Input(
             {
@@ -426,7 +426,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
         ),
         Output(
             {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
-            "errorMessage",
+            "errormessage",
         ),
         Input(
             {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
@@ -481,7 +481,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
                 "id": MATCH,
                 "language": MATCH,
             },
-            "errorMessage",
+            "errormessage",
         ),
         Input(
             {
@@ -525,7 +525,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
                 "variable_short_name": MATCH,
                 "id": VariableIdentifiers.CONTAINS_DATA_FROM.value,
             },
-            "errorMessage",
+            "errormessage",
         ),
         Output(
             {
@@ -541,7 +541,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
                 "variable_short_name": MATCH,
                 "id": VariableIdentifiers.CONTAINS_DATA_UNTIL.value,
             },
-            "errorMessage",
+            "errormessage",
         ),
         Input(
             {
@@ -586,7 +586,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
                 "type": DATASET_METADATA_DATE_INPUT,
                 "id": DatasetIdentifiers.CONTAINS_DATA_FROM.value,
             },
-            "errorMessage",
+            "errormessage",
         ),
         Output(
             {
@@ -600,7 +600,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
                 "type": DATASET_METADATA_DATE_INPUT,
                 "id": DatasetIdentifiers.CONTAINS_DATA_UNTIL.value,
             },
-            "errorMessage",
+            "errormessage",
         ),
         Input(
             {
@@ -644,7 +644,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
                 "variable_short_name": MATCH,
                 "id": MATCH,
             },
-            "errorMessage",
+            "errormessage",
         ),
         Input(
             {

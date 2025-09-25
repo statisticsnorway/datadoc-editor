@@ -354,16 +354,23 @@ def render_multidropdown_row(
                 showDescription=True,
                 description=field.type_description,
             ),
-            ssb.Input(
-                label=field.date_display_name,
-                value=item.get("use_restriction_date"),
-                id=date_id,
-                className="input-component",
-                type="date",
-                showDescription=True,
-                description=field.date_description,
+            html.Div(
+                [
+                    ssb.Input(
+                        label=field.date_display_name,
+                        value=item.get("use_restriction_date"),
+                        id=date_id,
+                        className="input-component",
+                        type="date",
+                        showDescription=True,
+                        description=field.date_description,
+                    ),
+                    html.Button(
+                        "", id=button_id, className="multidropdown-delete-button"
+                    ),
+                ],
+                className="date-button-row",
             ),
-            html.Button("", id=button_id, className="multidropdown-delete-button"),
         ],
         className="input-group-row",
         key=key,
