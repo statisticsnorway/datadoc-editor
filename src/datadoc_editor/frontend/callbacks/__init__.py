@@ -12,10 +12,14 @@ from dash import Dash
 from .pseudonymization_callbacks import register_pseudonymization_callbacks
 from .register_callbacks import register_callbacks
 from .use_restrictions_callbacks import register_use_restriction_callbacks
-
+from .dataset_callbacks import register_dataset_callbacks
+from .variables_callbacks import register_variables_callbacks
 
 def register_all_callbacks(app: Dash) -> None:
     """All register callbacks in app."""
     register_callbacks(app)
+    register_dataset_callbacks(app)
+    register_variables_callbacks(app)
     register_pseudonymization_callbacks(app)
     register_use_restriction_callbacks(app)
+
