@@ -708,7 +708,7 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
     )
     def callback_populate_variables_globals_section(
         dataset_opened_counter: int,  # noqa: ARG001 Dash requires arguments for all Inputs
-    ) -> str:
+    ) -> None:
         logger.debug("Populating global variables section.")
         if state.metadata.variables and len(state.metadata.variables) > 0:
             return build_global_ssb_accordion(

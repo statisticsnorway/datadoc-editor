@@ -350,7 +350,7 @@ def build_global_edit_section(
 def build_global_ssb_accordion(
     header: str,
     key: dict,
-    children: list,
+    children: html.Section,
 ) -> ssb.Accordion:
     """Build Accordion for one variable in variable workspace."""
     return ssb.Accordion(
