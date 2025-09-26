@@ -1,4 +1,4 @@
-"""All decorated callback functions should be defined here.
+"""General decorated callback functions should be defined here.
 
 Implementations of the callback functionality should be in other functions (in other files), to enable unit testing.
 """

@@ -1,5 +1,7 @@
-"""All callbacks for use_restriction."""
+"""use_restrictions decorated callback functions should be defined here.
 
+Implementations of the callback functionality should be in other functions (in other files), to enable unit testing.
+"""
 from __future__ import annotations
 
 import logging
@@ -36,7 +38,7 @@ logger = logging.getLogger(__name__)
 
 
 def register_use_restriction_callbacks(app: Dash) -> None:
-    """Define and register callbacks for use_restriction."""
+    """Define and register callbacks for use_restrictions."""
 
     @app.callback(
         [Output(USE_RESTRICTION_STORE, "data"), Output(FORCE_RERENDER_COUNTER, "data")],

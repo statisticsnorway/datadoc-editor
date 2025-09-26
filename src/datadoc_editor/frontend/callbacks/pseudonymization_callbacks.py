@@ -1,4 +1,7 @@
-"""All callbacks for pseudonymization."""
+"""Pseudonymization decorated callback functions should be defined here.
+
+Implementations of the callback functionality should be in other functions (in other files), to enable unit testing.
+"""
 
 from __future__ import annotations
 
@@ -28,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 
 def register_pseudonymization_callbacks(app: Dash) -> None:
-    """Define and register callbacks for pseudonymization."""
+    """Define and register callbacks for Pseudonymization."""
 
     @app.callback(
         Output({"type": "pseudo-field-container", "variable": MATCH}, "children"),

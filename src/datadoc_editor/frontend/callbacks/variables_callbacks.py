@@ -1,5 +1,7 @@
-"""All callbacks for variables tab."""
+"""Variables decorated callback functions should be defined here.
 
+Implementations of the callback functionality should be in other functions (in other files), to enable unit testing.
+"""
 from __future__ import annotations
 
 import logging
@@ -36,7 +38,7 @@ logger = logging.getLogger(__name__)
 
 
 def register_variables_callbacks(app: Dash) -> None:
-    """Define and register callbacks for variables tab."""
+    """Define and register callbacks for Variables tab."""
 
     @app.callback(
         Output(ACCORDION_WRAPPER_ID, "children"),
