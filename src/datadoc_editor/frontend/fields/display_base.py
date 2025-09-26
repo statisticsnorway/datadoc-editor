@@ -180,6 +180,7 @@ class DisplayMetadata(ABC):
     description: str
     obligatory: bool = False
     editable: bool = True
+    global_editable: bool = False
 
     def url_encode_shortname_ids(self, component_id: dict) -> None:
         """Encodes id to hanlde non ascii values."""

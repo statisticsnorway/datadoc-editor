@@ -112,6 +112,7 @@ DISPLAY_VARIABLES: dict[
         description="Den enhetstypen variabelen inneholder informasjon om. Eksempler på enhetstyper er person, foretak og eiendom.",
         options_getter=get_unit_type_options,
         obligatory=True,
+        global_editable=True,
     ),
     VariableIdentifiers.POPULATION_DESCRIPTION: MetadataMultiLanguageField(
         identifier=VariableIdentifiers.POPULATION_DESCRIPTION.value,
@@ -125,6 +126,7 @@ DISPLAY_VARIABLES: dict[
         display_name="Måleenhet",
         description="Dersom variabelen er kvantitativ, skal den ha en måleenhet, f.eks. kilo eller kroner.",
         options_getter=get_measurement_unit_options,
+        global_editable=True,
     ),
     VariableIdentifiers.INVALID_VALUE_DESCRIPTION: MetadataMultiLanguageField(
         identifier=VariableIdentifiers.INVALID_VALUE_DESCRIPTION.value,
@@ -137,6 +139,7 @@ DISPLAY_VARIABLES: dict[
         display_name="Multiplikasjonsfaktor",
         description="Multiplikasjonsfaktoren er den numeriske verdien som multipliseres med måleenheten, f.eks. når en skal vise store tall i en tabell, eksempelvis 1000 kroner.",
         type="number",
+        global_editable=True,
     ),
     VariableIdentifiers.VARIABLE_ROLE: MetadataDropdownField(
         identifier=VariableIdentifiers.VARIABLE_ROLE.value,
@@ -147,6 +150,7 @@ DISPLAY_VARIABLES: dict[
             get_enum_options,
             VariableRole,
         ),
+        global_editable=True,
     ),
     VariableIdentifiers.CLASSIFICATION_URI: MetadataInputField(
         identifier=VariableIdentifiers.CLASSIFICATION_URI.value,
@@ -159,6 +163,7 @@ DISPLAY_VARIABLES: dict[
         description="Datakilden til variabelen (på etat-/organisasjonsnivå).",
         options_getter=get_data_source_options,
         obligatory=True,
+        global_editable=True,
     ),
     VariableIdentifiers.TEMPORALITY_TYPE: MetadataDropdownField(
         identifier=VariableIdentifiers.TEMPORALITY_TYPE.value,
@@ -169,6 +174,7 @@ DISPLAY_VARIABLES: dict[
             TemporalityTypeType,
         ),
         obligatory=True,
+        global_editable=True,
     ),
     VariableIdentifiers.FORMAT: MetadataInputField(
         identifier=VariableIdentifiers.FORMAT.value,
@@ -237,6 +243,10 @@ VARIABLES_METADATA_RIGHT = [
 
 OBLIGATORY_VARIABLES_METADATA = [
     m for m in DISPLAY_VARIABLES.values() if m.obligatory and m.editable
+]
+
+GLOBAL_EDITABLE_VARIABLES_METADATA = [
+    m for m in DISPLAY_VARIABLES.values() if m.global_editable
 ]
 
 OPTIONAL_VARIABLES_METADATA = [

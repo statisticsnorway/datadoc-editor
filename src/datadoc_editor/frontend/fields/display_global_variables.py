@@ -83,6 +83,7 @@ DISPLAY_GLOBALS: dict[
             TemporalityTypeType,
         ),
         obligatory=True,
+        global_editable=True,
     ),
 }
 

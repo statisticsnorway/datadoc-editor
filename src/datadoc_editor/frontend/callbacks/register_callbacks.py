@@ -32,6 +32,7 @@ from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_a
 from datadoc_editor.frontend.callbacks.utils import update_store_data_with_inputs
 from datadoc_editor.frontend.callbacks.variables import (
     accept_pseudo_variable_metadata_input,
+    inherit_global_variable_values,
 )
 from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
@@ -725,10 +726,14 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
     def callback_accept_global_variable_metadata_input(
         value,  # noqa: ANN001
         component_id,  # noqa: ANN001
-    ) -> str:
+    ) -> None:
         """Save updated variable metadata values."""
         value_dict = {
             id_["id"]: val for id_, val in zip(component_id, value, strict=False)
         }
         logger.debug("Global value: %s", value_dict)
-        return str(value_dict)
+        inherit_global_variable_values(value_dict)
+        #fields_to_fill = ["unit_type", "measurement_unit", "multiplication_factor", "variable_role", "data_source", "temporality_type"]
+        #for field in fields_to_fill:
+        #    logger.debug("This is field %s and value %s", field, value_dict[field])
+        #return str(value_dict)

@@ -36,10 +36,11 @@ from datadoc_editor.frontend.components.builders import (
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
+from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PseudoVariableIdentifiers,
 )
-from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
+from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES, GLOBAL_EDITABLE_VARIABLES_METADATA
 from datadoc_editor.frontend.fields.display_variables import (
     MULTIPLE_LANGUAGE_VARIABLES_METADATA,
 )
@@ -485,6 +486,12 @@ def inherit_global_variable_values(global_values: dict):
     for var in variables:
         if var and var.short_name:
             lookup = state.metadata.variables_lookup[var.short_name]
+            logger.debug("Global for %s", lookup)
             for field in fields_to_fill:
-                if getattr(var, field) is None:
+                logger.debug("This is field %s and value %s", field, global_values[field])
+                field_value = getattr(var, field) 
+                logger.debug("Field value %s", field_value)
+                if global_values[field] and not getattr(var, field):
+                    logger.debug("For var %s with field value %s", lookup, field_value)
                     setattr(lookup, field, global_values[field])
+                    
