@@ -476,3 +476,14 @@ def mutate_variable_pseudonymization(
                 variable, inferred_algorithm, selected_algorithm
             )
         return
+
+def inherit_global_variable_values(global_values: dict):
+    """Set values if None."""
+    variables: list[model.Variable] = state.metadata.variables
+    fields_to_fill = ["unit_type", "measurement_unit", "multiplication_factor", "variable_role", "data_source", "temporality_type"]
+
+    for var in variables:
+        lookup = state.metadata.variables_lookup[var.short_name]
+        for field in fields_to_fill:
+            if getattr(var, field) is None:
+                setattr(lookup, field, global_values[field])

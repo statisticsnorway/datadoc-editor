@@ -13,7 +13,7 @@ from dash import html
 
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
-from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
+from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT, GlobalFieldTypes
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
@@ -21,6 +21,7 @@ from datadoc_editor.frontend.fields.display_base import FieldTypes
 from datadoc_editor.frontend.fields.display_base import (
     get_enum_options_with_delete_option,
 )
+from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_METADATA_INPUT
 
 if TYPE_CHECKING:
     from dapla_metadata.datasets import model
@@ -311,3 +312,57 @@ def build_link_object(text: str, href: str) -> dict | None:
     if link_href is None:
         return None
     return {"link_text": link_text, "link_href": link_href}
+
+def build_global_input_field_section(
+    metadata_fields: list[GlobalFieldTypes],
+    field_id: str = "",
+) -> dbc.Form:
+    """Create form with input fields for variable workspace."""
+    return dbc.Form(
+        [
+            i.render(
+                component_id={
+                    "type": GLOBAL_METADATA_INPUT,
+                    "id": i.identifier,
+                },
+            )
+            for i in metadata_fields
+        ],
+        id=f"{GLOBAL_METADATA_INPUT}-{2}-{field_id}",
+        className="edit-section-form",
+    )
+
+
+def build_global_edit_section(
+    metadata_inputs: list[GlobalFieldTypes],
+) -> html.Section:
+    """Create input section without variable or side."""
+    return html.Section(
+        id={"type": "edit-section"},
+        children=[
+            ssb.Paragraph("Hvorfor hva og hvordan", className="global-paragraph"),
+            build_global_input_field_section(metadata_inputs, field_id="editable"),
+            html.Div(id="global-output"),
+        ],
+        className="global-edit-section",
+    )
+    
+def build_global_ssb_accordion(
+    header: str,
+    key: dict,
+    children: list,
+) -> ssb.Accordion:
+    """Build Accordion for one variable in variable workspace."""
+    return ssb.Accordion(
+        header=header,
+        id=key,
+        children=[
+            html.Section(
+                id={
+                    "type": "global-variable-inputs",
+                },
+                children=children,
+            ),
+        ],
+        className="global-variable-accordion",
+    )

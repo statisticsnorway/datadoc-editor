@@ -40,9 +40,9 @@ from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata
 from datadoc_editor.frontend.callbacks.variables import mutate_variable_pseudonymization
 from datadoc_editor.frontend.callbacks.variables import populate_pseudo_workspace
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
-from datadoc_editor.frontend.components.builders import build_dataset_edit_section
+from datadoc_editor.frontend.components.builders import build_dataset_edit_section, build_global_edit_section, build_global_ssb_accordion
 from datadoc_editor.frontend.components.builders import build_dataset_machine_section
-from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
+from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID, GLOBAL_VARIABLES_ID
 from datadoc_editor.frontend.components.identifiers import ADD_USE_RESTRICTION_BUTTON
 from datadoc_editor.frontend.components.identifiers import FORCE_RERENDER_COUNTER
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
@@ -75,6 +75,7 @@ from datadoc_editor.frontend.fields.display_dataset import (
 )
 from datadoc_editor.frontend.fields.display_dataset import NON_EDITABLE_DATASET_METADATA
 from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
+from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_METADATA_INPUT, GLOBAL_VARIABLES
 from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
@@ -699,3 +700,35 @@ def register_callbacks(app: Dash) -> None:  # noqa: PLR0915
             variable.pseudonymization,
         )
         return populate_pseudo_workspace(variable, selected_algorithm)
+
+
+    @app.callback(
+        Output(GLOBAL_VARIABLES_ID, "children"),
+        Input("dataset-opened-counter", "data"),
+    )
+    def callback_populate_variables_globals_section(
+        dataset_opened_counter: int,  # noqa: ARG001 Dash requires arguments for all Inputs
+    ) -> str:
+        logger.debug("Populating global variables section.")
+        if state.metadata.variables and len(state.metadata.variables) > 0:
+            return build_global_ssb_accordion(
+                header="Rediger alle",
+                key={"global": "value"},
+                children=build_global_edit_section(GLOBAL_VARIABLES),
+            )
+
+    @app.callback(
+        Output("global-output", "children"),
+        Input({"type": GLOBAL_METADATA_INPUT, "id": ALL}, "value"),
+        State({"type": GLOBAL_METADATA_INPUT, "id": ALL}, "id"),
+    )
+    def callback_accept_global_variable_metadata_input(
+        value,  # noqa: ANN001
+        component_id,  # noqa: ANN001
+    ) -> str:
+        """Save updated variable metadata values."""
+        value_dict = {
+            id_["id"]: val for id_, val in zip(component_id, value, strict=False)
+        }
+        logger.debug("Global value: %s", value_dict)
+        return str(value_dict)
