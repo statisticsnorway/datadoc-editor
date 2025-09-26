@@ -2,11 +2,11 @@
 
 This package initializer collects and exposes all callback definitions from separate modules.
 
-Callbacks are imported here from their respective modules and exposed in a single namespace 
+Callbacks are imported here from their respective modules and exposed in a single namespace
 for easier access and maintainability.
 
-Callbacks should be organized according to logical, practical, or thematic groupings. 
-This helps keep related functionality together and makes it easier 
+Callbacks should be organized according to logical, practical, or thematic groupings.
+This helps keep related functionality together and makes it easier
 to extend or replace callbacks as the project evolves.
 
 Before creating a new module, check if an appropriate callback module already exists.

@@ -2,6 +2,7 @@
 
 Implementations of the callback functionality should be in other functions (in other files), to enable unit testing.
 """
+
 from __future__ import annotations
 
 import logging
