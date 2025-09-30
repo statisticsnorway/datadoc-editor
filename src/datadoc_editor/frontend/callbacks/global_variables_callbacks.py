@@ -60,12 +60,12 @@ def register_global_variables_callbacks(app: Dash) -> None:
         prevent_initial_call=True,
     )
     def callback_accept_global_variable_metadata_input(
-        value,  # ignore: ANN001
+        value,  # noqa: ANN001
         n_clicks: int,
-        reset_clicks: int, # ignore: ARG001
-        component_id,  # ignore: ANN001
-        store_data,  # ignore: ANN001
-    ): # ignore: ANN202
+        reset_clicks: int, # noqa: ARG001
+        component_id,  # noqa: ANN001
+        store_data,  # noqa: ANN001
+    ): # noqa: ANN202
         """Update store_data with add/change/delete and generate accurate alerts."""
         value_dict = {
             id_["id"]: val for id_, val in zip(component_id, value, strict=False)
