@@ -37,7 +37,7 @@ from datadoc_editor.frontend.components.builders import (
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
-from datadoc_editor.frontend.fields.display_base import GlobalDropdownField
+from datadoc_editor.frontend.fields.display_base import GlobalDropdownField, GlobalInputField
 from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PseudoVariableIdentifiers,
@@ -485,7 +485,7 @@ def mutate_variable_pseudonymization(
 
 
 def get_display_name_and_title(
-    value_dict: dict, display_globals: dict
+    value_dict: dict, display_globals: list[GlobalDropdownField | GlobalInputField]
 ) -> list[tuple[str, str]]:
     """Return a list of (display_name, human-readable title) for the selected global values."""
     result = []
@@ -561,33 +561,3 @@ def cancel_inherit_global_variable_values(store_data: dict):
     store_data.clear()
     logger.debug("After cancel: %s", store_data)
 
-
-def prepare_global_variable_values(global_values: dict) -> dict[str, dict[str, Any]]:
-    """Prepare global values for variables without writing them yet.
-    Returns a dict similar to store_data with display info and values.
-    """
-    num_variables_affected: dict[str, dict[str, Any]] = {}
-    display_values = get_display_name_and_title(global_values, GLOBAL_VARIABLES)
-    display_value_map = {display_name: title for display_name, title in display_values}
-
-    for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
-        raw_value = global_values.get(field_name)
-        if not raw_value:
-            continue
-
-        # Check if any variable can be updated
-        can_apply = any(
-            not getattr(var, field_name, None)
-            for var in state.metadata.variables
-            if var and var.short_name
-        )
-        if can_apply:
-            num_variables_affected[field_name] = {
-                "display_name": display_name,
-                "value": raw_value,
-                "display_value": display_value_map.get(display_name, raw_value),
-                "num_vars": 0,  # count applied on actual save
-                "variables": [],
-            }
-
-    return num_variables_affected

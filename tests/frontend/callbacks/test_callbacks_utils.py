@@ -530,5 +530,5 @@ def test_inherit_globals(metadata: Datadoc):
         "data_source": "04",
         "temporality_type": "STATUS",
     }
-    inherit_global_variable_values(global_values)
+    inherit_global_variable_values(global_values, None)
     assert variable.unit_type == "01"
