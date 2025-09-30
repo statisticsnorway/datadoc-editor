@@ -543,7 +543,7 @@ class GlobalDropdownField(DisplayGlobalMetadata):
             items=self.options_getter(),
             placeholder=DROPDOWN_DESELECT_OPTION,
             value="",
-            className="dropdown-component",
+            className="global-dropdown-component",
             showDescription=True,
             description=self.description,
             required=self.obligatory and self.editable,
@@ -571,7 +571,7 @@ class GlobalInputField(DisplayGlobalMetadata):
             description=self.description,
             readOnly=not self.editable,
             value="",
-            className="input-component",
+            className="global-input-component",
             required=self.obligatory and self.editable,
         )
 
