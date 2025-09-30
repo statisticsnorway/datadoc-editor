@@ -10,8 +10,10 @@ from typing import TYPE_CHECKING
 import dash_bootstrap_components as dbc
 import ssb_dash_components as ssb
 from dash import html
-
+from dash import dcc
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
+from datadoc_editor.frontend.components import identifiers
+from datadoc_editor.frontend.components.identifiers import ADD_GLOBAL_VARIABLES_BUTTON, GLOBAL_ALERTS
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
 from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT, GlobalFieldTypes
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
@@ -33,6 +35,7 @@ class AlertTypes(Enum):
     SUCCESS = auto()
     WARNING = auto()
     ERROR = auto()
+    INFO = auto()
 
 
 @dataclass
@@ -57,6 +60,9 @@ ALERT_TYPES = {
     AlertTypes.SUCCESS: AlertType(
         color="success",
     ),
+    AlertTypes.INFO: AlertType(
+        color="info",
+    )
 }
 
 
@@ -313,6 +319,7 @@ def build_link_object(text: str, href: str) -> dict | None:
         return None
     return {"link_text": link_text, "link_href": link_href}
 
+# Global sections
 def build_global_input_field_section(
     metadata_fields: list[GlobalFieldTypes],
     field_id: str = "",
@@ -329,7 +336,7 @@ def build_global_input_field_section(
             for i in metadata_fields
         ],
         id=f"{GLOBAL_METADATA_INPUT}-{2}-{field_id}",
-        className="edit-section-form",
+        className="global-edit-section-form",
     )
 
 
@@ -340,9 +347,24 @@ def build_global_edit_section(
     return html.Section(
         id={"type": "edit-section"},
         children=[
-            ssb.Paragraph("Hvorfor hva og hvordan", className="global-paragraph"),
-            build_global_input_field_section(metadata_inputs, field_id="editable"),
+            html.Div(
+                [
+                    ssb.Paragraph("Hvorfor hva og hvordan", className="global-paragraph"),
+                    html.Div(
+                        [
+                        
+                            ssb.Button("Legg til", id=ADD_GLOBAL_VARIABLES_BUTTON, className="global-button"),
+                            ssb.Button("Nullstill", id="reset-button", className="global-button"),
+                        
+                        ],
+                        className="global-header-buttons"
+                    ),
+                ],
+                className="global-section-header"
+            ),
             html.Div(id="global-output"),
+            build_global_input_field_section(metadata_inputs, field_id="editable"),
+            dcc.Store(id="global-variables-store", data={}),
         ],
         className="global-edit-section",
     )
@@ -358,11 +380,15 @@ def build_global_ssb_accordion(
         id=key,
         children=[
             html.Section(
-                id={
-                    "type": "global-variable-inputs",
-                },
+                id="global-variables-accordion",
+                #id={
+                #    "type": "global-variable-inputs",
+                #},
                 children=children,
             ),
         ],
         className="global-variable-accordion",
     )
+    
+def build_global_variables_info_alert():
+    """Build."""
