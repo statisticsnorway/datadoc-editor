@@ -32,6 +32,7 @@ def get_measurement_unit_options_with_delete() -> list[dict[str, str]]:
     dropdown_options.insert(0, {"title": DROPDOWN_DELETE_OPTION, "id": ""})
     return dropdown_options
 
+
 def get_data_source_options_with_delete() -> list[dict[str, str]]:
     """Collect the unit type options."""
     dropdown_options = [

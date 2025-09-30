@@ -2,13 +2,14 @@
 
 import logging
 
+import ssb_dash_components as ssb
 from dash import ALL
 from dash import Dash
 from dash import Input
 from dash import Output
 from dash import State
 from dash import ctx
-import ssb_dash_components as ssb
+
 from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.variables import (
     cancel_inherit_global_variable_values,
@@ -37,7 +38,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
     def callback_populate_variables_globals_section(
         dataset_opened_counter: int,  # noqa: ARG001 Dash requires arguments for all Inputs
     ) -> None | ssb.Accordion:
-        """docstring."""
+        """Docstring."""
         logger.debug("Populating global variables section.")
         if state.metadata.variables and len(state.metadata.variables) > 0:
             return build_global_ssb_accordion(
@@ -46,7 +47,6 @@ def register_global_variables_callbacks(app: Dash) -> None:
                 children=build_global_edit_section(GLOBAL_VARIABLES),
             )
         return None
-        
 
     @app.callback(
         Output("global-variables-store", "data"),
@@ -60,11 +60,11 @@ def register_global_variables_callbacks(app: Dash) -> None:
         prevent_initial_call=True,
     )
     def callback_accept_global_variable_metadata_input(
-        value, # ignore: ANN001
+        value,  # ignore: ANN001
         n_clicks: int,
         reset_clicks: int,
         component_id,  # ignore: ANN001
-        store_data, # ignore: ANN001
+        store_data,  # ignore: ANN001
     ):
         """Update store_data with add/change/delete and generate accurate alerts."""
         value_dict = {

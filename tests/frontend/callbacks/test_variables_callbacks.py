@@ -23,12 +23,12 @@ from datadoc_editor.frontend.callbacks.utils import update_selected_pseudonymiza
 from datadoc_editor.frontend.callbacks.utils import variables_control
 from datadoc_editor.frontend.callbacks.variables import (
     accept_pseudo_variable_metadata_input,
-    inherit_global_variable_values,
 )
 from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
 )
 from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
+from datadoc_editor.frontend.callbacks.variables import inherit_global_variable_values
 from datadoc_editor.frontend.callbacks.variables import mutate_variable_pseudonymization
 from datadoc_editor.frontend.callbacks.variables import populate_pseudo_workspace
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace

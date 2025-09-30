@@ -37,7 +37,8 @@ from datadoc_editor.frontend.components.builders import (
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
-from datadoc_editor.frontend.fields.display_base import GlobalDropdownField, GlobalInputField
+from datadoc_editor.frontend.fields.display_base import GlobalDropdownField
+from datadoc_editor.frontend.fields.display_base import GlobalInputField
 from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PseudoVariableIdentifiers,
@@ -560,4 +561,3 @@ def cancel_inherit_global_variable_values(store_data: dict):
                 logger.debug("values after cancel: %s", getattr(var, field_name))
     store_data.clear()
     logger.debug("After cancel: %s", store_data)
-
