@@ -4,14 +4,14 @@
 import logging
 from typing import TYPE_CHECKING
 from dash import ALL, Dash, Input, Output, State, ctx
+import dash
 
 from datadoc_editor import state
-from datadoc_editor.constants import DELETE_SELECTED
-from datadoc_editor.frontend.callbacks.variables import cancel_global_variable_changes, get_display_name_and_title, inherit_global_variable_values, prepare_global_variable_values
+from datadoc_editor.frontend.callbacks.variables import cancel_inherit_global_variable_values, inherit_global_variable_values
 from datadoc_editor.frontend.components.builders import AlertTypes, build_global_ssb_accordion, build_ssb_alert
 from datadoc_editor.frontend.components.builders import build_global_edit_section
-from datadoc_editor.frontend.components.identifiers import ADD_GLOBAL_VARIABLES_BUTTON, GLOBAL_VARIABLES_ID
-from datadoc_editor.frontend.fields.display_global_variables import DISPLAY_GLOBALS, GLOBAL_METADATA_INPUT, GLOBAL_VARIABLES
+from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
+from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_METADATA_INPUT, GLOBAL_VARIABLES
 if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
 
@@ -40,6 +40,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
     @app.callback(
         Output("global-variables-store", "data"),
         Output("global-output", "children"),
+        Output({"type": GLOBAL_METADATA_INPUT, "id": ALL}, "value"),
         Input({"type": GLOBAL_METADATA_INPUT, "id": ALL}, "value"),
         Input("add-global-variables-button", "n_clicks"),
         Input("reset-button", "n_clicks"),
@@ -58,15 +59,13 @@ def register_global_variables_callbacks(app: Dash) -> None:
         value_dict = {id_["id"]: val for id_, val in zip(component_id, value, strict=False)}
         if store_data is None:
             store_data = {}
-        global_dict = get_display_name_and_title(value_dict, GLOBAL_VARIABLES)
         alerts: list = []
-        display_value_map = {display_name: title for display_name, title in global_dict}
         delete_fields = [field_id for field_id, val in value_dict.items() if val in ("", "-- Velg --")]
         for field_id in delete_fields:
             store_data.pop(field_id, None)
             value_dict.pop(field_id, None)  
         info_alert_list = []
-        
+        triggered = ctx.triggered_id
         if n_clicks and n_clicks > 0:
             affected_variables = inherit_global_variable_values(value_dict, store_data)
             store_data.update(affected_variables)
@@ -83,6 +82,12 @@ def register_global_variables_callbacks(app: Dash) -> None:
                 link=None,
                 alert_list=info_alert_list
             ))
-        if reset_clicks and reset_clicks > 0:
+        if triggered == "reset-button":
             logger.debug("Store data %s", store_data)
-        return store_data, alerts
+            cancel_inherit_global_variable_values(store_data)
+            alerts = []
+            value = [""] * len(value) 
+            logger.debug("Value %s", value)
+            logger.debug("Id %s", component_id)
+            return store_data, alerts, value
+        return store_data, alerts, value
