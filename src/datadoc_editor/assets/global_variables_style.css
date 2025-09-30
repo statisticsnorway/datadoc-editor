@@ -27,8 +27,9 @@
     width: 100%;
 }
 
-.global-edit-section-form > .ssb-dropdown.dropdown-component, .ssb-input.input-component{
+.global-edit-section-form > .ssb-dropdown.global-dropdown-component, .ssb-input.global-input-component{
     max-width: 400px;
+    width: 100%;
 }
 
 .ssb-btn.secondary-btn.global-button{
