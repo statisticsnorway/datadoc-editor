@@ -1,3 +1,7 @@
+.ssb-accordion.global-variable-accordion {
+    border: 2px dotted pink;
+}
+
 .ssb-accordion.global-variable-accordion > .accordion-header {
     padding: 1rem;
     border: 2px solid green;
@@ -6,13 +10,34 @@
 .global-edit-section{
     display: flex;
     flex-direction: column;
-    column-count: 2;
 }
-.global-paragraph{
-    display:block;
+.global-edit-section-form{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+.global-edit-section-form > .ssb-paragraph.global-paragraph{
+    border: 2px dotted lightblue;
 }
 
-#global-variables-input-2-editable > .ssb-dropdown.dropdown-component,
-.ssb-input.input-component{
+#global-variables{
+    width: 100%;
+}
+
+.global-edit-section-form > .ssb-dropdown.dropdown-component, .ssb-input.input-component{
     max-width: 400px;
+}
+
+.ssb-btn.secondary-btn.global-button{
+    max-width: 150px;
+    position: relative;
+    left: 55%;
+}
+
+.global-section-header{
+    display: flex;
+    align-content: flex-start;
+    gap: 1rem;
 }
