@@ -4,10 +4,13 @@
 }
 
 .ssb-accordion.global-variable-accordion > .accordion-header {
-    padding: 1rem;
-    border: 2px solid green;
+    border: 2px solid #C3DCDC;
+    background-color: #C3DCDC;
 }
 
+.ssb-accordion.global-variable-accordion > .accordion-body {
+    padding: 1rem;
+}
 .global-edit-section{
     display: flex;
     flex-direction: column;
