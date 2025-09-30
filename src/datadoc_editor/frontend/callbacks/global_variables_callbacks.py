@@ -81,7 +81,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
         for field_id in delete_fields:
             store_data.pop(field_id, None)
             value_dict.pop(field_id, None)
-        info_alert_list:list = []
+        info_alert_list: list = []
         triggered = ctx.triggered_id
         if n_clicks and n_clicks > 0:
             affected_variables = inherit_global_variable_values(value_dict, store_data)
