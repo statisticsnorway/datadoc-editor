@@ -38,7 +38,6 @@ def get_measurement_unit_options() -> list[dict[str, str]]:
     dropdown_options.insert(0, {"title": "", "id": ""})
     return dropdown_options
 
-
 def get_unit_type_options() -> list[dict[str, str]]:
     """Collect the unit type options."""
     dropdown_options = [
@@ -247,6 +246,12 @@ OBLIGATORY_VARIABLES_METADATA = [
 
 GLOBAL_EDITABLE_VARIABLES_METADATA = [
     m for m in DISPLAY_VARIABLES.values() if m.global_editable
+]
+
+GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME: list[tuple] = [
+    (m.identifier, m.display_name)
+    for m in DISPLAY_VARIABLES.values() 
+    if m.global_editable
 ]
 
 OPTIONAL_VARIABLES_METADATA = [
