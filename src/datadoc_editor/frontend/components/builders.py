@@ -394,15 +394,8 @@ def build_global_ssb_accordion(
         children=[
             html.Section(
                 id="global-variables-accordion",
-                # id={
-                #    "type": "global-variable-inputs",
-                # },
                 children=children,
             ),
         ],
         className="global-variable-accordion",
     )
-
-
-def build_global_variables_info_alert():
-    """Build."""

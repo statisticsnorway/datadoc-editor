@@ -515,12 +515,13 @@ def get_display_name_and_title(
     return result
 
 
-def inherit_global_variable_values(global_values: dict, previous_data: dict | None):
+def inherit_global_variable_values(
+    global_values: dict, previous_data: dict | None
+) -> dict:
     """Apply values from store_data to variables (actual write)."""
     previous_data = previous_data or {}
     display_values = get_display_name_and_title(global_values, GLOBAL_VARIABLES)
-    display_value_map = {display_name: title for display_name, title in display_values}
-
+    display_value_map = dict(display_values)
     affected_variables: dict[str, dict[str, Any]] = {}
 
     for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
@@ -539,7 +540,7 @@ def inherit_global_variable_values(global_values: dict, previous_data: dict | No
     for var in state.metadata.variables:
         if not var or not var.short_name:
             continue
-        for field_name in affected_variables:
+        for field_name in affected_variables:  # noqa: PLC0206
             raw_value = affected_variables[field_name]["value"]
             current_value = getattr(var, field_name, None)
             if current_value is None:
@@ -549,7 +550,7 @@ def inherit_global_variable_values(global_values: dict, previous_data: dict | No
     return affected_variables
 
 
-def cancel_inherit_global_variable_values(store_data: dict):
+def cancel_inherit_global_variable_values(store_data: dict) -> None:
     """Remove all global added values."""
     logger.debug("Before cancel: %s", store_data)
     for field_name, field_data in store_data.items():

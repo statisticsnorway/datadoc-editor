@@ -965,4 +965,5 @@ def test_inherit_globals(metadata: Datadoc):
         "temporality_type": "STATUS",
     }
     inherit_global_variable_values(global_values, None)
-    assert variable.multiplication_factor == 2
+    expected_value = 2
+    assert variable.multiplication_factor == expected_value

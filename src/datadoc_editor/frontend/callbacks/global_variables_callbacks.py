@@ -59,13 +59,13 @@ def register_global_variables_callbacks(app: Dash) -> None:
         State("global-variables-store", "data"),
         prevent_initial_call=True,
     )
-    def callback_accept_global_variable_metadata_input(
+    def callback_accept_global_variable_metadata_input(  # noqa: ANN202
         value,  # noqa: ANN001
         n_clicks: int,
-        reset_clicks: int, # noqa: ARG001
+        reset_clicks: int,  # noqa: ARG001
         component_id,  # noqa: ANN001
         store_data,  # noqa: ANN001
-    ): # noqa: ANN202
+    ):
         """Update store_data with add/change/delete and generate accurate alerts."""
         value_dict = {
             id_["id"]: val for id_, val in zip(component_id, value, strict=False)
@@ -88,11 +88,10 @@ def register_global_variables_callbacks(app: Dash) -> None:
             store_data.update(affected_variables)
             logger.debug("Error %s", store_data)
 
-            # values()
-            for field_name, field_data in store_data.items():
-                info_alert_list.append(
-                    f"{field_data['display_name']}: {field_data['num_vars']} variables vil oppdateres med verdien: {field_data.get('display_value')}"
-                )
+            info_alert_list.extend(
+                f"{field_data['display_name']}: {field_data['num_vars']} variables vil oppdateres med verdien: {field_data.get('display_value')}"
+                for field_data in store_data.values()
+            )
             alerts.append(
                 build_ssb_alert(
                     alert_type=AlertTypes.INFO,
