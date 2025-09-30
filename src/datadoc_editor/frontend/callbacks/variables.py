@@ -5,7 +5,7 @@ from __future__ import annotations
 import datetime
 import logging
 import urllib.parse
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from dapla_metadata.datasets import model
 
@@ -36,11 +36,12 @@ from datadoc_editor.frontend.components.builders import (
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
-from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
+from datadoc_editor.frontend.fields.display_base import GlobalDropdownField
+from datadoc_editor.frontend.fields.display_global_variables import DISPLAY_GLOBALS, GLOBAL_VARIABLES
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PseudoVariableIdentifiers,
 )
-from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES, GLOBAL_EDITABLE_VARIABLES_METADATA
+from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES, GLOBAL_EDITABLE_VARIABLES_METADATA, GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME
 from datadoc_editor.frontend.fields.display_variables import (
     MULTIPLE_LANGUAGE_VARIABLES_METADATA,
 )
@@ -478,20 +479,249 @@ def mutate_variable_pseudonymization(
             )
         return
 
-def inherit_global_variable_values(global_values: dict):
-    """Set values if None."""
-    variables: list[model.Variable] = state.metadata.variables
-    fields_to_fill = ["unit_type", "measurement_unit", "multiplication_factor", "variable_role", "data_source", "temporality_type"]
+def get_display_name_and_title(value_dict: dict, display_globals: dict) -> list[tuple[str, str]]:
+    """
+    Return a list of (display_name, human-readable title) for the selected global values.
+    """
+    result = []
 
-    for var in variables:
-        if var and var.short_name:
-            lookup = state.metadata.variables_lookup[var.short_name]
-            logger.debug("Global for %s", lookup)
-            for field in fields_to_fill:
-                logger.debug("This is field %s and value %s", field, global_values[field])
-                field_value = getattr(var, field) 
-                logger.debug("Field value %s", field_value)
-                if global_values[field] and not getattr(var, field):
-                    logger.debug("For var %s with field value %s", lookup, field_value)
-                    setattr(lookup, field, global_values[field])
-                    
+    for field in display_globals:
+        if field.identifier not in value_dict:
+            continue
+
+        raw_value = value_dict[field.identifier]
+
+        if isinstance(field, GlobalDropdownField):
+            # Match the raw value to an option title
+            title = next(
+                (opt["title"] for opt in field.options_getter() if opt["id"] == raw_value),
+                raw_value,  # fallback
+            )
+        else:
+            title = raw_value
+
+        result.append((field.display_name, title))
+
+    return result
+#def get_display_name_and_title(value_dict, display_globals):
+#    result = []
+#    for field in display_globals:
+#        if field.identifier not in value_dict:
+#            continue
+#
+#        if isinstance(field, GlobalDropdownField):
+#            selected_value = value_dict[field.identifier]
+#            title = next(
+#                (opt["title"] for opt in field.options_getter() if opt["id"] == selected_value),
+#                selected_value,  # fallback if not found
+#            )
+#        else:
+#            title = value_dict[field.identifier]
+#
+#        result.append((field.display_name, title))
+#    return result
+    
+#def inherit_global_variable_values(global_values: dict) -> dict[str, dict[str, str | int]]:
+#    """
+#    Apply global values to variables if they are missing (ignore empty/delete),
+#    and return a summary of how many variables were updated.
+#    """
+#    num_variables_affected: dict[str, dict[str, str | int]] = {}
+#    display_values = get_display_name_and_title(global_values, GLOBAL_VARIABLES)
+#    display_value_map = {display_name: title for display_name, title in display_values}
+#
+#    # Filter out empty / delete selections
+#    filtered_values = {k: v for k, v in global_values.items() if v not in ("", DELETE_SELECTED)}
+#
+#    for var in state.metadata.variables:
+#        if not var or not var.short_name:
+#            continue
+#
+#        lookup = state.metadata.variables_lookup[var.short_name]
+#
+#        for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
+#            raw_value = filtered_values.get(field_name)
+#            if raw_value is None:
+#                continue  # skip deletes/empty
+#
+#            # Only apply if variable field is empty
+#            if not getattr(var, field_name):
+#                setattr(lookup, field_name, raw_value)
+#
+#                if field_name not in num_variables_affected:
+#                    num_variables_affected[field_name] = {
+#                        "display_name": display_name,
+#                        "value": raw_value,
+#                        "display_value": display_value_map.get(display_name, raw_value),
+#                        "num_vars": 0,
+#                    }
+#
+#                num_variables_affected[field_name]["num_vars"] += 1
+#
+#    logger.debug("Affected variables: %s", num_variables_affected)
+#    return num_variables_affected
+
+_temp_backup: dict[str, dict[str, Any]] = {}
+
+def inherit_global_variable_values_2(global_values: dict) -> dict[str, dict[str, str | int]]:
+    """
+    Apply global values to variables if they are missing,
+    and return a summary of how many variables were updated.
+    """
+    global _temp_backup
+    num_variables_affected: dict[str, dict[str, str | int]] = {}
+    display_values = get_display_name_and_title(global_values, GLOBAL_VARIABLES)
+    display_value_map = {display_name: title for display_name, title in display_values}
+    _temp_backup = {}
+
+    for var in state.metadata.variables:
+        if not var or not var.short_name:
+            continue
+
+        lookup = state.metadata.variables_lookup[var.short_name]
+
+        for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
+            # Skip if no global value for this field
+            raw_value = global_values.get(field_name)
+            if not raw_value:
+                continue 
+
+            # Only apply if the variable field is empty
+            if not getattr(var, field_name):
+                if var.short_name not in _temp_backup:
+                    _temp_backup[var.short_name] = {}
+                _temp_backup[var.short_name][field_name] = getattr(var, field_name)
+
+                setattr(lookup, field_name, global_values[field_name])
+
+                if field_name not in num_variables_affected:
+                    num_variables_affected[field_name] = {
+                        "display_name": display_name,
+                        "value": raw_value,
+                        "display_value": display_value_map.get(display_name, raw_value),
+                        "num_vars": 0,
+                    }
+
+                num_variables_affected[field_name]["num_vars"] += 1
+
+    logger.debug("Affected variables: %s", num_variables_affected)
+    return num_variables_affected
+
+def prepare_global_variable_values(global_values: dict) -> dict[str, dict[str, Any]]:
+    """
+    Prepare global values for variables without writing them yet.
+    Returns a dict similar to store_data with display info and values.
+    """
+    num_variables_affected: dict[str, dict[str, Any]] = {}
+    display_values = get_display_name_and_title(global_values, GLOBAL_VARIABLES)
+    display_value_map = {display_name: title for display_name, title in display_values}
+
+    for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
+        raw_value = global_values.get(field_name)
+        if not raw_value:
+            continue
+
+        # Check if any variable can be updated
+        can_apply = any(
+            not getattr(var, field_name, None)
+            for var in state.metadata.variables
+            if var and var.short_name
+        )
+        if can_apply:
+            num_variables_affected[field_name] = {
+                "display_name": display_name,
+                "value": raw_value,
+                "display_value": display_value_map.get(display_name, raw_value),
+                "num_vars": 0,  # count applied on actual save
+                "variables": []
+            }
+
+    return num_variables_affected
+
+def cancel_global_variable_changes(store_data: dict):
+    """Cancel all pending global variable changes before save."""
+    store_data.clear()
+
+def inherit_global_variable_values(global_values: dict, previous_data: dict):
+    """Apply values from store_data to variables (actual write)."""
+    previous_data = previous_data or {}
+    display_values = get_display_name_and_title(global_values, GLOBAL_VARIABLES)
+    display_value_map = {display_name: title for display_name, title in display_values}
+    
+    affected_variables: dict[str, dict[str, Any]] = {}
+
+    for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
+        raw_value = global_values.get(field_name)
+        if raw_value is None:
+            continue 
+
+        prev = previous_data.get(field_name, {})
+        affected_variables[field_name] = {
+            "display_name": display_name,
+            "value": raw_value,
+            "display_value": display_value_map.get(display_name, raw_value),
+            "num_vars": prev.get("num_vars", 0),
+            "vars_updated": prev.get("vars_updated", []).copy(),
+        }
+    for var in state.metadata.variables:
+        if not var or not var.short_name:
+            continue
+        for field_name in affected_variables.keys():
+            raw_value = affected_variables[field_name]["value"]
+            current_value = getattr(var, field_name, None)
+            if current_value is None:
+                setattr(var, field_name, raw_value)
+                affected_variables[field_name]["num_vars"] += 1
+                affected_variables[field_name]["vars_updated"].append(var.short_name)
+    return affected_variables
+
+def cancel_global_variable_changes_2():
+    """Revert any temporary global values applied via inherit_global_variable_values."""
+    global _temp_backup
+    for short_name, fields in _temp_backup.items():
+        lookup = state.metadata.variables_lookup[short_name]
+        if not lookup:
+            continue
+        for field_name, original_value in fields.items():
+            setattr(lookup, field_name, original_value)
+
+    _temp_backup.clear()
+    
+def cancel_inherit_global_variable_values(global_values: dict) -> dict[str, dict[str, str | int]]:
+    """
+    Apply global values to variables if they are missing,
+    and return a summary of how many variables were updated.
+    """
+    num_variables_affected: dict[str, dict[str, str | int]] = {}
+    display_values = get_display_name_and_title(global_values, GLOBAL_VARIABLES)
+    display_value_map = {display_name: title for display_name, title in display_values}
+
+
+    for var in state.metadata.variables:
+        if not var or not var.short_name:
+            continue
+
+        lookup = state.metadata.variables_lookup[var.short_name]
+
+        for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
+            # Skip if no global value for this field
+            raw_value = global_values.get(field_name)
+            if not raw_value:
+                continue 
+
+            # Only apply if the variable field is empty
+            if not getattr(var, field_name):
+                setattr(lookup, field_name, global_values[field_name])
+
+                if field_name not in num_variables_affected:
+                    num_variables_affected[field_name] = {
+                        "display_name": display_name,
+                        "value": raw_value,
+                        "display_value": display_value_map.get(display_name, raw_value),
+                        "num_vars": 0,
+                    }
+
+                num_variables_affected[field_name]["num_vars"] += 1
+
+    logger.debug("Affected variables: %s", num_variables_affected)
+    return num_variables_affected
