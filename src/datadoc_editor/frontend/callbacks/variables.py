@@ -514,7 +514,7 @@ def get_display_name_and_title(
     return result
 
 
-def inherit_global_variable_values(global_values: dict, previous_data: dict):
+def inherit_global_variable_values(global_values: dict, previous_data: dict | None):
     """Apply values from store_data to variables (actual write)."""
     previous_data = previous_data or {}
     display_values = get_display_name_and_title(global_values, GLOBAL_VARIABLES)
