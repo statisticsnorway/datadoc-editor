@@ -1,5 +1,6 @@
 .ssb-accordion.global-variable-accordion {
-    border: 2px dotted pink;
+    margin: 0;
+    padding: 0;
 }
 
 .ssb-accordion.global-variable-accordion > .accordion-header {
@@ -32,12 +33,16 @@
 
 .ssb-btn.secondary-btn.global-button{
     max-width: 150px;
-    position: relative;
-    left: 55%;
 }
 
-.global-section-header{
+.global-edit-section > .global-section-header{
     display: flex;
-    align-content: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.global-section-header > .global-header-buttons{
+    display: flex;
     gap: 1rem;
 }
