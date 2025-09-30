@@ -8,7 +8,7 @@ from dash import Input
 from dash import Output
 from dash import State
 from dash import ctx
-
+import ssb_dash_components as ssb
 from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.variables import (
     cancel_inherit_global_variable_values,
@@ -36,7 +36,8 @@ def register_global_variables_callbacks(app: Dash) -> None:
     )
     def callback_populate_variables_globals_section(
         dataset_opened_counter: int,  # noqa: ARG001 Dash requires arguments for all Inputs
-    ) -> None:
+    ) -> None | ssb.Accordion:
+        """docstring."""
         logger.debug("Populating global variables section.")
         if state.metadata.variables and len(state.metadata.variables) > 0:
             return build_global_ssb_accordion(
@@ -44,6 +45,8 @@ def register_global_variables_callbacks(app: Dash) -> None:
                 key={"global": "value"},
                 children=build_global_edit_section(GLOBAL_VARIABLES),
             )
+        return None
+        
 
     @app.callback(
         Output("global-variables-store", "data"),
@@ -57,11 +60,11 @@ def register_global_variables_callbacks(app: Dash) -> None:
         prevent_initial_call=True,
     )
     def callback_accept_global_variable_metadata_input(
-        value,
-        n_clicks,
-        reset_clicks,
-        component_id,
-        store_data,
+        value, # ignore: ANN001
+        n_clicks: int,
+        reset_clicks: int,
+        component_id,  # ignore: ANN001
+        store_data, # ignore: ANN001
     ):
         """Update store_data with add/change/delete and generate accurate alerts."""
         value_dict = {
@@ -85,6 +88,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
             store_data.update(affected_variables)
             logger.debug("Error %s", store_data)
 
+            # values()
             for field_name, field_data in store_data.items():
                 info_alert_list.append(
                     f"{field_data['display_name']}: {field_data['num_vars']} variables vil oppdateres med verdien: {field_data.get('display_value')}"
