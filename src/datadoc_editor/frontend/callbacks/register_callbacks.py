@@ -20,56 +20,7 @@ from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
-from datadoc_editor.frontend.callbacks.utils import update_store_data_with_inputs
-from datadoc_editor.frontend.callbacks.variables import (
-    accept_pseudo_variable_metadata_input,
-    inherit_global_variable_values,
-)
-from datadoc_editor.frontend.callbacks.variables import (
-    accept_variable_metadata_date_input,
-)
-from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
-from datadoc_editor.frontend.callbacks.variables import mutate_variable_pseudonymization
-from datadoc_editor.frontend.callbacks.variables import populate_pseudo_workspace
-from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
-from datadoc_editor.frontend.components.builders import build_dataset_edit_section, build_global_ssb_accordion
-from datadoc_editor.frontend.components.field_builders import build_global_edit_section
-from datadoc_editor.frontend.components.section_builders import build_dataset_machine_section
-from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID, GLOBAL_VARIABLES_ID
-from datadoc_editor.frontend.components.identifiers import ADD_USE_RESTRICTION_BUTTON
-from datadoc_editor.frontend.components.identifiers import FORCE_RERENDER_COUNTER
-from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
-from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_ID_STORE
-from datadoc_editor.frontend.components.identifiers import (
-    USE_RESTRICTION_LIST_CONTAINER,
-)
-from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_OPTION_STORE
-from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_STORE
-from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
-from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_DATE_INPUT
-from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
-from datadoc_editor.frontend.fields.display_base import (
-    DATASET_METADATA_MULTIDROPDOWN_INPUT,
-)
-from datadoc_editor.frontend.fields.display_base import (
-    DATASET_METADATA_MULTILANGUAGE_INPUT,
-)
-from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
-from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
-from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
-from datadoc_editor.frontend.fields.display_base import (
-    VARIABLES_METADATA_MULTILANGUAGE_INPUT,
-)
-from datadoc_editor.frontend.fields.display_dataset import (
-    EDITABLE_DATASET_METADATA_LEFT,
-)
-from datadoc_editor.frontend.fields.display_dataset import (
-    EDITABLE_DATASET_METADATA_RIGHT,
-)
-from datadoc_editor.frontend.fields.display_dataset import NON_EDITABLE_DATASET_METADATA
-from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
-from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_METADATA_INPUT, GLOBAL_VARIABLES
-from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
+
 
 if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
