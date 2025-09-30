@@ -23,6 +23,7 @@ from datadoc_editor.frontend.callbacks.utils import update_selected_pseudonymiza
 from datadoc_editor.frontend.callbacks.utils import variables_control
 from datadoc_editor.frontend.callbacks.variables import (
     accept_pseudo_variable_metadata_input,
+    inherit_global_variable_values,
 )
 from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
@@ -45,6 +46,7 @@ from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.fields.display_base import get_metadata_and_stringify
 from datadoc_editor.frontend.fields.display_base import get_standard_metadata
 from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
+from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PseudoVariableIdentifiers,
 )
@@ -943,3 +945,24 @@ def test_delete_pseudonymization(
     assert variable.pseudonymization.encryption_algorithm == "TINK-DAEAD"
     mutate_variable_pseudonymization(variable, constants.DELETE_SELECTED)
     assert variable.pseudonymization is None
+
+
+def test_global():
+    num_globals = 6
+    assert len(GLOBAL_VARIABLES) == num_globals
+
+
+def test_inherit_globals(metadata: Datadoc):
+    state.metadata = metadata
+    assert metadata is not None
+    first_var_short_name = metadata.variables[0].short_name
+    variable = state.metadata.variables_lookup.get(first_var_short_name)
+    assert variable is not None
+    assert variable.multiplication_factor is None
+    global_values = {
+        "multiplication_factor": "2",
+        "variable_role": "ATTRIBUTE",
+        "temporality_type": "STATUS",
+    }
+    inherit_global_variable_values(global_values, None)
+    assert variable.multiplication_factor == 2

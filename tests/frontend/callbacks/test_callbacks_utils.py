@@ -22,10 +22,8 @@ from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_a
 from datadoc_editor.frontend.callbacks.utils import update_store_data_with_inputs
 from datadoc_editor.frontend.callbacks.utils import update_use_restriction_date
 from datadoc_editor.frontend.callbacks.utils import update_use_restriction_type
-from datadoc_editor.frontend.callbacks.variables import inherit_global_variable_values
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
-from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
 
 
 def test_find_existing_language_string_no_existing_strings(bokmål_name: str):
@@ -509,26 +507,3 @@ def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Data
         variable.pseudonymization.pseudonymization_time
         == case.expected_pseudonymization_time
     )
-
-
-def test_global():
-    num_globals = 6
-    assert len(GLOBAL_VARIABLES) == num_globals
-
-
-def test_inherit_globals(metadata: Datadoc):
-    state.metadata = metadata
-    first_var_short_name = metadata.variables[0].short_name
-    variable = state.metadata.variables_lookup.get(first_var_short_name)
-    assert variable is not None
-    assert variable.unit_type is None
-    global_values = {
-        "unit_type": "01",
-        "measurement_unit": "01.03",
-        "multiplication_factor": "2",
-        "variable_role": "ATTRIBUTE",
-        "data_source": "04",
-        "temporality_type": "STATUS",
-    }
-    inherit_global_variable_values(global_values, None)
-    assert variable.unit_type == "01"
