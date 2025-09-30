@@ -18,7 +18,7 @@ from datadoc_editor.frontend.fields.display_base import get_enum_options
 from datadoc_editor.frontend.fields.display_variables import get_unit_type_options
 
 GLOBAL_METADATA_INPUT = "global-variables-input"
-
+GLOBAL_HEADER = "Globale verdier"
 
 def get_measurement_unit_options_with_delete() -> list[dict[str, str]]:
     """Collect the unit type options."""

@@ -2,6 +2,7 @@
 
 import logging
 
+import dash
 import ssb_dash_components as ssb
 from dash import ALL
 from dash import Dash
@@ -67,6 +68,18 @@ def register_global_variables_callbacks(app: Dash) -> None:
         store_data,  # noqa: ANN001
     ):
         """Update store_data with add/change/delete and generate accurate alerts."""
+        triggered = ctx.triggered_id
+        if "reset-button.n_clicks" in ctx.triggered_prop_ids:
+                cancel_inherit_global_variable_values(store_data)
+                alerts = []
+
+                # Build a fresh list of cleared values
+                # Ensure length matches the number of input components exactly
+                cleared_values = [None] * len(component_id)   # <-- use None instead of ""
+
+                logger.debug("Resetting %s inputs -> %s", len(component_id), cleared_values)
+                logger.debug("props %s", ctx.triggered_prop_ids)
+                return store_data, alerts, cleared_values
         value_dict = {
             id_["id"]: val for id_, val in zip(component_id, value, strict=False)
         }
@@ -82,8 +95,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
             store_data.pop(field_id, None)
             value_dict.pop(field_id, None)
         info_alert_list: list = []
-        triggered = ctx.triggered_id
-        if n_clicks and n_clicks > 0:
+        if triggered == "add-global-variables-button":
             affected_variables = inherit_global_variable_values(value_dict, store_data)
             store_data.update(affected_variables)
             logger.debug("Error %s", store_data)
@@ -101,12 +113,6 @@ def register_global_variables_callbacks(app: Dash) -> None:
                     alert_list=info_alert_list,
                 )
             )
-        if triggered == "reset-button":
-            logger.debug("Store data %s", store_data)
-            cancel_inherit_global_variable_values(store_data)
-            alerts = []
-            value = [""] * len(value)
-            logger.debug("Value %s", value)
-            logger.debug("Id %s", component_id)
-            return store_data, alerts, value
         return store_data, alerts, value
+
+
