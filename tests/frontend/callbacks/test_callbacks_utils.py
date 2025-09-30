@@ -510,16 +510,25 @@ def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Data
         == case.expected_pseudonymization_time
     )
 
+
 def test_global():
     num_globals = 6
     assert len(GLOBAL_VARIABLES) == num_globals
-    
+
+
 def test_inherit_globals(metadata: Datadoc):
     state.metadata = metadata
     first_var_short_name = metadata.variables[0].short_name
     variable = state.metadata.variables_lookup.get(first_var_short_name)
     assert variable is not None
     assert variable.unit_type is None
-    global_values = {'unit_type': '01', 'measurement_unit': '01.03', 'multiplication_factor': '2', 'variable_role': 'ATTRIBUTE', 'data_source': '04', 'temporality_type': 'STATUS'}
+    global_values = {
+        "unit_type": "01",
+        "measurement_unit": "01.03",
+        "multiplication_factor": "2",
+        "variable_role": "ATTRIBUTE",
+        "data_source": "04",
+        "temporality_type": "STATUS",
+    }
     inherit_global_variable_values(global_values)
     assert variable.unit_type == "01"

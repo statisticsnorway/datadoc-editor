@@ -21,7 +21,6 @@ from datadoc_editor.frontend.callbacks.dataset import open_dataset_handling
 from datadoc_editor.frontend.callbacks.utils import render_tabs
 from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_alerts
 
-
 if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
 

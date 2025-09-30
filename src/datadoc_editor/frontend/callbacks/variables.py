@@ -5,7 +5,8 @@ from __future__ import annotations
 import datetime
 import logging
 import urllib.parse
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
+from typing import Any
 
 from dapla_metadata.datasets import model
 
@@ -37,11 +38,14 @@ from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
 from datadoc_editor.frontend.fields.display_base import GlobalDropdownField
-from datadoc_editor.frontend.fields.display_global_variables import DISPLAY_GLOBALS, GLOBAL_VARIABLES
+from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PseudoVariableIdentifiers,
 )
-from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES, GLOBAL_EDITABLE_VARIABLES_METADATA, GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME
+from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
+from datadoc_editor.frontend.fields.display_variables import (
+    GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME,
+)
 from datadoc_editor.frontend.fields.display_variables import (
     MULTIPLE_LANGUAGE_VARIABLES_METADATA,
 )
@@ -479,10 +483,11 @@ def mutate_variable_pseudonymization(
             )
         return
 
-def get_display_name_and_title(value_dict: dict, display_globals: dict) -> list[tuple[str, str]]:
-    """
-    Return a list of (display_name, human-readable title) for the selected global values.
-    """
+
+def get_display_name_and_title(
+    value_dict: dict, display_globals: dict
+) -> list[tuple[str, str]]:
+    """Return a list of (display_name, human-readable title) for the selected global values."""
     result = []
 
     for field in display_globals:
@@ -494,7 +499,11 @@ def get_display_name_and_title(value_dict: dict, display_globals: dict) -> list[
         if isinstance(field, GlobalDropdownField):
             # Match the raw value to an option title
             title = next(
-                (opt["title"] for opt in field.options_getter() if opt["id"] == raw_value),
+                (
+                    opt["title"]
+                    for opt in field.options_getter()
+                    if opt["id"] == raw_value
+                ),
                 raw_value,  # fallback
             )
         else:
@@ -504,18 +513,19 @@ def get_display_name_and_title(value_dict: dict, display_globals: dict) -> list[
 
     return result
 
+
 def inherit_global_variable_values(global_values: dict, previous_data: dict):
     """Apply values from store_data to variables (actual write)."""
     previous_data = previous_data or {}
     display_values = get_display_name_and_title(global_values, GLOBAL_VARIABLES)
     display_value_map = {display_name: title for display_name, title in display_values}
-    
+
     affected_variables: dict[str, dict[str, Any]] = {}
 
     for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
         raw_value = global_values.get(field_name)
         if raw_value is None:
-            continue 
+            continue
 
         prev = previous_data.get(field_name, {})
         affected_variables[field_name] = {
@@ -528,7 +538,7 @@ def inherit_global_variable_values(global_values: dict, previous_data: dict):
     for var in state.metadata.variables:
         if not var or not var.short_name:
             continue
-        for field_name in affected_variables.keys():
+        for field_name in affected_variables:
             raw_value = affected_variables[field_name]["value"]
             current_value = getattr(var, field_name, None)
             if current_value is None:
@@ -536,7 +546,8 @@ def inherit_global_variable_values(global_values: dict, previous_data: dict):
                 affected_variables[field_name]["num_vars"] += 1
                 affected_variables[field_name]["vars_updated"].append(var.short_name)
     return affected_variables
-    
+
+
 def cancel_inherit_global_variable_values(store_data: dict):
     """Remove all global added values."""
     logger.debug("Before cancel: %s", store_data)
@@ -550,9 +561,9 @@ def cancel_inherit_global_variable_values(store_data: dict):
     store_data.clear()
     logger.debug("After cancel: %s", store_data)
 
+
 def prepare_global_variable_values(global_values: dict) -> dict[str, dict[str, Any]]:
-    """
-    Prepare global values for variables without writing them yet.
+    """Prepare global values for variables without writing them yet.
     Returns a dict similar to store_data with display info and values.
     """
     num_variables_affected: dict[str, dict[str, Any]] = {}
@@ -576,7 +587,7 @@ def prepare_global_variable_values(global_values: dict) -> dict[str, dict[str, A
                 "value": raw_value,
                 "display_value": display_value_map.get(display_name, raw_value),
                 "num_vars": 0,  # count applied on actual save
-                "variables": []
+                "variables": [],
             }
 
     return num_variables_affected

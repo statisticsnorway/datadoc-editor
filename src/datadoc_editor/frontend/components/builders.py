@@ -9,21 +9,24 @@ from typing import TYPE_CHECKING
 
 import dash_bootstrap_components as dbc
 import ssb_dash_components as ssb
-from dash import html
 from dash import dcc
+from dash import html
+
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
-from datadoc_editor.frontend.components import identifiers
-from datadoc_editor.frontend.components.identifiers import ADD_GLOBAL_VARIABLES_BUTTON, GLOBAL_ALERTS
+from datadoc_editor.frontend.components.identifiers import ADD_GLOBAL_VARIABLES_BUTTON
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
-from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT, GlobalFieldTypes
+from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import FieldTypes
+from datadoc_editor.frontend.fields.display_base import GlobalFieldTypes
 from datadoc_editor.frontend.fields.display_base import (
     get_enum_options_with_delete_option,
 )
-from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_METADATA_INPUT
+from datadoc_editor.frontend.fields.display_global_variables import (
+    GLOBAL_METADATA_INPUT,
+)
 
 if TYPE_CHECKING:
     from dapla_metadata.datasets import model
@@ -62,7 +65,7 @@ ALERT_TYPES = {
     ),
     AlertTypes.INFO: AlertType(
         color="info",
-    )
+    ),
 }
 
 
@@ -319,6 +322,7 @@ def build_link_object(text: str, href: str) -> dict | None:
         return None
     return {"link_text": link_text, "link_href": link_href}
 
+
 # Global sections
 def build_global_input_field_section(
     metadata_fields: list[GlobalFieldTypes],
@@ -349,18 +353,26 @@ def build_global_edit_section(
         children=[
             html.Div(
                 [
-                    ssb.Paragraph("Hvorfor hva og hvordan", className="global-paragraph"),
+                    ssb.Paragraph(
+                        "Hvorfor hva og hvordan", className="global-paragraph"
+                    ),
                     html.Div(
                         [
-                        
-                            ssb.Button("Legg til", id=ADD_GLOBAL_VARIABLES_BUTTON, className="global-button"),
-                            ssb.Button("Nullstill", id="reset-button", className="global-button"),
-                        
+                            ssb.Button(
+                                "Legg til",
+                                id=ADD_GLOBAL_VARIABLES_BUTTON,
+                                className="global-button",
+                            ),
+                            ssb.Button(
+                                "Nullstill",
+                                id="reset-button",
+                                className="global-button",
+                            ),
                         ],
-                        className="global-header-buttons"
+                        className="global-header-buttons",
                     ),
                 ],
-                className="global-section-header"
+                className="global-section-header",
             ),
             html.Div(id="global-output"),
             build_global_input_field_section(metadata_inputs, field_id="editable"),
@@ -368,7 +380,8 @@ def build_global_edit_section(
         ],
         className="global-edit-section",
     )
-    
+
+
 def build_global_ssb_accordion(
     header: str,
     key: dict,
@@ -381,14 +394,15 @@ def build_global_ssb_accordion(
         children=[
             html.Section(
                 id="global-variables-accordion",
-                #id={
+                # id={
                 #    "type": "global-variable-inputs",
-                #},
+                # },
                 children=children,
             ),
         ],
         className="global-variable-accordion",
     )
-    
+
+
 def build_global_variables_info_alert():
     """Build."""

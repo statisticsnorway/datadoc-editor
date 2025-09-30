@@ -30,7 +30,8 @@ from datadoc_editor.constants import PAPIS_STABLE_IDENTIFIER_TYPE
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.components.builders import AlertTypes
 from datadoc_editor.frontend.components.builders import build_ssb_alert
-from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID, GLOBAL_VARIABLES_ID
+from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
+from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
