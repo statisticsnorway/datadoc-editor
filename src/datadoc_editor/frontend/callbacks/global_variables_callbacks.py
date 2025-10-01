@@ -60,10 +60,10 @@ def register_global_variables_callbacks(app: Dash) -> None:
     )
     def callback_accept_global_variable_metadata_input(
         value: str | None,
-        n_clicks: int,
+        n_clicks: int,  # noqa: ARG001
         component_id: dict,
-        store_data: dict, 
-    )-> tuple:
+        store_data: dict,
+    ) -> tuple:
         """Update store_data with add/change/delete and generate accurate alerts."""
         triggered = ctx.triggered_id
         value_dict = {
@@ -100,7 +100,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
                 )
             )
         return store_data, alerts
-    
+
     @app.callback(
         Output({"type": GLOBAL_METADATA_INPUT, "id": ALL}, "value"),
         Input("reset-button", "n_clicks"),
@@ -109,16 +109,15 @@ def register_global_variables_callbacks(app: Dash) -> None:
         prevent_initial_call=True,
     )
     def accept_reset_button(
-        n_clicks: int,
-        store_data,
-        component_id,
+        n_clicks: int,  # noqa: ARG001
+        store_data: dict,
+        component_id: dict,
     ) -> list:
         """Button."""
         #  if "reset-button.n_clicks" in ctx.triggered_prop_ids:
         if ctx.triggered_id == "reset-button":
             cancel_inherit_global_variable_values(store_data)
-            cleared_values = ["","", None, "","",""]
+            cleared_values = ["", "", None, "", "", ""]
             logger.debug("Resetting %s inputs -> %s", len(component_id), cleared_values)
             return cleared_values
         return [dash.no_update]
-    

@@ -959,19 +959,24 @@ def test_inherit_globals(metadata: Datadoc):
     variable = state.metadata.variables_lookup.get(first_var_short_name)
     variable.variable_role = None
     assert variable is not None
-    assert all(field is None for field in [variable.multiplication_factor, variable.variable_role, variable.temporality_type])
-    
+    assert all(
+        field is None
+        for field in [
+            variable.multiplication_factor,
+            variable.variable_role,
+            variable.temporality_type,
+        ]
+    )
+
     global_values = {
         "multiplication_factor": "2",
         "variable_role": "ATTRIBUTE",
         "temporality_type": "STATUS",
     }
-    
+
     inherit_global_variable_values(global_values, None)
     expected_values = [2, "ATTRIBUTE", "STATUS"]
-    
+
     assert variable.multiplication_factor == expected_values[0]
     assert variable.variable_role == expected_values[1]
     assert variable.temporality_type == expected_values[2]
-
-        

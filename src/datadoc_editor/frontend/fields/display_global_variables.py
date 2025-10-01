@@ -10,7 +10,8 @@ from datadoc_editor.constants import DELETE_SELECTED
 from datadoc_editor.constants import DROPDOWN_DELETE_OPTION
 from datadoc_editor.enums import TemporalityTypeType
 from datadoc_editor.enums import VariableRole
-from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION, GlobalDropdownField
+from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
+from datadoc_editor.frontend.fields.display_base import GlobalDropdownField
 from datadoc_editor.frontend.fields.display_base import GlobalFieldTypes
 from datadoc_editor.frontend.fields.display_base import GlobalInputField
 from datadoc_editor.frontend.fields.display_base import get_data_source_options
@@ -19,6 +20,7 @@ from datadoc_editor.frontend.fields.display_variables import get_unit_type_optio
 
 GLOBAL_METADATA_INPUT = "global-variables-input"
 GLOBAL_HEADER = "Globale verdier"
+
 
 def get_measurement_unit_options_with_delete() -> list[dict[str, str]]:
     """Collect the unit type options."""

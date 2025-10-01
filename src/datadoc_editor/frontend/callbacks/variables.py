@@ -563,4 +563,3 @@ def cancel_inherit_global_variable_values(store_data: dict) -> dict:
     store_data.clear()
     logger.debug("After cancel: %s", store_data)
     return store_data
-
