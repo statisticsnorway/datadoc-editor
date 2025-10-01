@@ -64,7 +64,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
         component_id: dict,
         store_data: dict,
     ) -> tuple:
-        """Update store_data with add/change/delete and generate accurate alerts."""
+        """Update store_data with add/change/delete and generate alerts."""
         triggered = ctx.triggered_id
         value_dict = {
             id_["id"]: val for id_, val in zip(component_id, value, strict=False)
@@ -72,6 +72,8 @@ def register_global_variables_callbacks(app: Dash) -> None:
         if store_data is None:
             store_data = {}
         alerts: list = []
+        info_alert_list: list = []
+        
         delete_fields = [
             field_id
             for field_id, val in value_dict.items()
@@ -80,7 +82,6 @@ def register_global_variables_callbacks(app: Dash) -> None:
         for field_id in delete_fields:
             store_data.pop(field_id, None)
             value_dict.pop(field_id, None)
-        info_alert_list: list = []
         if triggered == "add-global-variables-button":
             affected_variables = inherit_global_variable_values(value_dict, store_data)
             store_data.update(affected_variables)
@@ -113,8 +114,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
         store_data: dict,
         component_id: dict,
     ) -> list:
-        """Button."""
-        #  if "reset-button.n_clicks" in ctx.triggered_prop_ids:
+        """Remove added global variables values."""
         if ctx.triggered_id == "reset-button":
             cancel_inherit_global_variable_values(store_data)
             cleared_values = ["", "", None, "", "", ""]

@@ -485,7 +485,7 @@ def mutate_variable_pseudonymization(
         return
 
 
-def get_display_name_and_title(
+def _get_display_name_and_title(
     value_dict: dict, display_globals: list[GlobalDropdownField | GlobalInputField]
 ) -> list[tuple[str, str]]:
     """Return a list of (display_name, human-readable title) for the selected global values."""
@@ -520,7 +520,7 @@ def inherit_global_variable_values(
 ) -> dict:
     """Apply values from store_data to variables (actual write)."""
     previous_data = previous_data or {}
-    display_values = get_display_name_and_title(global_values, GLOBAL_VARIABLES)
+    display_values = _get_display_name_and_title(global_values, GLOBAL_VARIABLES)
     display_value_map = dict(display_values)
     affected_variables: dict[str, dict[str, Any]] = {}
 
