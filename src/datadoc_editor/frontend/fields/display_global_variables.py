@@ -10,7 +10,7 @@ from datadoc_editor.constants import DELETE_SELECTED
 from datadoc_editor.constants import DROPDOWN_DELETE_OPTION
 from datadoc_editor.enums import TemporalityTypeType
 from datadoc_editor.enums import VariableRole
-from datadoc_editor.frontend.fields.display_base import GlobalDropdownField
+from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION, GlobalDropdownField
 from datadoc_editor.frontend.fields.display_base import GlobalFieldTypes
 from datadoc_editor.frontend.fields.display_base import GlobalInputField
 from datadoc_editor.frontend.fields.display_base import get_data_source_options
@@ -29,7 +29,7 @@ def get_measurement_unit_options_with_delete() -> list[dict[str, str]]:
         }
         for measurement_unit in state.measurement_units.classifications
     ]
-    dropdown_options.insert(0, {"title": DROPDOWN_DELETE_OPTION, "id": ""})
+    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": ""})
     return dropdown_options
 
 
