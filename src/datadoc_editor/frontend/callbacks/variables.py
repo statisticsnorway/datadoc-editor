@@ -550,7 +550,7 @@ def inherit_global_variable_values(
     return affected_variables
 
 
-def cancel_inherit_global_variable_values(store_data: dict) -> None:
+def cancel_inherit_global_variable_values(store_data: dict) -> dict:
     """Remove all global added values."""
     logger.debug("Before cancel: %s", store_data)
     for field_name, field_data in store_data.items():
@@ -562,3 +562,5 @@ def cancel_inherit_global_variable_values(store_data: dict) -> None:
                 logger.debug("values after cancel: %s", getattr(var, field_name))
     store_data.clear()
     logger.debug("After cancel: %s", store_data)
+    return store_data
+

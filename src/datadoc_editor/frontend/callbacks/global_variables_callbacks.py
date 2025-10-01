@@ -21,7 +21,6 @@ from datadoc_editor.frontend.components.builders import build_global_edit_sectio
 from datadoc_editor.frontend.components.builders import build_global_ssb_accordion
 from datadoc_editor.frontend.components.builders import build_ssb_alert
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
-from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_global_variables import (
     GLOBAL_METADATA_INPUT,
 )
