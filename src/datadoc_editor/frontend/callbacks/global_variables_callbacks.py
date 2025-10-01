@@ -21,6 +21,7 @@ from datadoc_editor.frontend.components.builders import build_global_edit_sectio
 from datadoc_editor.frontend.components.builders import build_global_ssb_accordion
 from datadoc_editor.frontend.components.builders import build_ssb_alert
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
+from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_global_variables import (
     GLOBAL_METADATA_INPUT,
 )
@@ -52,34 +53,20 @@ def register_global_variables_callbacks(app: Dash) -> None:
     @app.callback(
         Output("global-variables-store", "data"),
         Output("global-output", "children"),
-        Output({"type": GLOBAL_METADATA_INPUT, "id": ALL}, "value"),
         Input({"type": GLOBAL_METADATA_INPUT, "id": ALL}, "value"),
         Input("add-global-variables-button", "n_clicks"),
-        Input("reset-button", "n_clicks"),
         State({"type": GLOBAL_METADATA_INPUT, "id": ALL}, "id"),
         State("global-variables-store", "data"),
         prevent_initial_call=True,
     )
-    def callback_accept_global_variable_metadata_input(  # noqa: ANN202
-        value,  # noqa: ANN001
+    def callback_accept_global_variable_metadata_input(
+        value: str | None,
         n_clicks: int,
-        reset_clicks: int,  # noqa: ARG001
-        component_id,  # noqa: ANN001
-        store_data,  # noqa: ANN001
-    ):
+        component_id: dict,
+        store_data: dict, 
+    )-> tuple:
         """Update store_data with add/change/delete and generate accurate alerts."""
         triggered = ctx.triggered_id
-        if "reset-button.n_clicks" in ctx.triggered_prop_ids:
-                cancel_inherit_global_variable_values(store_data)
-                alerts = []
-
-                # Build a fresh list of cleared values
-                # Ensure length matches the number of input components exactly
-                cleared_values = [None] * len(component_id)   # <-- use None instead of ""
-
-                logger.debug("Resetting %s inputs -> %s", len(component_id), cleared_values)
-                logger.debug("props %s", ctx.triggered_prop_ids)
-                return store_data, alerts, cleared_values
         value_dict = {
             id_["id"]: val for id_, val in zip(component_id, value, strict=False)
         }
@@ -89,7 +76,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
         delete_fields = [
             field_id
             for field_id, val in value_dict.items()
-            if val in ("", "-- Velg --")
+            if val in ("", "-- Velg --", None)
         ]
         for field_id in delete_fields:
             store_data.pop(field_id, None)
@@ -113,6 +100,26 @@ def register_global_variables_callbacks(app: Dash) -> None:
                     alert_list=info_alert_list,
                 )
             )
-        return store_data, alerts, value
-
-
+        return store_data, alerts
+    
+    @app.callback(
+        Output({"type": GLOBAL_METADATA_INPUT, "id": ALL}, "value"),
+        Input("reset-button", "n_clicks"),
+        State("global-variables-store", "data"),
+        State({"type": GLOBAL_METADATA_INPUT, "id": ALL}, "id"),
+        prevent_initial_call=True,
+    )
+    def accept_reset_button(
+        n_clicks: int,
+        store_data,
+        component_id,
+    ) -> list:
+        """Button."""
+        #  if "reset-button.n_clicks" in ctx.triggered_prop_ids:
+        if ctx.triggered_id == "reset-button":
+            cancel_inherit_global_variable_values(store_data)
+            cleared_values = ["","", None, "","",""]
+            logger.debug("Resetting %s inputs -> %s", len(component_id), cleared_values)
+            return cleared_values
+        return [dash.no_update]
+    
