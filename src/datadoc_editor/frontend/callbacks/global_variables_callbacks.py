@@ -73,7 +73,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
             store_data = {}
         alerts: list = []
         info_alert_list: list = []
-        
+
         delete_fields = [
             field_id
             for field_id, val in value_dict.items()
