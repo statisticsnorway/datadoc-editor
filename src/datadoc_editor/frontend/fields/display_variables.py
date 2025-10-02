@@ -35,7 +35,7 @@ def get_measurement_unit_options() -> list[dict[str, str]]:
         }
         for measurement_unit in state.measurement_units.classifications
     ]
-    dropdown_options.insert(0, {"title": "", "id": ""})
+    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": ""})
     return dropdown_options
 
 
