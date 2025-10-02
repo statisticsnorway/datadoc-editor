@@ -35,7 +35,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
     @app.callback(
         Output(GLOBAL_VARIABLES_ID, "children"),
         Input("dataset-opened-counter", "data"),
-        Input("global-variable-store", "data"),
+        Input("global-variable-store", "data"), # this should just be the values
     )
     def callback_populate_variables_globals_section(
         dataset_opened_counter: int,  # noqa: ARG001 Dash requires arguments for all Inputs
@@ -73,10 +73,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
         State({"type": GLOBAL_METADATA_INPUT, "id": ALL}, "id"),
         prevent_initial_call=True,
     )
-    def reset_all(
-        n_clicks, 
-        ids, 
-        ):
+    def reset_all(n_clicks, ids):
         trigger = ctx.triggered_id
         print("Trigger in reset: ", trigger)
         if trigger == "reset-button":
