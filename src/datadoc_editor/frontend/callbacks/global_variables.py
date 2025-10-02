@@ -34,7 +34,6 @@ def _get_display_name_and_title(
         raw_value = value_dict[field.identifier]
 
         if isinstance(field, GlobalDropdownField):
-            # Match the raw value to an option title
             title = next(
                 (
                     opt["title"]
@@ -111,7 +110,7 @@ def cancel_inherit_global_variable_values(store_data: dict) -> dict:
     return store_data
 
 
-def remove_global_variable_2(store_data: dict, value_dict: dict, all_fields: bool = False) -> dict:
+def remove_global_variable_all(store_data: dict, value_dict: dict, all_fields: bool = False) -> dict:
     """
     Remove one or all global variable values.
     - If all_fields=True: clear everything (button-triggered).
@@ -139,10 +138,4 @@ def remove_global_variable_2(store_data: dict, value_dict: dict, all_fields: boo
                 if var.short_name in field_data.get("vars_updated", []):
                     setattr(var, field_name, None)
                     logger.debug("values after cancel: %s", getattr(var, field_name))
-        #for var in getattr(state.metadata, "variables", []):
-        #    if not var or not var.short_name:
-        #        continue
-        #    if var.short_name in field_id:  # or however you map field_id <-> var
-        #        setattr(var, field_id, None)
-
     return store_data
