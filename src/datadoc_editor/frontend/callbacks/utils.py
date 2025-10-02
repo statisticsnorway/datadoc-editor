@@ -16,6 +16,7 @@ from dapla_metadata.datasets import Datadoc
 from dapla_metadata.datasets import ObligatoryDatasetWarning
 from dapla_metadata.datasets import ObligatoryVariableWarning
 from dapla_metadata.datasets import model
+from dash import dcc
 from dash import html
 
 from datadoc_editor import config
@@ -31,6 +32,11 @@ from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.components.builders import AlertTypes
 from datadoc_editor.frontend.components.builders import build_ssb_alert
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
+from datadoc_editor.frontend.components.identifiers import (
+    FORCE_RERENDER_GLOBALS_COUNTER,
+)
+from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
+from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_VALUES_STORE
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
@@ -304,6 +310,12 @@ def render_tabs(tab: str) -> html.Article | None:
                     ],
                     className="workspace-header",
                 ),
+                html.Section(
+                    id=GLOBAL_VARIABLES_ID,
+                    className="",
+                ),
+                dcc.Store(id=GLOBAL_VARIABLES_VALUES_STORE, data={}),
+                dcc.Store(id=FORCE_RERENDER_GLOBALS_COUNTER, data=0),
                 html.Article(
                     id=ACCORDION_WRAPPER_ID,
                     className="workspace-content",
