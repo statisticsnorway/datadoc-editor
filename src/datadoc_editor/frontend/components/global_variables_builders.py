@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+import uuid
 
 import dash_bootstrap_components as dbc
 import ssb_dash_components as ssb
@@ -30,7 +31,6 @@ if TYPE_CHECKING:
 def build_global_input_field_section(
     metadata_fields: list[GlobalFieldTypes],
     selected_values: dict,
-    counter: int,
     field_id: str = "",
 ) -> dbc.Form:
     """Create form with input fields for global variable workspace."""
@@ -47,14 +47,13 @@ def build_global_input_field_section(
         ],
         id=f"{GLOBAL_VARIABLES_INPUT}-{field_id}",
         className="global-edit-section-form",
-        key=f"{GLOBAL_VARIABLES_INPUT}-{counter}",
+        key=str(uuid.uuid4()),
     )
 
 
 def build_global_edit_section(
     metadata_inputs: list[GlobalFieldTypes],
     selected_values: dict,
-    counter: int,
 ) -> html.Section:
     """Create input section for global variables."""
     return html.Section(
@@ -87,7 +86,6 @@ def build_global_edit_section(
             build_global_input_field_section(
                 metadata_inputs,
                 selected_values,
-                counter,
                 field_id=GLOBAL_EDITABLE,
             ),
             dcc.Store(id=GLOBAL_ADDED_VARIABLES_STORE, data={}),
