@@ -1,10 +1,8 @@
-
 """Callback functions to do with global variables metadata."""
 
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
 from typing import Any
 
 from datadoc_editor import state
@@ -15,11 +13,8 @@ from datadoc_editor.frontend.fields.display_variables import (
     GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME,
 )
 
-if TYPE_CHECKING:
-    import dash_bootstrap_components as dbc
-    from dapla_metadata.datasets import model
-
 logger = logging.getLogger(__name__)
+
 
 def _get_display_name_and_title(
     value_dict: dict, display_globals: list[GlobalDropdownField | GlobalInputField]
@@ -85,16 +80,6 @@ def inherit_global_variable_values(
                 affected_variables[field_name]["vars_updated"].append(var.short_name)
     return affected_variables
 
-def remove_global_variable(store_data: dict, value_dict: dict)-> None:
-    delete_fields = [
-        field_id
-        for field_id, val in value_dict.items()
-        if val in ("", "-- Velg --", None)
-    ]
-    for field_id in delete_fields:
-        store_data.pop(field_id, None)
-        value_dict.pop(field_id, None)
-    
 def cancel_inherit_global_variable_values(store_data: dict) -> dict:
     """Remove all global added values."""
     logger.debug("Before cancel: %s", store_data)
@@ -110,9 +95,14 @@ def cancel_inherit_global_variable_values(store_data: dict) -> dict:
     return store_data
 
 
-def remove_global_variable_all(store_data: dict, value_dict: dict, all_fields: bool = False) -> dict:
-    """
-    Remove one or all global variable values.
+def remove_global_variable_all(
+    store_data: dict,
+    value_dict: dict,
+    *,
+    all_fields: bool,
+) -> dict:
+    """Remove one or all global variable values.
+
     - If all_fields=True: clear everything (button-triggered).
     - If all_fields=False: only remove invalid/empty values (field-triggered).
     """

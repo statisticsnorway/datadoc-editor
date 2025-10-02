@@ -6,7 +6,6 @@ import datetime
 import logging
 import urllib.parse
 from typing import TYPE_CHECKING
-from typing import Any
 
 from dapla_metadata.datasets import model
 
@@ -37,16 +36,10 @@ from datadoc_editor.frontend.components.builders import (
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
-from datadoc_editor.frontend.fields.display_base import GlobalDropdownField
-from datadoc_editor.frontend.fields.display_base import GlobalInputField
-from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PseudoVariableIdentifiers,
 )
 from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
-from datadoc_editor.frontend.fields.display_variables import (
-    GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME,
-)
 from datadoc_editor.frontend.fields.display_variables import (
     MULTIPLE_LANGUAGE_VARIABLES_METADATA,
 )

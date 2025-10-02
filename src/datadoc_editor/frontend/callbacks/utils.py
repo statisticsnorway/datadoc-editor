@@ -9,13 +9,14 @@ import re
 import warnings
 from typing import TYPE_CHECKING
 from typing import cast
-from dash import dcc
+
 import arrow
 import ssb_dash_components as ssb
 from dapla_metadata.datasets import Datadoc
 from dapla_metadata.datasets import ObligatoryDatasetWarning
 from dapla_metadata.datasets import ObligatoryVariableWarning
 from dapla_metadata.datasets import model
+from dash import dcc
 from dash import html
 
 from datadoc_editor import config
@@ -30,7 +31,10 @@ from datadoc_editor.constants import PAPIS_STABLE_IDENTIFIER_TYPE
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.components.builders import AlertTypes
 from datadoc_editor.frontend.components.builders import build_ssb_alert
-from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID, FORCE_RERENDER_GLOBALS_COUNTER
+from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
+from datadoc_editor.frontend.components.identifiers import (
+    FORCE_RERENDER_GLOBALS_COUNTER,
+)
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID

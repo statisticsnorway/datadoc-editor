@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
+import uuid
 from dataclasses import dataclass
 from enum import Enum
 from enum import auto
 from typing import TYPE_CHECKING
-import uuid
 
 import dash_bootstrap_components as dbc
 import ssb_dash_components as ssb
@@ -14,7 +14,7 @@ from dash import dcc
 from dash import html
 
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
-from datadoc_editor.frontend.components.identifiers import ADD_GLOBAL_VARIABLES_BUTTON, FORCE_RERENDER_GLOBALS_COUNTER
+from datadoc_editor.frontend.components.identifiers import ADD_GLOBAL_VARIABLES_BUTTON
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
 from datadoc_editor.frontend.fields.display_base import DATASET_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
@@ -327,7 +327,7 @@ def build_link_object(text: str, href: str) -> dict | None:
 # Global sections
 def build_global_input_field_section(
     metadata_fields: list[GlobalFieldTypes],
-    selected_values: list,
+    selected_values: dict,
     field_id: str = "",
 ) -> dbc.Form:
     """Create form with input fields for variable workspace."""
@@ -345,13 +345,13 @@ def build_global_input_field_section(
         id=f"{GLOBAL_METADATA_INPUT}-{field_id}",
         className="global-edit-section-form",
         # Fix this listen to counter
-        key=str(uuid.uuid4()), 
+        key=str(uuid.uuid4()),
     )
 
 
 def build_global_edit_section(
     metadata_inputs: list[GlobalFieldTypes],
-    selected_values: list,
+    selected_values: dict,
 ) -> html.Section:
     """Create input section without variable or side."""
     return html.Section(
@@ -381,7 +381,9 @@ def build_global_edit_section(
                 className="global-section-header",
             ),
             html.Div(id="global-output"),
-            build_global_input_field_section(metadata_inputs, selected_values, field_id="editable"),
+            build_global_input_field_section(
+                metadata_inputs, selected_values, field_id="editable"
+            ),
             dcc.Store(id="global-variables-store", data={}),
         ],
         className="global-edit-section",

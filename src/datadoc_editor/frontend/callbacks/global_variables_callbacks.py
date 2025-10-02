@@ -29,16 +29,15 @@ def register_global_variables_callbacks(app: Dash) -> None:
     @app.callback(
         Output(GLOBAL_VARIABLES_ID, "children"),
         Input("dataset-opened-counter", "data"),
-        Input("global-variable-store", "data"), # this should just be the values
+        Input("global-variable-store", "data"),  # this should just be the values
     )
     def callback_populate_variables_globals_section(
         dataset_opened_counter: int,  # noqa: ARG001 Dash requires arguments for all Inputs
-        store_data,
+        store_data,  # noqa: ANN001
     ) -> None | ssb.Accordion:
         """Docstring."""
         logger.debug("Populating global variables section.")
         if state.metadata.variables and len(state.metadata.variables) > 0:
-            print("Higher level store data: ", store_data)
             return build_global_ssb_accordion(
                 header="Globale verdier",
                 key={"global": "value"},
@@ -52,25 +51,22 @@ def register_global_variables_callbacks(app: Dash) -> None:
         State({"type": GLOBAL_METADATA_INPUT, "id": ALL}, "id"),
         prevent_initial_call=True,
     )
-    def test_all_callback(
-        values, 
-        ids):
-        trigger = ctx.triggered_id
-        print("Trigger: ", trigger)
-        print("Value:", values)
-        print("IDs:", ids)
-        return dict(zip([i["id"] for i in ids], values))
-    
+    def test_all_callback(values, ids):  # noqa: ANN202,ANN001
+        logger.debug("Value: %s", values)
+        logger.debug("IDs: %s", ids)
+        return dict(zip([i["id"] for i in ids], values, strict=False))
+
     @app.callback(
         Output({"type": GLOBAL_METADATA_INPUT, "id": ALL}, "value"),
         Input("reset-button", "n_clicks"),
         State({"type": GLOBAL_METADATA_INPUT, "id": ALL}, "id"),
         prevent_initial_call=True,
     )
-    def reset_all(n_clicks, ids):
+    def reset_all(
+        n_clicks: int,  # noqa: ARG001 Dash requires arguments for all Inputs
+        ids,  # noqa: ANN001
+    ) -> list | None | dash.NoUpdate:
         trigger = ctx.triggered_id
-        print("Trigger in reset: ", trigger)
         if trigger == "reset-button":
-            cleared_values = [""] * len(ids)
-            return cleared_values
+            return [""] * len(ids)
         return dash.no_update
