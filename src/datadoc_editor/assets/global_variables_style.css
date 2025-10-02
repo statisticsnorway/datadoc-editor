@@ -1,0 +1,52 @@
+.ssb-accordion.global-variable-accordion {
+    margin: 0;
+    padding: 0;
+}
+
+.ssb-accordion.global-variable-accordion > .accordion-header {
+    border: 2px solid #C3DCDC;
+    background-color: #C3DCDC;
+}
+
+.ssb-accordion.global-variable-accordion > .accordion-body {
+    padding: 1rem;
+}
+.global-edit-section{
+    display: flex;
+    flex-direction: column;
+}
+.global-edit-section-form{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+.global-edit-section-form > .ssb-paragraph.global-paragraph{
+    border: 2px dotted lightblue;
+}
+
+#global-variables{
+    width: 100%;
+}
+
+.global-edit-section-form > .ssb-dropdown.global-dropdown-component, .ssb-input.global-input-component{
+    max-width: 400px;
+    width: 100%;
+}
+
+.ssb-btn.secondary-btn.global-button{
+    max-width: 150px;
+}
+
+.global-edit-section > .global-section-header{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.global-section-header > .global-header-buttons{
+    display: flex;
+    gap: 1rem;
+}
