@@ -13,6 +13,10 @@ from datadoc_editor.frontend.fields.display_variables import (
 )
 from datadoc_editor.frontend.fields.display_variables import get_unit_type_options
 
+GLOBAL_VARIABLES_INPUT = "global-variables-input"
+GLOBAL_HEADER = "Globale verdier"
+
+GLOBAL_HEADER_INFORMATION = "Hva, hvorfor og hvordan."
 
 class GlobalIdentifiers(str, Enum):
     """Fields which can be globally edited."""

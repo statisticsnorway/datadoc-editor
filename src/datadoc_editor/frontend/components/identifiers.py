@@ -10,3 +10,12 @@ USE_RESTRICTION_ID_STORE = "use-restriction-id-store"
 USE_RESTRICTION_LIST_CONTAINER = "use-restriction-list-container"
 
 GLOBAL_VARIABLES_ACCORDION = "global-variables-accordion"
+GLOBAL_INFO_ALERTS_OUTPUT= "global-info-alerts-output"
+GLOBAL_EDIT_SECTION = "global-edit-section"
+ADD_GLOBAL_VARIABLES_BUTTON="add-global-variables-button"
+RESET_GLOBAL_VARIABLES_BUTTON="reset-global-variables-button"
+GLOBAL_EDITABLE="global-editable"
+
+GLOBAL_ADDED_VARIABLES_STORE="global-added-variables-store"
+GLOBAL_ALERTS = "global-alerts"
+FORCE_RERENDER_GLOBALS_COUNTER = "force-rerender-globals-counter"
