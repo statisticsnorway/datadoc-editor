@@ -535,6 +535,7 @@ class GlobalDropdownField(DisplayGlobalMetadata):
     def render(
         self,
         component_id: dict,
+        value: str,
     ) -> ssb.Dropdown:
         """Build Dropdown component."""
         return ssb.Dropdown(
@@ -543,6 +544,7 @@ class GlobalDropdownField(DisplayGlobalMetadata):
             items=self.options_getter(),
             placeholder=DROPDOWN_DESELECT_OPTION,
             className="global-dropdown-component",
+            value=value,
             showDescription=True,
             description=self.description,
             required=self.obligatory and self.editable,
@@ -559,6 +561,7 @@ class GlobalInputField(DisplayGlobalMetadata):
     def render(
         self,
         component_id: dict,
+        value: int,
     ) -> ssb.Input:
         """Build an Input component."""
         return ssb.Input(
@@ -566,13 +569,13 @@ class GlobalInputField(DisplayGlobalMetadata):
             id=component_id,
             debounce=True,
             type=self.type,
+            value=value,
             showDescription=True,
             description=self.description,
             readOnly=not self.editable,
             className="global-input-component",
             required=self.obligatory and self.editable,
         )
-
 
 FieldTypes = (
     MetadataInputField
