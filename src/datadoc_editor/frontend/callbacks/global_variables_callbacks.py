@@ -6,20 +6,40 @@ Implementations of the callback functionality should be in other functions in 'g
 from __future__ import annotations
 
 import logging
+from typing import TYPE_CHECKING
+
 import dash
-import ssb_dash_components as ssb
-from dash import ALL, Dash, Input, Output, State, ctx
+from dash import ALL
+from dash import Dash
+from dash import Input
+from dash import Output
+from dash import State
+from dash import ctx
 
 from datadoc_editor import state
-from datadoc_editor.frontend.components.global_variables_builders import build_global_edit_section, build_global_ssb_accordion
-from datadoc_editor.frontend.components.identifiers import FORCE_RERENDER_GLOBALS_COUNTER, GLOBAL_VARIABLES_ID, GLOBAL_VARIABLES_VALUES_STORE, RESET_GLOBAL_VARIABLES_BUTTON
-from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES, GLOBAL_VARIABLES_INPUT
+from datadoc_editor.frontend.components.global_variables_builders import (
+    build_global_edit_section,
+)
+from datadoc_editor.frontend.components.global_variables_builders import (
+    build_global_ssb_accordion,
+)
+from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
+from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_VALUES_STORE
+from datadoc_editor.frontend.components.identifiers import RESET_GLOBAL_VARIABLES_BUTTON
+from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
+from datadoc_editor.frontend.fields.display_global_variables import (
+    GLOBAL_VARIABLES_INPUT,
+)
+
+if TYPE_CHECKING:
+    import ssb_dash_components as ssb
 
 logger = logging.getLogger(__name__)
 
+
 def register_global_variables_callbacks(app: Dash) -> None:
     """Define and register callbacks for global variables values."""
-    
+
     @app.callback(
         Output(GLOBAL_VARIABLES_ID, "children"),
         Input("dataset-opened-counter", "data"),
@@ -34,7 +54,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
         if state.metadata.variables and len(state.metadata.variables) > 0:
             return build_global_ssb_accordion(
                 header="Globale verdier",
-                key={"id":"global_id", "type": "accordion"},
+                key={"id": "global_id", "type": "accordion"},
                 children=build_global_edit_section(GLOBAL_VARIABLES, store_data),
             )
         return None

@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 import uuid
+from typing import TYPE_CHECKING
 
 import dash_bootstrap_components as dbc
 import ssb_dash_components as ssb
