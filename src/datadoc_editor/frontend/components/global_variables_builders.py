@@ -36,7 +36,7 @@ def build_global_input_field_section(
     """Create form with input fields for global variable workspace."""
     return dbc.Form(
         [
-            i.render(
+            i.render_globals(
                 component_id={
                     "type": GLOBAL_VARIABLES_INPUT,
                     "id": i.identifier,
@@ -54,6 +54,7 @@ def build_global_input_field_section(
 def build_global_edit_section(
     metadata_inputs: list[GlobalFieldTypes],
     selected_values: dict,
+    counter: int,
 ) -> html.Section:
     """Create input section for global variables."""
     return html.Section(
@@ -86,6 +87,7 @@ def build_global_edit_section(
             build_global_input_field_section(
                 metadata_inputs,
                 selected_values,
+                counter,
                 field_id=GLOBAL_EDITABLE,
             ),
             dcc.Store(id=GLOBAL_ADDED_VARIABLES_STORE, data={}),
