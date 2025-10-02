@@ -2,14 +2,30 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import dash_bootstrap_components as dbc
 import ssb_dash_components as ssb
-from dash import html
 from dash import dcc
+from dash import html
 
-from datadoc_editor.frontend.components.identifiers import ADD_GLOBAL_VARIABLES_BUTTON, GLOBAL_ADDED_VARIABLES_STORE, GLOBAL_EDIT_SECTION, GLOBAL_EDITABLE, GLOBAL_INFO_ALERTS_OUTPUT, GLOBAL_VARIABLES_ACCORDION, RESET_GLOBAL_VARIABLES_BUTTON
-from datadoc_editor.frontend.fields.display_base import GlobalFieldTypes
-from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_HEADER_INFORMATION, GLOBAL_VARIABLES_INPUT
+from datadoc_editor.frontend.components.identifiers import ADD_GLOBAL_VARIABLES_BUTTON
+from datadoc_editor.frontend.components.identifiers import GLOBAL_ADDED_VARIABLES_STORE
+from datadoc_editor.frontend.components.identifiers import GLOBAL_EDIT_SECTION
+from datadoc_editor.frontend.components.identifiers import GLOBAL_EDITABLE
+from datadoc_editor.frontend.components.identifiers import GLOBAL_INFO_ALERTS_OUTPUT
+from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ACCORDION
+from datadoc_editor.frontend.components.identifiers import RESET_GLOBAL_VARIABLES_BUTTON
+from datadoc_editor.frontend.fields.display_global_variables import (
+    GLOBAL_HEADER_INFORMATION,
+)
+from datadoc_editor.frontend.fields.display_global_variables import (
+    GLOBAL_VARIABLES_INPUT,
+)
+
+if TYPE_CHECKING:
+    from datadoc_editor.frontend.fields.display_base import GlobalFieldTypes
+
 
 def build_global_input_field_section(
     metadata_fields: list[GlobalFieldTypes],
@@ -33,7 +49,6 @@ def build_global_input_field_section(
         className="global-edit-section-form",
         key=f"{GLOBAL_VARIABLES_INPUT}-{counter}",
     )
-
 
 
 def build_global_edit_section(
@@ -69,13 +84,14 @@ def build_global_edit_section(
             ),
             html.Div(id=GLOBAL_INFO_ALERTS_OUTPUT),
             build_global_input_field_section(
-                metadata_inputs, selected_values, field_id=GLOBAL_EDITABLE,
+                metadata_inputs,
+                selected_values,
+                field_id=GLOBAL_EDITABLE,
             ),
             dcc.Store(id=GLOBAL_ADDED_VARIABLES_STORE, data={}),
         ],
         className="global-edit-section",
     )
-
 
 
 def build_global_ssb_accordion(

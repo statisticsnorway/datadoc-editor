@@ -18,6 +18,7 @@ GLOBAL_HEADER = "Globale verdier"
 
 GLOBAL_HEADER_INFORMATION = "Hva, hvorfor og hvordan."
 
+
 class GlobalIdentifiers(str, Enum):
     """Fields which can be globally edited."""
 
