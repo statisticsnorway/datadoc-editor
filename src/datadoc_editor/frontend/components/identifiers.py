@@ -9,4 +9,4 @@ USE_RESTRICTION_OPTION_STORE = "use-restriction-options-store"
 USE_RESTRICTION_ID_STORE = "use-restriction-id-store"
 USE_RESTRICTION_LIST_CONTAINER = "use-restriction-list-container"
 
-GLOBAL_VARIABLES_ACCORDION="global-variables-accordion"
+GLOBAL_VARIABLES_ACCORDION = "global-variables-accordion"

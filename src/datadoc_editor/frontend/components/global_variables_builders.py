@@ -7,6 +7,7 @@ from dash import html
 
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ACCORDION
 
+
 def build_global_ssb_accordion(
     header: str,
     key: dict,
