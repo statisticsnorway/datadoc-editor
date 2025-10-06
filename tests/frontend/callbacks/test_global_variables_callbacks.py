@@ -11,6 +11,7 @@ from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.global_variables import (
     inherit_global_variable_values,
 )
+from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
 
 if TYPE_CHECKING:
@@ -62,7 +63,7 @@ class GlobalTestScenario:
     expected_results: dict
 
 
-global_scenarios = [
+global_scenarios_add = [
     GlobalTestScenario(
         global_values={
             "unit_type": "",
@@ -155,7 +156,7 @@ def test_inherit_globals_will_add_new_values(metadata: Datadoc):
     }
 
     result = None
-    for scenario in global_scenarios:
+    for scenario in global_scenarios_add:
         result = inherit_global_variable_values(scenario.global_values, result)
 
         for field, expected in scenario.expected_results.items():
@@ -200,6 +201,81 @@ def test_inherit_globals_has_values(metadata: Datadoc):
     assert variable.short_name not in not_set_unit_types
     for var in not_set_unit_types:
         assert var.unit_type == "03"
+
+
+global_scenarios_remove = [
+    GlobalTestScenario(
+        global_values={
+            "unit_type": "03",
+            "measurement_unit": "",
+            "multiplication_factor": 2,
+            "variable_role": "",
+            "data_source": "",
+            "temporality_type": "",
+        },
+        expected_results={
+            "unit_type": {
+                "value": "03",
+                "display_value": "Bolig",
+                "display_name": "Enhetstype",
+            },
+            "multiplication_factor": {
+                "value": 2,
+                "display_value": 2,
+                "display_name": "Multiplikasjonsfaktor",
+            },
+        },
+    ),
+    GlobalTestScenario(
+        global_values={
+            "unit_type": DROPDOWN_DESELECT_OPTION,
+            "measurement_unit": "",
+            "multiplication_factor": None,
+            "variable_role": "",
+            "data_source": "",
+            "temporality_type": "",
+        },
+        expected_results={
+            "multiplication_factor": {
+                "value": 2,
+                "display_value": 2,
+                "display_name": "Multiplikasjonsfaktor",
+            },
+            "unit_type": {
+                "value": "03",
+                "display_value": "Bolig",
+                "display_name": "Enhetstype",
+            },
+        },
+    ),
+    GlobalTestScenario(
+        global_values={
+            "unit_type": "",
+            "measurement_unit": "",
+            "multiplication_factor": None,
+            "variable_role": "ATTRIBUTE",
+            "data_source": "",
+            "temporality_type": "",
+        },
+        expected_results={
+            "multiplication_factor": {
+                "value": 2,
+                "display_value": 2,
+                "display_name": "Multiplikasjonsfaktor",
+            },
+            "unit_type": {
+                "value": "03",
+                "display_value": "Bolig",
+                "display_name": "Enhetstype",
+            },
+            "variable_role": {
+                "value": "ATTRIBUTE",
+                "display_value": "ATTRIBUTT",
+                "display_name": "Variabelens rolle",
+            },
+        },
+    ),
+]
 
 
 def test_add_global_variables_will_add_to_state_value_if_value_was_none():

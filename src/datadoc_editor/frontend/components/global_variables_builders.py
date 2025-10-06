@@ -7,11 +7,9 @@ from typing import TYPE_CHECKING
 
 import dash_bootstrap_components as dbc
 import ssb_dash_components as ssb
-from dash import dcc
 from dash import html
 
 from datadoc_editor.frontend.components.identifiers import ADD_GLOBAL_VARIABLES_BUTTON
-from datadoc_editor.frontend.components.identifiers import GLOBAL_ADDED_VARIABLES_STORE
 from datadoc_editor.frontend.components.identifiers import GLOBAL_EDIT_SECTION
 from datadoc_editor.frontend.components.identifiers import GLOBAL_EDITABLE
 from datadoc_editor.frontend.components.identifiers import GLOBAL_INFO_ALERTS_OUTPUT
@@ -88,7 +86,6 @@ def build_global_edit_section(
                 selected_values,
                 field_id=GLOBAL_EDITABLE,
             ),
-            dcc.Store(id=GLOBAL_ADDED_VARIABLES_STORE, data={}),
         ],
         className="global-edit-section",
     )

@@ -76,10 +76,25 @@ def inherit_global_variable_values(
             continue
         for field_name, meta in affected_variables.items():
             raw_value = meta["value"]
-            # Only set the attribute if it's not already set (None)
             if getattr(var, field_name, None) is None:
                 setattr(var, field_name, raw_value)
                 meta["num_vars"] += 1
                 meta["vars_updated"].append(var.short_name)
 
     return affected_variables
+
+
+def reset_global_variables(
+    store_data: dict,
+) -> dict:
+    """Remove all global variable values added in session."""
+    logger.debug("Resetting all global variables...")
+    for field_name, field_data in store_data.items():
+        for var in state.metadata.variables:
+            if not var or not var.short_name:
+                continue
+            if var.short_name in field_data.get("vars_updated", []):
+                setattr(var, field_name, None)
+                logger.debug("Values after cancel: %s", getattr(var, field_name))
+
+    return {}

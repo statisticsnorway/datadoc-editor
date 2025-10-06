@@ -26,6 +26,7 @@ from datadoc_editor.frontend.components.global_variables_builders import (
 from datadoc_editor.frontend.components.global_variables_builders import (
     build_global_ssb_accordion,
 )
+from datadoc_editor.frontend.components.identifiers import ADD_GLOBAL_VARIABLES_BUTTON
 from datadoc_editor.frontend.components.identifiers import GLOBAL_ADDED_VARIABLES_STORE
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_VALUES_STORE
@@ -66,24 +67,17 @@ def register_global_variables_callbacks(app: Dash) -> None:
 
     @app.callback(
         Output(GLOBAL_VARIABLES_VALUES_STORE, "data"),
-        Output(GLOBAL_ADDED_VARIABLES_STORE, "data"),
         Input({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "value"),
         State({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "id"),
-        State(GLOBAL_ADDED_VARIABLES_STORE, "data"),
         prevent_initial_call=True,
     )
-    def accept_global_values(values, ids, added_variables_store):  # noqa: ANN202,ANN001
+    def select_global_values(values, ids):  # noqa: ANN202,ANN001
         logger.debug("Value: %s", values)
         logger.debug("IDs: %s", ids)
-        selected_values = dict(zip([i["id"] for i in ids], values, strict=False))
-        logger.debug("Selected values %s", selected_values)
-        if added_variables_store is None:
-            added_variables_store = {}
-        affected_variables = inherit_global_variable_values(
-            selected_values, added_variables_store
-        )
-        added_variables_store.update(affected_variables)
-        return selected_values, added_variables_store
+        if ctx.triggered_id == "reset-global-variables-button":
+            return dash.no_update
+
+        return dict(zip([i["id"] for i in ids], values, strict=False))
 
     @app.callback(
         Input(GLOBAL_VARIABLES_VALUES_STORE, "data"),
@@ -91,20 +85,49 @@ def register_global_variables_callbacks(app: Dash) -> None:
         prevent_initial_call=True,
     )
     def check_global_values(store_data, added_store_data):  # noqa: ANN202,ANN001
-        logger.debug("Listen to store %s", store_data)
+        logger.debug("Listen to selected store %s", store_data)
         logger.debug("Listen to added store data %s", added_store_data)
 
     @app.callback(
+        Output(GLOBAL_ADDED_VARIABLES_STORE, "data"),
+        Input(ADD_GLOBAL_VARIABLES_BUTTON, "n_clicks"),
+        State(GLOBAL_ADDED_VARIABLES_STORE, "data"),
+        State(GLOBAL_VARIABLES_VALUES_STORE, "data"),
+        prevent_initial_call=True,
+    )
+    def add_global_variables(
+        n_clicks: int,
+        added_variables_store: dict,
+        selected_values: dict,
+    ) -> dict:
+        if not n_clicks:
+            return dash.no_update
+        if added_variables_store is None:
+            added_variables_store = {}
+        affected_variables = inherit_global_variable_values(
+            selected_values, added_variables_store
+        )
+        added_variables_store = {**(added_variables_store or {}), **affected_variables}
+        logger.debug("Store %s", added_variables_store)
+        return added_variables_store
+
+    @app.callback(
         Output({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "value"),
+        Output(GLOBAL_ADDED_VARIABLES_STORE, "data", allow_duplicate=True),
         Input(RESET_GLOBAL_VARIABLES_BUTTON, "n_clicks"),
+        State(GLOBAL_ADDED_VARIABLES_STORE, "data"),
         State({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "id"),
         prevent_initial_call=True,
     )
-    def reset_global_variables(
-        n_clicks: int,  # noqa: ARG001
-        ids,  # noqa: ANN001
-    ) -> list | None | dash.NoUpdate:
+    def reset_global_variables(  # noqa: ANN202
+        n_clicks: int,
+        added_variables_data: dict,
+        component_ids,  # noqa: ANN001
+    ):
+        if not n_clicks:
+            return dash.no_update
         trigger = ctx.triggered_id
         if trigger == "reset-global-variables-button":
-            return [""] * len(ids)
-        return dash.no_update
+            new_store = reset_global_variables(added_variables_data)
+            return [""] * len(component_ids), new_store
+        return dash.no_update, dash.no_update
