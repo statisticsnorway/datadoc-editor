@@ -119,7 +119,7 @@ def test_save_and_generate_alerts():
 
     @dataclass
     class Variable:
-        short_name: str
+        short_name: str  # type: ignore [annotation-unchecked]
 
     mock_metadata.variables = [
         Variable(short_name="var"),

@@ -77,6 +77,9 @@ pythonpath = ["src/datadoc_editor"]
 [tool.uv]
 required-version = ">=0.6.17"
 
+[tool.uv.sources]
+dapla-toolbelt-metadata = { git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git" }
+
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
 tests = ["tests", "*/tests"]
