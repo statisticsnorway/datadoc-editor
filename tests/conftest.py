@@ -290,6 +290,9 @@ def _code_list_fake_classifications(code_list_fake_structure) -> None:
     state.organisational_units = code_list_fake_structure
     state.organisational_units.wait_for_external_result()
 
+    state.measurement_units = code_list_fake_structure
+    state.measurement_units.wait_for_external_result()
+
 
 @pytest.fixture
 def copy_dataset_to_path(
