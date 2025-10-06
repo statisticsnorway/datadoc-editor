@@ -26,7 +26,8 @@ from datadoc_editor.frontend.components.global_variables_builders import (
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_VALUES_STORE
 from datadoc_editor.frontend.components.identifiers import RESET_GLOBAL_VARIABLES_BUTTON
-from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_HEADER, GLOBAL_VARIABLES
+from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_HEADER
+from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
 from datadoc_editor.frontend.fields.display_global_variables import (
     GLOBAL_VARIABLES_INPUT,
 )
