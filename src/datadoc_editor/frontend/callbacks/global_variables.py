@@ -1,1 +1,85 @@
 """Callback functions to do with global variables metadata."""
+
+from __future__ import annotations
+
+import logging
+
+from datadoc_editor import state
+from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
+from datadoc_editor.frontend.fields.display_base import GlobalDropdownField
+from datadoc_editor.frontend.fields.display_base import GlobalInputField
+from datadoc_editor.frontend.fields.display_global_variables import (
+    GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME,
+)
+from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
+
+logger = logging.getLogger(__name__)
+
+
+def _get_display_name_and_title(
+    value_dict: dict, display_globals: list[GlobalDropdownField | GlobalInputField]
+) -> list[tuple[str, str]]:
+    """Return a list of (display_name, human-readable title) for the selected global values."""
+    result = []
+
+    for field in display_globals:
+        if field.identifier not in value_dict:
+            continue
+
+        raw_value = value_dict[field.identifier]
+
+        if isinstance(field, GlobalDropdownField):
+            title = next(
+                (
+                    opt["title"]
+                    for opt in field.options_getter()
+                    if opt["id"] == raw_value
+                ),
+                raw_value,  # fallback
+            )
+        else:
+            title = raw_value
+
+        result.append((field.display_name, title))
+
+    return result
+
+
+def inherit_global_variable_values(
+    global_values: dict, previous_data: dict | None
+) -> dict:
+    """Apply values from store_data to variables (actual write)."""
+    previous_data = previous_data or {}
+    logger.debug("Previous data %s", previous_data)
+    display_values = _get_display_name_and_title(global_values, GLOBAL_VARIABLES)
+    display_value_map = dict(display_values)
+    affected_variables = previous_data.copy()
+    logger.debug("Affected variables %s", affected_variables)
+
+    for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
+        if field_name in affected_variables:
+            continue
+        raw_value = global_values.get(field_name)
+        logger.debug("Raw value is: %s", raw_value)
+        if not raw_value or raw_value == DROPDOWN_DESELECT_OPTION:
+            continue
+        if field_name not in affected_variables:
+            affected_variables[field_name] = {
+                "display_name": display_name,
+                "value": raw_value,
+                "display_value": display_value_map.get(display_name, raw_value),
+                "num_vars": 0,
+                "vars_updated": [],
+            }
+    for var in state.metadata.variables:
+        if not var or not var.short_name:
+            continue
+        for field_name, meta in affected_variables.items():
+            raw_value = meta["value"]
+            # Only set the attribute if it's not already set (None)
+            if getattr(var, field_name, None) is None:
+                setattr(var, field_name, raw_value)
+                meta["num_vars"] += 1
+                meta["vars_updated"].append(var.short_name)
+
+    return affected_variables

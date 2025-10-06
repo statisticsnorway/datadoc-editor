@@ -17,12 +17,16 @@ from dash import State
 from dash import ctx
 
 from datadoc_editor import state
+from datadoc_editor.frontend.callbacks.global_variables import (
+    inherit_global_variable_values,
+)
 from datadoc_editor.frontend.components.global_variables_builders import (
     build_global_edit_section,
 )
 from datadoc_editor.frontend.components.global_variables_builders import (
     build_global_ssb_accordion,
 )
+from datadoc_editor.frontend.components.identifiers import GLOBAL_ADDED_VARIABLES_STORE
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_VALUES_STORE
 from datadoc_editor.frontend.components.identifiers import RESET_GLOBAL_VARIABLES_BUTTON
@@ -62,14 +66,33 @@ def register_global_variables_callbacks(app: Dash) -> None:
 
     @app.callback(
         Output(GLOBAL_VARIABLES_VALUES_STORE, "data"),
+        Output(GLOBAL_ADDED_VARIABLES_STORE, "data"),
         Input({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "value"),
         State({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "id"),
+        State(GLOBAL_ADDED_VARIABLES_STORE, "data"),
         prevent_initial_call=True,
     )
-    def accept_global_values(values, ids):  # noqa: ANN202,ANN001
+    def accept_global_values(values, ids, added_variables_store):  # noqa: ANN202,ANN001
         logger.debug("Value: %s", values)
         logger.debug("IDs: %s", ids)
-        return dict(zip([i["id"] for i in ids], values, strict=False))
+        selected_values = dict(zip([i["id"] for i in ids], values, strict=False))
+        logger.debug("Selected values %s", selected_values)
+        if added_variables_store is None:
+            added_variables_store = {}
+        affected_variables = inherit_global_variable_values(
+            selected_values, added_variables_store
+        )
+        added_variables_store.update(affected_variables)
+        return selected_values, added_variables_store
+
+    @app.callback(
+        Input(GLOBAL_VARIABLES_VALUES_STORE, "data"),
+        Input(GLOBAL_ADDED_VARIABLES_STORE, "data"),
+        prevent_initial_call=True,
+    )
+    def check_global_values(store_data, added_store_data):  # noqa: ANN202,ANN001
+        logger.debug("Listen to store %s", store_data)
+        logger.debug("Listen to added store data %s", added_store_data)
 
     @app.callback(
         Output({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "value"),
