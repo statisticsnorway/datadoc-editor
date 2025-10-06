@@ -26,7 +26,7 @@ from datadoc_editor.frontend.components.global_variables_builders import (
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_VALUES_STORE
 from datadoc_editor.frontend.components.identifiers import RESET_GLOBAL_VARIABLES_BUTTON
-from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
+from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_HEADER, GLOBAL_VARIABLES
 from datadoc_editor.frontend.fields.display_global_variables import (
     GLOBAL_VARIABLES_INPUT,
 )
@@ -53,7 +53,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
         logger.debug("Populating global variables section.")
         if state.metadata.variables and len(state.metadata.variables) > 0:
             return build_global_ssb_accordion(
-                header="Globale verdier",
+                header=GLOBAL_HEADER,
                 key={"id": "global_id", "type": "accordion"},
                 children=build_global_edit_section(GLOBAL_VARIABLES, store_data),
             )
