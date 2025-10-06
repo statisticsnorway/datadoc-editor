@@ -100,11 +100,9 @@ def register_global_variables_callbacks(app: Dash) -> None:
         n_clicks: int,
         added_variables_store: dict,
         selected_values: dict,
-    ) -> dict:
+    ) -> dict | dash.NoUpdate:
         if not n_clicks:
             return dash.no_update
-        if added_variables_store is None:
-            added_variables_store = {}
         affected_variables = inherit_global_variable_values(
             selected_values, added_variables_store
         )
