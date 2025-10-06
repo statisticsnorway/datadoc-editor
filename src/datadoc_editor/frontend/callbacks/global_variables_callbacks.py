@@ -20,6 +20,7 @@ from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.global_variables import (
     inherit_global_variable_values,
 )
+from datadoc_editor.frontend.callbacks.global_variables import remove_global_variables
 from datadoc_editor.frontend.components.global_variables_builders import (
     build_global_edit_section,
 )
@@ -128,6 +129,6 @@ def register_global_variables_callbacks(app: Dash) -> None:
             return dash.no_update
         trigger = ctx.triggered_id
         if trigger == "reset-global-variables-button":
-            new_store = reset_global_variables(added_variables_data)
+            new_store = remove_global_variables(added_variables_data)
             return [""] * len(component_ids), new_store
         return dash.no_update, dash.no_update

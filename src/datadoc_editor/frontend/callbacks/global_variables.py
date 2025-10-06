@@ -84,7 +84,7 @@ def inherit_global_variable_values(
     return affected_variables
 
 
-def reset_global_variables(
+def remove_global_variables(
     store_data: dict,
 ) -> dict:
     """Remove all global variable values added in session."""
