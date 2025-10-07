@@ -66,6 +66,8 @@ if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
     import pydantic
     from cloudpathlib import CloudPath
+    from dapla_metadata.datasets.utility.utils import VariableType
+    from datadoc_model.required import model as required_model
 
 
 logger = logging.getLogger(__name__)
@@ -611,7 +613,7 @@ def map_selected_algorithm_to_pseudo_fields(
 
 
 def map_dropdown_to_pseudo(
-    variable: model.Variable,
+    variable: VariableType,
 ) -> PseudonymizationAlgorithmsEnum | None:
     """Return dropdown algorithm value for a variable's pseudonymization."""
     if variable.pseudonymization:
@@ -631,9 +633,11 @@ def map_dropdown_to_pseudo(
 
 
 def apply_pseudonymization(
-    variable: model.Variable,
+    variable: VariableType,
     selected_algorithm: PseudonymizationAlgorithmsEnum,
-    transfer_pseudonymzation: model.Pseudonymization | None,
+    transfer_pseudonymzation: model.Pseudonymization
+    | required_model.Pseudonymization
+    | None,
 ) -> None:
     """Apply a pseudonymization algorithm to a variable and update its metadata.
 
@@ -644,7 +648,7 @@ def apply_pseudonymization(
     values are transferred.
 
     Args:
-        variable (model.Variable): The variable to pseudonymize.
+        variable (VariableType): The variable to pseudonymize.
         selected_algorithm (PseudonymizationAlgorithmsEnum): The pseudonymization algorithm to apply.
         transfer_pseudonymzation (model.Pseudonymization | None): Existing
             pseudonymization data to transfer, if applicable.
@@ -740,7 +744,7 @@ def parse_and_validate_pseudonymization_time(
 
 
 def update_selected_pseudonymization(
-    variable: model.Variable,
+    variable: VariableType,
     old_algorithm: PseudonymizationAlgorithmsEnum,
     new_algorithm: PseudonymizationAlgorithmsEnum,
 ) -> None:
@@ -752,7 +756,7 @@ def update_selected_pseudonymization(
         - Applies a new pseudonymization based on the newly selected algorithm.
 
     Args:
-        variable (model.Variable):
+        variable (VariableType):
             The variable whose pseudonymization is being updated.
         old_algorithm (PseudonymizationAlgorithmsEnum):
             The previously applied pseudonymization algorithm.
@@ -781,7 +785,7 @@ def update_selected_pseudonymization(
         )
 
 
-def delete_pseudonymization(variable: model.Variable) -> None:
+def delete_pseudonymization(variable: VariableType) -> None:
     """Remove pseudonymization for a Variable.."""
     state.metadata.remove_pseudonymization(
         variable.short_name,

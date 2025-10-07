@@ -53,13 +53,15 @@ from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
     from dapla_metadata.datasets import model
+    from dapla_metadata.datasets.utility.utils import VariableListType
+    from dapla_metadata.datasets.utility.utils import VariableType
 
 
 logger = logging.getLogger(__name__)
 
 
 def populate_variables_workspace(
-    variables: list[model.Variable],
+    variables: VariableListType,
     search_query: str,
     dataset_opened_counter: int,
 ) -> list:
@@ -100,7 +102,7 @@ def populate_variables_workspace(
 def handle_multi_language_metadata(
     metadata_field: str,
     new_value: MetadataInputTypes | model.LanguageStringType,
-    updated_row_id: str,
+    variable: VariableType,
     language: str,
 ) -> MetadataInputTypes | model.LanguageStringType:
     """Handle updates to fields which support multiple languages."""
@@ -109,7 +111,7 @@ def handle_multi_language_metadata(
         # We want to ensure we only remove the content for the current language,
         # not create a new blank object!
         return find_existing_language_string(
-            state.metadata.variables_lookup[updated_row_id],
+            variable,
             "",
             metadata_field,
             language,
@@ -117,7 +119,7 @@ def handle_multi_language_metadata(
 
     if isinstance(new_value, str):
         return find_existing_language_string(
-            state.metadata.variables_lookup[urllib.parse.unquote(updated_row_id)],
+            variable,
             new_value,
             metadata_field,
             language,
@@ -142,6 +144,7 @@ def accept_variable_metadata_input(
         variable_short_name,
         value,
     )
+    variable = get_variable_from_state(variable_short_name)
     try:
         if (
             metadata_field in MULTIPLE_LANGUAGE_VARIABLES_METADATA
@@ -150,7 +153,7 @@ def accept_variable_metadata_input(
             new_value = handle_multi_language_metadata(
                 metadata_field,
                 value,
-                variable_short_name,
+                variable,
                 language,
             )
         elif value == "":
@@ -161,7 +164,7 @@ def accept_variable_metadata_input(
 
         # Write the value to the variables structure
         setattr(
-            state.metadata.variables_lookup[urllib.parse.unquote(variable_short_name)],
+            variable,
             metadata_field,
             new_value,
         )
@@ -203,9 +206,6 @@ def accept_pseudo_variable_metadata_input(
         variable_short_name,
         value,
     )
-    variable_pseudonymization = state.metadata.variables_lookup[
-        urllib.parse.unquote(variable_short_name)
-    ].pseudonymization
     try:
         parsed_value: str | datetime.datetime | None
         if (
@@ -218,7 +218,7 @@ def accept_pseudo_variable_metadata_input(
         else:
             parsed_value = value or None
         setattr(
-            variable_pseudonymization,
+            get_variable_from_state(variable_short_name).pseudonymization,
             metadata_field,
             parsed_value,
         )
@@ -248,6 +248,7 @@ def accept_variable_metadata_date_input(
 ) -> tuple[bool, str, bool, str]:
     """Validate and save date range inputs."""
     message = ""
+    variable = get_variable_from_state(variable_short_name)
 
     try:
         (
@@ -255,26 +256,16 @@ def accept_variable_metadata_date_input(
             parsed_contains_data_until,
         ) = parse_and_validate_dates(
             str(
-                contains_data_from
-                or state.metadata.variables_lookup[
-                    variable_short_name
-                ].contains_data_from,
+                contains_data_from or variable.contains_data_from,
             ),
             str(
-                contains_data_until
-                or state.metadata.variables_lookup[
-                    variable_short_name
-                ].contains_data_until,
+                contains_data_until or variable.contains_data_until,
             ),
         )
 
         # Save both values to the model if they pass validation.
-        state.metadata.variables_lookup[
-            variable_short_name
-        ].contains_data_from = parsed_contains_data_from
-        state.metadata.variables_lookup[
-            variable_short_name
-        ].contains_data_until = parsed_contains_data_until
+        variable.contains_data_from = parsed_contains_data_from
+        variable.contains_data_until = parsed_contains_data_until
     except ValueError as e:
         logger.exception(
             "Validation failed for %s, %s, %s: %s, %s: %s",
@@ -320,7 +311,7 @@ def accept_variable_metadata_date_input(
     )
 
 
-def variable_identifier(
+def validate_field_name(
     dataset_identifier: str,
 ) -> str | None:
     """Pair corresponding identifiers."""
@@ -333,7 +324,7 @@ def variable_identifier(
     return metadata_identifiers.get(dataset_identifier)
 
 
-def variable_identifier_multilanguage(
+def validate_field_name_multilanguage(
     dataset_identifier: str,
 ) -> str | None:
     """Pair corresponding identifiers for multilanguage fields."""
@@ -345,15 +336,15 @@ def variable_identifier_multilanguage(
 
 def set_variables_values_inherit_dataset_values(
     value: MetadataInputTypes | model.LanguageStringType,
-    metadata_identifier: str,
+    dataset_metadata_identifier: str,
 ) -> None:
     """Set variable value based on dataset value."""
-    variable = variable_identifier(metadata_identifier)
-    if value is not None and variable is not None:
-        for val in state.metadata.variables:
+    field_name = validate_field_name(dataset_metadata_identifier)
+    if value is not None and field_name is not None:
+        for v in state.metadata.variables:
             setattr(
-                state.metadata.variables_lookup[val.short_name],
-                variable,
+                v,
+                field_name,
                 value,
             )
 
@@ -364,18 +355,18 @@ def set_variables_value_multilanguage_inherit_dataset_values(
     language: str,
 ) -> None:
     """Set variable multilanguage value based on dataset value."""
-    variable = variable_identifier_multilanguage(metadata_identifier)
-    if value is not None and variable is not None:
-        for val in state.metadata.variables:
+    field_name = validate_field_name_multilanguage(metadata_identifier)
+    if value is not None and field_name is not None:
+        for v in state.metadata.variables:
             update_value = handle_multi_language_metadata(
-                variable,
+                field_name,
                 value,
-                val.short_name,
+                v,
                 language,
             )
             setattr(
-                state.metadata.variables_lookup[val.short_name],
-                variable,
+                v,
+                field_name,
                 update_value,
             )
 
@@ -386,23 +377,23 @@ def set_variables_values_inherit_dataset_derived_date_values() -> None:
     Covers the case for inherit dataset date values where dates are derived from dataset path
     and must be set on file opening.
     """
-    for val in state.metadata.variables:
-        if state.metadata.variables_lookup[val.short_name].contains_data_from is None:
+    for v in state.metadata.variables:
+        if v.contains_data_from is None:
             setattr(
-                state.metadata.variables_lookup[val.short_name],
+                v,
                 VariableIdentifiers.CONTAINS_DATA_FROM,
                 state.metadata.dataset.contains_data_from,
             )
-        if state.metadata.variables_lookup[val.short_name].contains_data_until is None:
+        if v.contains_data_until is None:
             setattr(
-                state.metadata.variables_lookup[val.short_name],
+                v,
                 VariableIdentifiers.CONTAINS_DATA_UNTIL,
                 state.metadata.dataset.contains_data_until,
             )
 
 
 def populate_pseudo_workspace(
-    variable: model.Variable,
+    variable: VariableType,
     selected_algorithm: PseudonymizationAlgorithmsEnum | None,
 ) -> dbc.Form:
     """Build pseudonymization workspace for a variable.
@@ -411,7 +402,7 @@ def populate_pseudo_workspace(
     Builds pseudonymization workspace dynamically based on selected pseudo algorithm.
 
     Args:
-        variable (model.Variable):
+        variable (VariableType):
             The variable to build the pseudonymization workspace for.
         selected_algorithm (PseudonymizationAlgorithmsEnum | str | None):
             The pseudonymization algorithm selected by the user.
@@ -445,7 +436,7 @@ def populate_pseudo_workspace(
 
 
 def mutate_variable_pseudonymization(
-    variable: model.Variable,
+    variable: VariableType,
     selected_algorithm: PseudonymizationAlgorithmsEnum | str | None,
 ) -> None:
     """Updates or delete variable pseudonymization.
@@ -476,3 +467,22 @@ def mutate_variable_pseudonymization(
                 variable, inferred_algorithm, selected_algorithm
             )
         return
+
+
+def get_variable_from_state(short_name: str | None) -> VariableType:
+    """Use a variable's short name to retrieve the variable from the global state object.
+
+    Args:
+        short_name (str | None): The short name for the variable. Allows None in the type for compatibility with the optional model type.
+
+    Raises:
+        ValueError: If short_name is None.
+        IndexError: If the short_name is not known.
+
+    Returns:
+        VariableType: The variable corresponding to the given short_name.
+    """
+    if short_name is None:
+        msg = "Variable does not have a value for short_name!"
+        raise ValueError(msg)
+    return state.metadata.variables_lookup[urllib.parse.unquote(short_name)]
