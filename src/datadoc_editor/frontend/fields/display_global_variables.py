@@ -16,7 +16,7 @@ from datadoc_editor.frontend.fields.display_variables import get_unit_type_optio
 GLOBAL_VARIABLES_INPUT = "global-variables-input"
 GLOBAL_HEADER = "Globale verdier"
 
-GLOBAL_HEADER_INFORMATION = "Globale variabler lar deg sette samme verdi for flere variabler samtidig på utvalgte felt."
+GLOBAL_HEADER_INFORMATION = "Globale verdier lar deg sette samme verdi for flere variabler samtidig på utvalgte felt."
 GLOBAL_HEADER_INFORMATION_LIST = [
     "Verdier overskrives ikke - kun variabler uten eksisterende verdi blir oppdatert.",
     "Sett en verdi på feltene du ønsker å endre globalt.",
