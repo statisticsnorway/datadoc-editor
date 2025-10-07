@@ -278,8 +278,7 @@ def test_inherit_globals_can_add_new_after_reset(metadata: Datadoc):
     assert first_multiplication_factor is not None
     assert second_multiplication_factor is not None
     assert unit_type is not None
-    assert (
-        first_multiplication_factor.get("value")
-        != second_multiplication_factor.get("value")
+    assert first_multiplication_factor.get("value") != second_multiplication_factor.get(
+        "value"
     )
     assert unit_type.get("value") == "03"

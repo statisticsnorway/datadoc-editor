@@ -18,7 +18,7 @@ GLOBAL_HEADER = "Globale verdier"
 
 GLOBAL_HEADER_INFORMATION = "Globale variabler lar deg sette samme verdi for flere variabler samtidig på utvalgte felt."
 GLOBAL_HEADER_INFORMATION_LIST = [
-    "Verdier overskrives ikke – kun variabler uten eksisterende verdi blir oppdatert.",
+    "Verdier overskrives ikke - kun variabler uten eksisterende verdi blir oppdatert.",
     "Velg kun de feltene du ønsker å endre globalt.",
     "Trykk 'Legg til' for å legge til de valgte verdiene før lagring.",
     "Trykk 'Lagre metadata' for å skrive resultatet til fil.",
