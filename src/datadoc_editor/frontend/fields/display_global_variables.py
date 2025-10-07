@@ -16,14 +16,13 @@ from datadoc_editor.frontend.fields.display_variables import get_unit_type_optio
 GLOBAL_VARIABLES_INPUT = "global-variables-input"
 GLOBAL_HEADER = "Globale verdier"
 
-GLOBAL_HEADER_INFORMATION = "Globale variabler gjør det mulig å legge til samme verdi på mange variabler på en gang for noen utvalgte felt."
+GLOBAL_HEADER_INFORMATION = "Globale variabler lar deg sette samme verdi for flere variabler samtidig på utvalgte felt."
 GLOBAL_HEADER_INFORMATION_LIST = [
-    "Verdier kan ikke overskrives, kun variabler der det ikke er verdi vil kunne få verdi.",
-    "Velg verdi kun på de felt du ønsker å redigere globalt",
-    "Trykk på knappen 'Legg til'.",
-    "En rapport genereres der.",
-    "Trykke 'Lagre metadata' for å skrive resultatet til fil.",
-    "Angrer du må du trykke 'Nullstill' slik at ikke verdiene lagres.",
+    "Verdier overskrives ikke – kun variabler uten eksisterende verdi blir oppdatert.",
+    "Velg kun de feltene du ønsker å endre globalt.",
+    "Trykk 'Legg til' for å legge til de valgte verdiene før lagring.",
+    "Trykk 'Lagre metadata' for å skrive resultatet til fil.",
+    "Hvis du vil angre, trykk 'Nullstill' før du lagrer - da beholdes de opprinnelige verdiene.",
 ]
 
 

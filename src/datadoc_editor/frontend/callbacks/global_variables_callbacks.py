@@ -155,6 +155,8 @@ def register_global_variables_callbacks(app: Dash) -> None:
         Output(
             {"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "value", allow_duplicate=True
         ),
+        Output(GLOBAL_ADDED_VARIABLES_STORE, "data", allow_duplicate=True),
+        Output(GLOBAL_INFO_ALERTS_OUTPUT, "children", allow_duplicate=True),
         Input("save-button", "n_clicks"),
         State({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "id"),
         prevent_initial_call=True,
@@ -162,11 +164,13 @@ def register_global_variables_callbacks(app: Dash) -> None:
     def reset_global_variables_ui_on_save(
         n_clicks: int,
         component_ids,  # noqa: ANN001
-    ) -> dash.NoUpdate | list:
-        """Reset input fields when data is saved to file."""
+    ) -> tuple:
+        """Reset when data is saved to file.
+
+        Reset input fields, reset local store data and reset info alert section.
+        """
         if not n_clicks:
-            return dash.no_update
-        trigger = ctx.triggered_id
-        if trigger == "save-button":
-            return [""] * len(component_ids)
-        return dash.no_update
+            return dash.no_update, dash.no_update, dash.no_update
+        if ctx.triggered_id == "save-button":
+            return [""] * len(component_ids), {}, None
+        return dash.no_update, dash.no_update, dash.no_update

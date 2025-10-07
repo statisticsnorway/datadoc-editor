@@ -41,7 +41,7 @@ def _get_display_name_and_title(
                     for opt in field.options_getter()
                     if opt["id"] == raw_value
                 ),
-                raw_value,  # fallback
+                raw_value,
             )
         else:
             title = raw_value
@@ -72,17 +72,15 @@ def inherit_global_variable_values(
 ) -> dict:
     """Apply values from store_data to variables (actual write)."""
     previous_data = previous_data or {}
-    logger.debug("Previous data %s", previous_data)
+
     display_values = _get_display_name_and_title(global_values, GLOBAL_VARIABLES)
     display_value_map = dict(display_values)
     affected_variables = previous_data.copy()
-    logger.debug("Affected variables %s", affected_variables)
 
     for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
         if field_name in affected_variables:
             continue
         raw_value = global_values.get(field_name)
-        logger.debug("Raw value is: %s", raw_value)
         if not raw_value or raw_value == DROPDOWN_DESELECT_OPTION:
             continue
         if field_name not in affected_variables:
@@ -117,6 +115,5 @@ def remove_global_variables(
                 continue
             if var.short_name in field_data.get("vars_updated", []):
                 setattr(var, field_name, None)
-                logger.debug("Values after cancel: %s", getattr(var, field_name))
 
     return {}
