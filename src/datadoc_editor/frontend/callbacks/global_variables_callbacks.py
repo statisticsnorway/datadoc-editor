@@ -77,7 +77,6 @@ def register_global_variables_callbacks(app: Dash) -> None:
     )
     def select_global_values(values, ids) -> dash.NoUpdate | dict:  # noqa: ANN001
         """Store selected fields and values in memory."""
-        
         return dict(zip([i["id"] for i in ids], values, strict=False))
 
     @app.callback(
@@ -134,7 +133,6 @@ def register_global_variables_callbacks(app: Dash) -> None:
         """
         if not n_clicks:
             return dash.no_update
-        #trigger = ctx.triggered_id
         if ctx.triggered_id == "reset-global-variables-button" and n_clicks:
             new_store = remove_global_variables(added_variables_data)
             return None, [""] * len(component_ids), new_store
