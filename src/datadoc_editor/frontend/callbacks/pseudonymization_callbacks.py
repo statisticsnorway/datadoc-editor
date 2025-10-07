@@ -81,7 +81,7 @@ def register_pseudonymization_callbacks(app: Dash) -> None:
         ),
         Output(
             {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
-            "errormessage",
+            "errorMessage",
         ),
         Input(
             {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
