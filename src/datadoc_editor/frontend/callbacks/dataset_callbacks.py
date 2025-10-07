@@ -57,7 +57,7 @@ def register_dataset_callbacks(app: Dash) -> None:
         ),
         Output(
             {"type": DATASET_METADATA_INPUT, "id": MATCH},
-            "errormessage",
+            "errorMessage",
         ),
         Input(
             {"type": DATASET_METADATA_INPUT, "id": MATCH},
@@ -92,7 +92,7 @@ def register_dataset_callbacks(app: Dash) -> None:
                 "id": MATCH,
                 "language": MATCH,
             },
-            "errormessage",
+            "errorMessage",
         ),
         Input(
             {
@@ -135,7 +135,7 @@ def register_dataset_callbacks(app: Dash) -> None:
                 "field": MATCH,
                 "index": MATCH,
             },
-            "errormessage",
+            "errorMessage",
         ),
         Input(
             {
@@ -208,7 +208,7 @@ def register_dataset_callbacks(app: Dash) -> None:
                 "type": DATASET_METADATA_DATE_INPUT,
                 "id": DatasetIdentifiers.CONTAINS_DATA_FROM.value,
             },
-            "errormessage",
+            "errorMessage",
         ),
         Output(
             {
@@ -222,7 +222,7 @@ def register_dataset_callbacks(app: Dash) -> None:
                 "type": DATASET_METADATA_DATE_INPUT,
                 "id": DatasetIdentifiers.CONTAINS_DATA_UNTIL.value,
             },
-            "errormessage",
+            "errorMessage",
         ),
         Input(
             {
