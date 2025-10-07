@@ -106,8 +106,8 @@ def register_global_variables_callbacks(app: Dash) -> None:
     ) -> tuple | dash.NoUpdate:
         """Add selected global variables.
 
-        Updates metadata state with selected values.
-        Stores result in memory and returns info report.
+        Update metadata state with selected values.
+        Store result in memory and return info report.
         """
         if not n_clicks:
             return dash.no_update
@@ -141,7 +141,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
     ):
         """Reset metadata state and update input fields.
 
-        Removes added variables from metadata state, and resets input fields.
+        Remove added values from metadata state, and reset input fields.
         """
         if not n_clicks:
             return dash.no_update
