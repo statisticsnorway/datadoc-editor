@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from dataclasses import dataclass
 from enum import Enum
 from enum import auto
@@ -127,6 +128,7 @@ def build_input_field_section(
             for i in metadata_fields
         ],
         id=f"{VARIABLES_METADATA_INPUT}-{side}-{field_id}",
+        key=str(uuid.uuid4()),
         className="edit-section-form",
     )
 
