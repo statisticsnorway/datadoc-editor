@@ -55,13 +55,13 @@ def generate_info_alert_report(affected_variables: dict) -> dbc.Alert:
     """Build an info Alert."""
     info_alert_list: list = []
     info_alert_list.extend(
-        f"{field_data['display_name']}: {field_data['num_vars']} variables vil oppdateres med verdien: {field_data.get('display_value')}"
+        f"{field_data['display_name']}: {field_data['num_vars']} variabler oppdateres med: {field_data.get('display_value')}"
         for field_data in affected_variables.values()
     )
     return build_ssb_alert(
         alert_type=AlertTypes.INFO,
         title="Globale verdier",
-        message="Følgende felter vil kunne oppdateres:",
+        message=None,
         link=None,
         alert_list=info_alert_list,
     )
