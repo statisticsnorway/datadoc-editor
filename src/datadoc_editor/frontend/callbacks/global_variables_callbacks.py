@@ -97,8 +97,6 @@ def register_global_variables_callbacks(app: Dash) -> None:
         Update metadata state with selected values.
         Store result in memory and return info report.
         """
-        if not n_clicks:
-            return dash.no_update
         if ctx.triggered_id == ADD_GLOBAL_VARIABLES_BUTTON and n_clicks:
             affected_variables = inherit_global_variable_values(
                 selected_values, added_variables_store
