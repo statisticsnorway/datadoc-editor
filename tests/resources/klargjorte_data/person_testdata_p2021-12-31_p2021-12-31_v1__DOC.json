@@ -93,10 +93,10 @@
             "custom_type": null,
             "id": "2f72477a-f051-43ee-bf8b-0d8f47b5e0a7",
             "owner": "",
-            "file_path": "/Users/mmw/code/metadata-system/datadoc-editor/tests/resources/klargjorte_data/person_testdata_p2021-12-31_p2021-12-31_v1.parquet",
+            "file_path": "tests/resources/klargjorte_data/person_testdata_p2021-12-31_p2021-12-31_v1.parquet",
             "metadata_created_date": "2022-10-07T07:35:01Z",
             "metadata_created_by": "default_user@ssb.no",
-            "metadata_last_updated_date": "2025-10-07T11:57:42.408257Z",
+            "metadata_last_updated_date": "2025-09-24T20:08:12.467712Z",
             "metadata_last_updated_by": null,
             "contains_data_from": "2021-12-31",
             "contains_data_until": "2021-12-31"
