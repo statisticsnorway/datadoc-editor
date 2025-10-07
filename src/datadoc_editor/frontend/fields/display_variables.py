@@ -252,3 +252,29 @@ OBLIGATORY_VARIABLES_METADATA_IDENTIFIERS_AND_DISPLAY_NAME: list[tuple] = [
 NON_EDITABLE_VARIABLES_METADATA = [
     m for m in DISPLAY_VARIABLES.values() if not m.editable
 ]
+
+DISPLAY_GLOBALS: dict[
+    VariableIdentifiers,
+    FieldTypes,
+] = {
+    VariableIdentifiers.UNIT_TYPE: DISPLAY_VARIABLES[VariableIdentifiers.UNIT_TYPE],
+    VariableIdentifiers.MEASUREMENT_UNIT: DISPLAY_VARIABLES[
+        VariableIdentifiers.MEASUREMENT_UNIT
+    ],
+    VariableIdentifiers.MULTIPLICATION_FACTOR: DISPLAY_VARIABLES[
+        VariableIdentifiers.MULTIPLICATION_FACTOR
+    ],
+    VariableIdentifiers.VARIABLE_ROLE: DISPLAY_VARIABLES[
+        VariableIdentifiers.VARIABLE_ROLE
+    ],
+    VariableIdentifiers.DATA_SOURCE: DISPLAY_VARIABLES[VariableIdentifiers.DATA_SOURCE],
+    VariableIdentifiers.TEMPORALITY_TYPE: DISPLAY_VARIABLES[
+        VariableIdentifiers.TEMPORALITY_TYPE
+    ],
+}
+
+GLOBAL_VARIABLES = list(DISPLAY_GLOBALS.values())
+
+GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME: list[tuple] = [
+    (m.identifier, m.display_name) for m in DISPLAY_GLOBALS.values()
+]

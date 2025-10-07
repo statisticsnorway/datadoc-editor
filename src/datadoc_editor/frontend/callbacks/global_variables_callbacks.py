@@ -34,13 +34,11 @@ from datadoc_editor.frontend.components.identifiers import ADD_GLOBAL_VARIABLES_
 from datadoc_editor.frontend.components.identifiers import GLOBAL_ADDED_VARIABLES_STORE
 from datadoc_editor.frontend.components.identifiers import GLOBAL_INFO_ALERTS_OUTPUT
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
+from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_INPUT
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_VALUES_STORE
 from datadoc_editor.frontend.components.identifiers import RESET_GLOBAL_VARIABLES_BUTTON
-from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_HEADER
-from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
-from datadoc_editor.frontend.fields.display_global_variables import (
-    GLOBAL_VARIABLES_INPUT,
-)
+from datadoc_editor.frontend.constants import GLOBAL_HEADER
+from datadoc_editor.frontend.fields.display_variables import GLOBAL_VARIABLES
 
 if TYPE_CHECKING:
     import ssb_dash_components as ssb

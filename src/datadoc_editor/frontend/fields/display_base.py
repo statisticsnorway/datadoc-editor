@@ -505,79 +505,6 @@ class MetadataCheckboxField(DisplayMetadata):
         )
 
 
-@dataclass
-class DisplayGlobalMetadata(ABC):
-    """Controls how a given global metadata field should be displayed."""
-
-    identifier: str
-    display_name: str
-    description: str
-    obligatory: bool = False
-    editable: bool = True
-    global_editable: bool = False
-
-    @abstractmethod
-    def render_globals(
-        self,
-        component_id: dict,
-        value: str | int | None,
-    ) -> Component:
-        """Build a component."""
-        ...
-
-
-@dataclass
-class GlobalDropdownField(DisplayGlobalMetadata):
-    """Controls how a global Dropdown should be displayed."""
-
-    options_getter: Callable[[], list[dict[str, str]]] = list
-
-    def render_globals(
-        self,
-        component_id: dict,
-        value: str | int | None,
-    ) -> ssb.Dropdown:
-        """Build Dropdown component."""
-        return ssb.Dropdown(
-            header=self.display_name,
-            id=component_id,
-            items=self.options_getter(),
-            placeholder=DROPDOWN_DESELECT_OPTION,
-            className="global-dropdown-component",
-            value=value,
-            showDescription=True,
-            description=self.description,
-            required=self.obligatory and self.editable,
-        )
-
-
-@dataclass
-class GlobalInputField(DisplayGlobalMetadata):
-    """Controls how an global input field should be displayed."""
-
-    type: str = "text"
-    value_getter: Callable[[BaseModel, str], Any] = get_metadata_and_stringify
-
-    def render_globals(
-        self,
-        component_id: dict,
-        value: str | int | None,
-    ) -> ssb.Input:
-        """Build an Input component."""
-        return ssb.Input(
-            label=self.display_name,
-            id=component_id,
-            debounce=True,
-            type=self.type,
-            value=value,
-            showDescription=True,
-            description=self.description,
-            readOnly=not self.editable,
-            className="global-input-component",
-            required=self.obligatory and self.editable,
-        )
-
-
 FieldTypes = (
     MetadataInputField
     | MetadataDropdownField
@@ -588,5 +515,3 @@ FieldTypes = (
     | MetadataMultiLanguageField
     | MetadataMultiDropdownField
 )
-
-GlobalFieldTypes = GlobalDropdownField | GlobalInputField

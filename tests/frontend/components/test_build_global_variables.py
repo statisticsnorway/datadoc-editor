@@ -12,8 +12,8 @@ from datadoc_editor.frontend.components.global_variables_builders import (
 from datadoc_editor.frontend.components.global_variables_builders import (
     build_global_ssb_accordion,
 )
-from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_HEADER
-from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
+from datadoc_editor.frontend.constants import GLOBAL_HEADER
+from datadoc_editor.frontend.fields.display_variables import GLOBAL_VARIABLES
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")

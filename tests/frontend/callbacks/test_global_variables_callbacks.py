@@ -16,7 +16,7 @@ from datadoc_editor.frontend.callbacks.global_variables import (
     inherit_global_variable_values,
 )
 from datadoc_editor.frontend.callbacks.global_variables import remove_global_variables
-from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_HEADER
+from datadoc_editor.frontend.constants import GLOBAL_HEADER
 
 if TYPE_CHECKING:
     from dapla_metadata.datasets import Datadoc

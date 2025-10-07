@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import uuid
-from typing import TYPE_CHECKING
 
 import dash_bootstrap_components as dbc
 import ssb_dash_components as ssb
@@ -14,38 +13,55 @@ from datadoc_editor.frontend.components.identifiers import GLOBAL_EDIT_SECTION
 from datadoc_editor.frontend.components.identifiers import GLOBAL_EDITABLE
 from datadoc_editor.frontend.components.identifiers import GLOBAL_INFO_ALERTS_OUTPUT
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ACCORDION
+from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_INPUT
 from datadoc_editor.frontend.components.identifiers import RESET_GLOBAL_VARIABLES_BUTTON
-from datadoc_editor.frontend.fields.display_global_variables import (
-    GLOBAL_HEADER_INFORMATION,
-)
-from datadoc_editor.frontend.fields.display_global_variables import (
-    GLOBAL_HEADER_INFORMATION_LIST,
-)
-from datadoc_editor.frontend.fields.display_global_variables import (
-    GLOBAL_VARIABLES_INPUT,
-)
-
-if TYPE_CHECKING:
-    from datadoc_editor.frontend.fields.display_base import GlobalFieldTypes
+from datadoc_editor.frontend.constants import GLOBAL_HEADER_INFORMATION
+from datadoc_editor.frontend.constants import GLOBAL_HEADER_INFORMATION_LIST
+from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
+from datadoc_editor.frontend.fields.display_base import FieldTypes
+from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
+from datadoc_editor.frontend.fields.display_base import MetadataInputField
 
 
 def build_global_input_field_section(
-    metadata_fields: list[GlobalFieldTypes],
+    metadata_fields: list[FieldTypes],
     selected_values: dict,
     field_id: str = "",
 ) -> dbc.Form:
     """Create form with input fields for global variable workspace."""
-    return dbc.Form(
-        [
-            i.render_globals(
-                component_id={
-                    "type": GLOBAL_VARIABLES_INPUT,
-                    "id": i.identifier,
-                },
-                value=selected_values.get(i.identifier),
+    inputs = []
+    for field in metadata_fields:
+        value = selected_values.get(field.identifier)
+        component_id = {"type": GLOBAL_VARIABLES_INPUT, "id": field.identifier}
+        if isinstance(field, MetadataInputField):
+            input_component = ssb.Input(
+                label=field.display_name,
+                id=component_id,
+                debounce=True,
+                type=field.type,
+                value=value,
+                showDescription=True,
+                description=field.description,
+                readOnly=not field.editable,
+                className="global-input-component",
+                required=field.obligatory and field.editable,
             )
-            for i in metadata_fields
-        ],
+        elif isinstance(field, MetadataDropdownField):
+            input_component = ssb.Dropdown(
+                header=field.display_name,
+                id=component_id,
+                items=field.options_getter(),
+                placeholder=DROPDOWN_DESELECT_OPTION,
+                className="global-dropdown-component",
+                value=value,
+                showDescription=True,
+                description=field.description,
+                required=field.obligatory and field.editable,
+            )
+
+        inputs.append(input_component)
+    return dbc.Form(
+        inputs,
         id=f"{GLOBAL_VARIABLES_INPUT}-{field_id}",
         className="global-edit-section-form",
         key=str(uuid.uuid4()),
@@ -53,7 +69,7 @@ def build_global_input_field_section(
 
 
 def build_global_edit_section(
-    metadata_inputs: list[GlobalFieldTypes],
+    metadata_inputs: list[FieldTypes],
     selected_values: dict,
 ) -> html.Section:
     """Create input section for global variables."""

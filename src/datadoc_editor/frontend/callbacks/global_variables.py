@@ -9,12 +9,12 @@ from datadoc_editor import state
 from datadoc_editor.frontend.components.builders import AlertTypes
 from datadoc_editor.frontend.components.builders import build_ssb_alert
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
-from datadoc_editor.frontend.fields.display_base import GlobalDropdownField
-from datadoc_editor.frontend.fields.display_base import GlobalInputField
-from datadoc_editor.frontend.fields.display_global_variables import (
+from datadoc_editor.frontend.fields.display_base import FieldTypes
+from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
+from datadoc_editor.frontend.fields.display_variables import (
     GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME,
 )
-from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
+from datadoc_editor.frontend.fields.display_variables import GLOBAL_VARIABLES
 
 if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 def _get_display_name_and_title(
-    value_dict: dict, display_globals: list[GlobalDropdownField | GlobalInputField]
+    value_dict: dict, display_globals: list[FieldTypes]
 ) -> list[tuple[str, str]]:
     """Return a list of (display_name, human-readable title) for the selected global values."""
     result = []
@@ -34,7 +34,7 @@ def _get_display_name_and_title(
 
         raw_value = value_dict[field.identifier]
 
-        if isinstance(field, GlobalDropdownField):
+        if isinstance(field, MetadataDropdownField):
             title = next(
                 (
                     opt["title"]

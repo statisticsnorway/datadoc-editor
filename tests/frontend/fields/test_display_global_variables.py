@@ -1,7 +1,7 @@
-from datadoc_editor.frontend.fields.display_global_variables import (
+from datadoc_editor.frontend.fields.display_variables import (
     GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME,
 )
-from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
+from datadoc_editor.frontend.fields.display_variables import GLOBAL_VARIABLES
 
 
 def test_global():
