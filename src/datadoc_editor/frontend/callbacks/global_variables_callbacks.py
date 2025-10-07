@@ -156,8 +156,6 @@ def register_global_variables_callbacks(app: Dash) -> None:
 
         Reset input fields, reset local store data and reset info alert section.
         """
-        if not n_clicks:
-            return dash.no_update, dash.no_update, dash.no_update
         if ctx.triggered_id == "save-button" and n_clicks:
             return [""] * len(component_ids), {}, None
         return dash.no_update, dash.no_update, dash.no_update
