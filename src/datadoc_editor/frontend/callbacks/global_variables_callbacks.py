@@ -111,7 +111,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
         """
         if not n_clicks:
             return dash.no_update
-        if ctx.triggered_id == ADD_GLOBAL_VARIABLES_BUTTON:
+        if ctx.triggered_id == ADD_GLOBAL_VARIABLES_BUTTON and n_clicks:
             affected_variables = inherit_global_variable_values(
                 selected_values, added_variables_store
             )
@@ -126,6 +126,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
         return dash.no_update, dash.no_update
 
     @app.callback(
+        Output(GLOBAL_INFO_ALERTS_OUTPUT, "children", allow_duplicate=True),
         Output({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "value"),
         Output(GLOBAL_ADDED_VARIABLES_STORE, "data", allow_duplicate=True),
         Input(RESET_GLOBAL_VARIABLES_BUTTON, "n_clicks"),
@@ -147,8 +148,8 @@ def register_global_variables_callbacks(app: Dash) -> None:
         trigger = ctx.triggered_id
         if trigger == "reset-global-variables-button":
             new_store = remove_global_variables(added_variables_data)
-            return [""] * len(component_ids), new_store
-        return dash.no_update, dash.no_update
+            return None, [""] * len(component_ids), new_store
+        return dash.no_update, dash.no_update, dash.no_update
 
     @app.callback(
         Output(
