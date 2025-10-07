@@ -87,7 +87,7 @@ def register_variables_callbacks(app: Dash) -> None:
                 "id": MATCH,
                 "language": MATCH,
             },
-            "errormessage",
+            "errorMessage",
         ),
         Input(
             {
@@ -131,7 +131,7 @@ def register_variables_callbacks(app: Dash) -> None:
                 "variable_short_name": MATCH,
                 "id": VariableIdentifiers.CONTAINS_DATA_FROM.value,
             },
-            "errormessage",
+            "errorMessage",
         ),
         Output(
             {
@@ -147,7 +147,7 @@ def register_variables_callbacks(app: Dash) -> None:
                 "variable_short_name": MATCH,
                 "id": VariableIdentifiers.CONTAINS_DATA_UNTIL.value,
             },
-            "errormessage",
+            "errorMessage",
         ),
         Input(
             {
@@ -194,7 +194,7 @@ def register_variables_callbacks(app: Dash) -> None:
                 "variable_short_name": MATCH,
                 "id": MATCH,
             },
-            "errormessage",
+            "errorMessage",
         ),
         Input(
             {

@@ -26,11 +26,11 @@ jobs:
       image-tag: ${{ steps.metadata.outputs.tags }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: "Authenticate to Google Cloud"
         id: "auth"
-        uses: "google-github-actions/auth@v2.1.8"
+        uses: "google-github-actions/auth@v3.0.0"
         with:
           workload_identity_provider: "projects/906675412832/locations/global/workloadIdentityPools/ssb-identity-pool/providers/github-oidc-provider"
           service_account: "gh-ssb@nais-management-b3a7.iam.gserviceaccount.com"
@@ -83,7 +83,7 @@ jobs:
       contents: "read"
       id-token: "write"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: test

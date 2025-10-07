@@ -38,10 +38,10 @@ jobs:
 
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v5.6.0
+        uses: actions/setup-python@v6.0.0
         with:
           python-version: ${{ matrix.python }}
 
@@ -99,7 +99,7 @@ jobs:
     needs: tests
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
@@ -109,7 +109,7 @@ jobs:
           enable-cache: true
 
       - name: Download coverage data
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           pattern: coverage-data-*
           merge-multiple: true
@@ -134,4 +134,4 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         # No need to run SonarCloud analysis if dependabot update or token not defined
         if: env.SONAR_TOKEN != '' && (github.actor != 'dependabot[bot]')
-        uses: SonarSource/sonarqube-scan-action@v5.3.1
+        uses: SonarSource/sonarqube-scan-action@v6.0.0
