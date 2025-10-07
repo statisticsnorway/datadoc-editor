@@ -82,14 +82,6 @@ def register_global_variables_callbacks(app: Dash) -> None:
 
         return dict(zip([i["id"] for i in ids], values, strict=False))
 
-    @app.callback(
-        Input(GLOBAL_VARIABLES_VALUES_STORE, "data"),
-        Input(GLOBAL_ADDED_VARIABLES_STORE, "data"),
-        prevent_initial_call=True,
-    )
-    def check_global_values(store_data, added_store_data):  # noqa: ANN202,ANN001
-        logger.debug("Listen to selected store %s", store_data)
-        logger.debug("Listen to added store data %s", added_store_data)
 
     @app.callback(
         Output(GLOBAL_ADDED_VARIABLES_STORE, "data"),
