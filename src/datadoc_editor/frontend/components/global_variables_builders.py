@@ -19,6 +19,9 @@ from datadoc_editor.frontend.fields.display_global_variables import (
     GLOBAL_HEADER_INFORMATION,
 )
 from datadoc_editor.frontend.fields.display_global_variables import (
+    GLOBAL_HEADER_INFORMATION_LIST,
+)
+from datadoc_editor.frontend.fields.display_global_variables import (
     GLOBAL_VARIABLES_INPUT,
 )
 
@@ -60,7 +63,12 @@ def build_global_edit_section(
             html.Div(
                 [
                     ssb.Paragraph(
-                        GLOBAL_HEADER_INFORMATION, className="global-paragraph"
+                        GLOBAL_HEADER_INFORMATION,
+                        className="global-information-paragraph",
+                    ),
+                    html.Ul(
+                        [html.Li(item) for item in GLOBAL_HEADER_INFORMATION_LIST],
+                        className="global-information-list",
                     ),
                     html.Div(
                         [

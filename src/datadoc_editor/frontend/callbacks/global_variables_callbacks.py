@@ -18,6 +18,9 @@ from dash import ctx
 
 from datadoc_editor import state
 from datadoc_editor.frontend.callbacks.global_variables import (
+    generate_info_alert_report,
+)
+from datadoc_editor.frontend.callbacks.global_variables import (
     inherit_global_variable_values,
 )
 from datadoc_editor.frontend.callbacks.global_variables import remove_global_variables
@@ -29,6 +32,7 @@ from datadoc_editor.frontend.components.global_variables_builders import (
 )
 from datadoc_editor.frontend.components.identifiers import ADD_GLOBAL_VARIABLES_BUTTON
 from datadoc_editor.frontend.components.identifiers import GLOBAL_ADDED_VARIABLES_STORE
+from datadoc_editor.frontend.components.identifiers import GLOBAL_INFO_ALERTS_OUTPUT
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_VALUES_STORE
 from datadoc_editor.frontend.components.identifiers import RESET_GLOBAL_VARIABLES_BUTTON
@@ -57,7 +61,6 @@ def register_global_variables_callbacks(app: Dash) -> None:
         store_data,  # noqa: ANN001
     ) -> None | ssb.Accordion:
         """Populating global variables section."""
-        logger.debug("Populating global variables section.")
         if state.metadata.variables and len(state.metadata.variables) > 0:
             return build_global_ssb_accordion(
                 header=GLOBAL_HEADER,
@@ -72,9 +75,8 @@ def register_global_variables_callbacks(app: Dash) -> None:
         State({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "id"),
         prevent_initial_call=True,
     )
-    def select_global_values(values, ids):  # noqa: ANN202,ANN001
-        logger.debug("Value: %s", values)
-        logger.debug("IDs: %s", ids)
+    def select_global_values(values, ids) -> dash.NoUpdate | dict:  # noqa: ANN001
+        """Store selected fields and values in memory."""
         if ctx.triggered_id == "reset-global-variables-button":
             return dash.no_update
 
@@ -91,6 +93,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
 
     @app.callback(
         Output(GLOBAL_ADDED_VARIABLES_STORE, "data"),
+        Output(GLOBAL_INFO_ALERTS_OUTPUT, "children"),
         Input(ADD_GLOBAL_VARIABLES_BUTTON, "n_clicks"),
         State(GLOBAL_ADDED_VARIABLES_STORE, "data"),
         State(GLOBAL_VARIABLES_VALUES_STORE, "data"),
@@ -100,15 +103,27 @@ def register_global_variables_callbacks(app: Dash) -> None:
         n_clicks: int,
         added_variables_store: dict,
         selected_values: dict,
-    ) -> dict | dash.NoUpdate:
+    ) -> tuple | dash.NoUpdate:
+        """Add selected global variables.
+
+        Updates metadata state with selected values.
+        Stores result in memory and returns info report.
+        """
         if not n_clicks:
             return dash.no_update
-        affected_variables = inherit_global_variable_values(
-            selected_values, added_variables_store
-        )
-        added_variables_store = {**(added_variables_store or {}), **affected_variables}
-        logger.debug("Store %s", added_variables_store)
-        return added_variables_store
+        if ctx.triggered_id == ADD_GLOBAL_VARIABLES_BUTTON:
+            affected_variables = inherit_global_variable_values(
+                selected_values, added_variables_store
+            )
+            added_variables_store = {
+                **(added_variables_store or {}),
+                **affected_variables,
+            }
+            logger.debug("Store %s", added_variables_store)
+            return added_variables_store, generate_info_alert_report(
+                added_variables_store
+            )
+        return dash.no_update, dash.no_update
 
     @app.callback(
         Output({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "value"),
@@ -123,6 +138,10 @@ def register_global_variables_callbacks(app: Dash) -> None:
         added_variables_data: dict,
         component_ids,  # noqa: ANN001
     ):
+        """Reset metadata state and update input fields.
+
+        Removes added variables from metadata state, and resets input fields.
+        """
         if not n_clicks:
             return dash.no_update
         trigger = ctx.triggered_id
@@ -130,3 +149,23 @@ def register_global_variables_callbacks(app: Dash) -> None:
             new_store = remove_global_variables(added_variables_data)
             return [""] * len(component_ids), new_store
         return dash.no_update, dash.no_update
+
+    @app.callback(
+        Output(
+            {"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "value", allow_duplicate=True
+        ),
+        Input("save-button", "n_clicks"),
+        State({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "id"),
+        prevent_initial_call=True,
+    )
+    def reset_global_variables_ui_on_save(
+        n_clicks: int,
+        component_ids,  # noqa: ANN001
+    ) -> dash.NoUpdate | list:
+        """Reset input fields when data is saved to file."""
+        if not n_clicks:
+            return dash.no_update
+        trigger = ctx.triggered_id
+        if trigger == "save-button":
+            return [""] * len(component_ids)
+        return dash.no_update
