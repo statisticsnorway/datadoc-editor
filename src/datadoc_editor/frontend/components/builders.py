@@ -32,6 +32,7 @@ class AlertTypes(Enum):
     SUCCESS = auto()
     WARNING = auto()
     ERROR = auto()
+    INFO = auto()
 
 
 @dataclass
@@ -55,6 +56,9 @@ ALERT_TYPES = {
     ),
     AlertTypes.SUCCESS: AlertType(
         color="success",
+    ),
+    AlertTypes.INFO: AlertType(
+        color="info",
     ),
 }
 
