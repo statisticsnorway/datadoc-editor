@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 
 from datadoc_editor import state
+from datadoc_editor.frontend.components.builders import AlertType, AlertTypes, build_ssb_alert
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import GlobalDropdownField
 from datadoc_editor.frontend.fields.display_base import GlobalInputField
@@ -12,6 +13,7 @@ from datadoc_editor.frontend.fields.display_global_variables import (
     GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME,
 )
 from datadoc_editor.frontend.fields.display_global_variables import GLOBAL_VARIABLES
+import dash_bootstrap_components as dbc
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +46,19 @@ def _get_display_name_and_title(
 
     return result
 
+def generate_info_alert_report(affected_variables: dict)-> dbc.Alert:
+    info_alert_list: list = []
+    info_alert_list.extend(
+        f"{field_data['display_name']}: {field_data['num_vars']} variables vil oppdateres med verdien: {field_data.get('display_value')}"
+        for field_data in affected_variables.values()
+    )
+    return build_ssb_alert(
+        alert_type=AlertTypes.INFO,
+        title="Globale verdier",
+        message="Følgende felter vil kunne oppdateres:",
+        link=None,
+        alert_list=info_alert_list,
+    )
 
 def inherit_global_variable_values(
     global_values: dict, previous_data: dict | None
