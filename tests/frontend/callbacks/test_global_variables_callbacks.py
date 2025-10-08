@@ -153,8 +153,7 @@ def test_inherit_globals_no_values(metadata: Datadoc):
 @pytest.mark.usefixtures("_code_list_fake_classifications")
 def test_inherit_globals_will_not_change_if_value(metadata: Datadoc):
     state.metadata = metadata
-    first_var_short_name = metadata.variables[0].short_name
-    variable = state.metadata.variables_lookup.get(first_var_short_name)
+    variable = state.metadata.variables[0]
     assert variable is not None
     variable.unit_type = "02"
     assert variable.unit_type == "02"
