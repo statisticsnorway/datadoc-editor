@@ -78,12 +78,24 @@ def inherit_global_variable_values(
     affected_variables = previous_data.copy()
 
     for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
-        if field_name in affected_variables:
-            continue
         raw_value = global_values.get(field_name)
-        if not raw_value or raw_value == DROPDOWN_DESELECT_OPTION:
+        if not raw_value:
             continue
-        if field_name not in affected_variables:
+        display_value = display_value_map.get(display_name, raw_value)
+        #if field_name in affected_variables:
+        #    continue
+        # if not raw_value or raw_value == DROPDOWN_DESELECT_OPTION:
+        #     continue
+        if field_name in affected_variables:
+            # Compare and update if global value changed
+            prev_value = affected_variables[field_name].get("value")
+            if prev_value != raw_value:
+                affected_variables[field_name]["value"] = raw_value
+                affected_variables[field_name]["display_value"] = display_value
+                affected_variables[field_name]["vars_updated"] = []  # reset before reapplying
+                affected_variables[field_name]["num_vars"] = 0
+        else:
+        #if field_name not in affected_variables:
             affected_variables[field_name] = {
                 "display_name": display_name,
                 "value": raw_value,
@@ -96,11 +108,17 @@ def inherit_global_variable_values(
             continue
         for field_name, meta in affected_variables.items():
             raw_value = meta["value"]
-            if getattr(var, field_name, None) is None:
+            current_value = getattr(var, field_name, None)
+            # Update the variable if it's None OR if global value changed
+            if current_value != raw_value:
                 setattr(var, field_name, raw_value)
                 meta["num_vars"] += 1
                 meta["vars_updated"].append(var.short_name)
-
+            #if getattr(var, field_name, None) is None:
+            #    setattr(var, field_name, raw_value)
+            #    meta["num_vars"] += 1
+            #    meta["vars_updated"].append(var.short_name)
+#
     return affected_variables
 
 
