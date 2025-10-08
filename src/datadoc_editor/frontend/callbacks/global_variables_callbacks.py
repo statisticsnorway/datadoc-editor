@@ -75,8 +75,17 @@ def register_global_variables_callbacks(app: Dash) -> None:
     )
     def select_global_values(values, ids) -> dash.NoUpdate | dict:  # noqa: ANN001
         """Store selected fields and values in memory."""
+        logger.debug("Selected global variables %s", values)
         return dict(zip([i["id"] for i in ids], values, strict=False))
 
+    @app.callback(
+        Input(GLOBAL_VARIABLES_VALUES_STORE, "data"),
+        Input(GLOBAL_ADDED_VARIABLES_STORE, "data"),
+    )
+    def listen_to_store(data, added_data):
+        logger.debug("Listen to select %s", data)
+        logger.debug("Listen to added %s", added_data)
+        
     @app.callback(
         Output(GLOBAL_ADDED_VARIABLES_STORE, "data"),
         Output(GLOBAL_INFO_ALERTS_OUTPUT, "children"),
@@ -96,14 +105,10 @@ def register_global_variables_callbacks(app: Dash) -> None:
         Store result in memory and return info report.
         """
         if ctx.triggered_id == ADD_GLOBAL_VARIABLES_BUTTON and n_clicks:
-            affected_variables = inherit_global_variable_values(
+            added_variables_store = inherit_global_variable_values(
                 selected_values, added_variables_store
             )
-            added_variables_store = {
-                **(added_variables_store or {}),
-                **affected_variables,
-            }
-            logger.debug("Store %s", added_variables_store)
+            logger.debug("Added global variables %s", added_variables_store)
             return added_variables_store, generate_info_alert_report(
                 added_variables_store
             )
