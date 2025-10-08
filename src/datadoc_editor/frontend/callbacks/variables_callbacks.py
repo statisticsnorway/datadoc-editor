@@ -21,6 +21,7 @@ from datadoc_editor.frontend.callbacks.variables import (
 from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
+from datadoc_editor.frontend.components.identifiers import GLOBAL_ADDED_VARIABLES_STORE
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
@@ -46,11 +47,13 @@ def register_variables_callbacks(app: Dash) -> None:
         Input("dataset-opened-counter", "data"),
         Input("search-variables", "value"),
         Input("metadata-save-counter", "data"),
+        Input(GLOBAL_ADDED_VARIABLES_STORE, "data"),
     )
     def callback_populate_variables_workspace(
         dataset_opened_counter: int,
         search_query: str,
         metadata_save_counter: int,  # noqa: ARG001
+        added_variables_store: dict,  # noqa: ARG001 we want values to be shown for each variable when they are changed globally
     ) -> list:
         """Create variable workspace with accordions for variables."""
         logger.debug("Populating variables workspace. Search query: %s", search_query)
