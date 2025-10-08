@@ -45,10 +45,12 @@ def register_variables_callbacks(app: Dash) -> None:
         Output(ACCORDION_WRAPPER_ID, "children"),
         Input("dataset-opened-counter", "data"),
         Input("search-variables", "value"),
+        Input("metadata-save-counter", "data"),
     )
     def callback_populate_variables_workspace(
         dataset_opened_counter: int,
         search_query: str,
+        metadata_save_counter: int,  # noqa: ARG001
     ) -> list:
         """Create variable workspace with accordions for variables."""
         logger.debug("Populating variables workspace. Search query: %s", search_query)

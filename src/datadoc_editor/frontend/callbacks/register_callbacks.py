@@ -32,13 +32,16 @@ def register_callbacks(app: Dash) -> None:
 
     @app.callback(
         Output("alerts-section", "children", allow_duplicate=True),
+        Output("metadata-save-counter", "data"),
         Input("save-button", "n_clicks"),
         State("alerts-section", "children"),
+        State("metadata-save-counter", "data"),
         prevent_initial_call=True,
     )
     def callback_save_metadata_file(
         n_clicks: int,
         alerts: list,  # argument required by Dash  # noqa: ARG001
+        metadata_save_counter: int,
     ) -> Any | list:  # noqa: ANN401
         """Save the metadata document to disk and check obligatory metadata.
 
@@ -48,9 +51,11 @@ def register_callbacks(app: Dash) -> None:
             If none return no_update.
         """
         if n_clicks and n_clicks > 0:
-            return save_metadata_and_generate_alerts(state.metadata)
+            alerts_list = save_metadata_and_generate_alerts(state.metadata)
+            # Increment counter to notify other callbacks
+            return alerts_list, metadata_save_counter + 1
 
-        return no_update
+        return no_update, no_update
 
     @app.callback(
         Output("alerts-section", "children", allow_duplicate=True),

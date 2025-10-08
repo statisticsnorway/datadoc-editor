@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from dataclasses import dataclass
 from enum import Enum
 from enum import auto
@@ -34,6 +35,7 @@ class AlertTypes(Enum):
     SUCCESS = auto()
     WARNING = auto()
     ERROR = auto()
+    INFO = auto()
 
 
 @dataclass
@@ -57,6 +59,9 @@ ALERT_TYPES = {
     ),
     AlertTypes.SUCCESS: AlertType(
         color="success",
+    ),
+    AlertTypes.INFO: AlertType(
+        color="info",
     ),
 }
 
@@ -125,6 +130,7 @@ def build_input_field_section(
             for i in metadata_fields
         ],
         id=f"{VARIABLES_METADATA_INPUT}-{side}-{field_id}",
+        key=str(uuid.uuid4()),
         className="edit-section-form",
     )
 

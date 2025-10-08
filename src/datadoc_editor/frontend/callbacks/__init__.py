@@ -23,6 +23,7 @@ Functions containing the main logic should be categorized into separate files.
 from dash import Dash
 
 from .dataset_callbacks import register_dataset_callbacks
+from .global_variables_callbacks import register_global_variables_callbacks
 from .pseudonymization_callbacks import register_pseudonymization_callbacks
 from .register_callbacks import register_callbacks
 from .use_restrictions_callbacks import register_use_restriction_callbacks
@@ -36,3 +37,4 @@ def register_all_callbacks(app: Dash) -> None:
     register_variables_callbacks(app)
     register_pseudonymization_callbacks(app)
     register_use_restriction_callbacks(app)
+    register_global_variables_callbacks(app)

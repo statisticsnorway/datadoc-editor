@@ -50,6 +50,7 @@ def build_app(app: Dash) -> Dash:
                         data=0,
                         storage_type="session",
                     ),
+                    dcc.Store(id="metadata-save-counter", data=0),
                     build_controls_bar(),
                     html.Div(id="alerts-section"),
                     dcc.Tabs(
