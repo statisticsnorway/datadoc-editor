@@ -84,7 +84,7 @@ def get_enum_options(
         }
         for i in enum  # type: ignore [attr-defined]
     ]
-    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": ""})
+    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": DELETE_SELECTED})
     return dropdown_options
 
 
