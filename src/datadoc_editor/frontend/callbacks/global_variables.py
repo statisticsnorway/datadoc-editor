@@ -61,7 +61,7 @@ def generate_info_alert_report(affected_variables: dict) -> dbc.Alert:
     return build_ssb_alert(
         alert_type=AlertTypes.INFO,
         title="Globale verdier",
-        message=None,
+        message="Oppdatert verdiene for:",
         link=None,
         alert_list=info_alert_list,
     )
