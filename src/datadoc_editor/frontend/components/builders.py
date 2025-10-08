@@ -25,6 +25,8 @@ from datadoc_editor.frontend.fields.display_base import (
 
 if TYPE_CHECKING:
     from dapla_metadata.datasets import model
+    from dapla_metadata.datasets.utility.utils import VariableType
+    from datadoc_model.required import model as required_model
 
 
 class AlertTypes(Enum):
@@ -111,7 +113,7 @@ def build_ssb_alert(
 def build_input_field_section(
     metadata_fields: list[FieldTypes],
     side: str,
-    variable: model.Variable,
+    variable: VariableType,
     field_id: str = "",
 ) -> dbc.Form:
     """Create form with input fields for variable workspace."""
@@ -136,8 +138,8 @@ def build_input_field_section(
 def build_pseudo_field_section(
     metadata_fields: list[FieldTypes],
     side: str,
-    variable: model.Variable,
-    pseudonymization: model.Pseudonymization,
+    variable: VariableType,
+    pseudonymization: model.Pseudonymization | required_model.Pseudonymization,
     field_id: str = "",
 ) -> dbc.Form:
     """Create form with input fields for pseudo inputs."""
@@ -160,7 +162,7 @@ def build_pseudo_field_section(
 
 def build_edit_section(
     metadata_inputs: list[list[FieldTypes]],
-    variable: model.Variable,
+    variable: VariableType,
 ) -> html.Section:
     """Create input section for variable workspace."""
     return html.Section(
@@ -176,7 +178,7 @@ def build_edit_section(
 def build_variables_machine_section(
     metadata_inputs: list,
     title: str,
-    variable: model.Variable,
+    variable: VariableType,
 ) -> html.Section:
     """Create input section for variable workspace."""
     return html.Section(
@@ -196,7 +198,7 @@ def build_variables_machine_section(
 
 def build_variables_pseudonymization_section(
     title: str,
-    variable: model.Variable,
+    variable: VariableType,
     selected_algorithm: PseudonymizationAlgorithmsEnum | None,
 ) -> html.Section:
     """Create input section for pseudonymization with dropdown for selecting pseudo algorithm."""
