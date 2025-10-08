@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import copy
 import logging
 from typing import TYPE_CHECKING
 
 from datadoc_editor import state
+from datadoc_editor.constants import DELETE_SELECTED
 from datadoc_editor.frontend.components.builders import AlertTypes
 from datadoc_editor.frontend.components.builders import build_ssb_alert
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
@@ -21,7 +23,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-
+# return dict ?
 def _get_display_name_and_title(
     value_dict: dict, display_globals: list[FieldTypes]
 ) -> list[tuple[str, str]]:
@@ -75,27 +77,24 @@ def inherit_global_variable_values(
 
     display_values = _get_display_name_and_title(global_values, GLOBAL_VARIABLES)
     display_value_map = dict(display_values)
-    affected_variables = previous_data.copy()
+    
+    affected_variables = copy.deepcopy(previous_data)
 
     for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
         raw_value = global_values.get(field_name)
         if not raw_value:
             continue
         display_value = display_value_map.get(display_name, raw_value)
-        #if field_name in affected_variables:
-        #    continue
-        # if not raw_value or raw_value == DROPDOWN_DESELECT_OPTION:
-        #     continue
         if field_name in affected_variables:
-            # Compare and update if global value changed
             prev_value = affected_variables[field_name].get("value")
+            # possible to change previous added (but not saved) value
             if prev_value != raw_value:
                 affected_variables[field_name]["value"] = raw_value
                 affected_variables[field_name]["display_value"] = display_value
-                affected_variables[field_name]["vars_updated"] = []  # reset before reapplying
+                affected_variables[field_name]["vars_updated"] = [] 
                 affected_variables[field_name]["num_vars"] = 0
+        # if new
         else:
-        #if field_name not in affected_variables:
             affected_variables[field_name] = {
                 "display_name": display_name,
                 "value": raw_value,
@@ -103,24 +102,34 @@ def inherit_global_variable_values(
                 "num_vars": 0,
                 "vars_updated": [],
             }
+    # iterate variables
     for var in state.metadata.variables:
         if not var or not var.short_name:
             continue
         for field_name, meta in affected_variables.items():
             raw_value = meta["value"]
             current_value = getattr(var, field_name, None)
-            # Update the variable if it's None OR if global value changed
-            if current_value != raw_value:
+            # only allow change if value was added by global editing
+            if field_name in previous_data:
+                # Remove object by setting value to None
+                if raw_value == DELETE_SELECTED:
+                    logger.debug("remove from store %s", affected_variables[field_name])
+                    affected_variables[field_name]["value"] = None
+                    logger.debug("remove from store after %s", affected_variables)
+                    setattr(var, field_name, None)
+                    continue
+                # Update selected value
+                elif current_value != raw_value:
+                    setattr(var, field_name, raw_value)
+                    meta["num_vars"] += 1
+                    meta["vars_updated"].append(var.short_name)
+            # Edit variable fields with no value
+            if not current_value:
                 setattr(var, field_name, raw_value)
                 meta["num_vars"] += 1
                 meta["vars_updated"].append(var.short_name)
-            #if getattr(var, field_name, None) is None:
-            #    setattr(var, field_name, raw_value)
-            #    meta["num_vars"] += 1
-            #    meta["vars_updated"].append(var.short_name)
-#
-    return affected_variables
-
+    # Return if value is not None
+    return {k: v for k, v in affected_variables.items() if v["value"] is not None}
 
 def remove_global_variables(
     store_data: dict,
