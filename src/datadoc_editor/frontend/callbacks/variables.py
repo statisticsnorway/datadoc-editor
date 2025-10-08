@@ -156,7 +156,7 @@ def accept_variable_metadata_input(
                 variable,
                 language,
             )
-        elif value == "":
+        elif value == "" or value == DELETE_SELECTED:
             # Allow clearing non-multiple-language text fields
             new_value = None
         else:

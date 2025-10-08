@@ -9,6 +9,7 @@ import dash_bootstrap_components as dbc
 import pytest
 
 from datadoc_editor import state
+from datadoc_editor.constants import DELETE_SELECTED
 from datadoc_editor.frontend.callbacks.global_variables import (
     generate_info_alert_report,
 )
@@ -247,6 +248,31 @@ def test_add_and_reset_before_save(metadata: Datadoc):
     result_add_again = inherit_global_variable_values(global_values_again, reset)
     assert result_add_again["unit_type"]["value"] == "02"
 
+@pytest.mark.usefixtures("_code_list_fake_classifications")
+def test_add_and_reselect_before_save(metadata: Datadoc):
+    state.metadata = metadata
+    assert metadata.variables
+    global_values = {
+        "unit_type": "03",
+        "measurement_unit": "01",
+        "multiplication_factor": 1,
+        "variable_role": "IDENTIFIER",
+        "data_source": "05",
+        "temporality_type": "STATUS",
+    }
+    global_values_again = {
+        "unit_type": "02",
+        "temporality_type": "ACCUMULATED",
+        "measurement_unit": DELETE_SELECTED,
+    }
+    result_add_global_variables = inherit_global_variable_values(global_values, None)
+    result_add_again = inherit_global_variable_values(global_values_again, result_add_global_variables)
+    
+    assert result_add_again["unit_type"]["value"] == "02"
+    assert result_add_again["multiplication_factor"]["value"] == 1
+    assert result_add_again["temporality_type"]["value"] == "ACCUMULATED"
+    assert result_add_global_variables["measurement_unit"]["value"] == "01"
+    assert "measurement_unit" not in result_add_again
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
 def test_inherit_globals_can_add_new_after_reset(metadata: Datadoc):
