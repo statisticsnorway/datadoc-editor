@@ -189,7 +189,10 @@ def test_generate_global_variables_report(metadata: Datadoc):
     assert isinstance(generate_report, dbc.Alert)
     assert generate_report.children[0].children == GLOBALE_ALERT_TITLE
     assert len(generate_report.children[2].children) == len(global_values)
-    assert generate_report.children[2].children[0].children == "Enhetstype: 8 variabler oppdateres med: Bolig"
+    assert (
+        generate_report.children[2].children[0].children
+        == "Enhetstype: 8 variabler oppdateres med: Bolig"
+    )
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
