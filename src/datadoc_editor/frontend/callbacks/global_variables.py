@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import copy
 import logging
 from typing import TYPE_CHECKING
 
@@ -10,7 +9,6 @@ from datadoc_editor import state
 from datadoc_editor.constants import DELETE_SELECTED
 from datadoc_editor.frontend.components.builders import AlertTypes
 from datadoc_editor.frontend.components.builders import build_ssb_alert
-from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import FieldTypes
 from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
 from datadoc_editor.frontend.fields.display_variables import (
@@ -22,6 +20,7 @@ if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
 
 logger = logging.getLogger(__name__)
+
 
 def _get_display_name_and_title(
     value_dict: dict, display_globals: list[FieldTypes]
@@ -71,61 +70,71 @@ def generate_info_alert_report(affected_variables: dict) -> dbc.Alert:
 def inherit_global_variable_values(
     global_values: dict, previous_data: dict | None
 ) -> dict:
-    """Apply values from store_data to variables."""
+    """Edit global variables."""
     previous_data = previous_data or {}
 
     display_values = _get_display_name_and_title(global_values, GLOBAL_VARIABLES)
     display_value_map = dict(display_values)
-    
+
     affected_variables = {}
-    remove_affected = []
-    unchanged_value = []
-    
+    remove_deselected = set()
+    preserved_field = set()
+
     for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
         raw_value = global_values.get(field_name)
-        if field_name not in previous_data and (not raw_value or raw_value == DELETE_SELECTED):
+        previous_entry = previous_data.get(field_name)
+        previous_value = previous_entry.get("value") if previous_entry else None
+
+        if not previous_entry and (not raw_value or raw_value == DELETE_SELECTED):
             continue
-        if field_name in previous_data:
-            prev_value = previous_data[field_name].get("value")
-            if raw_value == DELETE_SELECTED:
-                remove_affected.append(field_name)
-            else:
-                affected_variables[field_name] = previous_data[field_name].copy()
-                # Update value
-                if prev_value != raw_value:
-                    affected_variables[field_name]["value"] = raw_value
-                    affected_variables[field_name]["display_value"] = display_value_map.get(display_name, raw_value)
-                    affected_variables[field_name]["vars_updated"] = [] 
-                    affected_variables[field_name]["num_vars"] = 0
-                else:
-                    # preserve previous data
-                    unchanged_value.append(field_name)
-        else:
-            # add new data
-            affected_variables[field_name] = {
+
+        if raw_value == DELETE_SELECTED:
+            remove_deselected.add(field_name)
+            continue
+
+        display_value = display_value_map.get(display_name, raw_value)
+        affected_variables[field_name] = (
+            previous_entry.copy()
+            if previous_entry
+            else {
                 "display_name": display_name,
-                "value": raw_value,
-                "display_value": display_value_map.get(display_name, raw_value),
-                "num_vars": 0,
                 "vars_updated": [],
+                "num_vars": 0,
             }
-            
+        )
+
+        if previous_value == raw_value:
+            preserved_field.add(field_name)
+        else:
+            affected_variables[field_name].update(
+                {
+                    "value": raw_value,
+                    "display_value": display_value,
+                    "vars_updated": [],
+                    "num_vars": 0,
+                }
+            )
+    # Update all variables in state
     for var in state.metadata.variables:
-        if not var or not var.short_name:
+        if not getattr(var, "short_name", None):
             continue
+
         # Remove previously added value
-        for field_name in remove_affected:
+        for field_name in remove_deselected:
             setattr(var, field_name, None)
-            continue
+
+        # Apply updates
         for field_name, meta in affected_variables.items():
-            # preserve unchanged
-            if field_name in unchanged_value:
+            if field_name in preserved_field:
                 continue
+
             raw_value = meta["value"]
             setattr(var, field_name, raw_value)
             meta["num_vars"] += 1
             meta["vars_updated"].append(var.short_name)
-    return {k: v for k, v in affected_variables.items() if v["value"] is not None}
+
+    return {k: v for k, v in affected_variables.items() if v.get("value") is not None}
+
 
 def remove_global_variables(
     store_data: dict,
