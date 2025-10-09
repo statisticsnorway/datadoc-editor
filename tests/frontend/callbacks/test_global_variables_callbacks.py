@@ -152,22 +152,19 @@ def test_inherit_globals_no_values(metadata: Datadoc):
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
-def test_inherit_globals_will_not_change_if_value(metadata: Datadoc):
+def test_inherit_globals_overwrites_old_value(metadata: Datadoc):
     state.metadata = metadata
     variable = state.metadata.variables[0]
     assert variable is not None
     variable.unit_type = "02"
-    assert variable.unit_type == "02"
-    assert variable.multiplication_factor is None
-
+    
     global_values = {
         "unit_type": "03",
-        "multiplication_factor": 2,
     }
 
     inherit_global_variable_values(global_values, None)
-    assert variable.multiplication_factor == global_values.get("multiplication_factor")
-    assert variable.unit_type != global_values.get("unit_type")
+    assert variable.unit_type != "02"
+    assert variable.unit_type == global_values.get("unit_type")
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
