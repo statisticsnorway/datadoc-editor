@@ -14,8 +14,7 @@ from datadoc_editor.frontend.components.identifiers import GLOBAL_EDITABLE
 from datadoc_editor.frontend.components.identifiers import GLOBAL_INFO_ALERTS_OUTPUT
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ACCORDION
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_INPUT
-from datadoc_editor.frontend.components.identifiers import RESET_GLOBAL_VARIABLES_BUTTON
-from datadoc_editor.frontend.constants import GLOBAL_HEADER_INFORMATION
+from datadoc_editor.frontend.constants import GLOBAL_ADD_BUTTON, GLOBAL_HEADER_INFORMATION
 from datadoc_editor.frontend.constants import GLOBAL_HEADER_INFORMATION_LIST
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import FieldTypes
@@ -86,20 +85,12 @@ def build_global_edit_section(
                         [html.Li(item) for item in GLOBAL_HEADER_INFORMATION_LIST],
                         className="global-information-list",
                     ),
-                    html.Div(
-                        [
-                            ssb.Button(
-                                "Legg til",
-                                id=ADD_GLOBAL_VARIABLES_BUTTON,
-                                className="global-button",
-                            ),
-                            ssb.Button(
-                                "Nullstill",
-                                id=RESET_GLOBAL_VARIABLES_BUTTON,
-                                className="global-button",
-                            ),
-                        ],
-                        className="global-header-buttons",
+                    ssb.Button(
+                        GLOBAL_ADD_BUTTON,
+                        id=ADD_GLOBAL_VARIABLES_BUTTON,
+                        negative=True,
+                        className="global-button",
+                        icon=html.I(className="bi-plus-circle"),
                     ),
                 ],
                 className="global-section-header",
