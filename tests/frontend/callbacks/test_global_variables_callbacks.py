@@ -188,7 +188,7 @@ def test_generate_global_variables_report(metadata: Datadoc):
     added_global_variables = inherit_global_variable_values(global_values, None)
     generate_report = generate_info_alert_report(added_global_variables)
     assert isinstance(generate_report, dbc.Alert)
-    assert generate_report.children[0].children == GLOBAL_HEADER
+    assert generate_report.children[0].children == "Globale verdier"
     assert len(generate_report.children[3].children) == len(global_values)
 
 
@@ -203,7 +203,7 @@ def test_generate_global_variables_report_no_result(metadata: Datadoc):
     added_global_variables = inherit_global_variable_values(global_values, None)
     generate_report = generate_info_alert_report(added_global_variables)
     assert isinstance(generate_report, dbc.Alert)
-    assert generate_report.children[0].children == GLOBAL_HEADER
+    assert generate_report.children[0].children == "Globale verdier"
     assert len(generate_report.children[3].children) == 0
 
 

@@ -97,8 +97,10 @@ def register_global_variables_callbacks(app: Dash) -> None:
         Store result in memory and return info report.
         """
         logger.debug("Stored global variables %s", added_variables_store)
+        if not n_clicks:
+            return dash.no_update
         stored_data = added_variables_store
-        if ctx.triggered_id == ADD_GLOBAL_VARIABLES_BUTTON and n_clicks:
+        if ctx.triggered_id == ADD_GLOBAL_VARIABLES_BUTTON and n_clicks and selected_values:
             new_variables_store = inherit_global_variable_values(
                 selected_values, stored_data
             )
@@ -107,32 +109,6 @@ def register_global_variables_callbacks(app: Dash) -> None:
 
             return new_variables_store, alerts
         return dash.no_update, dash.no_update
-
-    @app.callback(
-        Output(GLOBAL_INFO_ALERTS_OUTPUT, "children", allow_duplicate=True),
-        Output({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "value"),
-        Output(GLOBAL_ADDED_VARIABLES_STORE, "data", allow_duplicate=True),
-        Input(RESET_GLOBAL_VARIABLES_BUTTON, "n_clicks"),
-        State(GLOBAL_ADDED_VARIABLES_STORE, "data"),
-        State({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "id"),
-        prevent_initial_call=True,
-    )
-    def reset_global_variables(  # noqa: ANN202
-        n_clicks: int,
-        added_variables_data: dict,
-        component_ids,  # noqa: ANN001
-    ):
-        """Reset metadata state and update input fields.
-
-        Remove added values from metadata state, and reset input fields.
-        """
-        # Info Alerts is None here
-        if not n_clicks:
-            return dash.no_update
-        if ctx.triggered_id == "reset-global-variables-button" and n_clicks:
-            new_store = remove_global_variables(added_variables_data)
-            return None, [""] * len(component_ids), new_store
-        return dash.no_update, dash.no_update, dash.no_update
 
     @app.callback(
         Output(
