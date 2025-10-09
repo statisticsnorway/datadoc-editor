@@ -84,7 +84,9 @@ def get_enum_options(
         }
         for i in enum  # type: ignore [attr-defined]
     ]
-    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": DELETE_SELECTED})
+    dropdown_options.insert(
+        0, {"title": DROPDOWN_DESELECT_OPTION, "id": DELETE_SELECTED}
+    )
     return dropdown_options
 
 
@@ -113,7 +115,9 @@ def get_data_source_options() -> list[dict[str, str]]:
         }
         for data_sources in state.data_sources.classifications
     ]
-    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": DELETE_SELECTED})
+    dropdown_options.insert(
+        0, {"title": DROPDOWN_DESELECT_OPTION, "id": DELETE_SELECTED}
+    )
     return dropdown_options
 
 
