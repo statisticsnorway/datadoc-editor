@@ -87,8 +87,11 @@ def inherit_global_variable_values(
 
         if not previous_entry and (not raw_value or raw_value == DELETE_SELECTED):
             continue
-
-        if raw_value == DELETE_SELECTED:
+        
+        if field_name == "multiplication_factor" and raw_value == "":
+            raw_value = 0
+            
+        if raw_value in (DELETE_SELECTED, 0):
             remove_deselected.add(field_name)
             continue
 
@@ -127,7 +130,6 @@ def inherit_global_variable_values(
         for field_name, meta in affected_variables.items():
             if field_name in preserved_field:
                 continue
-
             raw_value = meta["value"]
             setattr(var, field_name, raw_value)
             meta["num_vars"] += 1
