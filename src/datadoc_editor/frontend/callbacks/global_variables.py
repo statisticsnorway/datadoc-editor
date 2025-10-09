@@ -78,31 +78,10 @@ def inherit_global_variable_values(
     display_values = _get_display_name_and_title(global_values, GLOBAL_VARIABLES)
     display_value_map = dict(display_values)
     
+    # Do not mutate the previous data
     affected_variables = copy.deepcopy(previous_data)
-
-    for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
-        raw_value = global_values.get(field_name)
-        if not raw_value:
-            continue
-        display_value = display_value_map.get(display_name, raw_value)
-        if field_name in affected_variables:
-            prev_value = affected_variables[field_name].get("value")
-            # possible to change previous added (but not saved) value
-            if prev_value != raw_value:
-                affected_variables[field_name]["value"] = raw_value
-                affected_variables[field_name]["display_value"] = display_value
-                affected_variables[field_name]["vars_updated"] = [] 
-                affected_variables[field_name]["num_vars"] = 0
-        # if new
-        else:
-            affected_variables[field_name] = {
-                "display_name": display_name,
-                "value": raw_value,
-                "display_value": display_value_map.get(display_name, raw_value),
-                "num_vars": 0,
-                "vars_updated": [],
-            }
-    # iterate variables
+    _create_global_variables_store(affected_variables, global_values, display_value_map)
+    
     for var in state.metadata.variables:
         if not var or not var.short_name:
             continue
@@ -131,6 +110,31 @@ def inherit_global_variable_values(
     # Return if value is not None
     return {k: v for k, v in affected_variables.items() if v["value"] is not None}
 
+def _create_global_variables_store(affected_variables, global_values, display_value_map):
+    """Apply."""
+    for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
+        raw_value = global_values.get(field_name)
+        if not raw_value:
+            continue
+        display_value = display_value_map.get(display_name, raw_value)
+        if field_name in affected_variables:
+            prev_value = affected_variables[field_name].get("value")
+            # possible to change previous added (but not saved) value
+            if prev_value != raw_value:
+                affected_variables[field_name]["value"] = raw_value
+                affected_variables[field_name]["display_value"] = display_value
+                affected_variables[field_name]["vars_updated"] = [] 
+                affected_variables[field_name]["num_vars"] = 0
+        # if new
+        else:
+            affected_variables[field_name] = {
+                "display_name": display_name,
+                "value": raw_value,
+                "display_value": display_value_map.get(display_name, raw_value),
+                "num_vars": 0,
+                "vars_updated": [],
+            }
+            
 def remove_global_variables(
     store_data: dict,
 ) -> dict:
