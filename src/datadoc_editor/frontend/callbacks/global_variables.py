@@ -7,8 +7,11 @@ from typing import TYPE_CHECKING
 
 from datadoc_editor import state
 from datadoc_editor.constants import DELETE_SELECTED
-from datadoc_editor.frontend.components.builders import AlertTypes
-from datadoc_editor.frontend.components.builders import build_ssb_alert
+from datadoc_editor.frontend.components.global_variables_builders import (
+    build_ssb_info_alert,
+)
+from datadoc_editor.frontend.constants import GLOBALE_ALERT_MESSAGE
+from datadoc_editor.frontend.constants import GLOBALE_ALERT_TITLE
 from datadoc_editor.frontend.fields.display_base import FieldTypes
 from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
 from datadoc_editor.frontend.fields.display_variables import (
@@ -52,17 +55,24 @@ def _get_display_name_and_title(
 
 
 def generate_info_alert_report(affected_variables: dict) -> dbc.Alert:
-    """Build an info Alert."""
+    """Create an informational alert summarizing updated global variables.
+
+    Args:
+        affected_variables (dict):
+            A mapping of variable identifiers registered in global variables section.
+
+    Returns:
+        dbc.Alert:
+            A Dash Bootstrap Components alert element displaying the summary of updates.
+    """
     info_alert_list: list = []
     info_alert_list.extend(
         f"{field_data['display_name']}: {field_data['num_vars']} variabler oppdateres med: {field_data.get('display_value')}"
         for field_data in affected_variables.values()
     )
-    return build_ssb_alert(
-        alert_type=AlertTypes.INFO,
-        title="Globale verdier",
-        message="Oppdatert verdiene for:",
-        link=None,
+    return build_ssb_info_alert(
+        title=GLOBALE_ALERT_TITLE,
+        message=GLOBALE_ALERT_MESSAGE,
         alert_list=info_alert_list,
     )
 
@@ -70,7 +80,20 @@ def generate_info_alert_report(affected_variables: dict) -> dbc.Alert:
 def inherit_global_variable_values(
     global_values: dict, previous_data: dict | None
 ) -> dict:
-    """Edit global variables."""
+    """Apply global edits to all variables simultaneously.
+
+    Updates, resets, or removes variable values across all variables based on
+    user selections, while preserving unchanged fields. This allows setting
+    the same value for multiple variables simultaneously.
+
+    Args:
+        global_values (dict): The newly selected or edited global variable values.
+        previous_data (dict | None): Previously stored variable metadata from the session.
+
+    Returns:
+        dict: All affected variables, including display names, updated values,
+            number of variables updated, and which variables were modified.
+    """
     previous_data = previous_data or {}
 
     display_values = _get_display_name_and_title(global_values, GLOBAL_VARIABLES)
@@ -136,18 +159,3 @@ def inherit_global_variable_values(
             meta["vars_updated"].append(var.short_name)
 
     return {k: v for k, v in affected_variables.items() if v.get("value") is not None}
-
-
-def remove_global_variables(
-    store_data: dict,
-) -> dict:
-    """Remove all global variable values added in session."""
-    logger.debug("Resetting all global variables...")
-    for field_name, field_data in store_data.items():
-        for var in state.metadata.variables:
-            if not var or not var.short_name:
-                continue
-            if var.short_name in field_data.get("vars_updated", []):
-                setattr(var, field_name, None)
-
-    return {}

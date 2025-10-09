@@ -8,7 +8,8 @@ import dash_bootstrap_components as dbc
 import ssb_dash_components as ssb
 from dash import html
 
-from datadoc_editor.frontend.components.builders import AlertType, AlertTypes
+from datadoc_editor.frontend.components.builders import AlertType
+from datadoc_editor.frontend.components.builders import AlertTypes
 from datadoc_editor.frontend.components.identifiers import ADD_GLOBAL_VARIABLES_BUTTON
 from datadoc_editor.frontend.components.identifiers import GLOBAL_EDIT_SECTION
 from datadoc_editor.frontend.components.identifiers import GLOBAL_EDITABLE
@@ -156,5 +157,3 @@ def build_ssb_info_alert(
         ],
         class_name="ssb-alert",
     )
-
-
