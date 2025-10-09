@@ -23,20 +23,6 @@ if TYPE_CHECKING:
     from dapla_metadata.datasets import Datadoc
 
 
-def _num_not_set(variables: list) -> dict:
-    """Count variable fields with no value."""
-    return {
-        "multiplication_factor": sum(
-            1 for v in variables if not v.multiplication_factor
-        ),
-        "unit_type": sum(1 for v in state.metadata.variables if not v.unit_type),
-        "variable_role": sum(1 for v in variables if not v.variable_role),
-        "measurement_unit": sum(1 for v in variables if not v.measurement_unit),
-        "data_source": sum(1 for v in variables if not v.data_source),
-        "temporality_type": sum(1 for v in variables if not v.temporality_type),
-    }
-
-
 @dataclass
 class GlobalTestScenario:
     """Data class global test scenarios."""
@@ -67,7 +53,7 @@ global_scenarios_add = [
         global_values={
             "unit_type": "03",
             "measurement_unit": "",
-            "multiplication_factor": None,
+            "multiplication_factor": 2,
             "variable_role": "",
             "data_source": "",
             "temporality_type": "",
@@ -87,9 +73,9 @@ global_scenarios_add = [
     ),
     GlobalTestScenario(
         global_values={
-            "unit_type": "",
+            "unit_type": "02",
             "measurement_unit": "",
-            "multiplication_factor": None,
+            "multiplication_factor": 2,
             "variable_role": "ATTRIBUTE",
             "data_source": "",
             "temporality_type": "",
@@ -101,8 +87,8 @@ global_scenarios_add = [
                 "display_name": "Multiplikasjonsfaktor",
             },
             "unit_type": {
-                "value": "03",
-                "display_value": "Bolig",
+                "value": "02",
+                "display_value": "Arbeidsulykke",
                 "display_name": "Enhetstype",
             },
             "variable_role": {
@@ -116,10 +102,34 @@ global_scenarios_add = [
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
+def test_inherit_globals_add_correct(metadata: Datadoc):
+    state.metadata = metadata
+    for var in metadata.variables:
+        var.unit_type = "02"
+    metadata.variables[1].multiplication_factor = 1
+    metadata.variables[1].data_source = "05"
+    global_values = {
+        "unit_type": "04",
+        "measurement_unit": "",
+        "multiplication_factor": 3,
+        "variable_role": "",
+        "data_source": "",
+        "temporality_type": "STATUS",
+    }
+    result = inherit_global_variable_values(global_values, None)
+    expected_factor = 3
+    for var in metadata.variables:
+        assert var.unit_type == "04"
+        assert var.multiplication_factor == expected_factor
+    assert metadata.variables[1].data_source == "05"
+    assert "unit_type" in result
+    assert "multiplication_factor" in result
+    assert "data_source" not in result
+
+
+@pytest.mark.usefixtures("_code_list_fake_classifications")
 def test_inherit_globals_increments_correct(metadata: Datadoc):
     state.metadata = metadata
-
-    num_not_set_before = _num_not_set(state.metadata.variables)
     result = None
     for scenario in global_scenarios_add:
         result = inherit_global_variable_values(scenario.global_values, result)
@@ -130,8 +140,8 @@ def test_inherit_globals_increments_correct(metadata: Datadoc):
                 for key, val in expected.items():
                     assert field_result[key] == val
 
-                assert field_result["num_vars"] == num_not_set_before[field]
-                assert len(field_result["vars_updated"]) == num_not_set_before[field]
+                assert field_result["num_vars"] == len(metadata.variables)
+                assert len(field_result["vars_updated"]) == len(metadata.variables)
             else:
                 assert field_result is None
 
@@ -157,7 +167,7 @@ def test_inherit_globals_overwrites_old_value(metadata: Datadoc):
     variable = state.metadata.variables[0]
     assert variable is not None
     variable.unit_type = "02"
-    
+
     global_values = {
         "unit_type": "03",
     }
@@ -165,33 +175,6 @@ def test_inherit_globals_overwrites_old_value(metadata: Datadoc):
     inherit_global_variable_values(global_values, None)
     assert variable.unit_type != "02"
     assert variable.unit_type == global_values.get("unit_type")
-
-
-@pytest.mark.usefixtures("_code_list_fake_classifications")
-def test_reset_added_variables(metadata: Datadoc):
-    state.metadata = metadata
-    assert metadata.variables
-    num_not_set_before = _num_not_set(state.metadata.variables)
-
-    global_values = {
-        "unit_type": "03",
-        "measurement_unit": "01",
-        "multiplication_factor": 1,
-        "variable_role": "IDENTIFIER",
-        "data_source": "05",
-        "temporality_type": "STATUS",
-    }
-    result_add_global_variables = inherit_global_variable_values(global_values, None)
-    num_not_set_after_inherit = _num_not_set(state.metadata.variables)
-
-    for key in num_not_set_after_inherit:
-        assert num_not_set_after_inherit.get(key) == 0
-
-    remove_global_variables(result_add_global_variables)
-    num_not_set_after_reset = _num_not_set(state.metadata.variables)
-
-    for key in num_not_set_before:
-        assert num_not_set_before.get(key) == num_not_set_after_reset.get(key)
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
@@ -245,6 +228,7 @@ def test_add_and_reset_before_save(metadata: Datadoc):
     result_add_again = inherit_global_variable_values(global_values_again, reset)
     assert result_add_again["unit_type"]["value"] == "02"
 
+
 @pytest.mark.usefixtures("_code_list_fake_classifications")
 def test_add_and_reselect_before_save(metadata: Datadoc):
     state.metadata = metadata
@@ -261,15 +245,22 @@ def test_add_and_reselect_before_save(metadata: Datadoc):
         "unit_type": "02",
         "temporality_type": "ACCUMULATED",
         "measurement_unit": DELETE_SELECTED,
+        "multiplication_factor": 1,
+        "variable_role": "IDENTIFIER",
+        "data_source": "05",
     }
     result_add_global_variables = inherit_global_variable_values(global_values, None)
-    result_add_again = inherit_global_variable_values(global_values_again, result_add_global_variables)
-    
+    result_add_again = inherit_global_variable_values(
+        global_values_again, result_add_global_variables
+    )
+
     assert result_add_again["unit_type"]["value"] == "02"
+    assert result_add_global_variables["multiplication_factor"]["value"] == 1
     assert result_add_again["multiplication_factor"]["value"] == 1
     assert result_add_again["temporality_type"]["value"] == "ACCUMULATED"
     assert result_add_global_variables["measurement_unit"]["value"] == "01"
     assert "measurement_unit" not in result_add_again
+
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
 def test_inherit_globals_can_add_new_after_reset(metadata: Datadoc):
