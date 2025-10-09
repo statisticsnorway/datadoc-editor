@@ -23,7 +23,6 @@ from datadoc_editor.frontend.callbacks.global_variables import (
 from datadoc_editor.frontend.callbacks.global_variables import (
     inherit_global_variable_values,
 )
-from datadoc_editor.frontend.callbacks.global_variables import remove_global_variables
 from datadoc_editor.frontend.components.global_variables_builders import (
     build_global_edit_section,
 )
@@ -36,7 +35,6 @@ from datadoc_editor.frontend.components.identifiers import GLOBAL_INFO_ALERTS_OU
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_INPUT
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_VALUES_STORE
-from datadoc_editor.frontend.components.identifiers import RESET_GLOBAL_VARIABLES_BUTTON
 from datadoc_editor.frontend.constants import GLOBAL_HEADER
 from datadoc_editor.frontend.fields.display_variables import GLOBAL_VARIABLES
 
@@ -100,7 +98,11 @@ def register_global_variables_callbacks(app: Dash) -> None:
         if not n_clicks:
             return dash.no_update
         stored_data = added_variables_store
-        if ctx.triggered_id == ADD_GLOBAL_VARIABLES_BUTTON and n_clicks and selected_values:
+        if (
+            ctx.triggered_id == ADD_GLOBAL_VARIABLES_BUTTON
+            and n_clicks
+            and selected_values
+        ):
             new_variables_store = inherit_global_variable_values(
                 selected_values, stored_data
             )

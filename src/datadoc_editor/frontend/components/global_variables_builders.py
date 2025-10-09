@@ -14,7 +14,8 @@ from datadoc_editor.frontend.components.identifiers import GLOBAL_EDITABLE
 from datadoc_editor.frontend.components.identifiers import GLOBAL_INFO_ALERTS_OUTPUT
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ACCORDION
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_INPUT
-from datadoc_editor.frontend.constants import GLOBAL_ADD_BUTTON, GLOBAL_HEADER_INFORMATION
+from datadoc_editor.frontend.constants import GLOBAL_ADD_BUTTON
+from datadoc_editor.frontend.constants import GLOBAL_HEADER_INFORMATION
 from datadoc_editor.frontend.constants import GLOBAL_HEADER_INFORMATION_LIST
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import FieldTypes

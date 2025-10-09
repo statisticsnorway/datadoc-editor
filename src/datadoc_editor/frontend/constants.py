@@ -10,7 +10,9 @@ PSEUDONYMIZATION = "Pseudonymisering"
 GLOBAL_HEADER = "Alle variabler"
 
 GLOBAL_ADD_BUTTON = "Bruk endringer"
-GLOBAL_HEADER_INFORMATION = "Her kan du sette samme verdi på utvalgte felt for alle variabler samtidig."
+GLOBAL_HEADER_INFORMATION = (
+    "Her kan du sette samme verdi på utvalgte felt for alle variabler samtidig."
+)
 
 GLOBAL_HEADER_INFORMATION_LIST = [
     "Velg kun de feltene du ønsker å endre for alle variabler.",
