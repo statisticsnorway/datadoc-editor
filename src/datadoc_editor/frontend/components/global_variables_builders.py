@@ -8,6 +8,7 @@ import dash_bootstrap_components as dbc
 import ssb_dash_components as ssb
 from dash import html
 
+from datadoc_editor.frontend.components.builders import AlertType, AlertTypes
 from datadoc_editor.frontend.components.identifiers import ADD_GLOBAL_VARIABLES_BUTTON
 from datadoc_editor.frontend.components.identifiers import GLOBAL_EDIT_SECTION
 from datadoc_editor.frontend.components.identifiers import GLOBAL_EDITABLE
@@ -124,3 +125,36 @@ def build_global_ssb_accordion(
         ],
         className="global-variable-accordion",
     )
+
+
+def build_ssb_info_alert(
+    title: str,
+    message: str | None = None,
+    alert_list: list | None = None,
+) -> dbc.Alert:
+    """Make a Dash Info Alert according to SSBs Design System."""
+    alert = AlertType.get_type(AlertTypes.INFO)
+    if alert_list is None:
+        alert_list = []
+    return dbc.Alert(
+        is_open=True,
+        dismissable=False,
+        fade=True,
+        color=alert.color,
+        children=[
+            html.H5(
+                title,
+            ),
+            html.P(
+                children=message,
+                className="alert_message",
+            ),
+            html.Ul(
+                [html.Li(i, className="alert_list_item") for i in alert_list],
+                className="alert_list",
+            ),
+        ],
+        class_name="ssb-alert",
+    )
+
+
