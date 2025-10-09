@@ -113,7 +113,7 @@ def get_data_source_options() -> list[dict[str, str]]:
         }
         for data_sources in state.data_sources.classifications
     ]
-    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": ""})
+    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": DELETE_SELECTED})
     return dropdown_options
 
 
