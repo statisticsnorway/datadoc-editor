@@ -96,13 +96,10 @@ def register_global_variables_callbacks(app: Dash) -> None:
         """
         logger.debug("Stored global variables %s", added_variables_store)
         stored_data = added_variables_store
-        if (
-            ctx.triggered_id == ADD_GLOBAL_VARIABLES_BUTTON
-            and n_clicks
-        ):
+        if ctx.triggered_id == ADD_GLOBAL_VARIABLES_BUTTON and n_clicks:
             if not selected_values and not stored_data:
                 return dash.no_update
-            
+
             new_variables_store = inherit_global_variable_values(
                 selected_values, stored_data
             )
