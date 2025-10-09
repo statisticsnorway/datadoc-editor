@@ -104,14 +104,16 @@ def register_global_variables_callbacks(app: Dash) -> None:
         Update metadata state with selected values.
         Store result in memory and return info report.
         """
+        logger.debug("Stored global variables %s", added_variables_store)
+        stored_data = added_variables_store
         if ctx.triggered_id == ADD_GLOBAL_VARIABLES_BUTTON and n_clicks:
-            added_variables_store = inherit_global_variable_values(
-                selected_values, added_variables_store
+            new_variables_store = inherit_global_variable_values(
+                selected_values, stored_data
             )
-            logger.debug("Added global variables %s", added_variables_store)
-            return added_variables_store, generate_info_alert_report(
-                added_variables_store
-            )
+            logger.debug("Added global variables %s", new_variables_store)
+            alerts = generate_info_alert_report(new_variables_store)
+            
+            return new_variables_store, alerts
         return dash.no_update, dash.no_update
 
     @app.callback(
@@ -132,6 +134,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
 
         Remove added values from metadata state, and reset input fields.
         """
+        # Info Alerts is None here
         if not n_clicks:
             return dash.no_update
         if ctx.triggered_id == "reset-global-variables-button" and n_clicks:
