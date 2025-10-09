@@ -19,3 +19,6 @@ GLOBAL_HEADER_INFORMATION_LIST = [
     "Trykk på knappen 'Bruk endringer' for å legge til valgte verdier eller redigere valgte verdier.",
     "Trykk 'Lagre metadata' for å skrive resultatet til fil.",
 ]
+
+GLOBALE_ALERT_TITLE = "Globale verdier"
+GLOBALE_ALERT_MESSAGE = "Oppdatert verdiene for:"
