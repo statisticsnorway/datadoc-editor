@@ -17,6 +17,7 @@ from datadoc_editor.frontend.callbacks.global_variables import (
     inherit_global_variable_values,
 )
 from datadoc_editor.frontend.callbacks.global_variables import remove_global_variables
+from datadoc_editor.frontend.constants import GLOBALE_ALERT_TITLE
 
 if TYPE_CHECKING:
     from dapla_metadata.datasets import Datadoc
@@ -187,8 +188,8 @@ def test_generate_global_variables_report(metadata: Datadoc):
     added_global_variables = inherit_global_variable_values(global_values, None)
     generate_report = generate_info_alert_report(added_global_variables)
     assert isinstance(generate_report, dbc.Alert)
-    assert generate_report.children[0].children == "Globale verdier"
-    assert len(generate_report.children[3].children) == len(global_values)
+    assert generate_report.children[0].children == GLOBALE_ALERT_TITLE
+    assert len(generate_report.children[2].children) == len(global_values)
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
@@ -202,8 +203,8 @@ def test_generate_global_variables_report_no_result(metadata: Datadoc):
     added_global_variables = inherit_global_variable_values(global_values, None)
     generate_report = generate_info_alert_report(added_global_variables)
     assert isinstance(generate_report, dbc.Alert)
-    assert generate_report.children[0].children == "Globale verdier"
-    assert len(generate_report.children[3].children) == 0
+    assert generate_report.children[0].children == GLOBALE_ALERT_TITLE
+    assert len(generate_report.children[2].children) == 0
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
