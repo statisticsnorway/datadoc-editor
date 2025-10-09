@@ -23,7 +23,6 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-# return dict ?
 def _get_display_name_and_title(
     value_dict: dict, display_globals: list[FieldTypes]
 ) -> list[tuple[str, str]]:
@@ -72,61 +71,37 @@ def generate_info_alert_report(affected_variables: dict) -> dbc.Alert:
 def inherit_global_variable_values(
     global_values: dict, previous_data: dict | None
 ) -> dict:
-    """Apply values from store_data to variables (actual write)."""
+    """Apply values from store_data to variables."""
     previous_data = previous_data or {}
 
     display_values = _get_display_name_and_title(global_values, GLOBAL_VARIABLES)
     display_value_map = dict(display_values)
     
-    # Do not mutate the previous data
-    affected_variables = copy.deepcopy(previous_data)
-    _create_global_variables_store(affected_variables, global_values, display_value_map)
+    affected_variables = {}
+    remove_affected = []
+    unchanged_value = []
     
-    for var in state.metadata.variables:
-        if not var or not var.short_name:
-            continue
-        for field_name, meta in affected_variables.items():
-            raw_value = meta["value"]
-            current_value = getattr(var, field_name, None)
-            # only allow change if value was added by global editing
-            if field_name in previous_data:
-                # Remove object by setting value to None
-                if raw_value == DELETE_SELECTED:
-                    logger.debug("remove from store %s", affected_variables[field_name])
-                    affected_variables[field_name]["value"] = None
-                    logger.debug("remove from store after %s", affected_variables)
-                    setattr(var, field_name, None)
-                    continue
-                # Update selected value
-                elif current_value != raw_value:
-                    setattr(var, field_name, raw_value)
-                    meta["num_vars"] += 1
-                    meta["vars_updated"].append(var.short_name)
-            # Edit variable fields with no value
-            if not current_value:
-                setattr(var, field_name, raw_value)
-                meta["num_vars"] += 1
-                meta["vars_updated"].append(var.short_name)
-    # Return if value is not None
-    return {k: v for k, v in affected_variables.items() if v["value"] is not None}
-
-def _create_global_variables_store(affected_variables, global_values, display_value_map):
-    """Apply."""
     for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
         raw_value = global_values.get(field_name)
-        if not raw_value:
+        if field_name not in previous_data and (not raw_value or raw_value == DELETE_SELECTED):
             continue
-        display_value = display_value_map.get(display_name, raw_value)
-        if field_name in affected_variables:
-            prev_value = affected_variables[field_name].get("value")
-            # possible to change previous added (but not saved) value
-            if prev_value != raw_value:
-                affected_variables[field_name]["value"] = raw_value
-                affected_variables[field_name]["display_value"] = display_value
-                affected_variables[field_name]["vars_updated"] = [] 
-                affected_variables[field_name]["num_vars"] = 0
-        # if new
+        if field_name in previous_data:
+            prev_value = previous_data[field_name].get("value")
+            if raw_value == DELETE_SELECTED:
+                remove_affected.append(field_name)
+            else:
+                affected_variables[field_name] = previous_data[field_name].copy()
+                # Update value
+                if prev_value != raw_value:
+                    affected_variables[field_name]["value"] = raw_value
+                    affected_variables[field_name]["display_value"] = display_value_map.get(display_name, raw_value)
+                    affected_variables[field_name]["vars_updated"] = [] 
+                    affected_variables[field_name]["num_vars"] = 0
+                else:
+                    # preserve previous data
+                    unchanged_value.append(field_name)
         else:
+            # add new data
             affected_variables[field_name] = {
                 "display_name": display_name,
                 "value": raw_value,
@@ -135,6 +110,23 @@ def _create_global_variables_store(affected_variables, global_values, display_va
                 "vars_updated": [],
             }
             
+    for var in state.metadata.variables:
+        if not var or not var.short_name:
+            continue
+        # Remove previously added value
+        for field_name in remove_affected:
+            setattr(var, field_name, None)
+            continue
+        for field_name, meta in affected_variables.items():
+            # preserve unchanged
+            if field_name in unchanged_value:
+                continue
+            raw_value = meta["value"]
+            setattr(var, field_name, raw_value)
+            meta["num_vars"] += 1
+            meta["vars_updated"].append(var.short_name)
+    return {k: v for k, v in affected_variables.items() if v["value"] is not None}
+
 def remove_global_variables(
     store_data: dict,
 ) -> dict:
