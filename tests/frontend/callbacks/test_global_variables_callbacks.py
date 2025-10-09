@@ -16,7 +16,6 @@ from datadoc_editor.frontend.callbacks.global_variables import (
 from datadoc_editor.frontend.callbacks.global_variables import (
     inherit_global_variable_values,
 )
-from datadoc_editor.frontend.callbacks.global_variables import remove_global_variables
 from datadoc_editor.frontend.constants import GLOBALE_ALERT_TITLE
 
 if TYPE_CHECKING:
@@ -208,28 +207,6 @@ def test_generate_global_variables_report_no_result(metadata: Datadoc):
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
-def test_add_and_reset_before_save(metadata: Datadoc):
-    state.metadata = metadata
-    assert metadata.variables
-    global_values = {
-        "unit_type": "03",
-        "measurement_unit": "01",
-        "multiplication_factor": 1,
-        "variable_role": "IDENTIFIER",
-        "data_source": "05",
-        "temporality_type": "STATUS",
-    }
-    global_values_again = {
-        "unit_type": "02",
-    }
-    result_add_global_variables = inherit_global_variable_values(global_values, None)
-    reset = remove_global_variables(result_add_global_variables)
-    assert reset == {}
-    result_add_again = inherit_global_variable_values(global_values_again, reset)
-    assert result_add_again["unit_type"]["value"] == "02"
-
-
-@pytest.mark.usefixtures("_code_list_fake_classifications")
 def test_add_and_reselect_before_save(metadata: Datadoc):
     state.metadata = metadata
     assert metadata.variables
@@ -260,38 +237,3 @@ def test_add_and_reselect_before_save(metadata: Datadoc):
     assert result_add_again["temporality_type"]["value"] == "ACCUMULATED"
     assert result_add_global_variables["measurement_unit"]["value"] == "01"
     assert "measurement_unit" not in result_add_again
-
-
-@pytest.mark.usefixtures("_code_list_fake_classifications")
-def test_inherit_globals_can_add_new_after_reset(metadata: Datadoc):
-    state.metadata = metadata
-
-    global_values_first = {
-        "unit_type": "",
-        "measurement_unit": "",
-        "multiplication_factor": 2,
-        "variable_role": "",
-        "data_source": "",
-        "temporality_type": "",
-    }
-    global_values_second = {
-        "unit_type": "03",
-        "measurement_unit": "",
-        "multiplication_factor": 1,
-        "variable_role": "",
-        "data_source": "",
-        "temporality_type": "",
-    }
-    first_result = inherit_global_variable_values(global_values_first, None)
-    reset = remove_global_variables(first_result)
-    second_result = inherit_global_variable_values(global_values_second, reset)
-    first_multiplication_factor = first_result.get("multiplication_factor")
-    second_multiplication_factor = second_result.get("multiplication_factor")
-    unit_type = second_result.get("unit_type")
-    assert first_multiplication_factor is not None
-    assert second_multiplication_factor is not None
-    assert unit_type is not None
-    assert first_multiplication_factor.get("value") != second_multiplication_factor.get(
-        "value"
-    )
-    assert unit_type.get("value") == "03"
