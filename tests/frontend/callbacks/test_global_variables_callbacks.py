@@ -101,7 +101,7 @@ global_scenarios_add = [
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
-def test_inherit_globals_add_correct(metadata: Datadoc):
+def test_inherit_globals_will_overwrite_existing_values(metadata: Datadoc):
     state.metadata = metadata
     for var in metadata.variables:
         var.unit_type = "02"
@@ -127,7 +127,7 @@ def test_inherit_globals_add_correct(metadata: Datadoc):
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
-def test_inherit_globals_increments_correct(metadata: Datadoc):
+def test_inherit_globals_can_handle_previous_values(metadata: Datadoc):
     state.metadata = metadata
     result = None
     for scenario in global_scenarios_add:
@@ -146,7 +146,7 @@ def test_inherit_globals_increments_correct(metadata: Datadoc):
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
-def test_inherit_globals_no_values(metadata: Datadoc):
+def test_inherit_globals_no_previous_and_new_values(metadata: Datadoc):
     state.metadata = metadata
     global_values = {
         "unit_type": "",
@@ -161,7 +161,7 @@ def test_inherit_globals_no_values(metadata: Datadoc):
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
-def test_inherit_globals_overwrites_old_value(metadata: Datadoc):
+def test_inherit_globals_overwrites_old_values(metadata: Datadoc):
     state.metadata = metadata
     variable = state.metadata.variables[0]
     assert variable is not None
@@ -189,6 +189,7 @@ def test_generate_global_variables_report(metadata: Datadoc):
     assert isinstance(generate_report, dbc.Alert)
     assert generate_report.children[0].children == GLOBALE_ALERT_TITLE
     assert len(generate_report.children[2].children) == len(global_values)
+    assert generate_report.children[2].children[0].children == "Enhetstype: 8 variabler oppdateres med: Bolig"
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
