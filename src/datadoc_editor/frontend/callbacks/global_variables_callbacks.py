@@ -95,21 +95,19 @@ def register_global_variables_callbacks(app: Dash) -> None:
         Store result in memory and return info report.
         """
         logger.debug("Stored global variables %s", added_variables_store)
-        if not n_clicks:
-            return dash.no_update
         stored_data = added_variables_store
         if (
             ctx.triggered_id == ADD_GLOBAL_VARIABLES_BUTTON
             and n_clicks
-            and selected_values
         ):
+            if not selected_values and not stored_data:
+                return dash.no_update
+            
             new_variables_store = inherit_global_variable_values(
                 selected_values, stored_data
             )
             logger.debug("Added global variables %s", new_variables_store)
-            alerts = generate_info_alert_report(new_variables_store)
-
-            return new_variables_store, alerts
+            return new_variables_store, generate_info_alert_report(new_variables_store)
         return dash.no_update, dash.no_update
 
     @app.callback(
@@ -122,7 +120,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
         State({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "id"),
         prevent_initial_call=True,
     )
-    def reset_global_variables_ui_on_save(
+    def reset_globals_after_save(
         n_clicks: int,
         component_ids,  # noqa: ANN001
     ) -> tuple:
