@@ -22,7 +22,6 @@ from datadoc_editor.frontend.fields.display_base import (
 )
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import FieldTypes
-from datadoc_editor.frontend.fields.display_base import MetadataDateField
 from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
 from datadoc_editor.frontend.fields.display_base import MetadataInputField
 from datadoc_editor.frontend.fields.display_base import MetadataMultiDropdownField
@@ -97,6 +96,7 @@ DISPLAY_DATASET: dict[
         display_name="Navn",
         description="Oppgi navn på datasettet. Navnet skal være forståelig for mennesker slik at det er søkbart.",
         obligatory=True,
+        editable=True,
         id_type=DATASET_METADATA_MULTILANGUAGE_INPUT,
     ),
     DatasetIdentifiers.DESCRIPTION: MetadataMultiLanguageField(
@@ -104,6 +104,7 @@ DISPLAY_DATASET: dict[
         display_name="Beskrivelse",
         description="Beskrivelse av datasettet",
         obligatory=True,
+        editable=True,
         id_type=DATASET_METADATA_MULTILANGUAGE_INPUT,
     ),
     DatasetIdentifiers.ASSESSMENT: MetadataDropdownField(
@@ -111,6 +112,7 @@ DISPLAY_DATASET: dict[
         display_name="Verdivurdering",
         description="Verdivurderingen utledes fra datatilstanden og kan ha verdiene: sensitiv (kildedata), skjermet (inndata, klargjorte data og statistikk) og åpen (utdata).",
         obligatory=True,
+        editable=True,
         options_getter=functools.partial(
             get_enum_options,
             Assessment,
@@ -121,12 +123,15 @@ DISPLAY_DATASET: dict[
         display_name="Populasjon",
         description='Oppgi populasjonen datasettet dekker. Beskrivelsen skal inkludere enhetstype, geografisk dekningsområde og tidsperiode, f.eks.  "Personer bosatt  i Norge 1990-2020"',
         obligatory=True,
+        editable=True,
         id_type=DATASET_METADATA_MULTILANGUAGE_INPUT,
     ),
     DatasetIdentifiers.USE_RESTRICTIONS: MetadataMultiDropdownField(
         identifier=DatasetIdentifiers.USE_RESTRICTIONS.value,
         display_name="Bruksrestriksjon",
         description="Velg hvilken bruksrestriksjon som gjelder.",
+        obligatory=False,
+        editable=True,
         options_getter=functools.partial(get_enum_options, UseRestrictionType),
         type_display_name="Bruksrestriksjon",
         type_description="Oppgi om det er knyttet noen bruksrestriksjoner til datasettet, f.eks. krav om sletting/anonymisering.",
@@ -139,6 +144,7 @@ DISPLAY_DATASET: dict[
         display_name="Datatilstand",
         description="Datasettets datatilstand der en av de følgende er mulige: kildedata, inndata, klargjorte data, statistikk og utdata.",
         obligatory=True,
+        editable=True,
         options_getter=functools.partial(
             get_enum_options,
             DataSetState,
@@ -148,11 +154,12 @@ DISPLAY_DATASET: dict[
         identifier=DatasetIdentifiers.DATASET_STATUS.value,
         display_name="Status",
         description="Oppgi om metadataene er under arbeid (utkast), kan deles internt (intern), kan deles eksternt(ekstern) eller er avsluttet/erstattet (utgått). Det kan være restriksjoner knyttet til deling både internt og eksternt.",
+        obligatory=True,
+        editable=True,
         options_getter=functools.partial(
             get_enum_options,
             DataSetStatus,
         ),
-        obligatory=True,
     ),
     DatasetIdentifiers.CONTAINS_DATA_FROM: MetadataPeriodField(
         identifier=DatasetIdentifiers.CONTAINS_DATA_FROM.value,
@@ -175,12 +182,15 @@ DISPLAY_DATASET: dict[
         display_name="Statistikkområde",
         description="Oppgi det primære statistikkområdet som datasettet tilhører.",
         obligatory=True,
+        editable=True,
         options_getter=get_statistical_subject_options,
     ),
     DatasetIdentifiers.KEYWORD: MetadataInputField(
         identifier=DatasetIdentifiers.KEYWORD.value,
         display_name="Nøkkelord",
         description="Her kan en oppgi nøkkelord som beskriver datasettet, og som kan brukes i søk. Nøkkelordene må legges inn som en kommaseparert streng. F.eks. befolkning, skatt, arbeidsledighet",
+        obligatory=False,
+        editable=True,
         value_getter=get_comma_separated_string,
     ),
     DatasetIdentifiers.VERSION: MetadataInputField(
@@ -188,6 +198,7 @@ DISPLAY_DATASET: dict[
         display_name="Versjon",
         description="Oppgi hvilken versjon av datasettet dette er (versjonering av datasett er beskrevet i Dapla-manualen).",
         obligatory=True,
+        editable=True,
         type="number",
     ),
     DatasetIdentifiers.VERSION_DESCRIPTION: MetadataMultiLanguageField(
@@ -195,6 +206,7 @@ DISPLAY_DATASET: dict[
         display_name="Versjonsbeskrivelse",
         description="Beskriv kort årsaken til at denne versjonen av datasettet ble laget.",
         obligatory=True,
+        editable=True,
         id_type=DATASET_METADATA_MULTILANGUAGE_INPUT,
     ),
     DatasetIdentifiers.SPATIAL_COVERAGE_DESCRIPTION: MetadataMultiLanguageField(
@@ -202,6 +214,7 @@ DISPLAY_DATASET: dict[
         display_name="Geografisk dekningsområde",
         description="Oppgi datasettets geografiske dekningsområde, f.eks. Norge.",
         obligatory=True,
+        editable=True,
         id_type=DATASET_METADATA_MULTILANGUAGE_INPUT,
     ),
     DatasetIdentifiers.SHORT_NAME: MetadataInputField(
@@ -305,10 +318,6 @@ DROPDOWN_DATASET_METADATA: list[MetadataDropdownField] = [
 
 DROPDOWN_DATASET_METADATA_IDENTIFIERS: list[str] = [
     m.identifier for m in DROPDOWN_DATASET_METADATA
-]
-
-TIMEZONE_AWARE_METADATA_IDENTIFIERS = [
-    m.identifier for m in DISPLAYED_DATASET_METADATA if isinstance(m, MetadataDateField)
 ]
 
 OBLIGATORY_DATASET_METADATA_IDENTIFIERS_AND_DISPLAY_NAME: list[tuple] = [

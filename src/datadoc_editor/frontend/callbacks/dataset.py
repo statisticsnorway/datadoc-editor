@@ -2,20 +2,17 @@
 
 from __future__ import annotations
 
-import datetime
 import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Any
 
-import arrow
 from dapla_metadata.datasets import DaplaDatasetPathInfo
 from dapla_metadata.datasets import Datadoc
 from dash import no_update
 
 from datadoc_editor import config
 from datadoc_editor import state
-from datadoc_editor.frontend.callbacks.utils import VALIDATION_ERROR
 from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 from datadoc_editor.frontend.callbacks.utils import MultidropdownInputTypes
 from datadoc_editor.frontend.callbacks.utils import find_existing_language_string
@@ -42,9 +39,6 @@ from datadoc_editor.frontend.fields.display_dataset import (
 )
 from datadoc_editor.frontend.fields.display_dataset import (
     MULTIPLE_LANGUAGE_DATASET_IDENTIFIERS,
-)
-from datadoc_editor.frontend.fields.display_dataset import (
-    TIMEZONE_AWARE_METADATA_IDENTIFIERS,
 )
 from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
 from datadoc_editor.utils import METADATA_DOCUMENT_FILE_SUFFIX
@@ -204,14 +198,6 @@ def process_special_cases(
             )
     elif metadata_identifier in DROPDOWN_DATASET_METADATA_IDENTIFIERS and value == "":
         updated_value = None
-    elif metadata_identifier in TIMEZONE_AWARE_METADATA_IDENTIFIERS and isinstance(
-        value,
-        (str, datetime.date, datetime.datetime),
-    ):
-        try:
-            updated_value = arrow.get(value).astimezone(tz=datetime.UTC)
-        except arrow.parser.ParserError as e:
-            raise ValueError(VALIDATION_ERROR + str(e)) from e
     else:
         updated_value = value
 

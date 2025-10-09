@@ -6,6 +6,7 @@ import datetime
 import logging
 import urllib.parse
 from typing import TYPE_CHECKING
+from typing import cast
 
 from dapla_metadata.datasets import model
 
@@ -55,6 +56,8 @@ if TYPE_CHECKING:
     from dapla_metadata.datasets import model
     from dapla_metadata.datasets.utility.utils import VariableListType
     from dapla_metadata.datasets.utility.utils import VariableType
+
+    from datadoc_editor.frontend.fields.display_base import MetadataUrnField
 
 
 logger = logging.getLogger(__name__)
@@ -159,6 +162,13 @@ def accept_variable_metadata_input(
         elif value == "":
             # Allow clearing non-multiple-language text fields
             new_value = None
+        elif metadata_field in [VariableIdentifiers.DEFINITION_URI] and isinstance(
+            value, str
+        ):
+            new_value = cast(
+                "MetadataUrnField",
+                DISPLAY_VARIABLES[VariableIdentifiers.DEFINITION_URI],
+            ).urn_getter(value)
         else:
             new_value = value
 

@@ -302,7 +302,7 @@ wheels = [
 [[package]]
 name = "dapla-toolbelt-metadata"
 version = "0.9.7"
-source = { registry = "https://pypi.org/simple" }
+source = { git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git?branch=dpmeta-1093-methods-for-urn-to-url-conversion#ad527ada1ba088827d8fbfda57187df763b3cd6f" }
 dependencies = [
     { name = "arrow" },
     { name = "beautifulsoup4" },
@@ -322,10 +322,6 @@ dependencies = [
     { name = "ssb-klass-python" },
     { name = "typing-extensions" },
     { name = "urllib3" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/40/f0/f9898ad59a8e11a4da373cbcfeca301c329ea6fcb2327304110d9be35f8f/dapla_toolbelt_metadata-0.9.7.tar.gz", hash = "sha256:61b81b4ffb34a9b178173afd8ba446c541a3945abec22cc989f6e2d80046bb78", size = 368460, upload-time = "2025-10-07T10:57:07.913Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/82/83/d777733dd2f7bf74a693ffe0796f2125cc4d35ebfc241e2b2a742ffee602/dapla_toolbelt_metadata-0.9.7-py3-none-any.whl", hash = "sha256:6f6b7b304be1219a34b01e010a05cb153606245cf66428d57f09d397b56f1ee1", size = 180161, upload-time = "2025-10-07T10:57:06.314Z" },
 ]
 
 [[package]]
@@ -2167,7 +2163,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "arrow", specifier = ">=1.3.0" },
-    { name = "dapla-toolbelt-metadata", specifier = "==0.9.7" },
+    { name = "dapla-toolbelt-metadata", git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git?branch=dpmeta-1093-methods-for-urn-to-url-conversion" },
     { name = "dash", specifier = ">=2.15.0" },
     { name = "dash-bootstrap-components", specifier = ">=1.1.0" },
     { name = "flask-healthz", specifier = ">=0.0.3" },
