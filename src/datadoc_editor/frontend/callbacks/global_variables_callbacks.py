@@ -79,14 +79,6 @@ def register_global_variables_callbacks(app: Dash) -> None:
         return dict(zip([i["id"] for i in ids], values, strict=False))
 
     @app.callback(
-        Input(GLOBAL_VARIABLES_VALUES_STORE, "data"),
-        Input(GLOBAL_ADDED_VARIABLES_STORE, "data"),
-    )
-    def listen_to_store(data, added_data):
-        logger.debug("Listen to select %s", data)
-        logger.debug("Listen to added %s", added_data)
-        
-    @app.callback(
         Output(GLOBAL_ADDED_VARIABLES_STORE, "data"),
         Output(GLOBAL_INFO_ALERTS_OUTPUT, "children"),
         Input(ADD_GLOBAL_VARIABLES_BUTTON, "n_clicks"),
@@ -112,7 +104,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
             )
             logger.debug("Added global variables %s", new_variables_store)
             alerts = generate_info_alert_report(new_variables_store)
-            
+
             return new_variables_store, alerts
         return dash.no_update, dash.no_update
 
