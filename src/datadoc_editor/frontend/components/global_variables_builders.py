@@ -8,19 +8,22 @@ import dash_bootstrap_components as dbc
 import ssb_dash_components as ssb
 from dash import html
 
+from datadoc_editor.frontend.components.builders import AlertType
+from datadoc_editor.frontend.components.builders import AlertTypes
 from datadoc_editor.frontend.components.identifiers import ADD_GLOBAL_VARIABLES_BUTTON
 from datadoc_editor.frontend.components.identifiers import GLOBAL_EDIT_SECTION
 from datadoc_editor.frontend.components.identifiers import GLOBAL_EDITABLE
 from datadoc_editor.frontend.components.identifiers import GLOBAL_INFO_ALERTS_OUTPUT
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ACCORDION
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_INPUT
-from datadoc_editor.frontend.components.identifiers import RESET_GLOBAL_VARIABLES_BUTTON
+from datadoc_editor.frontend.constants import GLOBAL_ADD_BUTTON
 from datadoc_editor.frontend.constants import GLOBAL_HEADER_INFORMATION
 from datadoc_editor.frontend.constants import GLOBAL_HEADER_INFORMATION_LIST
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import FieldTypes
 from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
 from datadoc_editor.frontend.fields.display_base import MetadataInputField
+from datadoc_editor.frontend.fields.display_variables import GLOBAL_OPTIONS_GETTERS
 
 
 def build_global_input_field_section(
@@ -47,10 +50,11 @@ def build_global_input_field_section(
                 required=field.obligatory and field.editable,
             )
         elif isinstance(field, MetadataDropdownField):
+            options_getter = GLOBAL_OPTIONS_GETTERS.get(field.identifier)
             input_component = ssb.Dropdown(
                 header=field.display_name,
                 id=component_id,
-                items=field.options_getter(),
+                items=options_getter() if callable(options_getter) else [],
                 placeholder=DROPDOWN_DESELECT_OPTION,
                 className="global-dropdown-component",
                 value=value,
@@ -86,20 +90,12 @@ def build_global_edit_section(
                         [html.Li(item) for item in GLOBAL_HEADER_INFORMATION_LIST],
                         className="global-information-list",
                     ),
-                    html.Div(
-                        [
-                            ssb.Button(
-                                "Legg til",
-                                id=ADD_GLOBAL_VARIABLES_BUTTON,
-                                className="global-button",
-                            ),
-                            ssb.Button(
-                                "Nullstill",
-                                id=RESET_GLOBAL_VARIABLES_BUTTON,
-                                className="global-button",
-                            ),
-                        ],
-                        className="global-header-buttons",
+                    ssb.Button(
+                        GLOBAL_ADD_BUTTON,
+                        id=ADD_GLOBAL_VARIABLES_BUTTON,
+                        negative=True,
+                        className="global-button",
+                        icon=html.I(className="bi-plus-circle"),
                     ),
                 ],
                 className="global-section-header",
@@ -131,4 +127,35 @@ def build_global_ssb_accordion(
             ),
         ],
         className="global-variable-accordion",
+    )
+
+
+def build_ssb_info_alert(
+    title: str,
+    message: str | None = None,
+    alert_list: list | None = None,
+) -> dbc.Alert:
+    """Make a Dash Info Alert according to SSBs Design System."""
+    alert = AlertType.get_type(AlertTypes.INFO)
+    if alert_list is None:
+        alert_list = []
+    return dbc.Alert(
+        is_open=True,
+        dismissable=False,
+        fade=True,
+        color=alert.color,
+        children=[
+            html.H5(
+                title,
+            ),
+            html.P(
+                children=message,
+                className="alert_message",
+            ),
+            html.Ul(
+                [html.Li(i, className="alert_list_item") for i in alert_list],
+                className="alert_list",
+            ),
+        ],
+        class_name="ssb-alert",
     )

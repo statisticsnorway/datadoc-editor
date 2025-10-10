@@ -23,7 +23,6 @@ from datadoc_editor.frontend.callbacks.global_variables import (
 from datadoc_editor.frontend.callbacks.global_variables import (
     inherit_global_variable_values,
 )
-from datadoc_editor.frontend.callbacks.global_variables import remove_global_variables
 from datadoc_editor.frontend.components.global_variables_builders import (
     build_global_edit_section,
 )
@@ -36,7 +35,6 @@ from datadoc_editor.frontend.components.identifiers import GLOBAL_INFO_ALERTS_OU
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_INPUT
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_VALUES_STORE
-from datadoc_editor.frontend.components.identifiers import RESET_GLOBAL_VARIABLES_BUTTON
 from datadoc_editor.frontend.constants import GLOBAL_HEADER
 from datadoc_editor.frontend.fields.display_variables import GLOBAL_VARIABLES
 
@@ -75,6 +73,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
     )
     def select_global_values(values, ids) -> dash.NoUpdate | dict:  # noqa: ANN001
         """Store selected fields and values in memory."""
+        logger.debug("Selected global variables %s", values)
         return dict(zip([i["id"] for i in ids], values, strict=False))
 
     @app.callback(
@@ -95,44 +94,18 @@ def register_global_variables_callbacks(app: Dash) -> None:
         Update metadata state with selected values.
         Store result in memory and return info report.
         """
+        logger.debug("Stored global variables %s", added_variables_store)
+        stored_data = added_variables_store
         if ctx.triggered_id == ADD_GLOBAL_VARIABLES_BUTTON and n_clicks:
-            affected_variables = inherit_global_variable_values(
-                selected_values, added_variables_store
+            if not selected_values and not stored_data:
+                return dash.no_update
+
+            new_variables_store = inherit_global_variable_values(
+                selected_values, stored_data
             )
-            added_variables_store = {
-                **(added_variables_store or {}),
-                **affected_variables,
-            }
-            logger.debug("Store %s", added_variables_store)
-            return added_variables_store, generate_info_alert_report(
-                added_variables_store
-            )
+            logger.debug("Added global variables %s", new_variables_store)
+            return new_variables_store, generate_info_alert_report(new_variables_store)
         return dash.no_update, dash.no_update
-
-    @app.callback(
-        Output(GLOBAL_INFO_ALERTS_OUTPUT, "children", allow_duplicate=True),
-        Output({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "value"),
-        Output(GLOBAL_ADDED_VARIABLES_STORE, "data", allow_duplicate=True),
-        Input(RESET_GLOBAL_VARIABLES_BUTTON, "n_clicks"),
-        State(GLOBAL_ADDED_VARIABLES_STORE, "data"),
-        State({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "id"),
-        prevent_initial_call=True,
-    )
-    def reset_global_variables(  # noqa: ANN202
-        n_clicks: int,
-        added_variables_data: dict,
-        component_ids,  # noqa: ANN001
-    ):
-        """Reset metadata state and update input fields.
-
-        Remove added values from metadata state, and reset input fields.
-        """
-        if not n_clicks:
-            return dash.no_update
-        if ctx.triggered_id == "reset-global-variables-button" and n_clicks:
-            new_store = remove_global_variables(added_variables_data)
-            return None, [""] * len(component_ids), new_store
-        return dash.no_update, dash.no_update, dash.no_update
 
     @app.callback(
         Output(
@@ -144,7 +117,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
         State({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "id"),
         prevent_initial_call=True,
     )
-    def reset_global_variables_ui_on_save(
+    def reset_globals_after_save(
         n_clicks: int,
         component_ids,  # noqa: ANN001
     ) -> tuple:

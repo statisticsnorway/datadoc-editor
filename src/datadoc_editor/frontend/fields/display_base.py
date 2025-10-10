@@ -84,7 +84,9 @@ def get_enum_options(
         }
         for i in enum  # type: ignore [attr-defined]
     ]
-    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": ""})
+    dropdown_options.insert(
+        0, {"title": DROPDOWN_DESELECT_OPTION, "id": DELETE_SELECTED}
+    )
     return dropdown_options
 
 
@@ -100,7 +102,7 @@ def get_enum_options_with_delete_option(
         }
         for i in enum  # type: ignore [attr-defined]
     ]
-    dropdown_options.append({"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
+    dropdown_options.insert(0, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
     return dropdown_options
 
 
@@ -114,6 +116,19 @@ def get_data_source_options() -> list[dict[str, str]]:
         for data_sources in state.data_sources.classifications
     ]
     dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": ""})
+    return dropdown_options
+
+
+def get_data_source_options_with_delete() -> list[dict[str, str]]:
+    """Collect the unit type options."""
+    dropdown_options = [
+        {
+            "title": data_sources.get_title(enums.SupportedLanguages.NORSK_BOKMÅL),
+            "id": data_sources.code,
+        }
+        for data_sources in state.data_sources.classifications
+    ]
+    dropdown_options.insert(0, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
     return dropdown_options
 
 

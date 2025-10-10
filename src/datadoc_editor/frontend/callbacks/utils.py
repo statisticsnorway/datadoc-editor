@@ -378,7 +378,10 @@ def render_multidropdown_row(
                         description=field.date_description,
                     ),
                     html.Button(
-                        "", id=button_id, className="multidropdown-delete-button"
+                        "",
+                        id=button_id,
+                        **{"aria-label": "Delete row"},  # type: ignore[arg-type]
+                        className="multidropdown-delete-button",
                     ),
                 ],
                 className="date-button-row",
