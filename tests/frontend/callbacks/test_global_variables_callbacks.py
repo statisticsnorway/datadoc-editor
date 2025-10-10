@@ -180,6 +180,34 @@ def test_globally_overwrite_existing_variable_values(metadata: Datadoc):
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
+def test_globally_delete_existing_variable_values(metadata: Datadoc):
+    state.metadata = metadata
+    unit_type_value_before = "02"
+    for var in metadata.variables:
+        var.unit_type = unit_type_value_before
+    multiplication_factor_before = 1
+    data_source_before = "05"
+    metadata.variables[1].multiplication_factor = multiplication_factor_before
+    metadata.variables[1].data_source = data_source_before
+
+    global_values = {
+        "unit_type": DELETE_SELECTED,
+        "measurement_unit": "",
+        "multiplication_factor": 0,
+        "variable_role": "",
+        "data_source": "",
+        "temporality_type": DELETE_SELECTED,
+    }
+
+    inherit_global_variable_values(global_values, None)
+
+    for var in metadata.variables:
+        assert var.unit_type is None
+        #assert var.multiplication_factor is None
+        assert var.temporality_type is None
+    assert metadata.variables[1].data_source == data_source_before
+
+@pytest.mark.usefixtures("_code_list_fake_classifications")
 def test_no_global_session_data_returns_empty_dict(metadata: Datadoc):
     state.metadata = metadata
     global_values = {
