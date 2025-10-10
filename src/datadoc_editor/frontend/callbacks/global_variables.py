@@ -10,7 +10,8 @@ from datadoc_editor.constants import DELETE_SELECTED
 from datadoc_editor.frontend.components.global_variables_builders import (
     build_ssb_info_alert,
 )
-from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_DELETE_TEXT, GLOBAL_INFO_ALERT_UPDATE_TEXT
+from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_DELETE_TEXT
+from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_UPDATE_TEXT
 from datadoc_editor.frontend.constants import GLOBALE_ALERT_TITLE
 from datadoc_editor.frontend.fields.display_base import FieldTypes
 from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
@@ -67,8 +68,9 @@ def generate_info_alert_report(affected_variables: dict) -> dbc.Alert:
     """
     info_alert_list: list = []
     info_alert_list.extend(
-        f"{fd['display_name']}: {GLOBAL_INFO_ALERT_DELETE_TEXT}" if fd.get("delete") == True else
-        f"{fd['display_name']}: {fd.get('num_vars', 0)} {GLOBAL_INFO_ALERT_UPDATE_TEXT}: {fd.get('display_value')}"
+        f"{fd['display_name']}: {GLOBAL_INFO_ALERT_DELETE_TEXT}"
+        if fd.get("delete")
+        else f"{fd['display_name']}: {fd.get('num_vars', 0)} {GLOBAL_INFO_ALERT_UPDATE_TEXT}: {fd.get('display_value')}"
         for fd in affected_variables.values()
     )
     return build_ssb_info_alert(
@@ -112,9 +114,6 @@ def inherit_global_variable_values(
 
         if not previous_entry and not raw_value:
             continue
-        
-        #if field_name == "multiplication_factor" and raw_value == "":
-        #    raw_value = 0
 
         if raw_value in (DELETE_SELECTED, "0"):
             logger.debug("Delete or 0 %s %s", field_name, raw_value)
@@ -168,4 +167,4 @@ def inherit_global_variable_values(
                 meta["num_vars"] += 1
                 meta["vars_updated"].append(var.short_name)
 
-    return {k: v for k, v in affected_variables.items()}
+    return affected_variables
