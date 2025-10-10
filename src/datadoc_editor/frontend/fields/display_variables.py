@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import functools
 from enum import Enum
-from typing import Callable
+from typing import TYPE_CHECKING
 
 from dapla_metadata.datasets import enums
 
@@ -33,6 +33,9 @@ from datadoc_editor.frontend.fields.display_base import get_enum_options
 from datadoc_editor.frontend.fields.display_base import (
     get_enum_options_with_delete_option,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 def get_measurement_unit_options() -> list[dict[str, str]]:
@@ -314,7 +317,9 @@ GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME: list[tuple] = [
     (m.identifier, m.display_name) for m in DISPLAY_GLOBALS.values()
 ]
 
-GLOBAL_OPTIONS_GETTERS: dict[str, functools.partial[list[dict[str, str]]] | Callable[[], list[dict[str, str]]]] = {
+GLOBAL_OPTIONS_GETTERS: dict[
+    str, functools.partial[list[dict[str, str]]] | Callable[[], list[dict[str, str]]]
+] = {
     DISPLAY_GLOBALS[
         VariableIdentifiers.DATA_SOURCE
     ].identifier: get_data_source_options_with_delete,
