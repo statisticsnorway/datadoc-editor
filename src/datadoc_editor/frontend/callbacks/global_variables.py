@@ -6,7 +6,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from datadoc_editor import state
-from datadoc_editor.constants import DELETE_SELECTED
+from datadoc_editor.constants import DELETE_SELECTED, GLOBAL_INFO_ALERT_DELETE_TEXT, GLOBAL_INFO_ALERT_UPDATE_TEXT
 from datadoc_editor.frontend.components.global_variables_builders import (
     build_ssb_info_alert,
 )
@@ -67,8 +67,9 @@ def generate_info_alert_report(affected_variables: dict) -> dbc.Alert:
     """
     info_alert_list: list = []
     info_alert_list.extend(
-        f"{field_data['display_name']}: {field_data['num_vars']} variabler oppdateres med: {field_data.get('display_value')}"
-        for field_data in affected_variables.values()
+        f"{fd['display_name']}: {GLOBAL_INFO_ALERT_DELETE_TEXT}" if fd.get("delete") == True else
+        f"{fd['display_name']}: {fd.get('num_vars', 0)} {GLOBAL_INFO_ALERT_UPDATE_TEXT}: {fd.get('display_value')}"
+        for fd in affected_variables.values()
     )
     return build_ssb_info_alert(
         title=GLOBALE_ALERT_TITLE,
@@ -117,6 +118,10 @@ def inherit_global_variable_values(
             raw_value = 0
 
         if raw_value in (DELETE_SELECTED, 0):
+            affected_variables[field_name] = {
+                "display_name": display_name,
+                "delete": True,
+            }
             remove_deselected.add(field_name)
             continue
 
@@ -128,6 +133,7 @@ def inherit_global_variable_values(
                 "display_name": display_name,
                 "vars_updated": [],
                 "num_vars": 0,
+                "delete": False,
             }
         )
 
@@ -140,6 +146,7 @@ def inherit_global_variable_values(
                     "display_value": display_value,
                     "vars_updated": [],
                     "num_vars": 0,
+                    "delete": False,
                 }
             )
     # Update all variables in state
@@ -153,11 +160,12 @@ def inherit_global_variable_values(
 
         # Apply updates
         for field_name, meta in affected_variables.items():
-            if field_name in preserved_field:
-                continue
-            raw_value = meta["value"]
-            setattr(var, field_name, raw_value)
-            meta["num_vars"] += 1
-            meta["vars_updated"].append(var.short_name)
+            if not meta["delete"]:
+                if field_name in preserved_field:
+                    continue
+                raw_value = meta["value"]
+                setattr(var, field_name, raw_value)
+                meta["num_vars"] += 1
+                meta["vars_updated"].append(var.short_name)
 
-    return {k: v for k, v in affected_variables.items() if v.get("value") is not None}
+    return {k: v for k, v in affected_variables.items()}
