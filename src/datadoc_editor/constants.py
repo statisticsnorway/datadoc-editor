@@ -22,4 +22,3 @@ ENCRYPTION_PARAMETER_STRATEGY_SKIP = "skip"
 
 DELETE_SELECTED = "delete_selected"
 DROPDOWN_DELETE_OPTION = "Ingen (slett)"
-

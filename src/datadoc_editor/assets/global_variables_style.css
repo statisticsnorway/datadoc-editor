@@ -60,7 +60,7 @@
     width: 100%;
 }
 
-@media  (max-width: 960px) {
+@media (max-width: 960px) {
     .global-edit-section-form > .ssb-dropdown.global-dropdown-component, .ssb-input.global-input-component{
             max-width: unset;
     }

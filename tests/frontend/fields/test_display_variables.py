@@ -1,16 +1,20 @@
 import pytest
 
 from datadoc_editor import state
-from datadoc_editor.constants import DELETE_SELECTED, DROPDOWN_DELETE_OPTION
+from datadoc_editor.constants import DELETE_SELECTED
+from datadoc_editor.constants import DROPDOWN_DELETE_OPTION
 from datadoc_editor.frontend.constants import NUM_GLOBAL_EDITABLE_VARIABLES
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
-from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES, get_unit_type_options_with_delete
+from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
 from datadoc_editor.frontend.fields.display_variables import (
     GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME,
 )
 from datadoc_editor.frontend.fields.display_variables import GLOBAL_VARIABLES
 from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 from datadoc_editor.frontend.fields.display_variables import get_unit_type_options
+from datadoc_editor.frontend.fields.display_variables import (
+    get_unit_type_options_with_delete,
+)
 from tests.conftest import CODE_LIST_DIR
 from tests.utils import TEST_RESOURCES_DIRECTORY
 
@@ -36,6 +40,7 @@ def test_get_unit_type_options(
     state.unit_types = code_list_fake_structure
     state.unit_types.wait_for_external_result()
     assert get_unit_type_options() == expected
+
 
 @pytest.mark.parametrize(
     ("code_list_csv_filepath_nb", "expected"),

@@ -19,7 +19,9 @@ from datadoc_editor.frontend.callbacks.global_variables import (
 from datadoc_editor.frontend.callbacks.global_variables import (
     inherit_global_variable_values,
 )
-from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_DELETE_TEXT, GLOBAL_INFO_ALERT_UPDATE_TEXT, GLOBALE_ALERT_TITLE
+from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_DELETE_TEXT
+from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_UPDATE_TEXT
+from datadoc_editor.frontend.constants import GLOBALE_ALERT_TITLE
 from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
 from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
@@ -207,6 +209,7 @@ def test_globally_delete_existing_variable_values(metadata: Datadoc):
         assert var.temporality_type is None
     assert metadata.variables[1].data_source == data_source_before
 
+
 @pytest.mark.usefixtures("_code_list_fake_classifications")
 def test_no_global_session_data_returns_empty_dict(metadata: Datadoc):
     state.metadata = metadata
@@ -252,7 +255,6 @@ def test_reset_global_session_data(metadata: Datadoc):
         assert field["delete"] is True
 
 
-
 @pytest.mark.usefixtures("_code_list_fake_classifications")
 def test_generate_global_variables_report(metadata: Datadoc):
     state.metadata = metadata
@@ -288,12 +290,13 @@ def test_generate_global_variables_report_no_global_values(metadata: Datadoc):
     assert generate_report.children[0].children == GLOBALE_ALERT_TITLE
     assert len(generate_report.children[2].children) == 0
 
+
 @pytest.mark.usefixtures("_code_list_fake_classifications")
 def test_generate_global_variables_report_delete_all(metadata: Datadoc):
     state.metadata = metadata
     for var in metadata.variables:
         var.multiplication_factor = 6
-        
+
     global_values = {
         "multiplication_factor": "0",
     }
@@ -304,4 +307,3 @@ def test_generate_global_variables_report_delete_all(metadata: Datadoc):
     for report_item in generated_report.children[2].children[0]:
         assert global_values.get("multiplication_factor") in report_item
         assert GLOBAL_INFO_ALERT_DELETE_TEXT in report_item
-
