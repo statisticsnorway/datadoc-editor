@@ -24,3 +24,6 @@ DELETE_SELECTED = "delete_selected"
 DROPDOWN_DELETE_OPTION = "Ingen (slett)"
 
 NUM_GLOBAL_EDITABLE_VARIABLES = 6
+
+GLOBAL_INFO_ALERT_UPDATE_TEXT = "variabler oppdateres med"
+GLOBAL_INFO_ALERT_DELETE_TEXT = "Sletter alle"
