@@ -23,7 +23,7 @@ from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import FieldTypes
 from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
 from datadoc_editor.frontend.fields.display_base import MetadataInputField
-
+from datadoc_editor.frontend.fields.display_variables import GLOBAL_OPTIONS_GETTERS
 
 def build_global_input_field_section(
     metadata_fields: list[FieldTypes],
@@ -49,10 +49,11 @@ def build_global_input_field_section(
                 required=field.obligatory and field.editable,
             )
         elif isinstance(field, MetadataDropdownField):
+            options_getter = GLOBAL_OPTIONS_GETTERS.get(field.identifier)
             input_component = ssb.Dropdown(
                 header=field.display_name,
                 id=component_id,
-                items=field.options_getter(),
+                items= options_getter() if callable(options_getter) else [],
                 placeholder=DROPDOWN_DESELECT_OPTION,
                 className="global-dropdown-component",
                 value=value,
