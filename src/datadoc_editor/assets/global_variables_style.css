@@ -60,8 +60,18 @@
     width: 100%;
 }
 
+.global-edit-section-form > .ssb-input.global-input-component .ssb-glossary .glossary-popup{
+    left: unset;
+    margin-left: unset;
+}
+
+.global-edit-section-form > .ssb-dropdown.global-dropdown-component .ssb-glossary .glossary-popup{
+    left: unset;
+    margin-left: unset;
+}
+
 @media (max-width: 960px) {
     .global-edit-section-form > .ssb-dropdown.global-dropdown-component, .ssb-input.global-input-component{
-            max-width: unset;
+        max-width: unset;
     }
 }
