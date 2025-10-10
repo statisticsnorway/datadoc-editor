@@ -110,9 +110,9 @@ def inherit_global_variable_values(
         previous_entry = previous_data.get(field_name)
         previous_value = previous_entry.get("value") if previous_entry else None
 
-        if not previous_entry and (not raw_value or raw_value == DELETE_SELECTED):
+        if not previous_entry and not raw_value:
             continue
-
+        
         if field_name == "multiplication_factor" and raw_value == "":
             raw_value = 0
 
