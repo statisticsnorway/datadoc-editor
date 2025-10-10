@@ -8,11 +8,11 @@ from enum import Enum
 from dapla_metadata.datasets import enums
 
 from datadoc_editor import state
-from datadoc_editor.constants import DELETE_SELECTED
+from datadoc_editor.constants import DELETE_SELECTED, DROPDOWN_DELETE_OPTION
 from datadoc_editor.enums import DataType
 from datadoc_editor.enums import TemporalityTypeType
 from datadoc_editor.enums import VariableRole
-from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
+from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION, get_data_source_options_with_delete, get_enum_options_with_delete_option
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
 from datadoc_editor.frontend.fields.display_base import (
     VARIABLES_METADATA_MULTILANGUAGE_INPUT,
@@ -37,10 +37,24 @@ def get_measurement_unit_options() -> list[dict[str, str]]:
         for measurement_unit in state.measurement_units.classifications
     ]
     dropdown_options.insert(
-        0, {"title": DROPDOWN_DESELECT_OPTION, "id": DELETE_SELECTED}
+        0, {"title": DROPDOWN_DESELECT_OPTION, "id": ""}
     )
     return dropdown_options
 
+
+def get_measurement_unit_options_with_delete() -> list[dict[str, str]]:
+    """Collect the unit type options."""
+    dropdown_options = [
+        {
+            "title": measurement_unit.get_title(enums.SupportedLanguages.NORSK_BOKMÅL),
+            "id": measurement_unit.code,
+        }
+        for measurement_unit in state.measurement_units.classifications
+    ]
+    dropdown_options.insert(
+        0, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED}
+    )
+    return dropdown_options
 
 def get_unit_type_options() -> list[dict[str, str]]:
     """Collect the unit type options."""
@@ -52,10 +66,23 @@ def get_unit_type_options() -> list[dict[str, str]]:
         for unit_type in state.unit_types.classifications
     ]
     dropdown_options.insert(
-        0, {"title": DROPDOWN_DESELECT_OPTION, "id": DELETE_SELECTED}
+        0, {"title": DROPDOWN_DESELECT_OPTION, "id": ""}
     )
     return dropdown_options
 
+def get_unit_type_options_with_delete() -> list[dict[str, str]]:
+    """Collect the unit type options."""
+    dropdown_options = [
+        {
+            "title": unit_type.get_title(enums.SupportedLanguages.NORSK_BOKMÅL),
+            "id": unit_type.code,
+        }
+        for unit_type in state.unit_types.classifications
+    ]
+    dropdown_options.insert(
+        0, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED}
+    )
+    return dropdown_options
 
 class VariableIdentifiers(str, Enum):
     """As defined here: https://statistics-norway.atlassian.net/wiki/spaces/MPD/pages/3042869256/Variabelforekomst."""
@@ -283,3 +310,12 @@ GLOBAL_VARIABLES = list(DISPLAY_GLOBALS.values())
 GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME: list[tuple] = [
     (m.identifier, m.display_name) for m in DISPLAY_GLOBALS.values()
 ]
+
+GLOBAL_OPTIONS_GETTERS: dict[VariableIdentifiers,list
+] = {
+    DISPLAY_GLOBALS[VariableIdentifiers.DATA_SOURCE].identifier: get_data_source_options_with_delete,
+    DISPLAY_GLOBALS[VariableIdentifiers.MEASUREMENT_UNIT].identifier: get_measurement_unit_options_with_delete,
+    DISPLAY_GLOBALS[VariableIdentifiers.UNIT_TYPE].identifier: get_unit_type_options_with_delete,
+    DISPLAY_GLOBALS[VariableIdentifiers.TEMPORALITY_TYPE].identifier: functools.partial(get_enum_options_with_delete_option,TemporalityTypeType),
+    DISPLAY_GLOBALS[VariableIdentifiers.VARIABLE_ROLE].identifier: functools.partial(get_enum_options_with_delete_option,VariableRole),
+}
