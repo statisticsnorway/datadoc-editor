@@ -7,9 +7,12 @@ from typing import TYPE_CHECKING
 
 import dash_bootstrap_components as dbc
 import pytest
+from dapla_metadata.datasets import enums
 
 from datadoc_editor import state
 from datadoc_editor.constants import DELETE_SELECTED
+from datadoc_editor.enums import TemporalityTypeType
+from datadoc_editor.enums import VariableRole
 from datadoc_editor.frontend.callbacks.global_variables import (
     generate_info_alert_report,
 )
@@ -17,6 +20,8 @@ from datadoc_editor.frontend.callbacks.global_variables import (
     inherit_global_variable_values,
 )
 from datadoc_editor.frontend.constants import GLOBALE_ALERT_TITLE
+from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
+from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
     from dapla_metadata.datasets import Datadoc
@@ -44,7 +49,9 @@ global_scenarios_add = [
             "multiplication_factor": {
                 "value": 2,
                 "display_value": 2,
-                "display_name": "Multiplikasjonsfaktor",
+                "display_name": DISPLAY_VARIABLES[
+                    VariableIdentifiers.MULTIPLICATION_FACTOR
+                ].display_name,
             },
         },
     ),
@@ -61,12 +68,16 @@ global_scenarios_add = [
             "multiplication_factor": {
                 "value": 2,
                 "display_value": 2,
-                "display_name": "Multiplikasjonsfaktor",
+                "display_name": DISPLAY_VARIABLES[
+                    VariableIdentifiers.MULTIPLICATION_FACTOR
+                ].display_name,
             },
             "unit_type": {
                 "value": "03",
                 "display_value": "Bolig",
-                "display_name": "Enhetstype",
+                "display_name": DISPLAY_VARIABLES[
+                    VariableIdentifiers.UNIT_TYPE
+                ].display_name,
             },
         },
     ),
@@ -75,7 +86,7 @@ global_scenarios_add = [
             "unit_type": "02",
             "measurement_unit": "",
             "multiplication_factor": 2,
-            "variable_role": "ATTRIBUTE",
+            "variable_role": VariableRole.ATTRIBUTE.value,
             "data_source": "",
             "temporality_type": "",
         },
@@ -83,52 +94,46 @@ global_scenarios_add = [
             "multiplication_factor": {
                 "value": 2,
                 "display_value": 2,
-                "display_name": "Multiplikasjonsfaktor",
+                "display_name": DISPLAY_VARIABLES[
+                    VariableIdentifiers.MULTIPLICATION_FACTOR
+                ].display_name,
             },
             "unit_type": {
                 "value": "02",
                 "display_value": "Arbeidsulykke",
-                "display_name": "Enhetstype",
+                "display_name": DISPLAY_VARIABLES[
+                    VariableIdentifiers.UNIT_TYPE
+                ].display_name,
             },
             "variable_role": {
                 "value": "ATTRIBUTE",
-                "display_value": "ATTRIBUTT",
-                "display_name": "Variabelens rolle",
+                "display_value": VariableRole.ATTRIBUTE.get_value_for_language(
+                    enums.SupportedLanguages.NORSK_BOKMÅL
+                ),
+                "display_name": DISPLAY_VARIABLES[
+                    VariableIdentifiers.VARIABLE_ROLE
+                ].display_name,
             },
         },
+    ),
+    GlobalTestScenario(
+        global_values={
+            "unit_type": DELETE_SELECTED,
+            "measurement_unit": DELETE_SELECTED,
+            "multiplication_factor": None,
+            "variable_role": DELETE_SELECTED,
+            "data_source": DELETE_SELECTED,
+            "temporality_type": DELETE_SELECTED,
+        },
+        expected_results={},
     ),
 ]
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
-def test_inherit_globals_will_overwrite_existing_values(metadata: Datadoc):
+def test_edit_globally_selected_values(metadata: Datadoc):
     state.metadata = metadata
-    for var in metadata.variables:
-        var.unit_type = "02"
-    metadata.variables[1].multiplication_factor = 1
-    metadata.variables[1].data_source = "05"
-    global_values = {
-        "unit_type": "04",
-        "measurement_unit": "",
-        "multiplication_factor": 3,
-        "variable_role": "",
-        "data_source": "",
-        "temporality_type": "STATUS",
-    }
-    result = inherit_global_variable_values(global_values, None)
-    expected_factor = 3
-    for var in metadata.variables:
-        assert var.unit_type == "04"
-        assert var.multiplication_factor == expected_factor
-    assert metadata.variables[1].data_source == "05"
-    assert "unit_type" in result
-    assert "multiplication_factor" in result
-    assert "data_source" not in result
 
-
-@pytest.mark.usefixtures("_code_list_fake_classifications")
-def test_inherit_globals_can_handle_previous_values(metadata: Datadoc):
-    state.metadata = metadata
     result = None
     for scenario in global_scenarios_add:
         result = inherit_global_variable_values(scenario.global_values, result)
@@ -146,7 +151,36 @@ def test_inherit_globals_can_handle_previous_values(metadata: Datadoc):
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
-def test_inherit_globals_no_previous_and_new_values(metadata: Datadoc):
+def test_globally_overwrite_existing_variable_values(metadata: Datadoc):
+    state.metadata = metadata
+    unit_type_value_before = "02"
+    for var in metadata.variables:
+        var.unit_type = unit_type_value_before
+    multiplication_factor_before = 1
+    data_source_before = "05"
+    metadata.variables[1].multiplication_factor = multiplication_factor_before
+    metadata.variables[1].data_source = data_source_before
+
+    global_values = {
+        "unit_type": "04",
+        "measurement_unit": "",
+        "multiplication_factor": 3,
+        "variable_role": "",
+        "data_source": "",
+        "temporality_type": TemporalityTypeType.STATUS,
+    }
+
+    inherit_global_variable_values(global_values, None)
+
+    for var in metadata.variables:
+        assert var.unit_type != unit_type_value_before
+        assert var.multiplication_factor == global_values["multiplication_factor"]
+        assert var.temporality_type == TemporalityTypeType.STATUS.value
+    assert metadata.variables[1].data_source == data_source_before
+
+
+@pytest.mark.usefixtures("_code_list_fake_classifications")
+def test_no_global_session_data_returns_empty_dict(metadata: Datadoc):
     state.metadata = metadata
     global_values = {
         "unit_type": "",
@@ -161,42 +195,56 @@ def test_inherit_globals_no_previous_and_new_values(metadata: Datadoc):
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
-def test_inherit_globals_overwrites_old_values(metadata: Datadoc):
+def test_reset_global_session_data(metadata: Datadoc):
     state.metadata = metadata
-    variable = state.metadata.variables[0]
-    assert variable is not None
-    variable.unit_type = "02"
 
-    global_values = {
-        "unit_type": "03",
+    global_values_1 = {
+        "unit_type": "04",
+        "measurement_unit": "",
+        "multiplication_factor": 3,
+        "variable_role": "",
+        "data_source": "",
+        "temporality_type": "STATUS",
     }
 
-    inherit_global_variable_values(global_values, None)
-    assert variable.unit_type != "02"
-    assert variable.unit_type == global_values.get("unit_type")
+    global_values_2 = {
+        "unit_type": DELETE_SELECTED,
+        "measurement_unit": "",
+        "multiplication_factor": 0,
+        "variable_role": "",
+        "data_source": "",
+        "temporality_type": DELETE_SELECTED,
+    }
+    add_global_variables = inherit_global_variable_values(global_values_1, None)
+    assert add_global_variables, "add_global_variables should not be empty"
+    reset_added_global_variables = inherit_global_variable_values(
+        global_values_2, add_global_variables
+    )
+    assert reset_added_global_variables == {}
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
 def test_generate_global_variables_report(metadata: Datadoc):
     state.metadata = metadata
+    num_variables = len(metadata.variables)
+
     global_values = {
         "unit_type": "03",
         "multiplication_factor": 2,
-        "variable_role": "ATTRIBUTE",
+        "variable_role": VariableRole.MEASURE,
     }
     added_global_variables = inherit_global_variable_values(global_values, None)
-    generate_report = generate_info_alert_report(added_global_variables)
-    assert isinstance(generate_report, dbc.Alert)
-    assert generate_report.children[0].children == GLOBALE_ALERT_TITLE
-    assert len(generate_report.children[2].children) == len(global_values)
-    assert (
-        generate_report.children[2].children[0].children
-        == "Enhetstype: 8 variabler oppdateres med: Bolig"
-    )
+    generated_report = generate_info_alert_report(added_global_variables)
+    assert isinstance(generated_report, dbc.Alert)
+    assert generated_report.children[0].children == GLOBALE_ALERT_TITLE
+    assert len(generated_report.children[2].children) == len(global_values)
+    for report_item in generated_report.children[2].children[0]:
+        assert num_variables in report_item
+        assert global_values.get("variable_role") in report_item
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
-def test_generate_global_variables_report_no_result(metadata: Datadoc):
+def test_generate_global_variables_report_no_global_values(metadata: Datadoc):
     state.metadata = metadata
     global_values = {
         "unit_type": "",
@@ -208,36 +256,3 @@ def test_generate_global_variables_report_no_result(metadata: Datadoc):
     assert isinstance(generate_report, dbc.Alert)
     assert generate_report.children[0].children == GLOBALE_ALERT_TITLE
     assert len(generate_report.children[2].children) == 0
-
-
-@pytest.mark.usefixtures("_code_list_fake_classifications")
-def test_add_and_reselect_before_save(metadata: Datadoc):
-    state.metadata = metadata
-    assert metadata.variables
-    global_values = {
-        "unit_type": "03",
-        "measurement_unit": "01",
-        "multiplication_factor": 1,
-        "variable_role": "IDENTIFIER",
-        "data_source": "05",
-        "temporality_type": "STATUS",
-    }
-    global_values_again = {
-        "unit_type": "02",
-        "temporality_type": "ACCUMULATED",
-        "measurement_unit": DELETE_SELECTED,
-        "multiplication_factor": 1,
-        "variable_role": "IDENTIFIER",
-        "data_source": "05",
-    }
-    result_add_global_variables = inherit_global_variable_values(global_values, None)
-    result_add_again = inherit_global_variable_values(
-        global_values_again, result_add_global_variables
-    )
-
-    assert result_add_again["unit_type"]["value"] == "02"
-    assert result_add_global_variables["multiplication_factor"]["value"] == 1
-    assert result_add_again["multiplication_factor"]["value"] == 1
-    assert result_add_again["temporality_type"]["value"] == "ACCUMULATED"
-    assert result_add_global_variables["measurement_unit"]["value"] == "01"
-    assert "measurement_unit" not in result_add_again

@@ -105,6 +105,8 @@ def inherit_global_variable_values(
 
     for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
         raw_value = global_values.get(field_name)
+        if raw_value == "":
+            raw_value = None
         previous_entry = previous_data.get(field_name)
         previous_value = previous_entry.get("value") if previous_entry else None
 
