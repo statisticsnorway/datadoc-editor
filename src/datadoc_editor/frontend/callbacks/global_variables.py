@@ -6,11 +6,11 @@ import logging
 from typing import TYPE_CHECKING
 
 from datadoc_editor import state
-from datadoc_editor.constants import DELETE_SELECTED, GLOBAL_INFO_ALERT_DELETE_TEXT, GLOBAL_INFO_ALERT_UPDATE_TEXT
+from datadoc_editor.constants import DELETE_SELECTED
 from datadoc_editor.frontend.components.global_variables_builders import (
     build_ssb_info_alert,
 )
-from datadoc_editor.frontend.constants import GLOBALE_ALERT_MESSAGE
+from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_DELETE_TEXT, GLOBAL_INFO_ALERT_UPDATE_TEXT
 from datadoc_editor.frontend.constants import GLOBALE_ALERT_TITLE
 from datadoc_editor.frontend.fields.display_base import FieldTypes
 from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
@@ -73,7 +73,6 @@ def generate_info_alert_report(affected_variables: dict) -> dbc.Alert:
     )
     return build_ssb_info_alert(
         title=GLOBALE_ALERT_TITLE,
-        message=GLOBALE_ALERT_MESSAGE,
         alert_list=info_alert_list,
     )
 
@@ -114,10 +113,11 @@ def inherit_global_variable_values(
         if not previous_entry and not raw_value:
             continue
         
-        if field_name == "multiplication_factor" and raw_value == "":
-            raw_value = 0
+        #if field_name == "multiplication_factor" and raw_value == "":
+        #    raw_value = 0
 
-        if raw_value in (DELETE_SELECTED, 0):
+        if raw_value in (DELETE_SELECTED, "0"):
+            logger.debug("Delete or 0 %s %s", field_name, raw_value)
             affected_variables[field_name] = {
                 "display_name": display_name,
                 "delete": True,

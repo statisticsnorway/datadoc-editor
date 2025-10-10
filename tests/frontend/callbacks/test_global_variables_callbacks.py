@@ -19,7 +19,7 @@ from datadoc_editor.frontend.callbacks.global_variables import (
 from datadoc_editor.frontend.callbacks.global_variables import (
     inherit_global_variable_values,
 )
-from datadoc_editor.frontend.constants import GLOBALE_ALERT_TITLE
+from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_DELETE_TEXT, GLOBAL_INFO_ALERT_UPDATE_TEXT, GLOBALE_ALERT_TITLE
 from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
 from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
@@ -193,7 +193,7 @@ def test_globally_delete_existing_variable_values(metadata: Datadoc):
     global_values = {
         "unit_type": DELETE_SELECTED,
         "measurement_unit": "",
-        "multiplication_factor": 0,
+        "multiplication_factor": "0",
         "variable_role": "",
         "data_source": "",
         "temporality_type": DELETE_SELECTED,
@@ -203,7 +203,7 @@ def test_globally_delete_existing_variable_values(metadata: Datadoc):
 
     for var in metadata.variables:
         assert var.unit_type is None
-        #assert var.multiplication_factor is None
+        assert var.multiplication_factor is None
         assert var.temporality_type is None
     assert metadata.variables[1].data_source == data_source_before
 
@@ -238,7 +238,7 @@ def test_reset_global_session_data(metadata: Datadoc):
     global_values_2 = {
         "unit_type": DELETE_SELECTED,
         "measurement_unit": "",
-        "multiplication_factor": 0,
+        "multiplication_factor": "0",
         "variable_role": "",
         "data_source": "",
         "temporality_type": DELETE_SELECTED,
@@ -248,7 +248,9 @@ def test_reset_global_session_data(metadata: Datadoc):
     reset_added_global_variables = inherit_global_variable_values(
         global_values_2, add_global_variables
     )
-    assert reset_added_global_variables == {}
+    for field in reset_added_global_variables.values():
+        assert field["delete"] is True
+
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
@@ -269,6 +271,7 @@ def test_generate_global_variables_report(metadata: Datadoc):
     for report_item in generated_report.children[2].children[0]:
         assert num_variables in report_item
         assert global_values.get("variable_role") in report_item
+        assert GLOBAL_INFO_ALERT_UPDATE_TEXT in report_item
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
@@ -276,7 +279,7 @@ def test_generate_global_variables_report_no_global_values(metadata: Datadoc):
     state.metadata = metadata
     global_values = {
         "unit_type": "",
-        "multiplication_factor": 0,
+        "multiplication_factor": "",
         "variable_role": "",
     }
     added_global_variables = inherit_global_variable_values(global_values, None)
@@ -284,3 +287,21 @@ def test_generate_global_variables_report_no_global_values(metadata: Datadoc):
     assert isinstance(generate_report, dbc.Alert)
     assert generate_report.children[0].children == GLOBALE_ALERT_TITLE
     assert len(generate_report.children[2].children) == 0
+
+@pytest.mark.usefixtures("_code_list_fake_classifications")
+def test_generate_global_variables_report_delete_all(metadata: Datadoc):
+    state.metadata = metadata
+    for var in metadata.variables:
+        var.multiplication_factor = 6
+        
+    global_values = {
+        "multiplication_factor": "0",
+    }
+    added_global_variables = inherit_global_variable_values(global_values, None)
+    generated_report = generate_info_alert_report(added_global_variables)
+    assert isinstance(generated_report, dbc.Alert)
+    assert generated_report.children[0].children == GLOBALE_ALERT_TITLE
+    for report_item in generated_report.children[2].children[0]:
+        assert global_values.get("multiplication_factor") in report_item
+        assert GLOBAL_INFO_ALERT_DELETE_TEXT in report_item
+

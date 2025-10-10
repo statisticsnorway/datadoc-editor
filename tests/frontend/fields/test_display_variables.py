@@ -2,7 +2,7 @@ import pytest
 
 from datadoc_editor import state
 from datadoc_editor.constants import DELETE_SELECTED, DROPDOWN_DELETE_OPTION
-from datadoc_editor.constants import NUM_GLOBAL_EDITABLE_VARIABLES
+from datadoc_editor.frontend.constants import NUM_GLOBAL_EDITABLE_VARIABLES
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES, get_unit_type_options_with_delete
 from datadoc_editor.frontend.fields.display_variables import (
