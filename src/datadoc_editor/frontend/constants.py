@@ -11,7 +11,7 @@ GLOBAL_HEADER = "Alle variabler"
 
 GLOBAL_ADD_BUTTON = "Bruk endringer"
 GLOBAL_HEADER_INFORMATION = (
-    "Her kan du sette samme verdi på utvalgte felt for alle variabler samtidig."
+    "Definer verdier som skal gjelde for alle variabler. Man kan senere endre verdien til en enkeltvariabel hvis man ønsker det."
 )
 
 GLOBAL_HEADER_INFORMATION_LIST = [
@@ -20,5 +20,10 @@ GLOBAL_HEADER_INFORMATION_LIST = [
     "Trykk 'Lagre metadata' for å skrive resultatet til fil.",
 ]
 
-GLOBALE_ALERT_TITLE = "Globale verdier"
-GLOBALE_ALERT_MESSAGE = "Oppdatert verdiene for:"
+GLOBALE_ALERT_TITLE = "Oppdatert verdier for:"
+
+GLOBAL_INFO_ALERT_UPDATE_TEXT = "variabler oppdateres med"
+GLOBAL_INFO_ALERT_DELETE_TEXT = "Sletter alle"
+
+NUM_GLOBAL_EDITABLE_VARIABLES = 6
+
