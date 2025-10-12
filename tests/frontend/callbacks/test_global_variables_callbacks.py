@@ -119,17 +119,6 @@ global_scenarios_add = [
             },
         },
     ),
-    GlobalTestScenario(
-        global_values={
-            "unit_type": DELETE_SELECTED,
-            "measurement_unit": DELETE_SELECTED,
-            "multiplication_factor": None,
-            "variable_role": DELETE_SELECTED,
-            "data_source": DELETE_SELECTED,
-            "temporality_type": DELETE_SELECTED,
-        },
-        expected_results={},
-    ),
 ]
 
 
@@ -146,9 +135,6 @@ def test_edit_globally_selected_values(metadata: Datadoc):
                 assert len(field_result["vars_updated"]) == len(metadata.variables)
                 for key, val in expected.items():
                     assert field_result[key] == val
-
-            else:
-                assert field_result is None
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
@@ -219,7 +205,7 @@ def test_globally_deselect_selected_variable_values(metadata: Datadoc):
     global_values_select = {
         "unit_type": "02",
         "measurement_unit": "",
-        "multiplication_factor": 3,
+        "multiplication_factor": "3",
         "variable_role": "",
         "data_source": "",
         "temporality_type": TemporalityTypeType.STATUS,
@@ -228,10 +214,10 @@ def test_globally_deselect_selected_variable_values(metadata: Datadoc):
     global_values_deselect = {
         "unit_type": DESELECT,
         "measurement_unit": "",
-        "multiplication_factor": "",
+        "multiplication_factor": "03",
         "variable_role": "",
         "data_source": "",
-        "temporality_type": "",
+        "temporality_type": "STATUS",
     }
 
     first_select = inherit_global_variable_values(global_values_select, None)
@@ -243,8 +229,76 @@ def test_globally_deselect_selected_variable_values(metadata: Datadoc):
     for var in metadata.variables:
         assert var.unit_type != "02"
         assert var.temporality_type == TemporalityTypeType.STATUS.value
+        assert var.multiplication_factor == 3
     assert "unit_type" not in deselect
     assert metadata.variables[1].unit_type == unit_type_value_before
+
+@pytest.mark.usefixtures("_code_list_fake_classifications")
+def test_globally_multiplication_factor(metadata: Datadoc):
+    state.metadata = metadata
+    multiplication_factor_before = 6
+    for var in metadata.variables:
+        var.multiplication_factor = multiplication_factor_before
+
+    global_values_select = {
+        "unit_type": "",
+        "measurement_unit": "",
+        "multiplication_factor": 3,
+        "variable_role": "",
+        "data_source": "",
+        "temporality_type": "",
+    }
+
+    global_values_deselect = {
+        "unit_type": "",
+        "measurement_unit": "",
+        "multiplication_factor": "",
+        "variable_role": "",
+        "data_source": "",
+        "temporality_type": "",
+    }
+    
+    global_values_reselect = {
+        "unit_type": "",
+        "measurement_unit": "",
+        "multiplication_factor": 2,
+        "variable_role": "",
+        "data_source": "",
+        "temporality_type": "",
+    }
+    
+    global_values_unchanged = {
+        "unit_type": "",
+        "measurement_unit": "",
+        "multiplication_factor": "2",
+        "variable_role": "",
+        "data_source": "",
+        "temporality_type": "",
+    }
+    
+    global_values_delete = {
+        "unit_type": "",
+        "measurement_unit": "",
+        "multiplication_factor": 0,
+        "variable_role": "",
+        "data_source": "",
+        "temporality_type": "",
+    }
+
+    first_select = inherit_global_variable_values(global_values_select, None)
+    for var in metadata.variables:
+        assert var.multiplication_factor == 3
+    deselect = inherit_global_variable_values(global_values_deselect, first_select)
+    for var in metadata.variables:
+        assert var.multiplication_factor == 6
+    reselect = inherit_global_variable_values(global_values_reselect, deselect)
+    for var in metadata.variables:
+        assert var.multiplication_factor == 2
+    unchanged = inherit_global_variable_values(global_values_unchanged, reselect)
+    for var in metadata.variables:
+        assert var.multiplication_factor == 2
+    deleted = inherit_global_variable_values(global_values_delete, unchanged)
+    assert "multiplication_factor" not in deleted
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
@@ -278,7 +332,7 @@ def test_reset_global_session_data(metadata: Datadoc):
     global_values_2 = {
         "unit_type": DELETE_SELECTED,
         "measurement_unit": "",
-        "multiplication_factor": "0",
+        "multiplication_factor": "",
         "variable_role": "",
         "data_source": "",
         "temporality_type": DELETE_SELECTED,
