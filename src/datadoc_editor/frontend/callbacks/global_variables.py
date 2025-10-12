@@ -10,11 +10,12 @@ from datadoc_editor import state
 from datadoc_editor.frontend.components.global_variables_builders import (
     build_ssb_info_alert,
 )
-from datadoc_editor.frontend.constants import DELETE_SELECTED, MULTIPLICATION_FACTOR
+from datadoc_editor.frontend.constants import DELETE_SELECTED
 from datadoc_editor.frontend.constants import DESELECT
 from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_DELETE_TEXT
 from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_UPDATE_TEXT
 from datadoc_editor.frontend.constants import GLOBALE_ALERT_TITLE
+from datadoc_editor.frontend.constants import MULTIPLICATION_FACTOR
 from datadoc_editor.frontend.fields.display_base import FieldTypes
 from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
 from datadoc_editor.frontend.fields.display_variables import (

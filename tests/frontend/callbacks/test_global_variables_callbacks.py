@@ -1,3 +1,4 @@
+# ruff: noqa: PLR2004
 """Tests for the global variables callbacks module."""
 
 from __future__ import annotations
@@ -233,6 +234,7 @@ def test_globally_deselect_selected_variable_values(metadata: Datadoc):
     assert "unit_type" not in deselect
     assert metadata.variables[1].unit_type == unit_type_value_before
 
+
 @pytest.mark.usefixtures("_code_list_fake_classifications")
 def test_globally_multiplication_factor(metadata: Datadoc):
     state.metadata = metadata
@@ -257,7 +259,7 @@ def test_globally_multiplication_factor(metadata: Datadoc):
         "data_source": "",
         "temporality_type": "",
     }
-    
+
     global_values_reselect = {
         "unit_type": "",
         "measurement_unit": "",
@@ -266,7 +268,7 @@ def test_globally_multiplication_factor(metadata: Datadoc):
         "data_source": "",
         "temporality_type": "",
     }
-    
+
     global_values_unchanged = {
         "unit_type": "",
         "measurement_unit": "",
@@ -275,7 +277,7 @@ def test_globally_multiplication_factor(metadata: Datadoc):
         "data_source": "",
         "temporality_type": "",
     }
-    
+
     global_values_delete = {
         "unit_type": "",
         "measurement_unit": "",
