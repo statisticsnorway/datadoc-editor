@@ -10,7 +10,7 @@ from datadoc_editor import state
 from datadoc_editor.frontend.components.global_variables_builders import (
     build_ssb_info_alert,
 )
-from datadoc_editor.frontend.constants import DELETE_SELECTED
+from datadoc_editor.frontend.constants import DELETE_SELECTED, MULTIPLICATION_FACTOR
 from datadoc_editor.frontend.constants import DESELECT
 from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_DELETE_TEXT
 from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_UPDATE_TEXT
@@ -180,7 +180,7 @@ def _build_affected_variables(
         previous_entry: dict | None = previous_data.get(field_name)
 
         if raw_value == DESELECT or (
-            field_name == "multiplication_factor" and not raw_value
+            field_name == MULTIPLICATION_FACTOR and not raw_value
         ):
             if previous_entry:
                 logger.debug("Deselecting %s", field_name)

@@ -30,3 +30,5 @@ DROPDOWN_DESELECT_OPTION = "-- Velg --"
 DELETE_SELECTED = "delete_selected"
 DROPDOWN_DELETE_OPTION = "Ingen (slett)"
 DESELECT = "deselect"
+
+MULTIPLICATION_FACTOR = "multiplication_factor"
