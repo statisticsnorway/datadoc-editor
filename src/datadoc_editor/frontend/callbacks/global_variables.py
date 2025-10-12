@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
+from typing import Any
 
 from datadoc_editor import state
 from datadoc_editor.frontend.components.global_variables_builders import (
@@ -100,17 +101,15 @@ def inherit_global_variable_values(
     previous_data = previous_data or {}
 
     affected_variables: dict = {}
-    delete_selected: set = set()
+
     preserve_field: set = set()
     deselect_selected: dict[str, Any] = {}
+    delete_selected: set = set()
 
-    _build_affected_variables(
+    preserve_field, deselect_selected, delete_selected = _build_affected_variables(
         affected_variables,
-        global_values, 
-        previous_data, 
-        deselect_selected, 
-        delete_selected, 
-        preserve_field
+        global_values,
+        previous_data,
     )
 
     # Update, delete or reset valus in state
@@ -154,7 +153,12 @@ def inherit_global_variable_values(
                 meta["num_vars"] += 1
     return affected_variables
 
-def _build_affected_variables(affected_variables, global_values, previous_data, deselect_selected, delete_selected, preserve_field):
+
+def _build_affected_variables(
+    affected_variables: dict,
+    global_values: dict,
+    previous_data: dict,
+) -> tuple[set, dict, set]:
     """Determine which global variables are new, reselected, deselected, deleted, or preserved.
 
     Updates the tracking structures in place to reflect detected changes.
@@ -162,6 +166,10 @@ def _build_affected_variables(affected_variables, global_values, previous_data, 
     """
     display_values = _get_display_name_and_title(global_values, GLOBAL_VARIABLES)
     display_value_map = dict(display_values)
+
+    delete_selected: set = set()
+    preserve_field: set = set()
+    deselect_selected: dict[str, Any] = {}
 
     for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
         raw_value = global_values.get(field_name)
@@ -217,3 +225,4 @@ def _build_affected_variables(affected_variables, global_values, previous_data, 
                 "value": raw_value,
                 "display_value": display_value,
             }
+    return preserve_field, deselect_selected, delete_selected
