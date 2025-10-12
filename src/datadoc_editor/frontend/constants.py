@@ -24,3 +24,9 @@ GLOBAL_INFO_ALERT_UPDATE_TEXT = "variabler oppdateres med"
 GLOBAL_INFO_ALERT_DELETE_TEXT = "Sletter alle"
 
 NUM_GLOBAL_EDITABLE_VARIABLES = 6
+
+DROPDOWN_DESELECT_OPTION = "-- Velg --"
+
+DELETE_SELECTED = "delete_selected"
+DROPDOWN_DELETE_OPTION = "Ingen (slett)"
+DESELECT = "deselect"
