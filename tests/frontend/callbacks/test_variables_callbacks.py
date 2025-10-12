@@ -40,7 +40,8 @@ from datadoc_editor.frontend.callbacks.variables import (
 from datadoc_editor.frontend.callbacks.variables import (
     set_variables_values_inherit_dataset_values,
 )
-from datadoc_editor.frontend.constants import DELETE_SELECTED, INVALID_DATE_ORDER
+from datadoc_editor.frontend.constants import DELETE_SELECTED
+from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.fields.display_base import get_metadata_and_stringify
 from datadoc_editor.frontend.fields.display_base import get_standard_metadata

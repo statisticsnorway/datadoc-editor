@@ -27,7 +27,10 @@ from datadoc_editor.frontend.components.identifiers import (
 )
 from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_OPTION_STORE
 from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_STORE
-from datadoc_editor.frontend.constants import DELETE_SELECTED, DESELECT, DROPDOWN_DELETE_OPTION, DROPDOWN_DESELECT_OPTION
+from datadoc_editor.frontend.constants import DELETE_SELECTED
+from datadoc_editor.frontend.constants import DESELECT
+from datadoc_editor.frontend.constants import DROPDOWN_DELETE_OPTION
+from datadoc_editor.frontend.constants import DROPDOWN_DESELECT_OPTION
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -87,6 +90,7 @@ def get_enum_options(
     )
     return dropdown_options
 
+
 def get_enum_options_with_delete_option(
     enum: type[LanguageStringsEnum],
 ) -> list[dict[str, str]]:
@@ -101,6 +105,7 @@ def get_enum_options_with_delete_option(
     ]
     dropdown_options.insert(0, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
     return dropdown_options
+
 
 def get_enum_options_with_delete_and_deselect_option(
     enum: type[LanguageStringsEnum],

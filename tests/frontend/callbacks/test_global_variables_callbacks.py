@@ -18,10 +18,12 @@ from datadoc_editor.frontend.callbacks.global_variables import (
 from datadoc_editor.frontend.callbacks.global_variables import (
     inherit_global_variable_values,
 )
-from datadoc_editor.frontend.constants import DELETE_SELECTED, DESELECT, GLOBAL_INFO_ALERT_DELETE_TEXT
+from datadoc_editor.frontend.constants import DELETE_SELECTED
+from datadoc_editor.frontend.constants import DESELECT
+from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_DELETE_TEXT
 from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_UPDATE_TEXT
 from datadoc_editor.frontend.constants import GLOBALE_ALERT_TITLE
-from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES, GLOBAL_VARIABLES
+from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
 from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
@@ -206,12 +208,13 @@ def test_globally_delete_existing_variable_values(metadata: Datadoc):
         assert var.temporality_type is None
     assert metadata.variables[1].data_source == data_source_before
 
+
 @pytest.mark.usefixtures("_code_list_fake_classifications")
 def test_globally_deselect_selected_variable_values(metadata: Datadoc):
     state.metadata = metadata
     unit_type_value_before = "06"
     for var in metadata.variables:
-        setattr(var, "unit_type", unit_type_value_before)
+        var.unit_type = unit_type_value_before
 
     global_values_select = {
         "unit_type": "02",
@@ -221,7 +224,7 @@ def test_globally_deselect_selected_variable_values(metadata: Datadoc):
         "data_source": "",
         "temporality_type": TemporalityTypeType.STATUS,
     }
-    
+
     global_values_deselect = {
         "unit_type": DESELECT,
         "measurement_unit": "",
@@ -235,14 +238,15 @@ def test_globally_deselect_selected_variable_values(metadata: Datadoc):
     for var in metadata.variables:
         assert var.unit_type == "02"
         assert var.temporality_type == TemporalityTypeType.STATUS.value
-    deselect  = inherit_global_variable_values(global_values_deselect, first_select)
+    deselect = inherit_global_variable_values(global_values_deselect, first_select)
     assert first_select["unit_type"]["value"] == "02"
     for var in metadata.variables:
         assert var.unit_type != "02"
         assert var.temporality_type == TemporalityTypeType.STATUS.value
     assert "unit_type" not in deselect
     assert metadata.variables[1].unit_type == unit_type_value_before
-    
+
+
 @pytest.mark.usefixtures("_code_list_fake_classifications")
 def test_no_global_session_data_returns_empty_dict(metadata: Datadoc):
     state.metadata = metadata

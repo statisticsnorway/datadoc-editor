@@ -9,7 +9,9 @@ from datadoc_editor import state
 from datadoc_editor.frontend.components.global_variables_builders import (
     build_ssb_info_alert,
 )
-from datadoc_editor.frontend.constants import DELETE_SELECTED, DESELECT, GLOBAL_INFO_ALERT_DELETE_TEXT
+from datadoc_editor.frontend.constants import DELETE_SELECTED
+from datadoc_editor.frontend.constants import DESELECT
+from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_DELETE_TEXT
 from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_UPDATE_TEXT
 from datadoc_editor.frontend.constants import GLOBALE_ALERT_TITLE
 from datadoc_editor.frontend.fields.display_base import FieldTypes
@@ -107,22 +109,23 @@ def inherit_global_variable_values(
 
     for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
         raw_value = global_values.get(field_name)
-        logger.debug("Raw value %s", raw_value)
+
         if raw_value == "":
             raw_value = None
-            
-        previous_entry = previous_data.get(field_name)
-        logger.debug("Raw value 2 %s", raw_value)
-        if raw_value == DESELECT or (field_name == "multiplication_factor" and not raw_value):
+
+        previous_entry: dict | None = previous_data.get(field_name)
+
+        if raw_value == DESELECT or (
+            field_name == "multiplication_factor" and not raw_value
+        ):
             if previous_entry:
-                logger.debug ("Deselecting %s", field_name)
+                logger.debug("Deselecting %s", field_name)
                 deselect_selected.update({field_name: previous_entry})
                 continue
-            else:
-                raw_value = None
-                
+            raw_value = None
+
         previous_value = previous_entry.get("value") if previous_entry else None
-        
+
         if not previous_entry and not raw_value:
             continue
 
@@ -136,16 +139,16 @@ def inherit_global_variable_values(
                 "delete": True,
                 "vars_updated": previous_vars_updated,
             }
-            logger.debug("Find deleted %s", affected_variables[field_name])
             delete_selected.add(field_name)
             continue
-        
+
         display_value = display_value_map.get(display_name, raw_value)
-        
+
         if previous_value == raw_value or (previous_entry and not raw_value):
-            affected_variables[field_name] = previous_entry
-            preserve_field.add(field_name)
-            continue
+            if previous_entry is not None:
+                affected_variables[field_name] = previous_entry
+                preserve_field.add(field_name)
+                continue
         else:
             previous_vars_updated = []
             if previous_entry:
@@ -169,16 +172,18 @@ def inherit_global_variable_values(
                 data["delete"] = False
             for key, value in data["vars_updated"].items():
                 if var.short_name == key:
-                    logger.debug("Find deleted %s", value)
-                    if field_name == "multiplication_factor" and value:
-                        value = int(value)
-                    setattr(var, field_name, value)
-            
+                    new_value = (
+                        int(value)
+                        if field_name == "multiplication_factor" and value
+                        else value
+                    )
+                    setattr(var, field_name, new_value)
+
         # Apply updates
-        for field_name, meta in affected_variables.items():       
+        for field_name, meta in affected_variables.items():
             if field_name in preserve_field:
                 continue
-            
+
             # Get the old value before updating
             old_value = getattr(var, field_name) or None
             if not isinstance(meta.get("vars_updated"), dict):
@@ -186,10 +191,10 @@ def inherit_global_variable_values(
             previous_entry = previous_data.get(field_name)
             if not previous_entry:
                 meta["vars_updated"][var.short_name] = old_value
-                
+
             # Delete
-            for field_name in delete_selected:
-                setattr(var, field_name, None)
+            for delete_field in delete_selected:
+                setattr(var, delete_field, None)
 
             if meta["delete"] is False:
                 raw_value = meta["value"]

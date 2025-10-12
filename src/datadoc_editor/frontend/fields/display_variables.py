@@ -12,8 +12,11 @@ from datadoc_editor import state
 from datadoc_editor.enums import DataType
 from datadoc_editor.enums import TemporalityTypeType
 from datadoc_editor.enums import VariableRole
-from datadoc_editor.frontend.constants import DELETE_SELECTED, DESELECT, DROPDOWN_DELETE_OPTION, DROPDOWN_DESELECT_OPTION
-from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT, get_enum_options_with_delete_and_deselect_option
+from datadoc_editor.frontend.constants import DELETE_SELECTED
+from datadoc_editor.frontend.constants import DESELECT
+from datadoc_editor.frontend.constants import DROPDOWN_DELETE_OPTION
+from datadoc_editor.frontend.constants import DROPDOWN_DESELECT_OPTION
+from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
 from datadoc_editor.frontend.fields.display_base import (
     VARIABLES_METADATA_MULTILANGUAGE_INPUT,
 )
@@ -29,7 +32,7 @@ from datadoc_editor.frontend.fields.display_base import (
 )
 from datadoc_editor.frontend.fields.display_base import get_enum_options
 from datadoc_editor.frontend.fields.display_base import (
-    get_enum_options_with_delete_option,
+    get_enum_options_with_delete_and_deselect_option,
 )
 
 if TYPE_CHECKING:

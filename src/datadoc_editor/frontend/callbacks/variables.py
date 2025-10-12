@@ -32,7 +32,8 @@ from datadoc_editor.frontend.components.builders import build_variables_machine_
 from datadoc_editor.frontend.components.builders import (
     build_variables_pseudonymization_section,
 )
-from datadoc_editor.frontend.constants import DELETE_SELECTED, INVALID_DATE_ORDER
+from datadoc_editor.frontend.constants import DELETE_SELECTED
+from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
