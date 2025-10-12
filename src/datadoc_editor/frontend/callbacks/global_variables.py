@@ -201,3 +201,104 @@ def inherit_global_variable_values(
                 setattr(var, field_name, raw_value)
                 meta["num_vars"] += 1
     return affected_variables
+
+def _build_affected_variables(
+    global_values: dict,
+    previous_data: dict,
+    display_value_map: dict[str, str]
+) -> tuple[dict[str, dict], set[str], set[str], dict[str, dict]]:
+    """Decide what to update, delete, deselect, or preserve."""
+    affected_variables: dict[str, dict] = {}
+    delete_selected: set[str] = set()
+    preserve_field: set[str] = set()
+    deselect_selected: dict[str, dict] = {}
+
+    for field_name, display_name in GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME:
+        raw_value = global_values.get(field_name) or None
+        previous_entry = previous_data.get(field_name)
+        previous_value = previous_entry.get("value") if previous_entry else None
+
+        # Deselect
+        if raw_value == DESELECT or (
+            field_name == "multiplication_factor" and not raw_value
+        ):
+            if previous_entry:
+                deselect_selected[field_name] = previous_entry
+                continue
+            raw_value = None
+
+        # Skip if nothing to do
+        if not previous_entry and not raw_value:
+            continue
+
+        # Delete
+        if raw_value in (DELETE_SELECTED, "0"):
+            affected_variables[field_name] = {
+                "display_name": display_name,
+                "delete": True,
+                "vars_updated": previous_entry.get("vars_updated", []) if previous_entry else [],
+            }
+            delete_selected.add(field_name)
+            continue
+
+        # Preserve unchanged
+        if previous_value == raw_value or (previous_entry and not raw_value):
+            if previous_entry:
+                affected_variables[field_name] = previous_entry
+                preserve_field.add(field_name)
+            continue
+
+        # Changed value → new record
+        display_value = display_value_map.get(display_name, raw_value)
+        affected_variables[field_name] = {
+            "display_name": display_name,
+            "vars_updated": previous_entry.get("vars_updated", []) if previous_entry else [],
+            "num_vars": 0,
+            "delete": False,
+            "value": raw_value,
+            "display_value": display_value,
+        }
+
+    return affected_variables, delete_selected, preserve_field, deselect_selected
+
+def _apply_global_updates_to_state(
+    state,
+    affected_variables: dict[str, dict],
+    delete_selected: set[str],
+    preserve_field: set[str],
+    deselect_selected: dict[str, dict],
+    previous_data: dict,
+):
+    for var in state.metadata.variables:
+        if not getattr(var, "short_name", None):
+            continue
+
+        # Deselect
+        for field_name, data in deselect_selected.items():
+            if data.get("delete"):
+                data["delete"] = False
+            for key, value in data["vars_updated"].items():
+                if var.short_name == key:
+                    new_value = (
+                        int(value)
+                        if field_name == "multiplication_factor" and value
+                        else value
+                    )
+                    setattr(var, field_name, new_value)
+
+        # Apply updates / deletions
+        for field_name, meta in affected_variables.items():
+            if field_name in preserve_field:
+                continue
+
+            old_value = getattr(var, field_name) or None
+            meta.setdefault("vars_updated", {})
+            if field_name not in previous_data:
+                meta["vars_updated"][var.short_name] = old_value
+
+            for delete_field in delete_selected:
+                setattr(var, delete_field, None)
+
+            if not meta.get("delete"):
+                setattr(var, field_name, meta["value"])
+                meta["num_vars"] += 1
