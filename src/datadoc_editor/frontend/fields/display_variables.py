@@ -9,13 +9,11 @@ from typing import TYPE_CHECKING
 from dapla_metadata.datasets import enums
 
 from datadoc_editor import state
-from datadoc_editor.constants import DELETE_SELECTED
-from datadoc_editor.constants import DROPDOWN_DELETE_OPTION
 from datadoc_editor.enums import DataType
 from datadoc_editor.enums import TemporalityTypeType
 from datadoc_editor.enums import VariableRole
-from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
-from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
+from datadoc_editor.frontend.constants import DELETE_SELECTED, DESELECT, DROPDOWN_DELETE_OPTION, DROPDOWN_DESELECT_OPTION
+from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT, get_enum_options_with_delete_and_deselect_option
 from datadoc_editor.frontend.fields.display_base import (
     VARIABLES_METADATA_MULTILANGUAGE_INPUT,
 )
@@ -60,7 +58,8 @@ def get_measurement_unit_options_with_delete() -> list[dict[str, str]]:
         }
         for measurement_unit in state.measurement_units.classifications
     ]
-    dropdown_options.insert(0, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
+    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": DESELECT})
+    dropdown_options.insert(1, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
     return dropdown_options
 
 
@@ -86,7 +85,8 @@ def get_unit_type_options_with_delete() -> list[dict[str, str]]:
         }
         for unit_type in state.unit_types.classifications
     ]
-    dropdown_options.insert(0, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
+    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": DESELECT})
+    dropdown_options.insert(1, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
     return dropdown_options
 
 
@@ -330,9 +330,9 @@ GLOBAL_OPTIONS_GETTERS: dict[
         VariableIdentifiers.UNIT_TYPE
     ].identifier: get_unit_type_options_with_delete,
     DISPLAY_GLOBALS[VariableIdentifiers.TEMPORALITY_TYPE].identifier: functools.partial(
-        get_enum_options_with_delete_option, TemporalityTypeType
+        get_enum_options_with_delete_and_deselect_option, TemporalityTypeType
     ),
     DISPLAY_GLOBALS[VariableIdentifiers.VARIABLE_ROLE].identifier: functools.partial(
-        get_enum_options_with_delete_option, VariableRole
+        get_enum_options_with_delete_and_deselect_option, VariableRole
     ),
 }

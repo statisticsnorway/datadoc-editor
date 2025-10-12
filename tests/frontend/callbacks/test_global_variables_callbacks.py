@@ -10,7 +10,6 @@ import pytest
 from dapla_metadata.datasets import enums
 
 from datadoc_editor import state
-from datadoc_editor.constants import DELETE_SELECTED
 from datadoc_editor.enums import TemporalityTypeType
 from datadoc_editor.enums import VariableRole
 from datadoc_editor.frontend.callbacks.global_variables import (
@@ -19,10 +18,10 @@ from datadoc_editor.frontend.callbacks.global_variables import (
 from datadoc_editor.frontend.callbacks.global_variables import (
     inherit_global_variable_values,
 )
-from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_DELETE_TEXT
+from datadoc_editor.frontend.constants import DELETE_SELECTED, DESELECT, GLOBAL_INFO_ALERT_DELETE_TEXT
 from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_UPDATE_TEXT
 from datadoc_editor.frontend.constants import GLOBALE_ALERT_TITLE
-from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
+from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES, GLOBAL_VARIABLES
 from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
@@ -67,18 +66,18 @@ global_scenarios_add = [
             "temporality_type": "",
         },
         expected_results={
-            "multiplication_factor": {
-                "value": 2,
-                "display_value": 2,
-                "display_name": DISPLAY_VARIABLES[
-                    VariableIdentifiers.MULTIPLICATION_FACTOR
-                ].display_name,
-            },
             "unit_type": {
                 "value": "03",
                 "display_value": "Bolig",
                 "display_name": DISPLAY_VARIABLES[
                     VariableIdentifiers.UNIT_TYPE
+                ].display_name,
+            },
+            "multiplication_factor": {
+                "value": 2,
+                "display_value": 2,
+                "display_name": DISPLAY_VARIABLES[
+                    VariableIdentifiers.MULTIPLICATION_FACTOR
                 ].display_name,
             },
         },
@@ -93,18 +92,18 @@ global_scenarios_add = [
             "temporality_type": "",
         },
         expected_results={
-            "multiplication_factor": {
-                "value": 2,
-                "display_value": 2,
-                "display_name": DISPLAY_VARIABLES[
-                    VariableIdentifiers.MULTIPLICATION_FACTOR
-                ].display_name,
-            },
             "unit_type": {
                 "value": "02",
                 "display_value": "Arbeidsulykke",
                 "display_name": DISPLAY_VARIABLES[
                     VariableIdentifiers.UNIT_TYPE
+                ].display_name,
+            },
+            "multiplication_factor": {
+                "value": 2,
+                "display_value": 2,
+                "display_name": DISPLAY_VARIABLES[
+                    VariableIdentifiers.MULTIPLICATION_FACTOR
                 ].display_name,
             },
             "variable_role": {
@@ -135,19 +134,17 @@ global_scenarios_add = [
 @pytest.mark.usefixtures("_code_list_fake_classifications")
 def test_edit_globally_selected_values(metadata: Datadoc):
     state.metadata = metadata
-
     result = None
     for scenario in global_scenarios_add:
         result = inherit_global_variable_values(scenario.global_values, result)
-
         for field, expected in scenario.expected_results.items():
             field_result = result.get(field)
             if field_result is not None:
+                assert field_result["num_vars"] == len(metadata.variables)
+                assert len(field_result["vars_updated"]) == len(metadata.variables)
                 for key, val in expected.items():
                     assert field_result[key] == val
 
-                assert field_result["num_vars"] == len(metadata.variables)
-                assert len(field_result["vars_updated"]) == len(metadata.variables)
             else:
                 assert field_result is None
 
@@ -209,7 +206,43 @@ def test_globally_delete_existing_variable_values(metadata: Datadoc):
         assert var.temporality_type is None
     assert metadata.variables[1].data_source == data_source_before
 
+@pytest.mark.usefixtures("_code_list_fake_classifications")
+def test_globally_deselect_selected_variable_values(metadata: Datadoc):
+    state.metadata = metadata
+    unit_type_value_before = "06"
+    for var in metadata.variables:
+        setattr(var, "unit_type", unit_type_value_before)
 
+    global_values_select = {
+        "unit_type": "02",
+        "measurement_unit": "",
+        "multiplication_factor": 3,
+        "variable_role": "",
+        "data_source": "",
+        "temporality_type": TemporalityTypeType.STATUS,
+    }
+    
+    global_values_deselect = {
+        "unit_type": DESELECT,
+        "measurement_unit": "",
+        "multiplication_factor": "",
+        "variable_role": "",
+        "data_source": "",
+        "temporality_type": "",
+    }
+
+    first_select = inherit_global_variable_values(global_values_select, None)
+    for var in metadata.variables:
+        assert var.unit_type == "02"
+        assert var.temporality_type == TemporalityTypeType.STATUS.value
+    deselect  = inherit_global_variable_values(global_values_deselect, first_select)
+    assert first_select["unit_type"]["value"] == "02"
+    for var in metadata.variables:
+        assert var.unit_type != "02"
+        assert var.temporality_type == TemporalityTypeType.STATUS.value
+    assert "unit_type" not in deselect
+    assert metadata.variables[1].unit_type == unit_type_value_before
+    
 @pytest.mark.usefixtures("_code_list_fake_classifications")
 def test_no_global_session_data_returns_empty_dict(metadata: Datadoc):
     state.metadata = metadata

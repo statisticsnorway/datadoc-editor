@@ -19,8 +19,6 @@ from dash import dcc
 from dash import html
 
 from datadoc_editor import state
-from datadoc_editor.constants import DELETE_SELECTED
-from datadoc_editor.constants import DROPDOWN_DELETE_OPTION
 from datadoc_editor.frontend.components.identifiers import ADD_USE_RESTRICTION_BUTTON
 from datadoc_editor.frontend.components.identifiers import FORCE_RERENDER_COUNTER
 from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_ID_STORE
@@ -29,6 +27,7 @@ from datadoc_editor.frontend.components.identifiers import (
 )
 from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_OPTION_STORE
 from datadoc_editor.frontend.components.identifiers import USE_RESTRICTION_STORE
+from datadoc_editor.frontend.constants import DELETE_SELECTED, DESELECT, DROPDOWN_DELETE_OPTION, DROPDOWN_DESELECT_OPTION
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -51,7 +50,6 @@ VARIABLES_METADATA_INPUT = "variables-metadata-input"
 VARIABLES_METADATA_DATE_INPUT = "variables-metadata-date-input"
 VARIABLES_METADATA_MULTILANGUAGE_INPUT = "dataset-metadata-multilanguage-input"
 
-DROPDOWN_DESELECT_OPTION = "-- Velg --"
 
 METADATA_LANGUAGES = [
     {
@@ -89,7 +87,6 @@ def get_enum_options(
     )
     return dropdown_options
 
-
 def get_enum_options_with_delete_option(
     enum: type[LanguageStringsEnum],
 ) -> list[dict[str, str]]:
@@ -103,6 +100,22 @@ def get_enum_options_with_delete_option(
         for i in enum  # type: ignore [attr-defined]
     ]
     dropdown_options.insert(0, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
+    return dropdown_options
+
+def get_enum_options_with_delete_and_deselect_option(
+    enum: type[LanguageStringsEnum],
+) -> list[dict[str, str]]:
+    """Generate the list of options based on the currently chosen language."""
+    dropdown_options = [
+        {
+            "title": i.get_value_for_language(enums.SupportedLanguages.NORSK_BOKMÅL)
+            or "",
+            "id": i.name,
+        }
+        for i in enum  # type: ignore [attr-defined]
+    ]
+    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": DESELECT})
+    dropdown_options.insert(1, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
     return dropdown_options
 
 
@@ -128,7 +141,8 @@ def get_data_source_options_with_delete() -> list[dict[str, str]]:
         }
         for data_sources in state.data_sources.classifications
     ]
-    dropdown_options.insert(0, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
+    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": DESELECT})
+    dropdown_options.insert(1, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
     return dropdown_options
 
 
