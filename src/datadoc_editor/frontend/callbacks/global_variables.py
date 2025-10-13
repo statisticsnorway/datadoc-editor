@@ -10,7 +10,7 @@ from datadoc_editor import state
 from datadoc_editor.frontend.components.global_variables_builders import (
     build_ssb_info_alert,
 )
-from datadoc_editor.frontend.constants import DELETE_SELECTED
+from datadoc_editor.frontend.constants import DELETE_SELECTED, MAGIC_DELETE_INSTRUCTION_STRING
 from datadoc_editor.frontend.constants import DESELECT
 from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_DELETE_TEXT
 from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_UPDATE_TEXT
@@ -194,7 +194,7 @@ def _build_affected_variables(
         if not previous_entry and not raw_value:
             continue
 
-        if raw_value in (DELETE_SELECTED, "0"):
+        if raw_value in (DELETE_SELECTED, MAGIC_DELETE_INSTRUCTION_STRING):
             logger.debug("Delete or 0 %s %s", field_name, raw_value)
             previous_vars_updated = []
             if previous_entry:

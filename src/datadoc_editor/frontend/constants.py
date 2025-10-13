@@ -32,3 +32,5 @@ DROPDOWN_DELETE_OPTION = "Ingen (slett)"
 DESELECT = "deselect"
 
 MULTIPLICATION_FACTOR = "multiplication_factor"
+
+MAGIC_DELETE_INSTRUCTION_STRING = "0"

@@ -19,7 +19,7 @@ from datadoc_editor.frontend.callbacks.global_variables import (
 from datadoc_editor.frontend.callbacks.global_variables import (
     inherit_global_variable_values,
 )
-from datadoc_editor.frontend.constants import DELETE_SELECTED
+from datadoc_editor.frontend.constants import DELETE_SELECTED, MAGIC_DELETE_INSTRUCTION_STRING
 from datadoc_editor.frontend.constants import DESELECT
 from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_DELETE_TEXT
 from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_UPDATE_TEXT
@@ -181,7 +181,7 @@ def test_globally_delete_existing_variable_values(metadata: Datadoc):
     global_values = {
         "unit_type": DELETE_SELECTED,
         "measurement_unit": "",
-        "multiplication_factor": "0",
+        "multiplication_factor": MAGIC_DELETE_INSTRUCTION_STRING,
         "variable_role": "",
         "data_source": "",
         "temporality_type": DELETE_SELECTED,
@@ -391,7 +391,7 @@ def test_generate_global_variables_report_delete_all(metadata: Datadoc):
         var.multiplication_factor = 6
 
     global_values = {
-        "multiplication_factor": "0",
+        "multiplication_factor": MAGIC_DELETE_INSTRUCTION_STRING,
     }
     added_global_variables = inherit_global_variable_values(global_values, None)
     generated_report = generate_info_alert_report(added_global_variables)
