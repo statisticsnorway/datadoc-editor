@@ -19,11 +19,12 @@ from datadoc_editor.frontend.callbacks.global_variables import (
 from datadoc_editor.frontend.callbacks.global_variables import (
     inherit_global_variable_values,
 )
-from datadoc_editor.frontend.constants import DELETE_SELECTED, MAGIC_DELETE_INSTRUCTION_STRING
+from datadoc_editor.frontend.constants import DELETE_SELECTED
 from datadoc_editor.frontend.constants import DESELECT
 from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_DELETE_TEXT
 from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_UPDATE_TEXT
 from datadoc_editor.frontend.constants import GLOBALE_ALERT_TITLE
+from datadoc_editor.frontend.constants import MAGIC_DELETE_INSTRUCTION_STRING
 from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
 from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
