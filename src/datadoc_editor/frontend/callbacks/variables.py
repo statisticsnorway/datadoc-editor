@@ -168,7 +168,7 @@ def accept_variable_metadata_input(
             new_value = cast(
                 "MetadataUrnField",
                 DISPLAY_VARIABLES[VariableIdentifiers.DEFINITION_URI],
-            ).urn_getter(value)
+            ).value_setter(value)
         else:
             new_value = value
 

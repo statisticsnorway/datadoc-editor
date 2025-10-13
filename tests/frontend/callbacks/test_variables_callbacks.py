@@ -14,6 +14,7 @@ import dash_bootstrap_components as dbc
 import pytest
 from dapla_metadata.datasets import ObligatoryVariableWarning
 from dapla_metadata.datasets import model
+from dapla_metadata.datasets.utility.urn import vardef_urn_converter
 from pydantic import AnyUrl
 
 from datadoc_editor import constants
@@ -89,8 +90,8 @@ def n_clicks_1():
         ),
         (
             VariableIdentifiers.DEFINITION_URI,
-            "https://www.example.com",
-            AnyUrl("https://www.example.com"),
+            "hd8sks89",
+            AnyUrl(vardef_urn_converter.get_urn("hd8sks89")),
         ),
         (
             VariableIdentifiers.IS_PERSONAL_DATA,
@@ -197,7 +198,7 @@ def test_accept_variable_metadata_input_invalid(
 ):
     state.metadata = metadata
     message = accept_variable_metadata_input(
-        "not a url",
+        "my invalid value",
         metadata.variables[0].short_name or "",
         metadata_field=VariableIdentifiers.DEFINITION_URI.value,
     )

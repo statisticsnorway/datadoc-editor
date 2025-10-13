@@ -78,7 +78,7 @@ pythonpath = ["src/datadoc_editor"]
 required-version = ">=0.6.17"
 
 [tool.uv.sources]
-dapla-toolbelt-metadata = { git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git" }
+dapla-toolbelt-metadata = { git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git", branch = "dpmeta-1093-urn-converter-is-id-method" }
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]

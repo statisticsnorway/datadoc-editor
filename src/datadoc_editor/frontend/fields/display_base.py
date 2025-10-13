@@ -223,8 +223,8 @@ class MetadataUrnField(DisplayMetadata):
     """Controls how a URN input field should be displayed."""
 
     id_getter: Callable[[str | AnyUrl], str | None]
-    url_getter: Callable[[BaseModel, str], Any]
-    urn_getter: Callable[[str], str]
+    value_getter: Callable[[BaseModel, str], Any]
+    value_setter: Callable[[str], str]
 
     def render(
         self,
@@ -243,13 +243,13 @@ class MetadataUrnField(DisplayMetadata):
                     showDescription=True,
                     description=self.description,
                     readOnly=not self.editable,
-                    value=self.id_getter(self.url_getter(metadata, self.identifier)),
+                    value=self.id_getter(self.value_getter(metadata, self.identifier)),
                     className="input-component",
                     required=self.obligatory and self.editable,
                 ),
                 html.A(
                     "Vis i datakatalogen (kommer!)",
-                    href=self.url_getter(metadata, self.identifier),
+                    href=self.value_getter(metadata, self.identifier),
                 ),
             ]
         )

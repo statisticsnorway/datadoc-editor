@@ -73,6 +73,24 @@ def definition_uri_url_getter(metadata: BaseModel, field_name: str) -> str | Non
     return get_metadata_and_stringify(metadata, field_name)
 
 
+def definition_uri_value_setter(value: str) -> str:
+    """Validate and convert a Vardef ID to a URN.
+
+    Args:
+        value (str): The value from user input.
+
+    Raises:
+        ValueError: If the value is not a valid Vardef ID.
+
+    Returns:
+        str: The full URN.
+    """
+    if not vardef_urn_converter.is_id(value):
+        msg = f"Value '{value}' is not a valid Vardef ID"
+        raise ValueError(msg)
+    return vardef_urn_converter.get_urn(value)
+
+
 class VariableIdentifiers(str, Enum):
     """As defined here: https://statistics-norway.atlassian.net/wiki/spaces/MPD/pages/3042869256/Variabelforekomst."""
 
@@ -117,8 +135,8 @@ DISPLAY_VARIABLES: dict[
         obligatory=False,
         editable=True,
         id_getter=vardef_urn_converter.get_id,
-        url_getter=definition_uri_url_getter,
-        urn_getter=vardef_urn_converter.get_urn,
+        value_getter=definition_uri_url_getter,
+        value_setter=definition_uri_value_setter,
     ),
     VariableIdentifiers.COMMENT: MetadataMultiLanguageField(
         identifier=VariableIdentifiers.COMMENT.value,
