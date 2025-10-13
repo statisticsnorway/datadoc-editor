@@ -363,8 +363,8 @@ def test_generate_global_variables_report(metadata: Datadoc):
     generated_report = generate_info_alert_report(added_global_variables)
     assert isinstance(generated_report, dbc.Alert)
     assert generated_report.children[0].children == GLOBALE_ALERT_TITLE
-    assert len(generated_report.children[2].children) == len(global_values)
-    for report_item in generated_report.children[2].children[0]:
+    assert len(generated_report.children[3].children) == len(global_values)
+    for report_item in generated_report.children[3].children[0]:
         assert num_variables in report_item
         assert global_values.get("variable_role") in report_item
         assert GLOBAL_INFO_ALERT_UPDATE_TEXT in report_item
@@ -382,7 +382,7 @@ def test_generate_global_variables_report_no_global_values(metadata: Datadoc):
     generate_report = generate_info_alert_report(added_global_variables)
     assert isinstance(generate_report, dbc.Alert)
     assert generate_report.children[0].children == GLOBALE_ALERT_TITLE
-    assert len(generate_report.children[2].children) == 0
+    assert len(generate_report.children[3].children) == 0
 
 
 @pytest.mark.usefixtures("_code_list_fake_classifications")
@@ -398,6 +398,6 @@ def test_generate_global_variables_report_delete_all(metadata: Datadoc):
     generated_report = generate_info_alert_report(added_global_variables)
     assert isinstance(generated_report, dbc.Alert)
     assert generated_report.children[0].children == GLOBALE_ALERT_TITLE
-    for report_item in generated_report.children[2].children[0]:
+    for report_item in generated_report.children[3].children[0]:
         assert global_values.get("multiplication_factor") in report_item
         assert GLOBAL_INFO_ALERT_DELETE_TEXT in report_item

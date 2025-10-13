@@ -7,9 +7,8 @@ from typing import TYPE_CHECKING
 from typing import Any
 
 from datadoc_editor import state
-from datadoc_editor.frontend.components.global_variables_builders import (
-    build_ssb_info_alert,
-)
+from datadoc_editor.frontend.components.builders import AlertTypes
+from datadoc_editor.frontend.components.builders import build_ssb_alert
 from datadoc_editor.frontend.constants import DELETE_SELECTED
 from datadoc_editor.frontend.constants import DESELECT
 from datadoc_editor.frontend.constants import GLOBAL_INFO_ALERT_DELETE_TEXT
@@ -77,9 +76,11 @@ def generate_info_alert_report(affected_variables: dict) -> dbc.Alert:
         else f"{fd['display_name']}: {fd.get('num_vars', 0)} {GLOBAL_INFO_ALERT_UPDATE_TEXT}: {fd.get('display_value')}"
         for fd in affected_variables.values()
     )
-    return build_ssb_info_alert(
+    return build_ssb_alert(
+        alert_type=AlertTypes.INFO,
         title=GLOBALE_ALERT_TITLE,
         alert_list=info_alert_list,
+        is_dissmissable=False,
     )
 
 
