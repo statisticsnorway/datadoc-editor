@@ -302,7 +302,7 @@ wheels = [
 [[package]]
 name = "dapla-toolbelt-metadata"
 version = "0.9.7"
-source = { git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git?branch=dpmeta-1093-methods-for-urn-to-url-conversion#ad527ada1ba088827d8fbfda57187df763b3cd6f" }
+source = { git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git#45e53e5fe115891a595b48068e63cca7e3bd9ec5" }
 dependencies = [
     { name = "arrow" },
     { name = "beautifulsoup4" },
@@ -2163,7 +2163,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "arrow", specifier = ">=1.3.0" },
-    { name = "dapla-toolbelt-metadata", git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git?branch=dpmeta-1093-methods-for-urn-to-url-conversion" },
+    { name = "dapla-toolbelt-metadata", git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git" },
     { name = "dash", specifier = ">=2.15.0" },
     { name = "dash-bootstrap-components", specifier = ">=1.1.0" },
     { name = "flask-healthz", specifier = ">=0.0.3" },
