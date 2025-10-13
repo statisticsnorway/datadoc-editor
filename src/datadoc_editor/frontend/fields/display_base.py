@@ -85,24 +85,15 @@ def get_enum_options(
         }
         for i in enum  # type: ignore [attr-defined]
     ]
-    dropdown_options.insert(
-        0, {"title": DROPDOWN_DESELECT_OPTION, "id": DELETE_SELECTED}
-    )
+    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": ""})
     return dropdown_options
 
 
 def get_enum_options_with_delete_option(
     enum: type[LanguageStringsEnum],
 ) -> list[dict[str, str]]:
-    """Generate the list of options based on the currently chosen language."""
-    dropdown_options = [
-        {
-            "title": i.get_value_for_language(enums.SupportedLanguages.NORSK_BOKMÅL)
-            or "",
-            "id": i.name,
-        }
-        for i in enum  # type: ignore [attr-defined]
-    ]
+    """Generate the list of options based on the currently chosen language with delete option."""
+    dropdown_options = get_enum_options(enum)
     dropdown_options.insert(0, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
     return dropdown_options
 
@@ -110,16 +101,9 @@ def get_enum_options_with_delete_option(
 def get_enum_options_with_delete_and_deselect_option(
     enum: type[LanguageStringsEnum],
 ) -> list[dict[str, str]]:
-    """Generate the list of options based on the currently chosen language."""
-    dropdown_options = [
-        {
-            "title": i.get_value_for_language(enums.SupportedLanguages.NORSK_BOKMÅL)
-            or "",
-            "id": i.name,
-        }
-        for i in enum  # type: ignore [attr-defined]
-    ]
-    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": DESELECT})
+    """Generate the list of options based on the currently chosen language with delete and deselect."""
+    dropdown_options = get_enum_options(enum)
+    dropdown_options[0] = {"title": DROPDOWN_DESELECT_OPTION, "id": DESELECT}
     dropdown_options.insert(1, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
     return dropdown_options
 
@@ -139,14 +123,8 @@ def get_data_source_options() -> list[dict[str, str]]:
 
 def get_data_source_options_with_delete() -> list[dict[str, str]]:
     """Collect the unit type options."""
-    dropdown_options = [
-        {
-            "title": data_sources.get_title(enums.SupportedLanguages.NORSK_BOKMÅL),
-            "id": data_sources.code,
-        }
-        for data_sources in state.data_sources.classifications
-    ]
-    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": DESELECT})
+    dropdown_options = get_data_source_options()
+    dropdown_options[0] = {"title": DROPDOWN_DESELECT_OPTION, "id": DESELECT}
     dropdown_options.insert(1, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
     return dropdown_options
 
