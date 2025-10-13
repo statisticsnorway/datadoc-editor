@@ -40,7 +40,7 @@ if TYPE_CHECKING:
 
 
 def get_measurement_unit_options() -> list[dict[str, str]]:
-    """Collect the unit type options."""
+    """Collect the measurement unit options."""
     dropdown_options = [
         {
             "title": measurement_unit.get_title(enums.SupportedLanguages.NORSK_BOKMÅL),
@@ -53,16 +53,11 @@ def get_measurement_unit_options() -> list[dict[str, str]]:
 
 
 def get_measurement_unit_options_with_delete() -> list[dict[str, str]]:
-    """Collect the unit type options."""
-    dropdown_options = [
-        {
-            "title": measurement_unit.get_title(enums.SupportedLanguages.NORSK_BOKMÅL),
-            "id": measurement_unit.code,
-        }
-        for measurement_unit in state.measurement_units.classifications
-    ]
-    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": DESELECT})
+    """Collect the measurement unit options with deselect and delete options."""
+    dropdown_options = get_measurement_unit_options()
+    dropdown_options[0] = {"title": DROPDOWN_DESELECT_OPTION, "id": DESELECT}
     dropdown_options.insert(1, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
+    
     return dropdown_options
 
 
@@ -80,16 +75,11 @@ def get_unit_type_options() -> list[dict[str, str]]:
 
 
 def get_unit_type_options_with_delete() -> list[dict[str, str]]:
-    """Collect the unit type options."""
-    dropdown_options = [
-        {
-            "title": unit_type.get_title(enums.SupportedLanguages.NORSK_BOKMÅL),
-            "id": unit_type.code,
-        }
-        for unit_type in state.unit_types.classifications
-    ]
-    dropdown_options.insert(0, {"title": DROPDOWN_DESELECT_OPTION, "id": DESELECT})
+    """Collect the unit type options with deselect and delete options."""
+    dropdown_options = get_unit_type_options()
+    dropdown_options[0] = {"title": DROPDOWN_DESELECT_OPTION, "id": DESELECT}
     dropdown_options.insert(1, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
+    
     return dropdown_options
 
 
