@@ -57,7 +57,7 @@ def get_measurement_unit_options_with_delete() -> list[dict[str, str]]:
     dropdown_options = get_measurement_unit_options()
     dropdown_options[0] = {"title": DROPDOWN_DESELECT_OPTION, "id": DESELECT}
     dropdown_options.insert(1, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
-    
+
     return dropdown_options
 
 
@@ -79,7 +79,7 @@ def get_unit_type_options_with_delete() -> list[dict[str, str]]:
     dropdown_options = get_unit_type_options()
     dropdown_options[0] = {"title": DROPDOWN_DESELECT_OPTION, "id": DESELECT}
     dropdown_options.insert(1, {"title": DROPDOWN_DELETE_OPTION, "id": DELETE_SELECTED})
-    
+
     return dropdown_options
 
 
