@@ -310,9 +310,7 @@ GLOBAL_EDITABLE_VARIABLES_METADATA_AND_DISPLAY_NAME: list[tuple] = [
     (m.identifier, m.display_name) for m in DISPLAY_GLOBALS.values()
 ]
 
-GLOBAL_OPTIONS_GETTERS: dict[
-    str, functools.partial[list[dict[str, str]]] | Callable[[], list[dict[str, str]]]
-] = {
+GLOBAL_OPTIONS_GETTERS: dict[str, Callable[[], list[dict[str, str]]]] = {
     DISPLAY_GLOBALS[
         VariableIdentifiers.DATA_SOURCE
     ].identifier: get_data_source_options_with_delete,

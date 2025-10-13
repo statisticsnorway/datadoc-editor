@@ -30,10 +30,10 @@ from datadoc_editor.frontend.components.global_variables_builders import (
     build_global_ssb_accordion,
 )
 from datadoc_editor.frontend.components.identifiers import ADD_GLOBAL_VARIABLES_BUTTON
-from datadoc_editor.frontend.components.identifiers import GLOBAL_ADDED_VARIABLES_STORE
 from datadoc_editor.frontend.components.identifiers import GLOBAL_INFO_ALERTS_OUTPUT
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_INPUT
+from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_STORE
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_VALUES_STORE
 from datadoc_editor.frontend.constants import GLOBAL_HEADER
 from datadoc_editor.frontend.fields.display_variables import GLOBAL_VARIABLES
@@ -77,16 +77,16 @@ def register_global_variables_callbacks(app: Dash) -> None:
         return dict(zip([i["id"] for i in ids], values, strict=False))
 
     @app.callback(
-        Output(GLOBAL_ADDED_VARIABLES_STORE, "data"),
+        Output(GLOBAL_VARIABLES_STORE, "data"),
         Output(GLOBAL_INFO_ALERTS_OUTPUT, "children"),
         Input(ADD_GLOBAL_VARIABLES_BUTTON, "n_clicks"),
-        State(GLOBAL_ADDED_VARIABLES_STORE, "data"),
+        State(GLOBAL_VARIABLES_STORE, "data"),
         State(GLOBAL_VARIABLES_VALUES_STORE, "data"),
         prevent_initial_call=True,
     )
     def add_global_variables(
         n_clicks: int,
-        added_variables_store: dict,
+        global_variables_store: dict,
         selected_values: dict,
     ) -> tuple | dash.NoUpdate:
         """Add selected global variables.
@@ -94,14 +94,12 @@ def register_global_variables_callbacks(app: Dash) -> None:
         Update metadata state with selected values.
         Store result in memory and return info report.
         """
-        logger.debug("Stored global variables %s", added_variables_store)
-        stored_data = added_variables_store
         if ctx.triggered_id == ADD_GLOBAL_VARIABLES_BUTTON and n_clicks:
-            if not selected_values and not stored_data:
+            if not selected_values and not global_variables_store:
                 return dash.no_update
 
             new_variables_store = inherit_global_variable_values(
-                selected_values, stored_data
+                selected_values, global_variables_store
             )
             logger.debug("Added global variables %s", new_variables_store)
             return new_variables_store, generate_info_alert_report(new_variables_store)
@@ -111,7 +109,7 @@ def register_global_variables_callbacks(app: Dash) -> None:
         Output(
             {"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "value", allow_duplicate=True
         ),
-        Output(GLOBAL_ADDED_VARIABLES_STORE, "data", allow_duplicate=True),
+        Output(GLOBAL_VARIABLES_STORE, "data", allow_duplicate=True),
         Output(GLOBAL_INFO_ALERTS_OUTPUT, "children", allow_duplicate=True),
         Input("save-button", "n_clicks"),
         State({"type": GLOBAL_VARIABLES_INPUT, "id": ALL}, "id"),
