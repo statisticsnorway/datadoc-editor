@@ -230,10 +230,14 @@ class MetadataUrnField(DisplayMetadata):
         self,
         component_id: dict,
         metadata: BaseModel,
-    ) -> ssb.Input:
-        """Build an Input component."""
+    ) -> html.Section:
+        """Build a URN Field."""
         self.url_encode_shortname_ids(component_id)
-        return html.Section(
+        value = self.value_getter(metadata, self.identifier)
+        section_id = component_id.copy()
+        section_id["type"] = VARIABLES_METADATA_INPUT + "-urn-section"
+        section = html.Section(
+            id=section_id,
             children=[
                 ssb.Input(
                     label=self.display_name,
@@ -243,16 +247,22 @@ class MetadataUrnField(DisplayMetadata):
                     showDescription=True,
                     description=self.description,
                     readOnly=not self.editable,
-                    value=self.id_getter(self.value_getter(metadata, self.identifier)),
+                    value=self.id_getter(value),  # Present the Identifier for editing
                     className="input-component",
                     required=self.obligatory and self.editable,
                 ),
-                html.A(
-                    "Vis i datakatalogen (kommer!)",
-                    href=self.value_getter(metadata, self.identifier),
-                ),
-            ]
+            ],
         )
+        if value:
+            section.children.append(
+                ssb.Link(
+                    "Vis i datakatalogen (kommer!)",
+                    icon=html.I(className="bi bi-arrow-right"),
+                    href=value,
+                    isExternal=True,
+                )
+            )
+        return section
 
 
 @dataclass
