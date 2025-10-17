@@ -7,14 +7,30 @@ INVALID_VALUE = "Ugyldig verdi angitt!"
 
 PSEUDONYMIZATION = "Pseudonymisering"
 
-GLOBAL_HEADER = "Globale verdier"
+GLOBAL_HEADER = "Alle variabler"
 
-GLOBAL_HEADER_INFORMATION = "Globale verdier lar deg sette samme verdi for flere variabler samtidig på utvalgte felt."
+GLOBAL_ADD_BUTTON = "Bruk endringer"
+GLOBAL_HEADER_INFORMATION = "Velg verdier som skal gjelde for alle variabler. Man kan senere endre verdien til en enkeltvariabel hvis man ønsker det."
 
 GLOBAL_HEADER_INFORMATION_LIST = [
-    "Verdier overskrives ikke - kun variabler uten eksisterende verdi kan oppdateres.",
-    "Velg kun de feltene du ønsker å endre globalt.",
-    "Trykk 'Legg til' for å legge til valgte verdier.",
+    "Velg kun de feltene du ønsker å endre for alle variabler.",
+    "Trykk på knappen 'Bruk endringer' for å legge til valgte verdier eller redigere valgte verdier.",
     "Trykk 'Lagre metadata' for å skrive resultatet til fil.",
-    "Hvis du vil angre, trykk 'Nullstill' før du lagrer - da beholdes de opprinnelige verdiene.",
 ]
+
+GLOBALE_ALERT_TITLE = "Verdiene er oppdatert for:"
+
+GLOBAL_INFO_ALERT_UPDATE_TEXT = "variabler oppdateres med"
+GLOBAL_INFO_ALERT_DELETE_TEXT = "Sletter alle"
+
+NUM_GLOBAL_EDITABLE_VARIABLES = 6
+
+DROPDOWN_DESELECT_OPTION = "-- Velg --"
+
+DELETE_SELECTED = "delete_selected"
+DROPDOWN_DELETE_OPTION = "Ingen (slett)"
+DESELECT = "deselect"
+
+MULTIPLICATION_FACTOR = "multiplication_factor"
+
+MAGIC_DELETE_INSTRUCTION_STRING = "0"

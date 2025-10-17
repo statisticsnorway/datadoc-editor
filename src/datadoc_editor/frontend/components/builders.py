@@ -66,12 +66,14 @@ ALERT_TYPES = {
 }
 
 
-def build_ssb_alert(
+def build_ssb_alert(  # noqa: PLR0913
     alert_type: AlertTypes,
     title: str,
     message: str | None = None,
     link: dict | None = None,
     alert_list: list | None = None,
+    *,
+    is_dissmissable: bool | None = True,
 ) -> dbc.Alert:
     """Make a Dash Alert according to SSBs Design System."""
     alert = AlertType.get_type(alert_type)
@@ -79,7 +81,7 @@ def build_ssb_alert(
         alert_list = []
     return dbc.Alert(
         is_open=True,
-        dismissable=True,
+        dismissable=is_dissmissable,
         fade=True,
         color=alert.color,
         duration=5000 if alert_type == AlertTypes.SUCCESS else None,

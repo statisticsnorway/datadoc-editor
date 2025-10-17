@@ -12,7 +12,6 @@ from typing import cast
 from dapla_metadata.datasets import model
 
 from datadoc_editor import state
-from datadoc_editor.constants import DELETE_SELECTED
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 from datadoc_editor.frontend.callbacks.utils import PseudonymizationInputTypes
@@ -35,6 +34,7 @@ from datadoc_editor.frontend.components.builders import build_variables_machine_
 from datadoc_editor.frontend.components.builders import (
     build_variables_pseudonymization_section,
 )
+from datadoc_editor.frontend.constants import DELETE_SELECTED
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.constants import PSEUDONYMIZATION
@@ -161,7 +161,7 @@ def accept_variable_metadata_input(
                 variable,
                 language,
             )
-        elif value == "":
+        elif value in ("", DELETE_SELECTED):
             # Allow clearing non-multiple-language text fields
             new_value = None
         elif metadata_field in [VariableIdentifiers.DEFINITION_URI] and isinstance(

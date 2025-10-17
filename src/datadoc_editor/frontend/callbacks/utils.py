@@ -32,8 +32,8 @@ from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.components.builders import AlertTypes
 from datadoc_editor.frontend.components.builders import build_ssb_alert
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
-from datadoc_editor.frontend.components.identifiers import GLOBAL_ADDED_VARIABLES_STORE
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ID
+from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_STORE
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_VALUES_STORE
 from datadoc_editor.frontend.components.identifiers import SECTION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
@@ -315,7 +315,7 @@ def render_tabs(tab: str) -> html.Article | None:
                     className="",
                 ),
                 dcc.Store(id=GLOBAL_VARIABLES_VALUES_STORE, data={}),
-                dcc.Store(id=GLOBAL_ADDED_VARIABLES_STORE, data={}),
+                dcc.Store(id=GLOBAL_VARIABLES_STORE, data={}),
                 html.Article(
                     id=ACCORDION_WRAPPER_ID,
                     className="workspace-content",
@@ -378,7 +378,11 @@ def render_multidropdown_row(
                         description=field.date_description,
                     ),
                     html.Button(
-                        "", id=button_id, className="multidropdown-delete-button"
+                        "",
+                        id=button_id,
+                        # Dict unpacking necessary for wildcard props in Dash
+                        **{"aria-label": "Delete row"},  # type: ignore[arg-type]
+                        className="multidropdown-delete-button",
                     ),
                 ],
                 className="date-button-row",

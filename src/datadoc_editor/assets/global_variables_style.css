@@ -33,7 +33,9 @@
 }
 
 .ssb-btn.secondary-btn.global-button{
-    max-width: 150px;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    border: 4px solid #C3DCDC;
 }
 
 .global-edit-section > .global-section-header{
@@ -42,12 +44,6 @@
     gap: 1rem;
     justify-content: space-between;
     margin-bottom: 0.5rem;
-}
-
-.global-section-header > .global-header-buttons{
-    display: flex;
-    gap: 1rem;
-    padding-bottom: 1rem;
 }
 
 .global-information-list{
@@ -64,8 +60,18 @@
     width: 100%;
 }
 
-@media  (max-width: 960px) {
+.global-edit-section-form > .ssb-input.global-input-component .ssb-glossary .glossary-popup{
+    left: unset;
+    margin-left: unset;
+}
+
+.global-edit-section-form > .ssb-dropdown.global-dropdown-component .ssb-glossary .glossary-popup{
+    left: unset;
+    margin-left: unset;
+}
+
+@media (max-width: 960px) {
     .global-edit-section-form > .ssb-dropdown.global-dropdown-component, .ssb-input.global-input-component{
-            max-width: unset;
+        max-width: unset;
     }
 }

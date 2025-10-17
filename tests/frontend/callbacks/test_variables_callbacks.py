@@ -44,6 +44,7 @@ from datadoc_editor.frontend.callbacks.variables import (
 from datadoc_editor.frontend.callbacks.variables import (
     set_variables_values_inherit_dataset_values,
 )
+from datadoc_editor.frontend.constants import DELETE_SELECTED
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
@@ -943,7 +944,7 @@ def test_delete_pseudonymization(
         encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION
     )
     assert variable.pseudonymization.encryption_algorithm == "TINK-DAEAD"
-    mutate_variable_pseudonymization(variable, constants.DELETE_SELECTED)
+    mutate_variable_pseudonymization(variable, DELETE_SELECTED)
     assert variable.pseudonymization is None
 
 

@@ -14,13 +14,14 @@ from datadoc_editor.frontend.components.identifiers import GLOBAL_EDITABLE
 from datadoc_editor.frontend.components.identifiers import GLOBAL_INFO_ALERTS_OUTPUT
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_ACCORDION
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_INPUT
-from datadoc_editor.frontend.components.identifiers import RESET_GLOBAL_VARIABLES_BUTTON
+from datadoc_editor.frontend.constants import GLOBAL_ADD_BUTTON
 from datadoc_editor.frontend.constants import GLOBAL_HEADER_INFORMATION
 from datadoc_editor.frontend.constants import GLOBAL_HEADER_INFORMATION_LIST
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
 from datadoc_editor.frontend.fields.display_base import FieldTypes
 from datadoc_editor.frontend.fields.display_base import MetadataDropdownField
 from datadoc_editor.frontend.fields.display_base import MetadataInputField
+from datadoc_editor.frontend.fields.display_variables import GLOBAL_OPTIONS_GETTERS
 
 
 def build_global_input_field_section(
@@ -47,10 +48,11 @@ def build_global_input_field_section(
                 required=field.obligatory and field.editable,
             )
         elif isinstance(field, MetadataDropdownField):
+            options_getter = GLOBAL_OPTIONS_GETTERS.get(field.identifier)
             input_component = ssb.Dropdown(
                 header=field.display_name,
                 id=component_id,
-                items=field.options_getter(),
+                items=options_getter() if callable(options_getter) else [],
                 placeholder=DROPDOWN_DESELECT_OPTION,
                 className="global-dropdown-component",
                 value=value,
@@ -86,20 +88,12 @@ def build_global_edit_section(
                         [html.Li(item) for item in GLOBAL_HEADER_INFORMATION_LIST],
                         className="global-information-list",
                     ),
-                    html.Div(
-                        [
-                            ssb.Button(
-                                "Legg til",
-                                id=ADD_GLOBAL_VARIABLES_BUTTON,
-                                className="global-button",
-                            ),
-                            ssb.Button(
-                                "Nullstill",
-                                id=RESET_GLOBAL_VARIABLES_BUTTON,
-                                className="global-button",
-                            ),
-                        ],
-                        className="global-header-buttons",
+                    ssb.Button(
+                        GLOBAL_ADD_BUTTON,
+                        id=ADD_GLOBAL_VARIABLES_BUTTON,
+                        negative=True,
+                        className="global-button",
+                        icon=html.I(className="bi-plus-circle"),
                     ),
                 ],
                 className="global-section-header",

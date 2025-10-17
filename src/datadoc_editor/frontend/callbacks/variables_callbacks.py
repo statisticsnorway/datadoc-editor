@@ -22,7 +22,7 @@ from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
 from datadoc_editor.frontend.callbacks.variables import rerender_definition_uri_field
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
-from datadoc_editor.frontend.components.identifiers import GLOBAL_ADDED_VARIABLES_STORE
+from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_STORE
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_DATE_INPUT
 from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
@@ -48,7 +48,7 @@ def register_variables_callbacks(app: Dash) -> None:
         Input("dataset-opened-counter", "data"),
         Input("search-variables", "value"),
         Input("metadata-save-counter", "data"),
-        Input(GLOBAL_ADDED_VARIABLES_STORE, "data"),
+        Input(GLOBAL_VARIABLES_STORE, "data"),
     )
     def callback_populate_variables_workspace(
         dataset_opened_counter: int,
