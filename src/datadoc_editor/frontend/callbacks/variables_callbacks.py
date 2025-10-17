@@ -20,6 +20,7 @@ from datadoc_editor.frontend.callbacks.variables import (
 )
 from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
+from datadoc_editor.frontend.callbacks.variables import rerender_definition_uri_field
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_STORE
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
@@ -225,3 +226,32 @@ def register_variables_callbacks(app: Dash) -> None:
             return False, ""
 
         return True, message
+
+    @app.callback(
+        Output(
+            {
+                "type": VARIABLES_METADATA_INPUT + "-urn-section",
+                "variable_short_name": MATCH,
+                "id": VariableIdentifiers.DEFINITION_URI.value,
+            },
+            "children",
+        ),
+        Input(
+            {
+                "type": VARIABLES_METADATA_INPUT,
+                "variable_short_name": MATCH,
+                "id": VariableIdentifiers.DEFINITION_URI.value,
+            },
+            "value",
+        ),
+        prevent_initial_call=True,
+    )
+    def rerender_definition_uri_field_callback(
+        value: MetadataInputTypes,
+    ) -> dbc.Alert:
+        """Update the display of this field to render the URL with changes."""
+        return rerender_definition_uri_field(
+            value,
+            ctx.triggered_id["variable_short_name"],
+            ctx.triggered_id,
+        )

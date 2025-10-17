@@ -301,7 +301,7 @@ wheels = [
 
 [[package]]
 name = "dapla-toolbelt-metadata"
-version = "0.9.7"
+version = "0.9.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "arrow" },
@@ -323,9 +323,9 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "urllib3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/40/f0/f9898ad59a8e11a4da373cbcfeca301c329ea6fcb2327304110d9be35f8f/dapla_toolbelt_metadata-0.9.7.tar.gz", hash = "sha256:61b81b4ffb34a9b178173afd8ba446c541a3945abec22cc989f6e2d80046bb78", size = 368460, upload-time = "2025-10-07T10:57:07.913Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/54/b3/a03fb280f40066fbea899961bbabb362762beb0966f738a57a9485eb856d/dapla_toolbelt_metadata-0.9.8.tar.gz", hash = "sha256:2b4aea23a907095f0dc22e82a6cf576acdf290464eb4340bdfa361ca7cbfec77", size = 369763, upload-time = "2025-10-13T12:38:55.673Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/82/83/d777733dd2f7bf74a693ffe0796f2125cc4d35ebfc241e2b2a742ffee602/dapla_toolbelt_metadata-0.9.7-py3-none-any.whl", hash = "sha256:6f6b7b304be1219a34b01e010a05cb153606245cf66428d57f09d397b56f1ee1", size = 180161, upload-time = "2025-10-07T10:57:06.314Z" },
+    { url = "https://files.pythonhosted.org/packages/5c/b2/30549f2fb630f9a34b2620d0088bf61d45d4ce01470b21a53bf55a8bdd14/dapla_toolbelt_metadata-0.9.8-py3-none-any.whl", hash = "sha256:0d43ecde05fd679d1ff260360076336f0c8b32f322755605f650c3cc670620eb", size = 180894, upload-time = "2025-10-13T12:38:53.891Z" },
 ]
 
 [[package]]
@@ -2167,7 +2167,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "arrow", specifier = ">=1.3.0" },
-    { name = "dapla-toolbelt-metadata", specifier = "==0.9.7" },
+    { name = "dapla-toolbelt-metadata", specifier = ">=0.9.8" },
     { name = "dash", specifier = ">=2.15.0" },
     { name = "dash-bootstrap-components", specifier = ">=1.1.0" },
     { name = "flask-healthz", specifier = ">=0.0.3" },

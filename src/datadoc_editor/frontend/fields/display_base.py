@@ -11,7 +11,6 @@ from typing import TYPE_CHECKING
 from typing import Any
 from typing import cast
 
-import arrow
 import ssb_dash_components as ssb
 from dapla_metadata.datasets import enums
 from dapla_metadata.datasets import model
@@ -36,6 +35,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
     from dash.development.base_component import Component
+    from pydantic import AnyUrl
     from pydantic import BaseModel
 
     from datadoc_editor.enums import LanguageStringsEnum
@@ -142,14 +142,6 @@ def get_metadata_and_stringify(metadata: BaseModel, identifier: str) -> str | No
     return str(value)
 
 
-def get_datetime_and_stringify(metadata: BaseModel, identifier: str) -> str | None:
-    """Get a metadata datetime value from the model and cast date to string."""
-    value = get_standard_metadata(metadata, identifier)
-    if not value:
-        return ""
-    return arrow.get(str(value)).format("YYYY-MM-DD")
-
-
 def _get_string_type_item(
     language_strings: model.LanguageStringType,
     current_metadata_language: enums.SupportedLanguages,
@@ -190,8 +182,8 @@ class DisplayMetadata(ABC):
     identifier: str
     display_name: str
     description: str
-    obligatory: bool = False
-    editable: bool = True
+    obligatory: bool
+    editable: bool
 
     def url_encode_shortname_ids(self, component_id: dict) -> None:
         """Encodes id to hanlde non ascii values."""
@@ -239,6 +231,53 @@ class MetadataInputField(DisplayMetadata):
 
 
 @dataclass
+class MetadataUrnField(DisplayMetadata):
+    """Controls how a URN input field should be displayed."""
+
+    id_getter: Callable[[str | AnyUrl], str | None]
+    value_getter: Callable[[BaseModel, str], Any]
+    value_setter: Callable[[str], str]
+
+    def render(
+        self,
+        component_id: dict,
+        metadata: BaseModel,
+    ) -> html.Section:
+        """Build a URN Field."""
+        self.url_encode_shortname_ids(component_id)
+        value = self.value_getter(metadata, self.identifier)
+        section_id = component_id.copy()
+        section_id["type"] = VARIABLES_METADATA_INPUT + "-urn-section"
+        section = html.Section(
+            id=section_id,
+            children=[
+                ssb.Input(
+                    label=self.display_name,
+                    id=component_id,
+                    debounce=True,
+                    type="text",
+                    showDescription=True,
+                    description=self.description,
+                    readOnly=not self.editable,
+                    value=self.id_getter(value),  # Present the Identifier for editing
+                    className="input-component",
+                    required=self.obligatory and self.editable,
+                ),
+            ],
+        )
+        if value:
+            section.children.append(
+                ssb.Link(
+                    "Vis i datakatalogen (kommer!)",
+                    icon=html.I(className="bi bi-arrow-right"),
+                    href=value,
+                    isExternal=True,
+                )
+            )
+        return section
+
+
+@dataclass
 class MetadataDropdownField(DisplayMetadata):
     """Controls how a Dropdown should be displayed."""
 
@@ -260,56 +299,6 @@ class MetadataDropdownField(DisplayMetadata):
             className="dropdown-component",
             showDescription=True,
             description=self.description,
-            required=self.obligatory and self.editable,
-        )
-
-
-@dataclass
-class MetadataDateField(DisplayMetadata):
-    """Controls how fields which define a single date are displayed."""
-
-    def render(
-        self,
-        component_id: dict,
-        metadata: BaseModel,
-    ) -> ssb.Input:
-        """Build Input date component."""
-        self.url_encode_shortname_ids(component_id)
-        return ssb.Input(
-            label=self.display_name,
-            id=component_id,
-            debounce=False,
-            type="date",
-            disabled=not self.editable,
-            showDescription=True,
-            description=self.description,
-            value=get_metadata_and_stringify(metadata, self.identifier),
-            className="input-component",
-            required=self.obligatory and self.editable,
-        )
-
-
-@dataclass
-class MetadataDateTimeField(DisplayMetadata):
-    """Controls how fields which define a single date are displayed."""
-
-    def render(
-        self,
-        component_id: dict,
-        metadata: BaseModel,
-    ) -> ssb.Input:
-        """Build Input date component."""
-        self.url_encode_shortname_ids(component_id)
-        return ssb.Input(
-            label=self.display_name,
-            id=component_id,
-            debounce=False,
-            type="date",
-            disabled=not self.editable,
-            showDescription=True,
-            description=self.description,
-            value=get_datetime_and_stringify(metadata, self.identifier),
-            className="input-component",
             required=self.obligatory and self.editable,
         )
 
@@ -519,9 +508,8 @@ class MetadataCheckboxField(DisplayMetadata):
 
 FieldTypes = (
     MetadataInputField
+    | MetadataUrnField
     | MetadataDropdownField
-    | MetadataDateField
-    | MetadataDateTimeField
     | MetadataCheckboxField
     | MetadataPeriodField
     | MetadataMultiLanguageField

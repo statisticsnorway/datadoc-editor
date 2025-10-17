@@ -7,6 +7,7 @@ import warnings
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from typing import Any
+from typing import cast
 from uuid import UUID
 
 import arrow
@@ -14,6 +15,8 @@ import dash_bootstrap_components as dbc
 import pytest
 from dapla_metadata.datasets import ObligatoryVariableWarning
 from dapla_metadata.datasets import model
+from dapla_metadata.datasets.utility.urn import ReferenceUrlTypes
+from dapla_metadata.datasets.utility.urn import vardef_urn_converter
 from pydantic import AnyUrl
 
 from datadoc_editor import constants
@@ -31,6 +34,7 @@ from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata
 from datadoc_editor.frontend.callbacks.variables import mutate_variable_pseudonymization
 from datadoc_editor.frontend.callbacks.variables import populate_pseudo_workspace
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
+from datadoc_editor.frontend.callbacks.variables import rerender_definition_uri_field
 from datadoc_editor.frontend.callbacks.variables import (
     set_variables_value_multilanguage_inherit_dataset_values,
 )
@@ -43,6 +47,7 @@ from datadoc_editor.frontend.callbacks.variables import (
 from datadoc_editor.frontend.constants import DELETE_SELECTED
 from datadoc_editor.frontend.constants import INVALID_DATE_ORDER
 from datadoc_editor.frontend.constants import INVALID_VALUE
+from datadoc_editor.frontend.fields.display_base import VARIABLES_METADATA_INPUT
 from datadoc_editor.frontend.fields.display_base import get_metadata_and_stringify
 from datadoc_editor.frontend.fields.display_base import get_standard_metadata
 from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
@@ -53,6 +58,7 @@ from datadoc_editor.frontend.fields.display_variables import DISPLAY_VARIABLES
 from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
+    import ssb_dash_components as ssb
     from dapla_metadata.datasets import Datadoc
 
     from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
@@ -90,8 +96,8 @@ def n_clicks_1():
         ),
         (
             VariableIdentifiers.DEFINITION_URI,
-            "https://www.example.com",
-            AnyUrl("https://www.example.com"),
+            "hd8sks89",
+            AnyUrl(vardef_urn_converter.get_urn("hd8sks89")),
         ),
         (
             VariableIdentifiers.IS_PERSONAL_DATA,
@@ -198,7 +204,7 @@ def test_accept_variable_metadata_input_invalid(
 ):
     state.metadata = metadata
     message = accept_variable_metadata_input(
-        "not a url",
+        "my invalid value",
         metadata.variables[0].short_name or "",
         metadata_field=VariableIdentifiers.DEFINITION_URI.value,
     )
@@ -940,3 +946,50 @@ def test_delete_pseudonymization(
     assert variable.pseudonymization.encryption_algorithm == "TINK-DAEAD"
     mutate_variable_pseudonymization(variable, DELETE_SELECTED)
     assert variable.pseudonymization is None
+
+
+@pytest.mark.parametrize(
+    ("user_value", "expected_number_of_components", "expected_urn", "expected_url"),
+    [
+        (None, 1, None, None),
+        (
+            "12345678",
+            2,
+            vardef_urn_converter.get_urn("12345678"),
+            vardef_urn_converter.get_url("12345678", ReferenceUrlTypes.FRONTEND),
+        ),
+        (
+            "blah",
+            1,
+            None,
+            None,
+        ),
+    ],
+)
+def test_rerender_definition_uri_field(
+    metadata: Datadoc,
+    user_value: str | None,
+    expected_number_of_components: int,
+    expected_urn: str | None,
+    expected_url: str | None,
+):
+    state.metadata = metadata
+    variable = state.metadata.variables[0]
+
+    components = rerender_definition_uri_field(
+        user_value,
+        variable_short_name=variable.short_name or "",
+        component_id={
+            "type": VARIABLES_METADATA_INPUT,
+            "variable_short_name": variable.short_name,
+            "id": VariableIdentifiers.DEFINITION_URI.value,
+        },
+    )
+    assert len(components) == expected_number_of_components
+    if expected_url and expected_urn:
+        assert cast("ssb.Input", components[0]).value == user_value
+        assert cast("ssb.Link", components[1]).href == expected_url
+        assert variable.definition_uri == AnyUrl(expected_urn)
+    else:
+        assert cast("ssb.Input", components[0]).value is None
+        assert variable.definition_uri == expected_urn

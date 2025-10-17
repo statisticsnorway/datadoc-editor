@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import contextlib
 import datetime
 import logging
 import urllib.parse
 from typing import TYPE_CHECKING
+from typing import cast
 
 from dapla_metadata.datasets import model
 
@@ -55,6 +57,9 @@ if TYPE_CHECKING:
     from dapla_metadata.datasets import model
     from dapla_metadata.datasets.utility.utils import VariableListType
     from dapla_metadata.datasets.utility.utils import VariableType
+    from dash.development.base_component import Component
+
+    from datadoc_editor.frontend.fields.display_base import MetadataUrnField
 
 
 logger = logging.getLogger(__name__)
@@ -159,6 +164,13 @@ def accept_variable_metadata_input(
         elif value in ("", DELETE_SELECTED):
             # Allow clearing non-multiple-language text fields
             new_value = None
+        elif metadata_field in [VariableIdentifiers.DEFINITION_URI] and isinstance(
+            value, str
+        ):
+            new_value = cast(
+                "MetadataUrnField",
+                DISPLAY_VARIABLES[VariableIdentifiers.DEFINITION_URI],
+            ).value_setter(value)
         else:
             new_value = value
 
@@ -309,6 +321,50 @@ def accept_variable_metadata_date_input(
         if variable_identifier == VariableIdentifiers.CONTAINS_DATA_FROM
         else no_error + error
     )
+
+
+def rerender_definition_uri_field(
+    value: MetadataInputTypes,
+    variable_short_name: str,
+    component_id: dict,
+) -> list[Component]:
+    """Render information for editing and viewing.
+
+    - Update the Variable Definition identifier value so that the user can modify it.
+    - If there is a valid value, also show a link to the variable definition in the data catalog.
+
+    Args:
+        value (MetadataInputTypes): The vaue from user input in the frontend.
+        variable_short_name (str): The short name of the variable being edited.
+        component_id (dict): The ID dictionary of the field being edited.
+
+    Raises:
+        RuntimeError: When the variable being edited cannot be found in metadata.
+
+    Returns:
+        list[Component]: The updated field components to be rendered in the frontend.
+    """
+    with contextlib.suppress(ValueError):
+        # Make sure the value actually gets set before we re-render.
+        # We don't handle validation and error messages in this callback so we
+        # just suppress the exception.
+        accept_variable_metadata_input(
+            value=value,
+            variable_short_name=variable_short_name,
+            metadata_field=VariableIdentifiers.DEFINITION_URI,
+        )
+    field = DISPLAY_VARIABLES[VariableIdentifiers.DEFINITION_URI]
+    if variable := state.metadata.variables_lookup.get(variable_short_name):
+        return field.render(
+            component_id=component_id,
+            metadata=variable,
+        ).children
+
+    # If we get down here then something is very wrong indeed.
+    msg = (
+        f"Editing a variable which can't be found in metadata: '{variable_short_name}'"
+    )
+    raise RuntimeError(msg)
 
 
 def validate_field_name(
