@@ -7,7 +7,7 @@ from enum import Enum
 from typing import TYPE_CHECKING
 
 from dapla_metadata.datasets import enums
-from dapla_metadata.datasets.utility.urn import ReferenceUrlTypes
+from dapla_metadata.datasets.utility.urn import klass_urn_converter
 from dapla_metadata.datasets.utility.urn import vardef_urn_converter
 
 from datadoc_editor import state
@@ -37,12 +37,9 @@ from datadoc_editor.frontend.fields.display_base import get_enum_options
 from datadoc_editor.frontend.fields.display_base import (
     get_enum_options_with_delete_and_deselect_option,
 )
-from datadoc_editor.frontend.fields.display_base import get_metadata_and_stringify
 
 if TYPE_CHECKING:
     from collections.abc import Callable
-
-    from pydantic import BaseModel
 
 
 def get_measurement_unit_options() -> list[dict[str, str]]:
@@ -89,37 +86,6 @@ def get_unit_type_options_with_delete() -> list[dict[str, str]]:
     return dropdown_options
 
 
-def definition_uri_url_getter(metadata: BaseModel, field_name: str) -> str | None:
-    """Get a URL for the definition_uri field, if possible. Falls back to the raw value."""
-    if resource_id := vardef_urn_converter.get_id(
-        str(get_metadata_and_stringify(metadata, field_name))
-    ):
-        return vardef_urn_converter.get_url(
-            str(resource_id),
-            url_type=ReferenceUrlTypes.FRONTEND,
-            visibility="public",
-        )
-    return get_metadata_and_stringify(metadata, field_name)
-
-
-def definition_uri_value_setter(value: str) -> str:
-    """Validate and convert a Vardef ID to a URN.
-
-    Args:
-        value (str): The value from user input.
-
-    Raises:
-        ValueError: If the value is not a valid Vardef ID.
-
-    Returns:
-        str: The full URN.
-    """
-    if not vardef_urn_converter.is_id(value):
-        msg = f"Value '{value}' is not a valid Vardef ID"
-        raise ValueError(msg)
-    return vardef_urn_converter.get_urn(value)
-
-
 class VariableIdentifiers(str, Enum):
     """As defined here: https://statistics-norway.atlassian.net/wiki/spaces/MPD/pages/3042869256/Variabelforekomst."""
 
@@ -163,9 +129,7 @@ DISPLAY_VARIABLES: dict[
         description="Oppgi IDen til tilhørende variabeldefinisjon i Vardef.",
         obligatory=False,
         editable=True,
-        id_getter=vardef_urn_converter.get_id,
-        value_getter=definition_uri_url_getter,
-        value_setter=definition_uri_value_setter,
+        converter=vardef_urn_converter,
     ),
     VariableIdentifiers.COMMENT: MetadataMultiLanguageField(
         identifier=VariableIdentifiers.COMMENT.value,
@@ -233,12 +197,13 @@ DISPLAY_VARIABLES: dict[
             VariableRole,
         ),
     ),
-    VariableIdentifiers.CLASSIFICATION_URI: MetadataInputField(
+    VariableIdentifiers.CLASSIFICATION_URI: MetadataUrnField(
         identifier=VariableIdentifiers.CLASSIFICATION_URI.value,
-        display_name="Kodeverkets URI",
-        description="Lenke (URI) til gyldige kodeverk (klassifikasjon eller kodeliste) i KLASS eller Klass-uttrekk. Variabelforekomster skal generelt knyttes til tilhørende kodeverk via relevant variabeldefinisjon i Vardef. Unntaksvis kan den imidlertid knyttes direkte til Klass via dette feltet (i tilfeller der det ikke er hensiktsmessig å definere variabelen i Vardef).",
+        display_name="Kodeverk ID",
+        description="ID til en klassifikasjon eller kodeliste i Klass. Variabelforekomster skal generelt knyttes til tilhørende kodeverk via relevant variabeldefinisjon i Vardef. Unntaksvis kan den imidlertid knyttes direkte til Klass via dette feltet (i tilfeller der det ikke er hensiktsmessig å definere variabelen i Vardef).",
         obligatory=False,
         editable=True,
+        converter=klass_urn_converter,
     ),
     VariableIdentifiers.DATA_SOURCE: MetadataDropdownField(
         identifier=VariableIdentifiers.DATA_SOURCE.value,

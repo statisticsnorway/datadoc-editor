@@ -14,6 +14,8 @@ from typing import cast
 import ssb_dash_components as ssb
 from dapla_metadata.datasets import enums
 from dapla_metadata.datasets import model
+from dapla_metadata.datasets.utility.urn import ReferenceUrlTypes
+from dapla_metadata.datasets.utility.urn import UrnConverter
 from dash import dcc
 from dash import html
 
@@ -35,7 +37,6 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
     from dash.development.base_component import Component
-    from pydantic import AnyUrl
     from pydantic import BaseModel
 
     from datadoc_editor.enums import LanguageStringsEnum
@@ -234,9 +235,36 @@ class MetadataInputField(DisplayMetadata):
 class MetadataUrnField(DisplayMetadata):
     """Controls how a URN input field should be displayed."""
 
-    id_getter: Callable[[str | AnyUrl], str | None]
-    value_getter: Callable[[BaseModel, str], Any]
-    value_setter: Callable[[str], str]
+    converter: UrnConverter
+
+    def url_getter(self, metadata: BaseModel, field_name: str) -> str | None:
+        """Get a URL for a URN field, if possible. Falls back to the raw value."""
+        if resource_id := self.converter.get_id(
+            str(get_metadata_and_stringify(metadata, field_name))
+        ):
+            return self.converter.get_url(
+                str(resource_id),
+                url_type=ReferenceUrlTypes.FRONTEND,
+                visibility="public",
+            )
+        return get_metadata_and_stringify(metadata, field_name)
+
+    def value_setter(self, value: str) -> str:
+        """Validate and convert an ID to a URN.
+
+        Args:
+            value (str): The value from user input.
+
+        Raises:
+            ValueError: If the value is not a valid ID.
+
+        Returns:
+            str: The full URN.
+        """
+        if not self.converter.is_id(value):
+            msg = f"Value '{value}' is not a valid ID"
+            raise ValueError(msg)
+        return self.converter.get_urn(value)
 
     def render(
         self,
@@ -245,7 +273,7 @@ class MetadataUrnField(DisplayMetadata):
     ) -> html.Section:
         """Build a URN Field."""
         self.url_encode_shortname_ids(component_id)
-        value = self.value_getter(metadata, self.identifier)
+        value = self.url_getter(metadata, self.identifier)
         section_id = component_id.copy()
         section_id["type"] = VARIABLES_METADATA_INPUT + "-urn-section"
         section = html.Section(
@@ -259,7 +287,9 @@ class MetadataUrnField(DisplayMetadata):
                     showDescription=True,
                     description=self.description,
                     readOnly=not self.editable,
-                    value=self.id_getter(value),  # Present the Identifier for editing
+                    value=self.converter.get_id(
+                        value or ""
+                    ),  # Present the Identifier for editing
                     className="input-component",
                     required=self.obligatory and self.editable,
                 ),

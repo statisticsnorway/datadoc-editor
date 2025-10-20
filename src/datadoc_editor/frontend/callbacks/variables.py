@@ -136,7 +136,7 @@ def handle_multi_language_metadata(
 def accept_variable_metadata_input(
     value: MetadataInputTypes,
     variable_short_name: str,
-    metadata_field: str,
+    metadata_field: VariableIdentifiers,
     language: str | None = None,
 ) -> str | None:
     """Validate and save the value when variable metadata is updated.
@@ -164,12 +164,13 @@ def accept_variable_metadata_input(
         elif value in ("", DELETE_SELECTED):
             # Allow clearing non-multiple-language text fields
             new_value = None
-        elif metadata_field in [VariableIdentifiers.DEFINITION_URI] and isinstance(
-            value, str
-        ):
+        elif metadata_field in [
+            VariableIdentifiers.DEFINITION_URI,
+            VariableIdentifiers.CLASSIFICATION_URI,
+        ] and isinstance(value, str):
             new_value = cast(
                 "MetadataUrnField",
-                DISPLAY_VARIABLES[VariableIdentifiers.DEFINITION_URI],
+                DISPLAY_VARIABLES[metadata_field],
             ).value_setter(value)
         else:
             new_value = value
@@ -323,20 +324,22 @@ def accept_variable_metadata_date_input(
     )
 
 
-def rerender_definition_uri_field(
+def rerender_urn_field(
     value: MetadataInputTypes,
     variable_short_name: str,
     component_id: dict,
+    field_id: VariableIdentifiers,
 ) -> list[Component]:
     """Render information for editing and viewing.
 
-    - Update the Variable Definition identifier value so that the user can modify it.
-    - If there is a valid value, also show a link to the variable definition in the data catalog.
+    - Update the Identifier value so that the user can modify it.
+    - If there is a valid value, also show a link to the resource in the data catalog.
 
     Args:
         value (MetadataInputTypes): The vaue from user input in the frontend.
         variable_short_name (str): The short name of the variable being edited.
         component_id (dict): The ID dictionary of the field being edited.
+        field_id (VariableIdentifiers): Which Metadata field is being edited.
 
     Raises:
         RuntimeError: When the variable being edited cannot be found in metadata.
@@ -351,14 +354,17 @@ def rerender_definition_uri_field(
         accept_variable_metadata_input(
             value=value,
             variable_short_name=variable_short_name,
-            metadata_field=VariableIdentifiers.DEFINITION_URI,
+            metadata_field=field_id,
         )
-    field = DISPLAY_VARIABLES[VariableIdentifiers.DEFINITION_URI]
     if variable := state.metadata.variables_lookup.get(variable_short_name):
-        return field.render(
-            component_id=component_id,
-            metadata=variable,
-        ).children
+        return (
+            DISPLAY_VARIABLES[field_id]
+            .render(
+                component_id=component_id,
+                metadata=variable,
+            )
+            .children
+        )
 
     # If we get down here then something is very wrong indeed.
     msg = (
