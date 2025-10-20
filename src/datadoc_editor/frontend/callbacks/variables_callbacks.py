@@ -8,6 +8,7 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
+import dash
 from dash import MATCH
 from dash import Dash
 from dash import Input
@@ -20,7 +21,7 @@ from datadoc_editor.frontend.callbacks.variables import (
 )
 from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
-from datadoc_editor.frontend.callbacks.variables import rerender_definition_uri_field
+from datadoc_editor.frontend.callbacks.variables import rerender_urn_field
 from datadoc_editor.frontend.components.identifiers import ACCORDION_WRAPPER_ID
 from datadoc_editor.frontend.components.identifiers import GLOBAL_VARIABLES_STORE
 from datadoc_editor.frontend.components.identifiers import VARIABLES_INFORMATION_ID
@@ -33,6 +34,7 @@ from datadoc_editor.frontend.fields.display_variables import VariableIdentifiers
 
 if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
+    from dash.development.base_component import Component
 
     from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 
@@ -232,7 +234,7 @@ def register_variables_callbacks(app: Dash) -> None:
             {
                 "type": VARIABLES_METADATA_INPUT + "-urn-section",
                 "variable_short_name": MATCH,
-                "id": VariableIdentifiers.DEFINITION_URI.value,
+                "id": MATCH,
             },
             "children",
         ),
@@ -240,7 +242,7 @@ def register_variables_callbacks(app: Dash) -> None:
             {
                 "type": VARIABLES_METADATA_INPUT,
                 "variable_short_name": MATCH,
-                "id": VariableIdentifiers.DEFINITION_URI.value,
+                "id": MATCH,
             },
             "value",
         ),
@@ -248,10 +250,16 @@ def register_variables_callbacks(app: Dash) -> None:
     )
     def rerender_definition_uri_field_callback(
         value: MetadataInputTypes,
-    ) -> dbc.Alert:
+    ) -> list[Component] | dash.NoUpdate:
         """Update the display of this field to render the URL with changes."""
-        return rerender_definition_uri_field(
+        if ctx.triggered_id["id"] not in [
+            VariableIdentifiers.DEFINITION_URI.value,
+            VariableIdentifiers.CLASSIFICATION_URI.value,
+        ]:
+            return dash.no_update
+        return rerender_urn_field(
             value,
             ctx.triggered_id["variable_short_name"],
             ctx.triggered_id,
+            ctx.triggered_id["id"],
         )

@@ -16,6 +16,7 @@ import pytest
 from dapla_metadata.datasets import ObligatoryVariableWarning
 from dapla_metadata.datasets import model
 from dapla_metadata.datasets.utility.urn import ReferenceUrlTypes
+from dapla_metadata.datasets.utility.urn import klass_urn_converter
 from dapla_metadata.datasets.utility.urn import vardef_urn_converter
 from pydantic import AnyUrl
 
@@ -34,7 +35,7 @@ from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata
 from datadoc_editor.frontend.callbacks.variables import mutate_variable_pseudonymization
 from datadoc_editor.frontend.callbacks.variables import populate_pseudo_workspace
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
-from datadoc_editor.frontend.callbacks.variables import rerender_definition_uri_field
+from datadoc_editor.frontend.callbacks.variables import rerender_urn_field
 from datadoc_editor.frontend.callbacks.variables import (
     set_variables_value_multilanguage_inherit_dataset_values,
 )
@@ -155,8 +156,8 @@ def n_clicks_1():
         ),
         (
             VariableIdentifiers.CLASSIFICATION_URI,
-            "https://www.example.com",
-            AnyUrl("https://www.example.com"),
+            "91",
+            AnyUrl("urn:ssb:classification:klass:91"),
         ),
         (
             VariableIdentifiers.INVALID_VALUE_DESCRIPTION,
@@ -188,7 +189,7 @@ def test_accept_variable_metadata_input_valid(
         accept_variable_metadata_input(
             value,
             metadata.variables[0].short_name or "",
-            metadata_field=metadata_field.value,
+            metadata_field=metadata_field,
             language="nb",
         )
         is None
@@ -206,7 +207,7 @@ def test_accept_variable_metadata_input_invalid(
     message = accept_variable_metadata_input(
         "my invalid value",
         metadata.variables[0].short_name or "",
-        metadata_field=VariableIdentifiers.DEFINITION_URI.value,
+        metadata_field=VariableIdentifiers.DEFINITION_URI,
     )
     assert message is not None
     assert message == INVALID_VALUE
@@ -647,7 +648,7 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
         accept_variable_metadata_input(
             "Format value",
             metadata_illegal_shortnames.variables[-1].short_name,
-            metadata_field=VariableIdentifiers.FORMAT.value,
+            metadata_field=VariableIdentifiers.FORMAT,
             language="nb",
         )
         is None
@@ -949,25 +950,37 @@ def test_delete_pseudonymization(
 
 
 @pytest.mark.parametrize(
-    ("user_value", "expected_number_of_components", "expected_urn", "expected_url"),
+    (
+        "field",
+        "user_value",
+        "expected_number_of_components",
+        "expected_urn",
+        "expected_url",
+    ),
     [
-        (None, 1, None, None),
+        (VariableIdentifiers.DEFINITION_URI, None, 1, None, None),
         (
+            VariableIdentifiers.DEFINITION_URI,
             "12345678",
             2,
             vardef_urn_converter.get_urn("12345678"),
             vardef_urn_converter.get_url("12345678", ReferenceUrlTypes.FRONTEND),
         ),
+        (VariableIdentifiers.DEFINITION_URI, "blah", 1, None, None),
+        (VariableIdentifiers.CLASSIFICATION_URI, None, 1, None, None),
         (
-            "blah",
-            1,
-            None,
-            None,
+            VariableIdentifiers.CLASSIFICATION_URI,
+            "91",
+            2,
+            klass_urn_converter.get_urn("91"),
+            klass_urn_converter.get_url("91", ReferenceUrlTypes.FRONTEND),
         ),
+        (VariableIdentifiers.CLASSIFICATION_URI, "blah", 1, None, None),
     ],
 )
-def test_rerender_definition_uri_field(
+def test_rerender_urn_field(  # noqa: PLR0913
     metadata: Datadoc,
+    field: VariableIdentifiers,
     user_value: str | None,
     expected_number_of_components: int,
     expected_urn: str | None,
@@ -976,20 +989,21 @@ def test_rerender_definition_uri_field(
     state.metadata = metadata
     variable = state.metadata.variables[0]
 
-    components = rerender_definition_uri_field(
+    components = rerender_urn_field(
         user_value,
         variable_short_name=variable.short_name or "",
         component_id={
             "type": VARIABLES_METADATA_INPUT,
             "variable_short_name": variable.short_name,
-            "id": VariableIdentifiers.DEFINITION_URI.value,
+            "id": field.value,
         },
+        field_id=field,
     )
     assert len(components) == expected_number_of_components
     if expected_url and expected_urn:
         assert cast("ssb.Input", components[0]).value == user_value
         assert cast("ssb.Link", components[1]).href == expected_url
-        assert variable.definition_uri == AnyUrl(expected_urn)
+        assert getattr(variable, field.value) == AnyUrl(expected_urn)
     else:
         assert cast("ssb.Input", components[0]).value is None
-        assert variable.definition_uri == expected_urn
+        assert getattr(variable, field.value) == expected_urn
