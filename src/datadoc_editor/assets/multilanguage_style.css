@@ -99,12 +99,9 @@
 }
 
 #variables-metadata-input-right-editable .metadata-checkbox-field .glossary-popup {
-    /* Spesifikke stiler for denne ene popupen */
     margin-left: 10px;
     top: 0px;
     left: 240px;
-    background-color: #f9f9f9;
-    /* eksempel */
 }
 
 #variables-metadata-input-right-editable .metadata-checkbox-field .glossary-popup::after {
