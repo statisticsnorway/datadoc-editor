@@ -1,6 +1,6 @@
 /*Style for multilanguage fields*/
 
-.multilanguage-fieldset{
+.multilanguage-fieldset {
     border: 1px solid #274247;
     outline: #274247;
     padding: 1rem;
@@ -9,53 +9,53 @@
     margin: 1.5rem 1rem 0 0;
 }
 
-.legend-glossary{
+.legend-glossary {
     background-color: white;
     padding-top: 0;
     margin: 0.3rem;
 }
 
-.multilanguage-legend{
+.multilanguage-legend {
     width: fit-content;
     font-size: 1rem;
 }
 
-.multilanguage-fieldset > .ssb-glossary.legend-glossary > .glossary-button{
+.multilanguage-fieldset>.ssb-glossary.legend-glossary>.glossary-button {
     padding: 0 0.3rem;
     background-image: none;
 }
 
-.multilanguage-fieldset:focus{
+.multilanguage-fieldset:focus {
     border: 1px solid #00824d;
     outline: 1px solid #00824d;
     outline-offset: 0;
 }
 
-.multilanguage-fieldset:hover{
+.multilanguage-fieldset:hover {
     border: 1px solid #00824d;
     outline: 1px solid #00824d;
     outline-offset: 0;
 }
 
-.ssb-glossary.legend-glossary{
+.ssb-glossary.legend-glossary {
     position: absolute;
     z-index: 10;
     top: -20px;
 }
 
-.ssb-input.multilanguage-input-component{
+.ssb-input.multilanguage-input-component {
     max-width: unset;
     width: 100%;
 }
 
-.multilanguage-fieldset > .ssb-glossary.legend-glossary > .glossary-popup {
+.multilanguage-fieldset>.ssb-glossary.legend-glossary>.glossary-popup {
     margin-left: 20px;
     left: unset;
     top: unset;
     bottom: 5px;
 }
 
-.multilanguage-fieldset > .ssb-glossary.legend-glossary > .glossary-popup::after {
+.multilanguage-fieldset>.ssb-glossary.legend-glossary>.glossary-popup::after {
     left: -10px;
     margin-left: -10px;
     top: unset;
@@ -64,6 +64,50 @@
     -webkit-transform: rotate(-90deg);
 }
 
-.ssb-glossary.legend-glossary > .glossary-popup .content-box > .glossary-closing{
+.ssb-glossary.legend-glossary>.glossary-popup .content-box>.glossary-closing {
     margin-top: 1.8rem;
+}
+
+#variables-metadata-input-left-editable .glossary-popup {
+    margin-left: 30px;
+    top: 0px;
+    left: 130px;
+}
+
+#variables-metadata-input-left-editable .glossary-popup::after {
+    left: -10px;
+    margin-left: -10px;
+    top: 5px;
+    bottom: unset;
+    transform: rotateX(-90deg);
+    -webkit-transform: rotate(-90deg);
+}
+
+#variables-metadata-input-right-editable .glossary-popup {
+    margin-left: 30px;
+    top: 0px;
+    left: 130px;
+}
+
+#variables-metadata-input-right-editable .glossary-popup::after {
+    left: -10px;
+    margin-left: -10px;
+    top: 5px;
+    bottom: unset;
+    transform: rotateX(-90deg);
+    -webkit-transform: rotate(-90deg);
+}
+
+#variables-metadata-input-right-editable .metadata-checkbox-field .glossary-popup {
+    margin-left: 10px;
+    top: 0px;
+    left: 240px;
+}
+
+#variables-metadata-input-right-editable .metadata-checkbox-field .glossary-popup::after {
+    left: -10px;
+    margin-left: -10px;
+    top: 5px;
+    transform: rotateX(-90deg);
+    -webkit-transform: rotate(-90deg);
 }
