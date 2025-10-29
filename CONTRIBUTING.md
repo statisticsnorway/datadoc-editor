@@ -128,9 +128,17 @@ docker run -p 8050:8050 \
 datadoc
 ```
 
-### Release process
+## Release process
 
-Manually edit the `project.version` field in `pyproject.toml`. This project uses semantic versioning so follow that standard when bumping the version number.
+Update the version using `uv version --bump`. This project follows [semantic versioning](https://semver.org/):
+
+```bash
+uv version --bump patch   # bug fixes
+uv version --bump minor   # new features
+uv version --bump major   # breaking changes
+```
+
+Create a new branch for the release.
 
 Commit with message like `Bump version x.x.x -> y.y.y`.
 
