@@ -95,6 +95,9 @@ jobs:
     name: Run mabl tests
     runs-on: ubuntu-latest
     needs: deploy
+    permissions:
+      contents: "read"
+      id-token: "write"
     steps:
       - name: Run mabl tests
         id: mabl-test-deployment
