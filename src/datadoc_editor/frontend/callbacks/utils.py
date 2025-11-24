@@ -64,14 +64,13 @@ from datadoc_editor.frontend.fields.display_variables import (
 )
 
 if TYPE_CHECKING:
-    import pathlib
     from collections.abc import Callable
 
     import dash_bootstrap_components as dbc
     import pydantic
-    from cloudpathlib import CloudPath
     from dapla_metadata.datasets.utility.utils import VariableType
     from datadoc_model.required import model as required_model
+    from upath.types import ReadablePathLike
 
 
 logger = logging.getLogger(__name__)
@@ -204,7 +203,7 @@ def update_use_restriction_date(
     return items
 
 
-def get_dataset_path() -> pathlib.Path | CloudPath | str:
+def get_dataset_path() -> ReadablePathLike:
     """Extract the path to the dataset from the potential sources."""
     if state.metadata.dataset_path is not None:
         return state.metadata.dataset_path
