@@ -692,7 +692,11 @@ def apply_pseudonymization(
                         else None,
                         stable_identifier_version=transfer_pseudonymzation.stable_identifier_version
                         if transfer_pseudonymzation
-                        else None,
+                        else datetime.datetime.now(
+                        datetime.UTC
+                    )
+                    .date()
+                    .isoformat(),
                     ),
                 )
             case PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA:
