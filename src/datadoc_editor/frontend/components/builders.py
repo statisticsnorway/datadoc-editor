@@ -158,6 +158,7 @@ def build_pseudo_field_section(
             for i in metadata_fields
         ],
         id=f"{PSEUDO_METADATA_INPUT}-{side}-{field_id}",
+        key=str(uuid.uuid4()),
         className="edit-section-form",
     )
 
