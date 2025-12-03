@@ -26,7 +26,6 @@ def get_datetime_and_stringify(metadata: BaseModel, identifier: str) -> str | No
         return ""
     return arrow.get(str(value)).format("YYYY-MM-DD")
 
-
 PSEUDO_FIELDS: dict[
     PseudoVariableIdentifiers,
     FieldTypes,
@@ -44,6 +43,7 @@ PSEUDO_FIELDS: dict[
         identifier=PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
         display_name="Stabil identifikator versjon",
         description="Det skal brukes den type versjonering som er brukt for stabil identifikator katalogen, eksempler kan være dato eller semantisk versjonering.",
+        type="date",
         obligatory=False,
         editable=True,
     ),
