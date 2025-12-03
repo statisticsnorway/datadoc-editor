@@ -386,6 +386,7 @@ class PseudoCase:
     expected_encryption_algorithm: str | None
     expected_encryption_key_reference: str | None
     expected_algorithm_parameters: list | None
+    expected_stable_identifier_version: str | None = None
     saved_pseudonymization: model.Pseudonymization | None = None
     expected_pseudonymization_time: datetime.datetime | None = None
 
@@ -427,6 +428,11 @@ class PseudoCase:
                     .isoformat()
                 },
             ],
+            expected_stable_identifier_version=datetime.datetime.now(
+                        datetime.UTC
+                    )
+                    .date()
+                    .isoformat()
         ),
         PseudoCase(
             selected_algorithm=enums.PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
@@ -507,3 +513,4 @@ def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Data
         variable.pseudonymization.pseudonymization_time
         == case.expected_pseudonymization_time
     )
+    assert variable.pseudonymization.stable_identifier_version == case.expected_stable_identifier_version

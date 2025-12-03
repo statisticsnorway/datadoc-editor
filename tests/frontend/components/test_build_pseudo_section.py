@@ -26,6 +26,16 @@ TEST_VARIABLES = [
         2,
     ),
     (
+        PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
+        model.Variable(
+            short_name="helse",
+            pseudonymization=model.Pseudonymization(
+                stable_identifier_type="FREG_SNR", encryption_algorithm="TINK-FPE", stable_identifier_version="2025-01-01",
+            ),
+        ),
+        2,
+    ),
+    (
         PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITHOUT_STABLE_ID,
         model.Variable(
             short_name="helse",
@@ -69,6 +79,7 @@ TEST_VARIABLES = [
 
 TEST_IDS = [
     "papis_with_stable_id",
+    "papis_with_stable_id and version",
     "papis_without_stable_id",
     "standard_dapla",
     "custom_algorithm",
