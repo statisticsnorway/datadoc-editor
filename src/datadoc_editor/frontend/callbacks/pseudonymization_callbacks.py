@@ -13,6 +13,7 @@ from dash import Dash
 from dash import Input
 from dash import Output
 from dash import State
+import dash
 
 from datadoc_editor import state
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
@@ -130,3 +131,4 @@ def register_pseudonymization_callbacks(app: Dash) -> None:
         field_name = component_id["id"]
         new_value = getattr(var.pseudonymization, field_name, None)
         return new_value
+    
