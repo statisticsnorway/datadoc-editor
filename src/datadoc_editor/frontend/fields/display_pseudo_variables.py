@@ -25,6 +25,7 @@ def get_datetime_and_stringify(metadata: BaseModel, identifier: str) -> str | No
     if not value:
         return ""
     return arrow.get(str(value)).format("YYYY-MM-DD")
+    
 
 PSEUDO_FIELDS: dict[
     PseudoVariableIdentifiers,
@@ -46,6 +47,7 @@ PSEUDO_FIELDS: dict[
         type="date",
         obligatory=False,
         editable=True,
+        value_getter=get_datetime_and_stringify,
     ),
     PseudoVariableIdentifiers.STABLE_IDENTIFIER_TYPE: MetadataInputField(
         identifier=PseudoVariableIdentifiers.STABLE_IDENTIFIER_TYPE.value,

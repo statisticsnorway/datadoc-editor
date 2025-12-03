@@ -691,7 +691,8 @@ def apply_pseudonymization(
                         pseudonymization_time=transfer_pseudonymzation.pseudonymization_time
                         if transfer_pseudonymzation
                         else None,
-                        stable_identifier_version= datetime.datetime.now(
+                        #stable_identifier_version=datetime.datetime.now(datetime.UTC).date().isoformat(),
+                        stable_identifier_version= transfer_pseudonymzation.stable_identifier_version if transfer_pseudonymzation and transfer_pseudonymzation.stable_identifier_version else datetime.datetime.now(
                         datetime.UTC
                     )
                     .date()
@@ -718,7 +719,8 @@ def apply_pseudonymization(
                         if transfer_pseudonymzation
                         else None,
                         stable_identifier_type=None,
-                        stable_identifier_version=None,
+                        stable_identifier_version=transfer_pseudonymzation.stable_identifier_version if transfer_pseudonymzation
+                        else None,
                         encryption_algorithm_parameters=None,
                     ),
                 )

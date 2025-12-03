@@ -13,7 +13,7 @@ from dapla_metadata.datasets import model
 
 from datadoc_editor import state
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
-from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
+from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes, update_stable_identifier_version
 from datadoc_editor.frontend.callbacks.utils import PseudonymizationInputTypes
 from datadoc_editor.frontend.callbacks.utils import apply_pseudonymization
 from datadoc_editor.frontend.callbacks.utils import delete_pseudonymization
@@ -220,12 +220,14 @@ def accept_pseudo_variable_metadata_input(
         value,
     )
     try:
-        parsed_value: str | datetime.datetime | None
+        parsed_value: str | datetime.datetime | None = None
         if (
             metadata_field == PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME
             and isinstance(value, (datetime.datetime, str))
         ):
             parsed_value = parse_and_validate_pseudonymization_time(value)
+        elif (metadata_field == PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION):
+            parsed_value = update_stable_identifier_version(value.strip(), get_variable_from_state(variable_short_name))
         elif isinstance(value, str):
             parsed_value = value.strip() or None
         else:
