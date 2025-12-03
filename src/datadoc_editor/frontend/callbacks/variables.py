@@ -12,6 +12,8 @@ from typing import cast
 from dapla_metadata.datasets import model
 
 from datadoc_editor import state
+from datadoc_editor import enums
+from datadoc_editor.constants import PAPIS_ALGORITHM_ENCRYPTION
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes, update_stable_identifier_version
 from datadoc_editor.frontend.callbacks.utils import PseudonymizationInputTypes
@@ -227,7 +229,10 @@ def accept_pseudo_variable_metadata_input(
         ):
             parsed_value = parse_and_validate_pseudonymization_time(value)
         elif (metadata_field == PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION):
-            parsed_value = update_stable_identifier_version(value.strip(), get_variable_from_state(variable_short_name))
+            if get_variable_from_state(variable_short_name).pseudonymization.encryption_algorithm == PAPIS_ALGORITHM_ENCRYPTION:
+                parsed_value = update_stable_identifier_version(value.strip(), get_variable_from_state(variable_short_name))
+            else:
+                parsed_value = value.strip() if value else None
         elif isinstance(value, str):
             parsed_value = value.strip() or None
         else:
