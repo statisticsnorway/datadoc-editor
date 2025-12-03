@@ -22,7 +22,7 @@ from dash import html
 from datadoc_editor import config
 from datadoc_editor import constants
 from datadoc_editor import state
-from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_DATASET_MESSAGE
+from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_DATASET_MESSAGE, ENCRYPTION_PARAMETER_SNAPSHOT_DATE
 from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_VARIABLES_MESSAGE
 from datadoc_editor.constants import ILLEGAL_SHORTNAME_WARNING
 from datadoc_editor.constants import ILLEGAL_SHORTNAME_WARNING_MESSAGE
@@ -46,6 +46,7 @@ from datadoc_editor.frontend.fields.display_dataset import (
 from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     OBLIGATORY_VARIABLES_METADATA_PSEUDO_IDENTIFIERS_AND_DISPLAY_NAME,
+    PseudoVariableIdentifiers,
 )
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PSEUDONYMIZATION_DEAD_METADATA,
@@ -690,9 +691,7 @@ def apply_pseudonymization(
                         pseudonymization_time=transfer_pseudonymzation.pseudonymization_time
                         if transfer_pseudonymzation
                         else None,
-                        stable_identifier_version=transfer_pseudonymzation.stable_identifier_version
-                        if transfer_pseudonymzation
-                        else datetime.datetime.now(
+                        stable_identifier_version= datetime.datetime.now(
                         datetime.UTC
                     )
                     .date()
@@ -724,7 +723,32 @@ def apply_pseudonymization(
                     ),
                 )
 
+def update_stable_identifier_version(field_value: str, variable: str)-> str:
+    """Validate stable identifier version date and update snapshot date.
+    
+    When updating field stable indetifier version also update snapshot date. Validate it is a date.
+    
+    """
+    if field_value is None:
+        raise ValueError("field_value cannot be None")
 
+    try:
+        arrow.get(field_value, "YYYY-MM-DD")
+    except arrow.parser.ParserError:
+        raise ValueError(f"field_value '{field_value}' is not a valid ISO date")
+
+    # Find the dict containing the snapshot date key
+    if variable.pseudonymization.encryption_algorithm_parameters is not None:
+        for param_dict in variable.pseudonymization.encryption_algorithm_parameters:
+            if constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE in param_dict:
+                # Update only snapshot date dict, leave others unchanged
+                param_dict[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE] = field_value
+                break
+        else:
+            # Optional: handle case when no dict contains the key
+            raise KeyError(f"No parameter contains key '{constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE}'")
+    return field_value
+    
 def parse_and_validate_pseudonymization_time(
     pseudo_date: str | datetime.datetime | None,
 ) -> datetime.datetime | None:
