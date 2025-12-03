@@ -389,6 +389,7 @@ class PseudoCase:
     expected_stable_identifier_version: str | None = None
     saved_pseudonymization: model.Pseudonymization | None = None
     expected_pseudonymization_time: datetime.datetime | None = None
+    expected_snapshot_date: str | None = None
 
 
 @pytest.mark.parametrize(
@@ -429,6 +430,11 @@ class PseudoCase:
                 },
             ],
             expected_stable_identifier_version=datetime.datetime.now(
+                        datetime.UTC
+                    )
+                    .date()
+                    .isoformat(),
+            expected_snapshot_date=datetime.datetime.now(
                         datetime.UTC
                     )
                     .date()
@@ -514,3 +520,10 @@ def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Data
         == case.expected_pseudonymization_time
     )
     assert variable.pseudonymization.stable_identifier_version == case.expected_stable_identifier_version
+    if case.expected_snapshot_date is not None:
+        snapshot_param = next(
+            (p for p in variable.pseudonymization.encryption_algorithm_parameters
+                if constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE  in p),
+            None
+        )
+        assert snapshot_param[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE] == case.expected_snapshot_date
