@@ -93,10 +93,10 @@
             "custom_type": null,
             "id": "2f72477a-f051-43ee-bf8b-0d8f47b5e0a7",
             "owner": "",
-            "file_path": "tests/resources/klargjorte_data/person_testdata_p2021-12-31_p2021-12-31_v1.parquet",
+            "file_path": "None",
             "metadata_created_date": "2022-10-07T07:35:01Z",
             "metadata_created_by": "default_user@ssb.no",
-            "metadata_last_updated_date": "2025-09-24T20:08:12.467712Z",
+            "metadata_last_updated_date": "2025-12-03T16:16:58.481728Z",
             "metadata_last_updated_by": null,
             "contains_data_from": "2021-12-31",
             "contains_data_until": "2021-12-31"
@@ -126,14 +126,10 @@
                 "pseudonymization": {
                     "pseudonymization_time": "2025-10-05T00:00:00Z",
                     "stable_identifier_type": null,
-                    "stable_identifier_version": null,
-                    "encryption_algorithm": "TINK-DAEAD",
-                    "encryption_key_reference": "ssb-common-key-1",
-                    "encryption_algorithm_parameters": [
-                        {
-                            "keyId": "ssb-common-key-1"
-                        }
-                    ]
+                    "stable_identifier_version": "2025-12-03",
+                    "encryption_algorithm": null,
+                    "encryption_key_reference": null,
+                    "encryption_algorithm_parameters": null
                 },
                 "unit_type": null,
                 "data_source": null,
@@ -175,7 +171,7 @@
                 "pseudonymization": {
                     "pseudonymization_time": null,
                     "stable_identifier_type": "FREG_SNR",
-                    "stable_identifier_version": "gh-hj",
+                    "stable_identifier_version": "1999-11-23",
                     "encryption_algorithm": "TINK-FPE",
                     "encryption_key_reference": "papis-common-key-1",
                     "encryption_algorithm_parameters": [
@@ -230,7 +226,7 @@
                 "pseudonymization": {
                     "pseudonymization_time": "2025-09-07T00:00:00Z",
                     "stable_identifier_type": "pkpk",
-                    "stable_identifier_version": "bkhbhj",
+                    "stable_identifier_version": "2024-01-01",
                     "encryption_algorithm": "TINK-DAED",
                     "encryption_key_reference": "ssb-common-key-1",
                     "encryption_algorithm_parameters": null
