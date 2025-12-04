@@ -8,7 +8,7 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from dash import MATCH
+from dash import MATCH, ctx
 from dash import Dash
 from dash import Input
 from dash import Output
@@ -62,10 +62,19 @@ def register_pseudonymization_callbacks(app: Dash) -> None:
         if variable is None:
             logger.info("Variable not found in lookup!")
             return []
+        
+        # Identify what triggered the callback
+        triggered = ctx.triggered_id
+        logger.debug("Triggered by: %s", triggered)
+
+        # --- RUN MUTATE ON BOTH EVENTS ---
+        if triggered == dropdown_id or triggered == "save-button":
+            mutate_variable_pseudonymization(variable, selected_algorithm)
+
 
         # Persist update and deletion only on save
-        if n_clicks and n_clicks > 0:
-            mutate_variable_pseudonymization(variable, selected_algorithm)  # type: ignore[arg-type]
+        #if n_clicks and n_clicks > 0:
+        #    mutate_variable_pseudonymization(variable, selected_algorithm)  # type: ignore[arg-type]
 
         logger.debug(
             "Variable %s has pseudo info: %s",
