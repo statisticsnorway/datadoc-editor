@@ -987,7 +987,7 @@ def test_update_stable_identifier_version(metadata: Datadoc):
 
     assert snapshot_param is not None
     assert snapshot_param[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE] == test_date
-    
+
     # If stable identifier version is None todays date is set
     test_date_none = None
     accept_pseudo_variable_metadata_input(
@@ -996,10 +996,16 @@ def test_update_stable_identifier_version(metadata: Datadoc):
         PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
     )
 
-    assert variable.pseudonymization.stable_identifier_version == datetime.datetime.now(datetime.UTC).date().isoformat()
+    assert (
+        variable.pseudonymization.stable_identifier_version
+        == datetime.datetime.now(datetime.UTC).date().isoformat()
+    )
 
     assert snapshot_param is not None
-    assert snapshot_param[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE] == datetime.datetime.now(datetime.UTC).date().isoformat()
+    assert (
+        snapshot_param[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE]
+        == datetime.datetime.now(datetime.UTC).date().isoformat()
+    )
 
 
 def test_delete_pseudonymization(

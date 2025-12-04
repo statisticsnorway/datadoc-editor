@@ -707,8 +707,8 @@ def apply_pseudonymization(
 def update_stable_identifier_version(field_value: str, variable: str) -> str:
     """Validate stable identifier version date and update snapshot date.
 
-    When updating field stable indetifier version also update snapshot date. Validate it is a date.
-
+    When updating field stable indetifier version also update snapshot date.
+    Validate it is a date.
     """
     if field_value is None:
         raise ValueError("Field_value cannot be None")
@@ -716,7 +716,8 @@ def update_stable_identifier_version(field_value: str, variable: str) -> str:
     try:
         arrow.get(field_value, "YYYY-MM-DD")
     except arrow.parser.ParserError:
-        raise ValueError("Field_value %s is not a valid ISO date", field_value)
+        error_message = ("Field_value %s is not a valid ISO date", field_value)
+        raise ValueError(error_message)
 
     # Find the dict containing the snapshot date key
     if variable.pseudonymization.encryption_algorithm_parameters is not None:
@@ -726,10 +727,11 @@ def update_stable_identifier_version(field_value: str, variable: str) -> str:
                 param_dict[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE] = field_value
                 break
         else:
-            raise KeyError(
+            error_message = (
                 "No parameter contains key %s",
                 constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE,
             )
+            raise KeyError(error_message)
     return field_value
 
 

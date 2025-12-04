@@ -235,6 +235,8 @@ def accept_pseudo_variable_metadata_input(
                 ).pseudonymization.encryption_algorithm
                 == PAPIS_ALGORITHM_ENCRYPTION
             ):
+                if value is None:
+                    value = datetime.datetime.now(datetime.UTC).date().isoformat()
                 parsed_value = update_stable_identifier_version(
                     value.strip(), get_variable_from_state(variable_short_name)
                 )
@@ -539,9 +541,7 @@ def mutate_variable_pseudonymization(
     ):
         inferred_algorithm = map_dropdown_to_pseudo(variable)
         if inferred_algorithm and inferred_algorithm != selected_algorithm:
-            update_selected_pseudonymization(
-                variable, selected_algorithm
-            )
+            update_selected_pseudonymization(variable, selected_algorithm)
         return
 
 
