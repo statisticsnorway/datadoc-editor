@@ -720,15 +720,17 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
 def test_accept_pseudo_variable_metadata_input_valid(
     metadata: Datadoc,
     metadata_field: PseudoVariableIdentifiers,
-    value: str | datetime.datetime | None,
+    value: PseudonymizationInputTypes,
     pseudo_algorithm: enums.PseudonymizationAlgorithmsEnum,
     expected_model_value: Any,  # noqa: ANN401
 ):
     state.metadata = metadata
     first_var_short_name = metadata.variables[0].short_name
     variable = get_variable_from_state(first_var_short_name)
+    
     assert variable is not None
     assert variable.short_name is not None
+    
     apply_pseudonymization(
         variable,
         pseudo_algorithm,
