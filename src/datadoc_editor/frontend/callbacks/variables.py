@@ -244,7 +244,9 @@ def accept_pseudo_variable_metadata_input(
                         value, get_variable_from_state(variable_short_name)
                     )
                 else:
-                    parsed_value = value.strip() if value else None
+                    if isinstance(value, str):
+                        value = value.strip()
+                    parsed_value = value if value else None
             elif isinstance(value, str):
                 parsed_value = value.strip() or None
             else:
