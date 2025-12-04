@@ -723,11 +723,10 @@ def test_accept_pseudo_variable_metadata_input_valid(
     metadata_field: PseudoVariableIdentifiers,
     value: PseudonymizationInputTypes,
     pseudo_algorithm: enums.PseudonymizationAlgorithmsEnum,
-    expected_model_value: Any,  # noqa: ANN401
+    expected_model_value: PseudonymizationInputTypes,  # noqa: ANN401
 ):
     state.metadata = metadata
-    first_var_short_name = metadata.variables[0].short_name
-    variable = get_variable_from_state(first_var_short_name)
+    variable = metadata.variables[0]
 
     assert variable is not None
     assert variable.short_name is not None
@@ -736,6 +735,8 @@ def test_accept_pseudo_variable_metadata_input_valid(
         variable,
         pseudo_algorithm,
     )
+    assert variable.pseudonymization is not None
+    # Update
     result = accept_pseudo_variable_metadata_input(
         value, variable.short_name, metadata_field=metadata_field.value
     )
@@ -749,6 +750,40 @@ def test_accept_pseudo_variable_metadata_input_valid(
         == expected_model_value
     )
 
+def test_accept_pseudo_variable_failing(
+    metadata: Datadoc,
+):
+    state.metadata = metadata
+    first_var_short_name = metadata.variables[0].short_name
+    variable = get_variable_from_state(first_var_short_name)
+
+    assert variable is not None
+    assert variable.short_name is not None
+
+    apply_pseudonymization(
+        variable,
+        enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
+    )
+    assert (
+        getattr(
+            variable.pseudonymization,
+            PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
+        )
+        == datetime.datetime.now(datetime.UTC).date().isoformat()
+    )
+    
+    result = accept_pseudo_variable_metadata_input(
+        '1999-12-23', variable.short_name, PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value
+    )
+    assert result is None, f"Function returned error: {result}"
+
+    assert (
+        getattr(
+            variable.pseudonymization,
+            PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
+        )
+        == "1999-12-23"
+    )
 
 @dataclass
 class PseudoCase:
