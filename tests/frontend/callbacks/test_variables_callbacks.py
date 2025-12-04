@@ -723,7 +723,7 @@ def test_accept_pseudo_variable_metadata_input_valid(
     metadata_field: PseudoVariableIdentifiers,
     value: PseudonymizationInputTypes,
     pseudo_algorithm: enums.PseudonymizationAlgorithmsEnum,
-    expected_model_value: PseudonymizationInputTypes,  # noqa: ANN401
+    expected_model_value: PseudonymizationInputTypes,
 ):
     state.metadata = metadata
     variable = metadata.variables[0]
@@ -750,6 +750,7 @@ def test_accept_pseudo_variable_metadata_input_valid(
         == expected_model_value
     )
 
+
 def test_accept_pseudo_variable_failing(
     metadata: Datadoc,
 ):
@@ -771,9 +772,11 @@ def test_accept_pseudo_variable_failing(
         )
         == datetime.datetime.now(datetime.UTC).date().isoformat()
     )
-    
+
     result = accept_pseudo_variable_metadata_input(
-        '1999-12-23', variable.short_name, PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value
+        "1999-12-23",
+        variable.short_name,
+        PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
     )
     assert result is None, f"Function returned error: {result}"
 
@@ -784,6 +787,7 @@ def test_accept_pseudo_variable_failing(
         )
         == "1999-12-23"
     )
+
 
 @dataclass
 class PseudoCase:
