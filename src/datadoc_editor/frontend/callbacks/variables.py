@@ -540,7 +540,7 @@ def mutate_variable_pseudonymization(
         inferred_algorithm = map_dropdown_to_pseudo(variable)
         if inferred_algorithm and inferred_algorithm != selected_algorithm:
             update_selected_pseudonymization(
-                variable, inferred_algorithm, selected_algorithm
+                variable, selected_algorithm
             )
         return
 
