@@ -710,8 +710,10 @@ def update_stable_identifier_version(field_value: PseudonymizationInputTypes, va
     When updating field stable indetifier version also update snapshot date.
     Validate it is a date.
     """
+    validated_date: str
     try:
-        arrow.get(field_value, "YYYY-MM-DD")
+        validated_date = arrow.get(str(field_value)).format("YYYY-MM-DD")
+        #arrow.get(field_value, "YYYY-MM-DD")
     except arrow.parser.ParserError as e:
         error_message = ("Field_value %s is not a valid ISO date", field_value)
         raise ValueError(error_message) from e
@@ -729,7 +731,7 @@ def update_stable_identifier_version(field_value: PseudonymizationInputTypes, va
                 constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE,
             )
             raise KeyError(error_message)
-    return field_value
+    return validated_date
 
 
 def parse_and_validate_pseudonymization_time(
