@@ -118,21 +118,3 @@ def register_pseudonymization_callbacks(app: Dash) -> None:
             return False, ""
 
         return True, message
-
-    @app.callback(
-        Output(
-            {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
-            "value",
-        ),
-        Input("save-button", "n_clicks"),
-        State(
-            {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
-            "id",
-        ),
-        prevent_initial_call=True,
-    )
-    def update_pseudo_input_values(n_clicks, component_id):
-        var = state.metadata.variables_lookup.get(component_id["variable_short_name"])
-        field_name = component_id["id"]
-        new_value = getattr(var.pseudonymization, field_name, None)
-        return new_value
