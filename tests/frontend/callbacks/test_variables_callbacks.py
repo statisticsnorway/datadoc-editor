@@ -729,7 +729,6 @@ def test_accept_pseudo_variable_metadata_input_valid(
     apply_pseudonymization(
         variable,
         pseudo_algorithm,
-        None,
     )
     result = accept_pseudo_variable_metadata_input(
         value,
@@ -932,15 +931,15 @@ def test_update_pseudonymization_algorithm(case, metadata: Datadoc):
         variable.pseudonymization = case.saved_pseudonymization
     update_selected_pseudonymization(
         variable,
-        case.saved_pseudonymization.encryption_algorithm,
         case.selected_algorithm,
     )
     if case.expected_variable_pseudonymization is True:
         assert variable.pseudonymization is not None
-        assert (
-            variable.pseudonymization.pseudonymization_time
-            == case.saved_pseudonymization.pseudonymization_time
-        )
+        if case.saved_pseudonymization.pseudonymization_time:
+            assert (
+                variable.pseudonymization.pseudonymization_time
+                != case.saved_pseudonymization.pseudonymization_time
+            )
         if variable.pseudonymization.encryption_algorithm_parameters is not None:
             assert case.expected_algorithm_parameters_length == len(
                 variable.pseudonymization.encryption_algorithm_parameters
@@ -954,7 +953,6 @@ def test_update_stable_identifier_version(metadata: Datadoc):
     apply_pseudonymization(
         variable,
         enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
-        None
     )
     
     assert variable.pseudonymization.stable_identifier_version == datetime.datetime.now(

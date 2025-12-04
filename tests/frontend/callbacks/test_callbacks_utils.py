@@ -478,9 +478,7 @@ class PseudoCase:
                     2021, 1, 1, 0, 0, tzinfo=datetime.UTC
                 ),
             ),
-            expected_pseudonymization_time=datetime.datetime(
-                2021, 1, 1, 0, 0, tzinfo=datetime.UTC
-            ),
+            expected_pseudonymization_time=None,
         ),
     ],
     ids=[
@@ -497,7 +495,6 @@ def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Data
     apply_pseudonymization(
         variable,
         case.selected_algorithm,
-        case.saved_pseudonymization,
     )
     assert variable.pseudonymization is not None
     assert (
