@@ -728,12 +728,13 @@ def test_accept_pseudo_variable_metadata_input_valid(
     first_var_short_name = metadata.variables[0].short_name
     variable = get_variable_from_state(first_var_short_name)
     assert variable is not None
+    assert variable.short_name is not None
     apply_pseudonymization(
         variable,
         pseudo_algorithm,
     )
     result = accept_pseudo_variable_metadata_input(
-        value, first_var_short_name, metadata_field=metadata_field.value
+        value, variable.short_name, metadata_field=metadata_field.value
     )
     assert result is None, f"Function returned error: {result}"
 
