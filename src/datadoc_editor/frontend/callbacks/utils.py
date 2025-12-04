@@ -715,7 +715,6 @@ def update_stable_identifier_version(
     validated_date: str
     try:
         validated_date = arrow.get(str(field_value)).format("YYYY-MM-DD")
-        # arrow.get(field_value, "YYYY-MM-DD")
     except arrow.parser.ParserError as e:
         error_message = ("Field_value %s is not a valid ISO date", field_value)
         raise ValueError(error_message) from e
