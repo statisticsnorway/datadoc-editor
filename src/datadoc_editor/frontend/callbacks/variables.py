@@ -212,7 +212,7 @@ def accept_pseudo_variable_metadata_input(
 
     Depending on the metadata field:
     - If `metadata_field` is 'pseudonymization_time', the input is parsed and validated as a date/time.
-    - If `metadata_field` is 'stable_identifier_version', the value is validated as a date (or set to today by default) 
+    - If `metadata_field` is 'stable_identifier_version', the value is validated as a date (or set to today by default)
         and `snapshotDate` is updated accordingly.
     - For all other fields, string values are stripped of whitespace.
 

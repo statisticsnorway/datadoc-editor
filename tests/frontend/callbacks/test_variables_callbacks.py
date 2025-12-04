@@ -34,7 +34,6 @@ from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
 )
 from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
-from datadoc_editor.frontend.callbacks.variables import get_variable_from_state
 from datadoc_editor.frontend.callbacks.variables import mutate_variable_pseudonymization
 from datadoc_editor.frontend.callbacks.variables import populate_pseudo_workspace
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
@@ -749,6 +748,7 @@ def test_accept_pseudo_variable_metadata_input_valid(
         )
         == expected_model_value
     )
+
 
 @dataclass
 class PseudoCase:
