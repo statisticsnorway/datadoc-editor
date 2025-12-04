@@ -716,9 +716,9 @@ def update_stable_identifier_version(field_value: str, variable: str) -> str:
 
     try:
         arrow.get(field_value, "YYYY-MM-DD")
-    except arrow.parser.ParserError:
+    except arrow.parser.ParserError as e:
         error_message = ("Field_value %s is not a valid ISO date", field_value)
-        raise ValueError(error_message)
+        raise ValueError(error_message) from e
 
     # Find the dict containing the snapshot date key
     if variable.pseudonymization.encryption_algorithm_parameters is not None:
