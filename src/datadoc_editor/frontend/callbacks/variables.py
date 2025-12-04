@@ -222,7 +222,7 @@ def accept_pseudo_variable_metadata_input(
         value,
     )
     try:
-        parsed_value: str | datetime.datetime | None = None
+        parsed_value: PseudonymizationInputTypes = None
         variable = get_variable_from_state(variable_short_name)
         if variable:
             if (
@@ -251,6 +251,7 @@ def accept_pseudo_variable_metadata_input(
                 parsed_value = value.strip() or None
             else:
                 parsed_value = value or None
+            logger.debug(f"Value '{parsed_value}' Type of value '{type(parsed_value)}")
             setattr(
                 get_variable_from_state(variable_short_name).pseudonymization,
                 metadata_field,
