@@ -223,34 +223,37 @@ def accept_pseudo_variable_metadata_input(
     )
     try:
         parsed_value: str | datetime.datetime | None = None
-        if (
-            metadata_field == PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME
-            and isinstance(value, (datetime.datetime, str))
-        ):
-            parsed_value = parse_and_validate_pseudonymization_time(value)
-        elif metadata_field == PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION:
-            if (
-                get_variable_from_state(
+        variable = get_variable_from_state(
                     variable_short_name
-                ).pseudonymization.encryption_algorithm
-                == PAPIS_ALGORITHM_ENCRYPTION
-            ):
-                if value is None:
-                    value = datetime.datetime.now(datetime.UTC).date().isoformat()
-                parsed_value = update_stable_identifier_version(
-                    value.strip(), get_variable_from_state(variable_short_name)
                 )
+        if variable:
+            if (
+                metadata_field == PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME
+                and isinstance(value, (datetime.datetime, str))
+            ):
+                parsed_value = parse_and_validate_pseudonymization_time(value)
+            elif metadata_field == PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION:
+                if ( variable.pseudonymization and variable.pseudonymization.encryption_algorithm
+                    == PAPIS_ALGORITHM_ENCRYPTION
+                ):
+                    if value is None:
+                        value = datetime.datetime.now(datetime.UTC).date().isoformat()
+                    if isinstance(value, str):
+                        value = value.strip()
+                    parsed_value = update_stable_identifier_version(
+                        value, get_variable_from_state(variable_short_name)
+                    )
+                else:
+                    parsed_value = value.strip() if value else None
+            elif isinstance(value, str):
+                parsed_value = value.strip() or None
             else:
-                parsed_value = value.strip() if value else None
-        elif isinstance(value, str):
-            parsed_value = value.strip() or None
-        else:
-            parsed_value = value or None
-        setattr(
-            get_variable_from_state(variable_short_name).pseudonymization,
-            metadata_field,
-            parsed_value,
-        )
+                parsed_value = value or None
+            setattr(
+                get_variable_from_state(variable_short_name).pseudonymization,
+                metadata_field,
+                parsed_value,
+            )
     except ValueError:
         logger.exception(
             "Validation failed for %s, %s, %s:",
