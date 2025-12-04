@@ -711,7 +711,8 @@ def update_stable_identifier_version(field_value: str, variable: str) -> str:
     Validate it is a date.
     """
     if field_value is None:
-        raise ValueError("Field_value cannot be None") from None
+        error_message = "Field_value cannot be None"
+        raise ValueError(error_message) from None
 
     try:
         arrow.get(field_value, "YYYY-MM-DD")
