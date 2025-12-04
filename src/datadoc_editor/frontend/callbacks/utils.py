@@ -711,12 +711,12 @@ def update_stable_identifier_version(field_value: str, variable: str) -> str:
 
     """
     if field_value is None:
-        raise ValueError("field_value cannot be None")
+        raise ValueError("Field_value cannot be None")
 
     try:
         arrow.get(field_value, "YYYY-MM-DD")
     except arrow.parser.ParserError:
-        raise ValueError(f"field_value '{field_value}' is not a valid ISO date")
+        raise ValueError("Field_value %s is not a valid ISO date", field_value)
 
     # Find the dict containing the snapshot date key
     if variable.pseudonymization.encryption_algorithm_parameters is not None:
@@ -727,7 +727,7 @@ def update_stable_identifier_version(field_value: str, variable: str) -> str:
                 break
         else:
             raise KeyError(
-                f"No parameter contains key '{constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE}'"
+                "No parameter contains key %s", constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE,
             )
     return field_value
 
