@@ -648,17 +648,21 @@ def apply_pseudonymization(
     variable: VariableType,
     selected_algorithm: PseudonymizationAlgorithmsEnum,
 ) -> None:
-    """Apply a pseudonymization algorithm to a variable and update its metadata.
+    """Apply a pseudonymization algorithm to a variable.
 
-    Depending on the selected algorithm, this function creates and assigns a
-    corresponding `Pseudonymization` object.
+    Depending on the selected algorithm, this function creates a corresponding
+    `Pseudonymization` object and assigns it to `state.metadata` for the given variable.
+
+    For `PAPIS_ALGORITHM_WITH_STABLE_ID`, the `stable_identifier_version` is
+    automatically set to today's date.
 
     Args:
         variable (VariableType): The variable to pseudonymize.
         selected_algorithm (PseudonymizationAlgorithmsEnum): The pseudonymization algorithm to apply.
 
-    Returns:
-        None
+    Side Effects:
+        Modifies `state.metadata` by adding or updating the pseudonymization object
+        for the given variable.
     """
     if variable.short_name:
         match selected_algorithm:
@@ -707,10 +711,23 @@ def apply_pseudonymization(
 def update_stable_identifier_version(
     field_value: PseudonymizationInputTypes, variable: VariableType
 ) -> str:
-    """Validate stable identifier version date and update snapshot date.
+    """Validate and update the stable identifier version for a variable.
 
-    When updating field stable indetifier version also update snapshot date.
-    Validate it is a date.
+    This function validates that `field_value` is a proper date and converts it
+    to an ISO-formatted string (`YYYY-MM-DD`). If the variable has an associated
+    pseudonymization with `encryption_algorithm_parameters`, it updates the
+    `snapshotDate` in the corresponding dictionary.
+
+    Args:
+        field_value (PseudonymizationInputTypes): The value to set as the stable identifier version.
+        variable (VariableType): The variable whose pseudonymization parameters are updated.
+
+    Returns:
+        str: The validated date in ISO format (`YYYY-MM-DD`).
+
+    Raises:
+        ValueError: If `field_value` is not a valid date.
+        KeyError: If `encryption_algorithm_parameters` exists but no dictionary contains the snapshot date key.
     """
     validated_date: str
     try:
@@ -727,7 +744,7 @@ def update_stable_identifier_version(
     ):
         for param_dict in variable.pseudonymization.encryption_algorithm_parameters:
             if constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE in param_dict:
-                # Update only snapshot date dict, leave others unchanged
+                # Update only snapshotDate dict
                 param_dict[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE] = field_value
                 break
         else:

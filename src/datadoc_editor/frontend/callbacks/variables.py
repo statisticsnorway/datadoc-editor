@@ -208,19 +208,24 @@ def accept_pseudo_variable_metadata_input(
     variable_short_name: str,
     metadata_field: str,
 ) -> str | None:
-    """Validate and save the value when a pseudo variable metadata is updated.
+    """Validate and save a pseudo-variable metadata field.
 
-    If metadata field is 'pseudonymization_time' date is parsed and validated, else value
-    is stripped from all whitespace.
+    Depending on the metadata field:
+    - If `metadata_field` is 'pseudonymization_time', the input is parsed and validated as a date/time.
+    - If `metadata_field` is 'stable_identifier_version', the value is validated as a date (or set to today by default) 
+        and `snapshotDate` is updated accordingly.
+    - For all other fields, string values are stripped of whitespace.
 
-    Returns an error message if an exception was raised, otherwise returns None.
+    The function updates the corresponding field in the variable's pseudonymization metadata.
+
+    Args:
+        value (PseudonymizationInputTypes): The new value to set for the metadata field.
+        variable_short_name (str): The short name of the variable whose metadata is updated.
+        metadata_field (str): The metadata field to update.
+
+    Returns:
+        str | None: Returns an error message if validation fails, otherwise `None`.
     """
-    logger.debug(
-        "Updating %s, %s with %s",
-        metadata_field,
-        variable_short_name,
-        value,
-    )
     try:
         parsed_value: PseudonymizationInputTypes = None
         variable = get_variable_from_state(variable_short_name)
