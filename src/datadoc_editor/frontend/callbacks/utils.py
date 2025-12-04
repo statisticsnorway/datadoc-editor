@@ -727,7 +727,8 @@ def update_stable_identifier_version(field_value: str, variable: str) -> str:
                 break
         else:
             raise KeyError(
-                "No parameter contains key %s", constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE,
+                "No parameter contains key %s",
+                constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE,
             )
     return field_value
 
