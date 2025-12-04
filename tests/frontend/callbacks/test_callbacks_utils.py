@@ -517,7 +517,7 @@ def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Data
         == case.expected_stable_identifier_version
     )
     if case.expected_snapshot_date is not None:
-        snapshot_param = next(
+        snapshot_param: dict | None = next(
             (
                 p
                 for p in variable.pseudonymization.encryption_algorithm_parameters
@@ -525,6 +525,7 @@ def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Data
             ),
             None,
         )
+        assert snapshot_param is not None
         assert (
             snapshot_param[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE]
             == case.expected_snapshot_date

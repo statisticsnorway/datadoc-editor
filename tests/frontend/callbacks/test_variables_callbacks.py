@@ -949,20 +949,21 @@ def test_update_pseudonymization_algorithm(case, metadata: Datadoc):
 def test_update_stable_identifier_version(metadata: Datadoc):
     state.metadata = metadata
     variable = metadata.variables[0]
-
+    assert variable and variable.short_name is not None
     # Apply pseudonymization
     apply_pseudonymization(
         variable,
         enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
     )
-
+    assert variable.pseudonymization is not None
     assert (
         variable.pseudonymization.stable_identifier_version
         == datetime.datetime.now(datetime.UTC).date().isoformat()
     )
 
     # Check that the snapshot date in the list of dicts is updated
-    snapshot_param = next(
+    assert variable.pseudonymization.encryption_algorithm_parameters is not None
+    snapshot_param: dict | None = next(
         (
             p
             for p in variable.pseudonymization.encryption_algorithm_parameters
@@ -970,6 +971,7 @@ def test_update_stable_identifier_version(metadata: Datadoc):
         ),
         None,
     )
+    assert snapshot_param is not None
     assert (
         snapshot_param[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE]
         == datetime.datetime.now(datetime.UTC).date().isoformat()
