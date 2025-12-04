@@ -949,7 +949,8 @@ def test_update_pseudonymization_algorithm(case, metadata: Datadoc):
 def test_update_stable_identifier_version(metadata: Datadoc):
     state.metadata = metadata
     variable = metadata.variables[0]
-    assert variable and variable.short_name is not None
+    assert variable is not None
+    assert variable.short_name is not None
     # Apply pseudonymization
     apply_pseudonymization(
         variable,
