@@ -42,7 +42,7 @@ def register_pseudonymization_callbacks(app: Dash) -> None:
     )
     def callback_populate_pseudo_workspace(
         value,  # noqa: ANN001
-        n_clicks: int, # noqa: ARG001
+        n_clicks: int,  # noqa: ARG001
         dropdown_id,  # noqa: ANN001
     ) -> dbc.Form:
         """Dynamically create pseudonymization workspace.
