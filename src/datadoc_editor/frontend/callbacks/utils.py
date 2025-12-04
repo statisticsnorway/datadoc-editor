@@ -704,7 +704,9 @@ def apply_pseudonymization(
                 )
 
 
-def update_stable_identifier_version(field_value: PseudonymizationInputTypes, variable: VariableType) -> str:
+def update_stable_identifier_version(
+    field_value: PseudonymizationInputTypes, variable: VariableType
+) -> str:
     """Validate stable identifier version date and update snapshot date.
 
     When updating field stable indetifier version also update snapshot date.
@@ -713,13 +715,17 @@ def update_stable_identifier_version(field_value: PseudonymizationInputTypes, va
     validated_date: str
     try:
         validated_date = arrow.get(str(field_value)).format("YYYY-MM-DD")
-        #arrow.get(field_value, "YYYY-MM-DD")
+        # arrow.get(field_value, "YYYY-MM-DD")
     except arrow.parser.ParserError as e:
         error_message = ("Field_value %s is not a valid ISO date", field_value)
         raise ValueError(error_message) from e
 
     # Find the dict containing the snapshot date key
-    if variable and variable.pseudonymization and variable.pseudonymization.encryption_algorithm_parameters is not None:
+    if (
+        variable
+        and variable.pseudonymization
+        and variable.pseudonymization.encryption_algorithm_parameters is not None
+    ):
         for param_dict in variable.pseudonymization.encryption_algorithm_parameters:
             if constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE in param_dict:
                 # Update only snapshot date dict, leave others unchanged

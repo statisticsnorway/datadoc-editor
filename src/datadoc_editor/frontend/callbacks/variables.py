@@ -223,9 +223,7 @@ def accept_pseudo_variable_metadata_input(
     )
     try:
         parsed_value: str | datetime.datetime | None = None
-        variable = get_variable_from_state(
-                    variable_short_name
-                )
+        variable = get_variable_from_state(variable_short_name)
         if variable:
             if (
                 metadata_field == PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME
@@ -233,7 +231,9 @@ def accept_pseudo_variable_metadata_input(
             ):
                 parsed_value = parse_and_validate_pseudonymization_time(value)
             elif metadata_field == PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION:
-                if ( variable.pseudonymization and variable.pseudonymization.encryption_algorithm
+                if (
+                    variable.pseudonymization
+                    and variable.pseudonymization.encryption_algorithm
                     == PAPIS_ALGORITHM_ENCRYPTION
                 ):
                     if value is None:
