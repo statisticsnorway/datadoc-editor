@@ -23,6 +23,7 @@ from pydantic import AnyUrl
 from datadoc_editor import constants
 from datadoc_editor import enums
 from datadoc_editor import state
+from datadoc_editor.frontend.callbacks.utils import PseudonymizationInputTypes
 from datadoc_editor.frontend.callbacks.utils import apply_pseudonymization
 from datadoc_editor.frontend.callbacks.utils import update_selected_pseudonymization
 from datadoc_editor.frontend.callbacks.utils import variables_control
@@ -727,10 +728,10 @@ def test_accept_pseudo_variable_metadata_input_valid(
     state.metadata = metadata
     first_var_short_name = metadata.variables[0].short_name
     variable = get_variable_from_state(first_var_short_name)
-    
+
     assert variable is not None
     assert variable.short_name is not None
-    
+
     apply_pseudonymization(
         variable,
         pseudo_algorithm,
