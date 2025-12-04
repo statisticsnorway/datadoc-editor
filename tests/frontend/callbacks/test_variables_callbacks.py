@@ -750,45 +750,6 @@ def test_accept_pseudo_variable_metadata_input_valid(
         == expected_model_value
     )
 
-
-def test_accept_pseudo_variable_failing(
-    metadata: Datadoc,
-):
-    state.metadata = metadata
-    first_var_short_name = metadata.variables[0].short_name
-    variable = get_variable_from_state(first_var_short_name)
-
-    assert variable is not None
-    assert variable.short_name is not None
-
-    apply_pseudonymization(
-        variable,
-        enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
-    )
-    assert (
-        getattr(
-            variable.pseudonymization,
-            PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
-        )
-        == datetime.datetime.now(datetime.UTC).date().isoformat()
-    )
-
-    result = accept_pseudo_variable_metadata_input(
-        "1999-12-23",
-        variable.short_name,
-        PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
-    )
-    assert result is None, f"Function returned error: {result}"
-
-    assert (
-        getattr(
-            variable.pseudonymization,
-            PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
-        )
-        == "1999-12-23"
-    )
-
-
 @dataclass
 class PseudoCase:
     """Test cases Pseudonymization."""
@@ -993,7 +954,6 @@ def test_update_stable_identifier_version(metadata: Datadoc):
     variable = metadata.variables[0]
     assert variable is not None
     assert variable.short_name is not None
-    # Apply pseudonymization
     apply_pseudonymization(
         variable,
         enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
@@ -1027,11 +987,7 @@ def test_update_stable_identifier_version(metadata: Datadoc):
         variable.short_name,
         PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
     )
-
-    assert variable.pseudonymization is not None
     assert variable.pseudonymization.stable_identifier_version == test_date
-
-    assert snapshot_param is not None
     assert snapshot_param[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE] == test_date
 
     # If stable identifier version is None todays date is set
@@ -1041,13 +997,10 @@ def test_update_stable_identifier_version(metadata: Datadoc):
         variable.short_name,
         PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
     )
-
     assert (
         variable.pseudonymization.stable_identifier_version
         == datetime.datetime.now(datetime.UTC).date().isoformat()
     )
-
-    assert snapshot_param is not None
     assert (
         snapshot_param[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE]
         == datetime.datetime.now(datetime.UTC).date().isoformat()
