@@ -22,7 +22,7 @@ from dash import html
 from datadoc_editor import config
 from datadoc_editor import constants
 from datadoc_editor import state
-from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_DATASET_MESSAGE, ENCRYPTION_PARAMETER_SNAPSHOT_DATE
+from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_DATASET_MESSAGE
 from datadoc_editor.constants import CHECK_OBLIGATORY_METADATA_VARIABLES_MESSAGE
 from datadoc_editor.constants import ILLEGAL_SHORTNAME_WARNING
 from datadoc_editor.constants import ILLEGAL_SHORTNAME_WARNING_MESSAGE
@@ -46,7 +46,6 @@ from datadoc_editor.frontend.fields.display_dataset import (
 from datadoc_editor.frontend.fields.display_dataset import DatasetIdentifiers
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     OBLIGATORY_VARIABLES_METADATA_PSEUDO_IDENTIFIERS_AND_DISPLAY_NAME,
-    PseudoVariableIdentifiers,
 )
 from datadoc_editor.frontend.fields.display_pseudo_variables import (
     PSEUDONYMIZATION_DEAD_METADATA,
@@ -70,7 +69,6 @@ if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
     import pydantic
     from dapla_metadata.datasets.utility.utils import VariableType
-    from datadoc_model.required import model as required_model
     from upath.types import ReadablePathLike
 
 
@@ -653,7 +651,7 @@ def apply_pseudonymization(
     """Apply a pseudonymization algorithm to a variable and update its metadata.
 
     Depending on the selected algorithm, this function creates and assigns a
-    corresponding `Pseudonymization` object. 
+    corresponding `Pseudonymization` object.
 
     Args:
         variable (VariableType): The variable to pseudonymize.
@@ -679,7 +677,9 @@ def apply_pseudonymization(
                         encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION,
                         stable_identifier_type=constants.PAPIS_STABLE_IDENTIFIER_TYPE,
                         pseudonymization_time=None,
-                        stable_identifier_version=datetime.datetime.now(datetime.UTC).date().isoformat(),
+                        stable_identifier_version=datetime.datetime.now(datetime.UTC)
+                        .date()
+                        .isoformat(),
                     ),
                 )
             case PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA:
@@ -687,7 +687,7 @@ def apply_pseudonymization(
                     variable.short_name,
                     model.Pseudonymization(
                         encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION,
-                        pseudonymization_time=None
+                        pseudonymization_time=None,
                     ),
                 )
             case PseudonymizationAlgorithmsEnum.CUSTOM:
@@ -703,11 +703,12 @@ def apply_pseudonymization(
                     ),
                 )
 
-def update_stable_identifier_version(field_value: str, variable: str)-> str:
+
+def update_stable_identifier_version(field_value: str, variable: str) -> str:
     """Validate stable identifier version date and update snapshot date.
-    
+
     When updating field stable indetifier version also update snapshot date. Validate it is a date.
-    
+
     """
     if field_value is None:
         raise ValueError("field_value cannot be None")
@@ -725,9 +726,12 @@ def update_stable_identifier_version(field_value: str, variable: str)-> str:
                 param_dict[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE] = field_value
                 break
         else:
-            raise KeyError(f"No parameter contains key '{constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE}'")
+            raise KeyError(
+                f"No parameter contains key '{constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE}'"
+            )
     return field_value
-    
+
+
 def parse_and_validate_pseudonymization_time(
     pseudo_date: str | datetime.datetime | None,
 ) -> datetime.datetime | None:

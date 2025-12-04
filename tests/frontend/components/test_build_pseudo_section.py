@@ -30,7 +30,9 @@ TEST_VARIABLES = [
         model.Variable(
             short_name="helse",
             pseudonymization=model.Pseudonymization(
-                stable_identifier_type="FREG_SNR", encryption_algorithm="TINK-FPE", stable_identifier_version="2025-01-01",
+                stable_identifier_type="FREG_SNR",
+                encryption_algorithm="TINK-FPE",
+                stable_identifier_version="2025-01-01",
             ),
         ),
         2,

@@ -13,7 +13,6 @@ from dash import Dash
 from dash import Input
 from dash import Output
 from dash import State
-import dash
 
 from datadoc_editor import state
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
@@ -121,9 +120,15 @@ def register_pseudonymization_callbacks(app: Dash) -> None:
         return True, message
 
     @app.callback(
-        Output({"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH}, "value"),
+        Output(
+            {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
+            "value",
+        ),
         Input("save-button", "n_clicks"),
-        State({"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH}, "id"),
+        State(
+            {"type": PSEUDO_METADATA_INPUT, "variable_short_name": MATCH, "id": MATCH},
+            "id",
+        ),
         prevent_initial_call=True,
     )
     def update_pseudo_input_values(n_clicks, component_id):
@@ -131,4 +136,3 @@ def register_pseudonymization_callbacks(app: Dash) -> None:
         field_name = component_id["id"]
         new_value = getattr(var.pseudonymization, field_name, None)
         return new_value
-    

@@ -23,16 +23,17 @@ from pydantic import AnyUrl
 from datadoc_editor import constants
 from datadoc_editor import enums
 from datadoc_editor import state
-from datadoc_editor.frontend.callbacks.utils import apply_pseudonymization, update_selected_pseudonymization
+from datadoc_editor.frontend.callbacks.utils import apply_pseudonymization
+from datadoc_editor.frontend.callbacks.utils import update_selected_pseudonymization
 from datadoc_editor.frontend.callbacks.utils import variables_control
 from datadoc_editor.frontend.callbacks.variables import (
     accept_pseudo_variable_metadata_input,
-    get_variable_from_state,
 )
 from datadoc_editor.frontend.callbacks.variables import (
     accept_variable_metadata_date_input,
 )
 from datadoc_editor.frontend.callbacks.variables import accept_variable_metadata_input
+from datadoc_editor.frontend.callbacks.variables import get_variable_from_state
 from datadoc_editor.frontend.callbacks.variables import mutate_variable_pseudonymization
 from datadoc_editor.frontend.callbacks.variables import populate_pseudo_workspace
 from datadoc_editor.frontend.callbacks.variables import populate_variables_workspace
@@ -662,7 +663,7 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
 
 
 @pytest.mark.parametrize(
-    ("metadata_field", "value", "pseudo_algorithm","expected_model_value"),
+    ("metadata_field", "value", "pseudo_algorithm", "expected_model_value"),
     [
         (
             PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME,
@@ -731,9 +732,7 @@ def test_accept_pseudo_variable_metadata_input_valid(
         pseudo_algorithm,
     )
     result = accept_pseudo_variable_metadata_input(
-        value,
-        variable.short_name,
-        metadata_field=metadata_field.value
+        value, variable.short_name, metadata_field=metadata_field.value
     )
     assert result is None, f"Function returned error: {result}"
     variable = state.metadata.variables_lookup.get(first_var_short_name)
@@ -945,6 +944,7 @@ def test_update_pseudonymization_algorithm(case, metadata: Datadoc):
                 variable.pseudonymization.encryption_algorithm_parameters
             )
 
+
 def test_update_stable_identifier_version(metadata: Datadoc):
     state.metadata = metadata
     variable = metadata.variables[0]
@@ -954,32 +954,36 @@ def test_update_stable_identifier_version(metadata: Datadoc):
         variable,
         enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
     )
-    
-    assert variable.pseudonymization.stable_identifier_version == datetime.datetime.now(
-                        datetime.UTC
-                    ).date().isoformat()
-    
+
+    assert (
+        variable.pseudonymization.stable_identifier_version
+        == datetime.datetime.now(datetime.UTC).date().isoformat()
+    )
+
     # Check that the snapshot date in the list of dicts is updated
     snapshot_param = next(
-        (p for p in variable.pseudonymization.encryption_algorithm_parameters
-        if constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE in p),
-        None
+        (
+            p
+            for p in variable.pseudonymization.encryption_algorithm_parameters
+            if constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE in p
+        ),
+        None,
     )
-    assert snapshot_param[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE] == datetime.datetime.now(
-                        datetime.UTC
-                    ).date().isoformat()
+    assert (
+        snapshot_param[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE]
+        == datetime.datetime.now(datetime.UTC).date().isoformat()
+    )
 
     # Update the stable identifier version (snapshot date)
     test_date = "2024-11-03"
     accept_pseudo_variable_metadata_input(
         test_date,
         variable.short_name,
-        PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value
+        PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
     )
 
     assert variable.pseudonymization is not None
     assert variable.pseudonymization.stable_identifier_version == test_date
-
 
     assert snapshot_param is not None
     assert snapshot_param[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE] == test_date
