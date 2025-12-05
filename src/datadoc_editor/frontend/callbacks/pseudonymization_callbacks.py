@@ -70,6 +70,9 @@ def register_pseudonymization_callbacks(app: Dash) -> None:
 
         if ctx.triggered_id == "save-button":
             mutate_variable_pseudonymization(variable, selected_algorithm)
+            
+        if ctx.triggered_id == dropdown_id:
+            mutate_variable_pseudonymization(variable, selected_algorithm)
 
         logger.debug(
             "Variable %s has pseudo info: %s",
