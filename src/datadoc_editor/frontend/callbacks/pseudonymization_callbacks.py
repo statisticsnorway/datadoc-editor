@@ -68,10 +68,8 @@ def register_pseudonymization_callbacks(app: Dash) -> None:
 
         logger.debug("Triggered by: %s", ctx.triggered_id)
 
-        if ctx.triggered_id == "save-button":
-            mutate_variable_pseudonymization(variable, selected_algorithm)
-
-        if ctx.triggered_id == dropdown_id:
+        # Perform changes when the user selects a new pseudonymization algorithm from the dropdown or clicks the save button
+        if ctx.triggered_id in [dropdown_id, "save-button"]:
             mutate_variable_pseudonymization(variable, selected_algorithm)
 
         logger.debug(
