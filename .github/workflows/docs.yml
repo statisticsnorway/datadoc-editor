@@ -31,7 +31,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6.0.0
         with:
-          python-version-file: "pyproject.toml"
+          python-version: "3.13" # Pyarrow doesn't provide wheels for 3.14 yet
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
