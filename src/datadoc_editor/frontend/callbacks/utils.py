@@ -69,7 +69,6 @@ if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
     import pydantic
     from dapla_metadata.datasets.utility.utils import VariableType
-    from datadoc_model.required import model as required_model
     from upath.types import ReadablePathLike
 
 
@@ -648,26 +647,22 @@ def map_dropdown_to_pseudo(
 def apply_pseudonymization(
     variable: VariableType,
     selected_algorithm: PseudonymizationAlgorithmsEnum,
-    transfer_pseudonymzation: model.Pseudonymization
-    | required_model.Pseudonymization
-    | None,
 ) -> None:
-    """Apply a pseudonymization algorithm to a variable and update its metadata.
+    """Apply a pseudonymization algorithm to a variable.
 
-    Depending on the selected algorithm, this function creates and assigns a
-    corresponding `Pseudonymization` object. If previously stored values exist
-    for algorithm-specific optional fields, they are transferred to the new
-    `Pseudonymization`. If the selected algorithm is `CUSTOM`, all available
-    values are transferred.
+    Depending on the selected algorithm, this function creates a corresponding
+    `Pseudonymization` object and assigns it to `state.metadata` for the given variable.
+
+    For `PAPIS_ALGORITHM_WITH_STABLE_ID`, the `stable_identifier_version` is
+    automatically set to today's date.
 
     Args:
         variable (VariableType): The variable to pseudonymize.
         selected_algorithm (PseudonymizationAlgorithmsEnum): The pseudonymization algorithm to apply.
-        transfer_pseudonymzation (model.Pseudonymization | None): Existing
-            pseudonymization data to transfer, if applicable.
 
-    Returns:
-        None
+    Side Effects:
+        Modifies `state.metadata` by adding or updating the pseudonymization object
+        for the given variable.
     """
     if variable.short_name:
         match selected_algorithm:
@@ -676,9 +671,7 @@ def apply_pseudonymization(
                     variable.short_name,
                     model.Pseudonymization(
                         encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION,
-                        pseudonymization_time=transfer_pseudonymzation.pseudonymization_time
-                        if transfer_pseudonymzation
-                        else None,
+                        pseudonymization_time=None,
                     ),
                 )
             case PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID:
@@ -687,12 +680,10 @@ def apply_pseudonymization(
                     model.Pseudonymization(
                         encryption_algorithm=constants.PAPIS_ALGORITHM_ENCRYPTION,
                         stable_identifier_type=constants.PAPIS_STABLE_IDENTIFIER_TYPE,
-                        pseudonymization_time=transfer_pseudonymzation.pseudonymization_time
-                        if transfer_pseudonymzation
-                        else None,
-                        stable_identifier_version=transfer_pseudonymzation.stable_identifier_version
-                        if transfer_pseudonymzation
-                        else None,
+                        pseudonymization_time=None,
+                        stable_identifier_version=datetime.datetime.now(datetime.UTC)
+                        .date()
+                        .isoformat(),
                     ),
                 )
             case PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA:
@@ -700,9 +691,7 @@ def apply_pseudonymization(
                     variable.short_name,
                     model.Pseudonymization(
                         encryption_algorithm=constants.STANDARD_ALGORITM_DAPLA_ENCRYPTION,
-                        pseudonymization_time=transfer_pseudonymzation.pseudonymization_time
-                        if transfer_pseudonymzation
-                        else None,
+                        pseudonymization_time=None,
                     ),
                 )
             case PseudonymizationAlgorithmsEnum.CUSTOM:
@@ -711,14 +700,60 @@ def apply_pseudonymization(
                     pseudonymization=model.Pseudonymization(
                         encryption_algorithm=None,
                         encryption_key_reference=None,
-                        pseudonymization_time=transfer_pseudonymzation.pseudonymization_time
-                        if transfer_pseudonymzation
-                        else None,
+                        pseudonymization_time=None,
                         stable_identifier_type=None,
                         stable_identifier_version=None,
                         encryption_algorithm_parameters=None,
                     ),
                 )
+
+
+def update_stable_identifier_version(
+    field_value: PseudonymizationInputTypes, variable: VariableType
+) -> str:
+    """Validate and update the stable identifier version for a variable.
+
+    This function validates that `field_value` is a proper date and converts it
+    to an ISO-formatted string (`YYYY-MM-DD`). If the variable has an associated
+    pseudonymization with `encryption_algorithm_parameters`, it updates the
+    `snapshotDate` in the corresponding dictionary.
+
+    Args:
+        field_value (PseudonymizationInputTypes): The value to set as the stable identifier version.
+        variable (VariableType): The variable whose pseudonymization parameters are updated.
+
+    Returns:
+        str: The validated date in ISO format (`YYYY-MM-DD`).
+
+    Raises:
+        ValueError: If `field_value` is not a valid date.
+        KeyError: If `encryption_algorithm_parameters` exists but no dictionary contains the snapshot date key.
+    """
+    validated_date: str
+    try:
+        validated_date = arrow.get(str(field_value)).format("YYYY-MM-DD")
+    except arrow.parser.ParserError as e:
+        error_message = ("Field_value %s is not a valid ISO date", field_value)
+        raise ValueError(error_message) from e
+
+    # Find the dict containing the snapshot date key
+    if (
+        variable
+        and variable.pseudonymization
+        and variable.pseudonymization.encryption_algorithm_parameters is not None
+    ):
+        for param_dict in variable.pseudonymization.encryption_algorithm_parameters:
+            if constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE in param_dict:
+                # Update only snapshotDate dict
+                param_dict[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE] = field_value
+                break
+        else:
+            error_message = (
+                "No parameter contains key %s",
+                constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE,
+            )
+            raise KeyError(error_message)
+    return validated_date
 
 
 def parse_and_validate_pseudonymization_time(
@@ -758,42 +793,34 @@ def parse_and_validate_pseudonymization_time(
 
 def update_selected_pseudonymization(
     variable: VariableType,
-    old_algorithm: PseudonymizationAlgorithmsEnum,
     new_algorithm: PseudonymizationAlgorithmsEnum,
 ) -> None:
     """Update the pseudonymization algorithm for a variable.
 
     This function replaces the variable's existing pseudonymization with a new one:
         - Removes the pseudonymization defined by the old algorithm.
-        - Transfers old pseudonymization values to 'apply_pseudonymization'
         - Applies a new pseudonymization based on the newly selected algorithm.
 
     Args:
         variable (VariableType):
             The variable whose pseudonymization is being updated.
-        old_algorithm (PseudonymizationAlgorithmsEnum):
-            The previously applied pseudonymization algorithm.
         new_algorithm (PseudonymizationAlgorithmsEnum):
             The newly selected pseudonymization algorithm.
     """
     if variable.short_name:
-        transfer_pseudonymization = (
-            variable.pseudonymization if variable.pseudonymization else None
-        )
         state.metadata.remove_pseudonymization(variable.short_name)
         logger.debug(
             "Updating pseuonymization step 1: Remove pseudonymization for %s",
             variable.short_name,
         )
-        apply_pseudonymization(variable, new_algorithm, transfer_pseudonymization)
+        apply_pseudonymization(variable, new_algorithm)
         logger.debug(
             "Updating pseuonymization step 2: Add new pseudonymization for %s.",
             variable.short_name,
         )
         logger.info(
-            "Updating pseudonymization algorithm for %s from %s to %s.",
+            "Updating pseudonymization algorithm for %s to %s.",
             variable.short_name,
-            old_algorithm,
             new_algorithm,
         )
 

@@ -44,8 +44,10 @@ PSEUDO_FIELDS: dict[
         identifier=PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
         display_name="Stabil identifikator versjon",
         description="Det skal brukes den type versjonering som er brukt for stabil identifikator katalogen, eksempler kan være dato eller semantisk versjonering.",
+        type="date",
         obligatory=False,
         editable=True,
+        value_getter=get_datetime_and_stringify,
     ),
     PseudoVariableIdentifiers.STABLE_IDENTIFIER_TYPE: MetadataInputField(
         identifier=PseudoVariableIdentifiers.STABLE_IDENTIFIER_TYPE.value,

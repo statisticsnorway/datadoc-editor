@@ -23,6 +23,8 @@ from pydantic import AnyUrl
 from datadoc_editor import constants
 from datadoc_editor import enums
 from datadoc_editor import state
+from datadoc_editor.frontend.callbacks.utils import PseudonymizationInputTypes
+from datadoc_editor.frontend.callbacks.utils import apply_pseudonymization
 from datadoc_editor.frontend.callbacks.utils import update_selected_pseudonymization
 from datadoc_editor.frontend.callbacks.utils import variables_control
 from datadoc_editor.frontend.callbacks.variables import (
@@ -661,11 +663,12 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
 
 
 @pytest.mark.parametrize(
-    ("metadata_field", "value", "expected_model_value"),
+    ("metadata_field", "value", "pseudo_algorithm", "expected_model_value"),
     [
         (
             PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME,
             "2024-12-31",
+            enums.PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
             datetime.datetime(
                 2024,
                 12,
@@ -679,31 +682,37 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
         (
             PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME,
             "",
+            enums.PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
             None,
         ),
         (
             PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME,
             None,
+            enums.PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
             None,
         ),
         (
             PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION,
-            "stable identifier ",
-            "stable identifier",
+            "2024-01-01",
+            enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
+            "2024-01-01",
         ),
         (
             PseudoVariableIdentifiers.STABLE_IDENTIFIER_TYPE,
             "",
+            enums.PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
             None,
         ),
         (
             PseudoVariableIdentifiers.ENCRYPTION_ALGORITHM,
             "TINK-FPE",
+            enums.PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
             "TINK-FPE",
         ),
         (
             PseudoVariableIdentifiers.ENCRYPTION_KEY_REFERENCE,
             "SSB_GLOBAL_KEY_1",
+            enums.PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
             "SSB_GLOBAL_KEY_1",
         ),
     ],
@@ -711,22 +720,27 @@ def test_accept_variable_metadata_input_when_shortname_is_non_ascii(
 def test_accept_pseudo_variable_metadata_input_valid(
     metadata: Datadoc,
     metadata_field: PseudoVariableIdentifiers,
-    value: str | datetime.datetime | None,
-    expected_model_value: Any,  # noqa: ANN401
+    value: PseudonymizationInputTypes,
+    pseudo_algorithm: enums.PseudonymizationAlgorithmsEnum,
+    expected_model_value: PseudonymizationInputTypes,
 ):
     state.metadata = metadata
-    first_var_short_name = metadata.variables[0].short_name or ""
-    metadata.add_pseudonymization(first_var_short_name)
-    assert (
-        accept_pseudo_variable_metadata_input(
-            value,
-            first_var_short_name,
-            metadata_field=metadata_field.value,
-        )
-        is None
-    )
-    variable = state.metadata.variables_lookup.get(first_var_short_name)
+    variable = metadata.variables[0]
+
     assert variable is not None
+    assert variable.short_name is not None
+
+    apply_pseudonymization(
+        variable,
+        pseudo_algorithm,
+    )
+    assert variable.pseudonymization is not None
+    # Update
+    result = accept_pseudo_variable_metadata_input(
+        value, variable.short_name, metadata_field=metadata_field.value
+    )
+    assert result is None, f"Function returned error: {result}"
+
     assert (
         getattr(
             variable.pseudonymization,
@@ -920,19 +934,77 @@ def test_update_pseudonymization_algorithm(case, metadata: Datadoc):
         variable.pseudonymization = case.saved_pseudonymization
     update_selected_pseudonymization(
         variable,
-        case.saved_pseudonymization.encryption_algorithm,
         case.selected_algorithm,
     )
     if case.expected_variable_pseudonymization is True:
         assert variable.pseudonymization is not None
-        assert (
-            variable.pseudonymization.pseudonymization_time
-            == case.saved_pseudonymization.pseudonymization_time
-        )
+        if case.saved_pseudonymization.pseudonymization_time:
+            assert (
+                variable.pseudonymization.pseudonymization_time
+                != case.saved_pseudonymization.pseudonymization_time
+            )
         if variable.pseudonymization.encryption_algorithm_parameters is not None:
             assert case.expected_algorithm_parameters_length == len(
                 variable.pseudonymization.encryption_algorithm_parameters
             )
+
+
+def test_update_stable_identifier_version(metadata: Datadoc):
+    state.metadata = metadata
+    variable = metadata.variables[0]
+    assert variable is not None
+    assert variable.short_name is not None
+    apply_pseudonymization(
+        variable,
+        enums.PseudonymizationAlgorithmsEnum.PAPIS_ALGORITHM_WITH_STABLE_ID,
+    )
+    assert variable.pseudonymization is not None
+    assert (
+        variable.pseudonymization.stable_identifier_version
+        == datetime.datetime.now(datetime.UTC).date().isoformat()
+    )
+
+    # Check that the snapshot date in the list of dicts is updated
+    assert variable.pseudonymization.encryption_algorithm_parameters is not None
+    snapshot_param: dict | None = next(
+        (
+            p
+            for p in variable.pseudonymization.encryption_algorithm_parameters
+            if constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE in p
+        ),
+        None,
+    )
+    assert snapshot_param is not None
+    assert (
+        snapshot_param[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE]
+        == datetime.datetime.now(datetime.UTC).date().isoformat()
+    )
+
+    # Update the stable identifier version
+    test_date = "2024-11-03"
+    accept_pseudo_variable_metadata_input(
+        test_date,
+        variable.short_name,
+        PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
+    )
+    assert variable.pseudonymization.stable_identifier_version == test_date
+    assert snapshot_param[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE] == test_date
+
+    # If stable identifier version is None todays date is set
+    test_date_none = None
+    accept_pseudo_variable_metadata_input(
+        test_date_none,
+        variable.short_name,
+        PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION.value,
+    )
+    assert (
+        variable.pseudonymization.stable_identifier_version
+        == datetime.datetime.now(datetime.UTC).date().isoformat()
+    )
+    assert (
+        snapshot_param[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE]
+        == datetime.datetime.now(datetime.UTC).date().isoformat()
+    )
 
 
 def test_delete_pseudonymization(

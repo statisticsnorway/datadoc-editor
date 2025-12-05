@@ -12,6 +12,7 @@ from typing import cast
 from dapla_metadata.datasets import model
 
 from datadoc_editor import state
+from datadoc_editor.constants import PAPIS_ALGORITHM_ENCRYPTION
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
 from datadoc_editor.frontend.callbacks.utils import MetadataInputTypes
 from datadoc_editor.frontend.callbacks.utils import PseudonymizationInputTypes
@@ -27,6 +28,7 @@ from datadoc_editor.frontend.callbacks.utils import (
     parse_and_validate_pseudonymization_time,
 )
 from datadoc_editor.frontend.callbacks.utils import update_selected_pseudonymization
+from datadoc_editor.frontend.callbacks.utils import update_stable_identifier_version
 from datadoc_editor.frontend.components.builders import build_edit_section
 from datadoc_editor.frontend.components.builders import build_pseudo_field_section
 from datadoc_editor.frontend.components.builders import build_ssb_accordion
@@ -206,35 +208,59 @@ def accept_pseudo_variable_metadata_input(
     variable_short_name: str,
     metadata_field: str,
 ) -> str | None:
-    """Validate and save the value when a pseudo variable metadata is updated.
+    """Validate and save a pseudo-variable metadata field.
 
-    If metadata field is 'pseudonymization_time' date is parsed and validated, else value
-    is stripped from all whitespace.
+    Depending on the metadata field:
+    - If `metadata_field` is 'pseudonymization_time', the input is parsed and validated as a date/time.
+    - If `metadata_field` is 'stable_identifier_version', the value is validated as a date (or set to today by default)
+        and `snapshotDate` is updated accordingly.
+    - For all other fields, string values are stripped of whitespace.
 
-    Returns an error message if an exception was raised, otherwise returns None.
+    The function updates the corresponding field in the variable's pseudonymization metadata.
+
+    Args:
+        value (PseudonymizationInputTypes): The new value to set for the metadata field.
+        variable_short_name (str): The short name of the variable whose metadata is updated.
+        metadata_field (str): The metadata field to update.
+
+    Returns:
+        str | None: Returns an error message if validation fails, otherwise `None`.
     """
-    logger.debug(
-        "Updating %s, %s with %s",
-        metadata_field,
-        variable_short_name,
-        value,
-    )
     try:
-        parsed_value: str | datetime.datetime | None
-        if (
-            metadata_field == PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME
-            and isinstance(value, (datetime.datetime, str))
-        ):
-            parsed_value = parse_and_validate_pseudonymization_time(value)
-        elif isinstance(value, str):
-            parsed_value = value.strip() or None
-        else:
-            parsed_value = value or None
-        setattr(
-            get_variable_from_state(variable_short_name).pseudonymization,
-            metadata_field,
-            parsed_value,
-        )
+        parsed_value: PseudonymizationInputTypes = None
+        variable = get_variable_from_state(variable_short_name)
+        if variable:
+            if (
+                metadata_field == PseudoVariableIdentifiers.PSEUDONYMIZATION_TIME
+                and isinstance(value, (datetime.datetime, str))
+            ):
+                parsed_value = parse_and_validate_pseudonymization_time(value)
+            elif metadata_field == PseudoVariableIdentifiers.STABLE_IDENTIFIER_VERSION:
+                if (
+                    variable.pseudonymization
+                    and variable.pseudonymization.encryption_algorithm
+                    == PAPIS_ALGORITHM_ENCRYPTION
+                ):
+                    if value is None:
+                        value = datetime.datetime.now(datetime.UTC).date().isoformat()
+                    if isinstance(value, str):
+                        value = value.strip()
+                    parsed_value = update_stable_identifier_version(
+                        value, get_variable_from_state(variable_short_name)
+                    )
+                else:
+                    if isinstance(value, str):
+                        value = value.strip()
+                    parsed_value = value if value else None
+            elif isinstance(value, str):
+                parsed_value = value.strip() or None
+            else:
+                parsed_value = value or None
+            setattr(
+                get_variable_from_state(variable_short_name).pseudonymization,
+                metadata_field,
+                parsed_value,
+            )
     except ValueError:
         logger.exception(
             "Validation failed for %s, %s, %s:",
@@ -479,7 +505,7 @@ def populate_pseudo_workspace(
         selected_algorithm = map_dropdown_to_pseudo(variable)
 
     if selected_algorithm and not variable.pseudonymization:
-        apply_pseudonymization(variable, selected_algorithm, None)
+        apply_pseudonymization(variable, selected_algorithm)
         logger.info("Added pseudonymization for %s", variable.short_name)
 
     if variable.pseudonymization is None:
@@ -525,9 +551,7 @@ def mutate_variable_pseudonymization(
     ):
         inferred_algorithm = map_dropdown_to_pseudo(variable)
         if inferred_algorithm and inferred_algorithm != selected_algorithm:
-            update_selected_pseudonymization(
-                variable, inferred_algorithm, selected_algorithm
-            )
+            update_selected_pseudonymization(variable, selected_algorithm)
         return
 
 

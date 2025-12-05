@@ -386,8 +386,10 @@ class PseudoCase:
     expected_encryption_algorithm: str | None
     expected_encryption_key_reference: str | None
     expected_algorithm_parameters: list | None
+    expected_stable_identifier_version: str | None = None
     saved_pseudonymization: model.Pseudonymization | None = None
     expected_pseudonymization_time: datetime.datetime | None = None
+    expected_snapshot_date: str | None = None
 
 
 @pytest.mark.parametrize(
@@ -427,6 +429,12 @@ class PseudoCase:
                     .isoformat()
                 },
             ],
+            expected_stable_identifier_version=datetime.datetime.now(datetime.UTC)
+            .date()
+            .isoformat(),
+            expected_snapshot_date=datetime.datetime.now(datetime.UTC)
+            .date()
+            .isoformat(),
         ),
         PseudoCase(
             selected_algorithm=enums.PseudonymizationAlgorithmsEnum.STANDARD_ALGORITM_DAPLA,
@@ -466,9 +474,7 @@ class PseudoCase:
                     2021, 1, 1, 0, 0, tzinfo=datetime.UTC
                 ),
             ),
-            expected_pseudonymization_time=datetime.datetime(
-                2021, 1, 1, 0, 0, tzinfo=datetime.UTC
-            ),
+            expected_pseudonymization_time=None,
         ),
     ],
     ids=[
@@ -485,7 +491,6 @@ def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Data
     apply_pseudonymization(
         variable,
         case.selected_algorithm,
-        case.saved_pseudonymization,
     )
     assert variable.pseudonymization is not None
     assert (
@@ -507,3 +512,21 @@ def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Data
         variable.pseudonymization.pseudonymization_time
         == case.expected_pseudonymization_time
     )
+    assert (
+        variable.pseudonymization.stable_identifier_version
+        == case.expected_stable_identifier_version
+    )
+    if case.expected_snapshot_date is not None:
+        snapshot_param: dict | None = next(
+            (
+                p
+                for p in variable.pseudonymization.encryption_algorithm_parameters
+                if constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE in p
+            ),
+            None,
+        )
+        assert snapshot_param is not None
+        assert (
+            snapshot_param[constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE]
+            == case.expected_snapshot_date
+        )

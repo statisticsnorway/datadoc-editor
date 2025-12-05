@@ -13,6 +13,8 @@ from dash import Dash
 from dash import Input
 from dash import Output
 from dash import State
+from dash import ctx
+from dash import no_update
 
 from datadoc_editor import state
 from datadoc_editor.enums import PseudonymizationAlgorithmsEnum
@@ -25,6 +27,7 @@ from datadoc_editor.frontend.fields.display_base import PSEUDO_METADATA_INPUT
 
 if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
+    from dash import NoUpdate
 
 
 logger = logging.getLogger(__name__)
@@ -41,9 +44,9 @@ def register_pseudonymization_callbacks(app: Dash) -> None:
     )
     def callback_populate_pseudo_workspace(
         value,  # noqa: ANN001
-        n_clicks: int,
+        n_clicks: int,  # noqa: ARG001
         dropdown_id,  # noqa: ANN001
-    ) -> dbc.Form:
+    ) -> dbc.Form | NoUpdate:
         """Dynamically create pseudonymization workspace.
 
         - The dropdown value updates the displayed pseudonymization fields immediately.
@@ -61,11 +64,13 @@ def register_pseudonymization_callbacks(app: Dash) -> None:
 
         if variable is None:
             logger.info("Variable not found in lookup!")
-            return []
+            return no_update
 
-        # Persist update and deletion only on save
-        if n_clicks and n_clicks > 0:
-            mutate_variable_pseudonymization(variable, selected_algorithm)  # type: ignore[arg-type]
+        logger.debug("Triggered by: %s", ctx.triggered_id)
+
+        # Perform changes when the user selects a new pseudonymization algorithm from the dropdown or clicks the save button
+        if ctx.triggered_id in [dropdown_id, "save-button"]:
+            mutate_variable_pseudonymization(variable, selected_algorithm)
 
         logger.debug(
             "Variable %s has pseudo info: %s",
