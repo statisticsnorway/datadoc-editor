@@ -153,6 +153,7 @@ DISPLAY_VARIABLES: dict[
         options_getter=get_unit_type_options,
         obligatory=True,
         editable=True,
+        searchable=True,
     ),
     VariableIdentifiers.POPULATION_DESCRIPTION: MetadataMultiLanguageField(
         identifier=VariableIdentifiers.POPULATION_DESCRIPTION.value,
@@ -169,6 +170,7 @@ DISPLAY_VARIABLES: dict[
         options_getter=get_measurement_unit_options,
         obligatory=False,
         editable=True,
+        searchable=True,
     ),
     VariableIdentifiers.INVALID_VALUE_DESCRIPTION: MetadataMultiLanguageField(
         identifier=VariableIdentifiers.INVALID_VALUE_DESCRIPTION.value,
@@ -212,6 +214,7 @@ DISPLAY_VARIABLES: dict[
         options_getter=get_data_source_options,
         obligatory=True,
         editable=True,
+        searchable=True,
     ),
     VariableIdentifiers.TEMPORALITY_TYPE: MetadataDropdownField(
         identifier=VariableIdentifiers.TEMPORALITY_TYPE.value,

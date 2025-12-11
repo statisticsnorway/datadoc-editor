@@ -183,6 +183,7 @@ DISPLAY_DATASET: dict[
         description="Oppgi det primære statistikkområdet som datasettet tilhører.",
         obligatory=True,
         editable=True,
+        searchable=True,
         options_getter=get_statistical_subject_options,
     ),
     DatasetIdentifiers.KEYWORD: MetadataInputField(
