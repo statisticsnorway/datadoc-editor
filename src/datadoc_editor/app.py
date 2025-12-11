@@ -154,8 +154,7 @@ def collect_data_from_external_sources(
     )
 
     state.measurement_units = CodeList(
-        executor,
-        config.get_measurement_unit_code(),
+        executor=executor, classification_id=config.get_measurement_unit_code(), level=2
     )
 
     state.organisational_units = CodeList(
@@ -188,7 +187,7 @@ def main(dataset_path: str | None = None) -> None:
         else:
             if dev_mode := config.get_dash_development_mode():
                 logger.warning(
-                    "Starting in Development Mode. NOT SUITABLE FOR PRODUCTION.",
+                    "Starting in Dash Debug Mode. NOT SUITABLE FOR PRODUCTION.",
                 )
             app.run(debug=dev_mode, port=port)
 

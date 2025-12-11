@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 from datadoc_editor.constants import DAPLA_MANUAL_TEXT
 from datadoc_editor.frontend.components.builders import build_link_object
 
-DOT_ENV_FILE_PATH = Path(__file__).parent.joinpath(".env")
+DOT_ENV_FILE_PATH = Path(__file__).parents[2] / ".env"
 
 JUPYTERHUB_USER = "JUPYTERHUB_USER"
 DAPLA_REGION = "DAPLA_REGION"
