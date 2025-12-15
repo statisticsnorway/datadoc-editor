@@ -26,7 +26,7 @@ jobs:
       image-tag: ${{ steps.metadata.outputs.tags }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: "Authenticate to Google Cloud"
         id: "auth"
@@ -83,7 +83,7 @@ jobs:
       contents: "read"
       id-token: "write"
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: test
