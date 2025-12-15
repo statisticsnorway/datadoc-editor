@@ -312,6 +312,7 @@ class MetadataDropdownField(DisplayMetadata):
     """Controls how a Dropdown should be displayed."""
 
     options_getter: Callable[[], list[dict[str, str]]] = list
+    searchable: bool = False
 
     def render(
         self,
@@ -330,6 +331,7 @@ class MetadataDropdownField(DisplayMetadata):
             showDescription=True,
             description=self.description,
             required=self.obligatory and self.editable,
+            searchable=self.searchable,
         )
 
 

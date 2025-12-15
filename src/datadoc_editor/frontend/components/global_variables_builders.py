@@ -59,6 +59,7 @@ def build_global_input_field_section(
                 showDescription=True,
                 description=field.description,
                 required=field.obligatory and field.editable,
+                searchable=field.searchable,
             )
 
         inputs.append(input_component)
