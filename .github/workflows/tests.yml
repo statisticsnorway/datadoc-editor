@@ -67,7 +67,7 @@ jobs:
           subprocess.run(cmd, shell=True)
 
       - name: Restore pre-commit cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         if: matrix.session == 'pre-commit'
         with:
           path: ~/.cache/pre-commit
@@ -81,7 +81,7 @@ jobs:
 
       - name: Upload coverage data
         if: always() && matrix.session == 'tests'
-        uses: "actions/upload-artifact@v5"
+        uses: "actions/upload-artifact@v6"
         with:
           name: coverage-data-${{ matrix.os }}-${{ matrix.python }}
           path: ".coverage.*"
@@ -89,7 +89,7 @@ jobs:
 
       - name: Upload documentation
         if: matrix.session == 'docs-build'
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: docs
           path: docs/_build
@@ -109,7 +109,7 @@ jobs:
           enable-cache: true
 
       - name: Download coverage data
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           pattern: coverage-data-*
           merge-multiple: true
@@ -134,4 +134,4 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         # No need to run SonarCloud analysis if dependabot update or token not defined
         if: env.SONAR_TOKEN != '' && (github.actor != 'dependabot[bot]')
-        uses: SonarSource/sonarqube-scan-action@v6.0.0
+        uses: SonarSource/sonarqube-scan-action@v7.0.0
