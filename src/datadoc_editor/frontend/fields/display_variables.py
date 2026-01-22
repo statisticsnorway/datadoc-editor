@@ -11,7 +11,6 @@ from dapla_metadata.datasets.utility.urn import klass_urn_converter
 from dapla_metadata.datasets.utility.urn import vardef_urn_converter
 
 from datadoc_editor import state
-from datadoc_editor.enums import DataType
 from datadoc_editor.enums import TemporalityTypeType
 from datadoc_editor.enums import VariableRole
 from datadoc_editor.frontend.constants import DELETE_SELECTED
@@ -256,17 +255,6 @@ DISPLAY_VARIABLES: dict[
         description="Fysisk navn på variabelen i datasettet. Bør tilsvare anbefalt kortnavn.",
         obligatory=True,
         editable=False,
-    ),
-    VariableIdentifiers.DATA_TYPE: MetadataDropdownField(
-        identifier=VariableIdentifiers.DATA_TYPE.value,
-        display_name="Datatype",
-        description="Velg en av følgende datatyper: tekst, heltall, desimaltall, datotid eller boolsk. Dersom variabelen er knyttet til et kodeverk i Klass, velges datatype tekst.",
-        obligatory=True,
-        editable=True,
-        options_getter=functools.partial(
-            get_enum_options,
-            DataType,
-        ),
     ),
     VariableIdentifiers.DATA_ELEMENT_PATH: MetadataInputField(
         identifier=VariableIdentifiers.DATA_ELEMENT_PATH.value,

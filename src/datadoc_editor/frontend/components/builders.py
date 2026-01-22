@@ -231,21 +231,22 @@ def build_variables_pseudonymization_section(
     )
 
 
-def build_ssb_accordion(
-    header: str,
+def build_variable_accordion(
+    short_name: str,
+    data_type: str,
     key: dict,
-    variable_short_name: str,
     children: list,
 ) -> ssb.Accordion:
     """Build Accordion for one variable in variable workspace."""
     return ssb.Accordion(
-        header=header,
+        header=data_type,
+        subHeader=short_name,
         id=key,
         children=[
             html.Section(
                 id={
                     "type": "variable-inputs",
-                    "variable_short_name": variable_short_name,
+                    "variable_short_name": short_name,
                 },
                 children=children,
             ),

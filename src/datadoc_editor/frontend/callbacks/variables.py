@@ -31,7 +31,7 @@ from datadoc_editor.frontend.callbacks.utils import update_selected_pseudonymiza
 from datadoc_editor.frontend.callbacks.utils import update_stable_identifier_version
 from datadoc_editor.frontend.components.builders import build_edit_section
 from datadoc_editor.frontend.components.builders import build_pseudo_field_section
-from datadoc_editor.frontend.components.builders import build_ssb_accordion
+from datadoc_editor.frontend.components.builders import build_variable_accordion
 from datadoc_editor.frontend.components.builders import build_variables_machine_section
 from datadoc_editor.frontend.components.builders import (
     build_variables_pseudonymization_section,
@@ -77,13 +77,13 @@ def populate_variables_workspace(
     Allows for filtering which variables are displayed via the search box.
     """
     return [
-        build_ssb_accordion(
+        build_variable_accordion(
             variable.short_name or "",
+            variable.data_type,
             {
                 "type": "variables-accordion",
-                "id": f"{variable.short_name}-{dataset_opened_counter}",  # Insert language into the ID to invalidate browser caches
+                "id": f"{variable.short_name}-{dataset_opened_counter}",  # Insert counter into the ID to invalidate browser caches
             },
-            variable.short_name or "",
             children=[
                 build_edit_section(
                     [VARIABLES_METADATA_LEFT, VARIABLES_METADATA_RIGHT],  # type: ignore [list-item]
