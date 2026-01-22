@@ -423,8 +423,8 @@ wheels = [
 
 [[package]]
 name = "dapla-toolbelt-metadata"
-version = "0.12.0"
-source = { git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git?branch=feat%2Fdpmeta-1237%2Fwarn-when-data-type-is-not-parsed#ef0ee67d64d61e0b7b834db4d0f1c3e4c45447df" }
+version = "0.12.1"
+source = { git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git#0de6b1b5fe6262acaef316be5d94e2be2f4e4007" }
 dependencies = [
     { name = "arrow" },
     { name = "beautifulsoup4" },
@@ -2826,7 +2826,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "arrow", specifier = ">=1.3.0" },
-    { name = "dapla-toolbelt-metadata", git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git?branch=feat%2Fdpmeta-1237%2Fwarn-when-data-type-is-not-parsed" },
+    { name = "dapla-toolbelt-metadata", git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git" },
     { name = "dash", specifier = ">=2.15.0" },
     { name = "dash-bootstrap-components", specifier = ">=1.1.0" },
     { name = "flask-healthz", specifier = ">=0.0.3" },

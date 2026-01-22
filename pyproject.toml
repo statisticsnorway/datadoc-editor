@@ -78,7 +78,7 @@ pythonpath = ["src/datadoc_editor"]
 required-version = ">=0.6.17"
 
 [tool.uv.sources]
-dapla-toolbelt-metadata = { git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git", branch = "feat/dpmeta-1237/warn-when-data-type-is-not-parsed" }
+dapla-toolbelt-metadata = { git = "https://github.com/statisticsnorway/dapla-toolbelt-metadata.git" }
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
