@@ -12,6 +12,7 @@ from uuid import UUID
 import dash
 import dash_bootstrap_components as dbc
 import pytest
+from dapla_metadata.datasets import InconsistentDatasetsError
 from dapla_metadata.datasets import ObligatoryDatasetWarning
 from dapla_metadata.datasets import model
 from dapla_metadata.datasets._merge import DatasetConsistencyStatus
@@ -438,6 +439,23 @@ def test_open_dataset_handling_file_not_found(
     file_path: str,
 ):
     open_file_mock.side_effect = FileNotFoundError()
+
+    alert, counter = open_dataset_handling(
+        n_clicks_1,
+        file_path,
+        0,
+    )
+    assert alert.color == "danger"
+    assert counter == dash.no_update
+
+
+@patch(f"{DATASET_CALLBACKS_MODULE}.open_file")
+def test_open_dataset_handling_file_inconsistent_datasets_error(
+    open_file_mock: Mock,
+    n_clicks_1: int,
+    file_path: str,
+):
+    open_file_mock.side_effect = InconsistentDatasetsError()
 
     alert, counter = open_dataset_handling(
         n_clicks_1,

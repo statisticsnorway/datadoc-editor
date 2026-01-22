@@ -9,6 +9,7 @@ from typing import Any
 
 from dapla_metadata.datasets import DaplaDatasetPathInfo
 from dapla_metadata.datasets import Datadoc
+from dapla_metadata.datasets import InconsistentDatasetsError
 from dash import no_update
 
 from datadoc_editor import config
@@ -69,7 +70,8 @@ def open_file(file_path: str | None = None) -> Datadoc:
     )
 
 
-def open_dataset_handling(
+# TODO(@mmwinther): #570 Simplify the logic here
+def open_dataset_handling(  # noqa: PLR0911
     n_clicks: int,
     file_path: str,
     dataset_opened_counter: int,
@@ -108,6 +110,16 @@ def open_dataset_handling(
                 ),
                 no_update,
             )
+    except InconsistentDatasetsError as e:
+        logger.exception("Dataset has unacceptable problems: %s", str(file_path))
+        return (
+            build_ssb_alert(
+                AlertTypes.ERROR,
+                "Datasettet følger ikke SSB sine standarder",
+                message=str(e),
+            ),
+            no_update,
+        )
     except Exception:
         logger.exception("Could not open %s", str(file_path))
         return (

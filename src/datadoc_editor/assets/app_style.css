@@ -13,3 +13,7 @@
 .language-footer{
     margin: 1.5rem 4rem;
 }
+
+.alert_message {
+    white-space: pre-wrap;
+}
