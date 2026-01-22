@@ -72,13 +72,11 @@ def open_file(file_path: str | None = None) -> Datadoc:
 
 # TODO(@mmwinther): #570 Simplify the logic here
 def open_dataset_handling(  # noqa: PLR0911
-    n_clicks: int,
     file_path: str,
     dataset_opened_counter: int,
 ) -> tuple[dbc.Alert, int | Any]:
     """Handle errors and other logic around opening a dataset file."""
-    if file_path:
-        file_path = file_path.strip()
+    file_path = file_path.strip()
     try:
         state.metadata = open_file(file_path)
         set_variables_values_inherit_dataset_derived_date_values()
@@ -131,31 +129,28 @@ def open_dataset_handling(  # noqa: PLR0911
             no_update,
         )
     dataset_opened_counter += 1
-    if n_clicks and n_clicks > 0:
-        dapla_dataset_path_info = DaplaDatasetPathInfo(file_path)
-        if not dapla_dataset_path_info.path_complies_with_naming_standard():
-            return (
-                build_ssb_alert(
-                    AlertTypes.WARNING,
-                    "Filen følger ikke navnestandard",
-                    message="Vennligst se mer informasjon her:",
-                    link=config.get_dapla_manual_naming_standard_url(),
-                ),
-                dataset_opened_counter,
-            )
-        status: list[DatasetConsistencyStatus] = (
-            state.metadata.dataset_consistency_status
+    dapla_dataset_path_info = DaplaDatasetPathInfo(file_path)
+    if not dapla_dataset_path_info.path_complies_with_naming_standard():
+        return (
+            build_ssb_alert(
+                AlertTypes.WARNING,
+                "Filen følger ikke navnestandard",
+                message="Vennligst se mer informasjon her:",
+                link=config.get_dapla_manual_naming_standard_url(),
+            ),
+            dataset_opened_counter,
         )
-        failed_items = [item.message for item in status or [] if not item.success]
-        if failed_items:
-            return (
-                build_ssb_alert(
-                    AlertTypes.WARNING,
-                    "Det er inkonsistens mellom data og metadata for:",
-                    alert_list=list(failed_items),
-                ),
-                dataset_opened_counter,
-            )
+    status: list[DatasetConsistencyStatus] = state.metadata.dataset_consistency_status
+    failed_items = [item.message for item in status or [] if not item.success]
+    if failed_items:
+        return (
+            build_ssb_alert(
+                AlertTypes.WARNING,
+                "Det er inkonsistens mellom data og metadata for:",
+                alert_list=list(failed_items),
+            ),
+            dataset_opened_counter,
+        )
     return (
         build_ssb_alert(
             AlertTypes.SUCCESS,
