@@ -8,7 +8,6 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from typing import Any
 from typing import cast
-from uuid import UUID
 
 import arrow
 import dash_bootstrap_components as dbc
@@ -172,11 +171,6 @@ def n_clicks_1():
                     ),
                 ],
             ),
-        ),
-        (
-            VariableIdentifiers.IDENTIFIER,
-            "2f72477a-f051-43ee-bf8b-0d8f47b5e0a7",
-            UUID("2f72477a-f051-43ee-bf8b-0d8f47b5e0a7"),
         ),
     ],
 )

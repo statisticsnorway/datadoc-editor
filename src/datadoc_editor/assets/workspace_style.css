@@ -81,12 +81,6 @@
     padding-top: 0.5rem;
 }
 
-.variable-machine-section >.edit-section.dataset-machine-section{
-    max-width: unset;
-    width: 100%;
-    justify-content: center;
-}
-
 #dataset-metadata-input-Maskingenerert, #pseudo-metadata-input-left-pseudo, #variables-metadata-input-left-machine{
     justify-content: space-between;
 }

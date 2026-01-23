@@ -11,7 +11,6 @@ from dapla_metadata.datasets.utility.urn import klass_urn_converter
 from dapla_metadata.datasets.utility.urn import vardef_urn_converter
 
 from datadoc_editor import state
-from datadoc_editor.enums import DataType
 from datadoc_editor.enums import TemporalityTypeType
 from datadoc_editor.enums import VariableRole
 from datadoc_editor.frontend.constants import DELETE_SELECTED
@@ -104,7 +103,6 @@ class VariableIdentifiers(str, Enum):
     FORMAT = "format"
     CLASSIFICATION_URI = "classification_uri"
     INVALID_VALUE_DESCRIPTION = "invalid_value_description"
-    IDENTIFIER = "id"
     CONTAINS_DATA_FROM = "contains_data_from"
     CONTAINS_DATA_UNTIL = "contains_data_until"
     DATA_ELEMENT_PATH = "data_element_path"
@@ -257,16 +255,12 @@ DISPLAY_VARIABLES: dict[
         obligatory=True,
         editable=False,
     ),
-    VariableIdentifiers.DATA_TYPE: MetadataDropdownField(
+    VariableIdentifiers.DATA_TYPE: MetadataInputField(
         identifier=VariableIdentifiers.DATA_TYPE.value,
         display_name="Datatype",
-        description="Velg en av følgende datatyper: tekst, heltall, desimaltall, datotid eller boolsk. Dersom variabelen er knyttet til et kodeverk i Klass, velges datatype tekst.",
+        description="Den abstrakte datatypen utledet fra den konkrete datatypen av variabelen i datasettet. Mulige verdier er: tekst, heltall, desimaltall, datotid eller boolsk. Det er ikke tilatt å redigere denne ettersom den må speile datasettet presist.",
         obligatory=True,
-        editable=True,
-        options_getter=functools.partial(
-            get_enum_options,
-            DataType,
-        ),
+        editable=False,
     ),
     VariableIdentifiers.DATA_ELEMENT_PATH: MetadataInputField(
         identifier=VariableIdentifiers.DATA_ELEMENT_PATH.value,
@@ -274,13 +268,6 @@ DISPLAY_VARIABLES: dict[
         description="For hierarkiske datasett (JSON) må sti til dataelementet oppgis i tillegg til kortnavn (shortName)",
         obligatory=False,
         editable=True,
-    ),
-    VariableIdentifiers.IDENTIFIER: MetadataInputField(
-        identifier=VariableIdentifiers.IDENTIFIER.value,
-        display_name="ID",
-        description="Unik SSB identifikator for variabelforekomsten i datasettet",
-        obligatory=False,
-        editable=False,
     ),
 }
 

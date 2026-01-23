@@ -1,20 +1,5 @@
 /*Style for input components and checkbox components*/
 
-.ssb-input.input-component > span > .ssb-glossary.info-glossary > .glossary-popup {
-    margin-left: 20px;
-    left: unset;
-    top: unset;
-    bottom: 5px;
-}
-
-.ssb-input.input-component > span > .ssb-glossary.info-glossary > .glossary-popup::after {
-    left: -10px;
-    margin-left: -10px;
-    top: unset;
-    bottom: 5px;
-    transform: rotateX(-90deg);
-    -webkit-transform: rotate(-90deg);
-}
 
 .ssb-input.input-component input[readonly]{
     border: 1px solid #274247 !important;
@@ -79,20 +64,6 @@ label.form-check-label{
     margin-right: 1rem;
 }
 
-
-.ssb-glossary.info-glossary{
-    max-width: fit-content;
-}
-
-.ssb-glossary.datadoc-glossary > .glossary-popup .content-box > .glossary-closing{
-    margin-top: 1.8rem;
-}
-
-#dataset-metadata-input-Maskingenerert > .ssb-input .input-component > .ssb-glossary > .glossary-button,
-#variables-metadata-input-left-machine > div > span > span > button,
-#pseudo-metadata-input-left-pseudo > div > span > span > button {
-    background-image: none;
-}
 
 
 @media only screen and (max-width: 1900px) {
