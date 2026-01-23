@@ -23,6 +23,7 @@ from datadoc_editor.frontend.callbacks.utils import save_metadata_and_generate_a
 
 if TYPE_CHECKING:
     import dash_bootstrap_components as dbc
+    from dash import NoUpdate
 
 logger = logging.getLogger(__name__)
 
@@ -69,16 +70,15 @@ def register_callbacks(app: Dash) -> None:
         n_clicks: int,
         dataset_path: str,
         dataset_opened_counter: int,
-    ) -> tuple[dbc.Alert, int]:
+    ) -> tuple[dbc.Alert, int] | NoUpdate:
         """Open a dataset.
 
         Shows an alert on success or failure.
-
-        To trigger reload of data in the UI, we update the
-        language dropdown. This is a hack and could be replaced
-        by a more formal mechanism.
         """
-        return open_dataset_handling(n_clicks, dataset_path, dataset_opened_counter)
+        if n_clicks and n_clicks > 0:
+            return open_dataset_handling(dataset_path, dataset_opened_counter)
+
+        return no_update
 
     @app.callback(
         Output("display-tab", "children"),
