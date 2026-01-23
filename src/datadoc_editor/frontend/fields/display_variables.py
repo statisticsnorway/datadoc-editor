@@ -256,19 +256,19 @@ DISPLAY_VARIABLES: dict[
         obligatory=True,
         editable=False,
     ),
+    VariableIdentifiers.DATA_TYPE: MetadataInputField(
+        identifier=VariableIdentifiers.DATA_TYPE.value,
+        display_name="Datatype",
+        description="Den abstrakt datatypen som kategoriserer den konkret datatypen av variabelen i datasettet. Mulige verdier er: tekst, heltall, desimaltall, datotid eller boolsk.",
+        obligatory=True,
+        editable=False,
+    ),
     VariableIdentifiers.DATA_ELEMENT_PATH: MetadataInputField(
         identifier=VariableIdentifiers.DATA_ELEMENT_PATH.value,
         display_name="Dataelementsti",
         description="For hierarkiske datasett (JSON) må sti til dataelementet oppgis i tillegg til kortnavn (shortName)",
         obligatory=False,
         editable=True,
-    ),
-    VariableIdentifiers.IDENTIFIER: MetadataInputField(
-        identifier=VariableIdentifiers.IDENTIFIER.value,
-        display_name="ID",
-        description="Unik SSB identifikator for variabelforekomsten i datasettet",
-        obligatory=False,
-        editable=False,
     ),
 }
 

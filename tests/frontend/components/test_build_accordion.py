@@ -43,7 +43,7 @@ ACCORDION_TYPE = "variables-accordion"
     ],
 )
 def test_build_variable_accordion(name, dict_id, field_list):
-    accordion = build_variable_accordion(name, dict_id, name, field_list)
+    accordion = build_variable_accordion(name, dict_id, field_list)
     assert accordion.id["type"] == ACCORDION_TYPE
     assert accordion.id["id"] == accordion.header
     assert isinstance(accordion, ssb.Accordion)

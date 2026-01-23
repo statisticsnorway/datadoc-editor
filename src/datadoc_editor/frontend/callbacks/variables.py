@@ -79,19 +79,17 @@ def populate_variables_workspace(
     return [
         build_variable_accordion(
             variable.short_name or "",
-            str(variable.data_type),
             {
                 "type": "variables-accordion",
                 "id": f"{variable.short_name}-{dataset_opened_counter}",  # Insert counter into the ID to invalidate browser caches
             },
             children=[
-                build_edit_section(
-                    [VARIABLES_METADATA_LEFT, VARIABLES_METADATA_RIGHT],  # type: ignore [list-item]
-                    variable,
-                ),
                 build_variables_machine_section(
                     NON_EDITABLE_VARIABLES_METADATA,
-                    "Maskingenerert",
+                    variable,
+                ),
+                build_edit_section(
+                    [VARIABLES_METADATA_LEFT, VARIABLES_METADATA_RIGHT],
                     variable,
                 ),
                 build_variables_pseudonymization_section(

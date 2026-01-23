@@ -24,6 +24,8 @@ from datadoc_editor.frontend.fields.display_base import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from dapla_metadata.datasets import model
     from dapla_metadata.datasets.utility.utils import VariableType
     from datadoc_model.required import model as required_model
@@ -164,7 +166,7 @@ def build_pseudo_field_section(
 
 
 def build_edit_section(
-    metadata_inputs: list[list[FieldTypes]],
+    metadata_inputs: Sequence[Sequence[FieldTypes]],
     variable: VariableType,
 ) -> html.Section:
     """Create input section for variable workspace."""
@@ -180,14 +182,12 @@ def build_edit_section(
 
 def build_variables_machine_section(
     metadata_inputs: list,
-    title: str,
     variable: VariableType,
 ) -> html.Section:
     """Create input section for variable workspace."""
     return html.Section(
-        id={"type": "edit-section", "title": title},
+        id={"type": "edit-section", "title": "machine"},
         children=[
-            ssb.Title(title, size=3, className="edit-section-title"),
             build_input_field_section(
                 metadata_inputs,
                 "left",
@@ -195,7 +195,7 @@ def build_variables_machine_section(
                 field_id="machine",
             ),
         ],
-        className="variable-machine-section",
+        className="edit-section",
     )
 
 
@@ -233,13 +233,12 @@ def build_variables_pseudonymization_section(
 
 def build_variable_accordion(
     short_name: str,
-    data_type: str,
     key: dict,
     children: list,
 ) -> ssb.Accordion:
     """Build Accordion for one variable in variable workspace."""
     return ssb.Accordion(
-        header=f"{short_name} - {data_type}",
+        header=f"{short_name}",
         id=key,
         children=[
             html.Section(
@@ -313,12 +312,10 @@ def build_dataset_edit_section(
     )
 
 
-def build_link_object(text: str, href: str) -> dict | None:
+def build_link_object(text: str | None, href: str | None) -> dict | None:
     """Build link object with text and URL."""
-    link_text: str | None = text
-    link_href: str | None = href
-    if link_text is None:
-        return {"link_text": link_href, "link_href": link_href}
-    if link_href is None:
+    if href is None:
         return None
-    return {"link_text": link_text, "link_href": link_href}
+    if text is None:
+        return {"link_text": href, "link_href": href}
+    return {"link_text": text, "link_href": href}
