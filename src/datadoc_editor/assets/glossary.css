@@ -1,0 +1,55 @@
+.ssb-glossary .glossary-closing,
+.edit-section .ssb-glossary .glossary-closing,
+.ssb-glossary.info-glossary .glossary-closing,
+.ssb-glossary.legend-glossary .glossary-closing
+{
+    margin-top: 1.8rem;
+}
+
+.ssb-glossary,
+.edit-section .ssb-glossary,
+.ssb-glossary.info-glossary
+{
+    position: relative;
+    max-width: fit-content;
+}
+
+.ssb-glossary.legend-glossary
+{
+    padding: 0 0.3rem;
+    background-image: none;
+    position: absolute;
+    top: -20px;
+    background-color: white;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0.3rem;
+    max-width: fit-content;
+}
+
+.edit-section .ssb-glossary .glossary-popup,
+.ssb-glossary.info-glossary .glossary-popup,
+.ssb-glossary.legend-glossary .glossary-popup
+{
+    position: absolute;
+    z-index: 999;
+    left: unset;
+    margin-left: unset;
+    top: 0px;
+    right: -290px;
+    bottom: 5px;
+}
+
+/* After refers to the little arrow on the glossary box */
+.edit-section .ssb-glossary .glossary-popup::after,
+.ssb-glossary.info-glossary .glossary-popup::after,
+.ssb-glossary.legend-glossary .glossary-popup::after
+{
+    position: absolute;
+    left: -10px;
+    margin-left: -10px;
+    top: 5px;
+    bottom: unset;
+    transform: rotateX(-90deg);
+    -webkit-transform: rotate(-90deg);
+}

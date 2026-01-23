@@ -5,27 +5,11 @@
     width: 100%;
 }
 
-.ssb-dropdown.dropdown-component > .ssb-glossary.info-glossary > .glossary-popup {
-    margin-left: 20px;
-    left: unset;
     top: unset;
     bottom: 5px;
     background-image: none;
-}
 
-.ssb-dropdown.dropdown-component > .ssb-glossary.info-glossary > .glossary-popup::after {
-    left: -10px;
-    margin-left: -10px;
     top: unset;
     bottom: 5px;
     transform: rotateX(-90deg);
     -webkit-transform: rotate(-90deg);
-}
-
-.ssb-glossary.info-glossary > .glossary-button  > .glossary-textwrap > .ssb-dropdown label, .ssb-dropdown .dropdown-label{
-    margin-bottom: 0;
-}
-
-.ssb-dropdown.dropdown-component > .ssb-glossary.glossary-button {
-    background-image: none;
-}
