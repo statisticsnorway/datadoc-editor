@@ -79,7 +79,7 @@ def populate_variables_workspace(
     return [
         build_variable_accordion(
             variable.short_name or "",
-            variable.data_type,
+            str(variable.data_type),
             {
                 "type": "variables-accordion",
                 "id": f"{variable.short_name}-{dataset_opened_counter}",  # Insert counter into the ID to invalidate browser caches

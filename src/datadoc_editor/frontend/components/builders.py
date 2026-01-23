@@ -239,8 +239,7 @@ def build_variable_accordion(
 ) -> ssb.Accordion:
     """Build Accordion for one variable in variable workspace."""
     return ssb.Accordion(
-        header=data_type,
-        subHeader=short_name,
+        header=f"{short_name} - {data_type}",
         id=key,
         children=[
             html.Section(
