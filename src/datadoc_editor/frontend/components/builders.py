@@ -115,7 +115,7 @@ def build_ssb_alert(  # noqa: PLR0913
 
 
 def build_input_field_section(
-    metadata_fields: list[FieldTypes],
+    metadata_fields: Sequence[FieldTypes],
     side: str,
     variable: VariableType,
     field_id: str = "",
