@@ -103,7 +103,6 @@ class VariableIdentifiers(str, Enum):
     FORMAT = "format"
     CLASSIFICATION_URI = "classification_uri"
     INVALID_VALUE_DESCRIPTION = "invalid_value_description"
-    IDENTIFIER = "id"
     CONTAINS_DATA_FROM = "contains_data_from"
     CONTAINS_DATA_UNTIL = "contains_data_until"
     DATA_ELEMENT_PATH = "data_element_path"
