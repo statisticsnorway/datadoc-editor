@@ -4,12 +4,3 @@
     max-width: unset;
     width: 100%;
 }
-
-    top: unset;
-    bottom: 5px;
-    background-image: none;
-
-    top: unset;
-    bottom: 5px;
-    transform: rotateX(-90deg);
-    -webkit-transform: rotate(-90deg);
