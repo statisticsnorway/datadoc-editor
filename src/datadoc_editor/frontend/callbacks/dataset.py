@@ -9,7 +9,6 @@ from typing import Any
 
 from dapla_metadata.datasets import DaplaDatasetPathInfo
 from dapla_metadata.datasets import Datadoc
-from dapla_metadata.datasets import InconsistentDatasetsError
 from dash import no_update
 
 from datadoc_editor import config
@@ -67,11 +66,12 @@ def open_file(file_path: str | None = None) -> Datadoc:
     return Datadoc(
         dataset_path=str(dataset).strip() if dataset else None,
         statistic_subject_mapping=state.statistic_subject_mapping,
+        errors_as_warnings=True,
     )
 
 
 # TODO(@mmwinther): #570 Simplify the logic here
-def open_dataset_handling(  # noqa: PLR0911
+def open_dataset_handling(
     file_path: str,
     dataset_opened_counter: int,
 ) -> tuple[dbc.Alert, int | Any]:
@@ -108,16 +108,6 @@ def open_dataset_handling(  # noqa: PLR0911
                 ),
                 no_update,
             )
-    except InconsistentDatasetsError as e:
-        logger.exception("Dataset has unacceptable problems: %s", str(file_path))
-        return (
-            build_ssb_alert(
-                AlertTypes.ERROR,
-                "Datasettet følger ikke SSB sine standarder",
-                message=str(e),
-            ),
-            no_update,
-        )
     except Exception:
         logger.exception("Could not open %s", str(file_path))
         return (
@@ -129,25 +119,25 @@ def open_dataset_handling(  # noqa: PLR0911
             no_update,
         )
     dataset_opened_counter += 1
-    dapla_dataset_path_info = DaplaDatasetPathInfo(file_path)
-    if not dapla_dataset_path_info.path_complies_with_naming_standard():
-        return (
-            build_ssb_alert(
-                AlertTypes.WARNING,
-                "Filen følger ikke navnestandard",
-                message="Vennligst se mer informasjon her:",
-                link=config.get_dapla_manual_naming_standard_url(),
-            ),
-            dataset_opened_counter,
-        )
     status: list[DatasetConsistencyStatus] = state.metadata.dataset_consistency_status
     failed_items = [item.message for item in status or [] if not item.success]
     if failed_items:
         return (
             build_ssb_alert(
                 AlertTypes.WARNING,
-                "Det er inkonsistens mellom data og metadata for:",
-                alert_list=list(failed_items),
+                "Det er oppdaget inkonsistens i data eller metadata:",
+                alert_list=failed_items,
+            ),
+            dataset_opened_counter,
+        )
+
+    if not DaplaDatasetPathInfo(file_path).path_complies_with_naming_standard():
+        return (
+            build_ssb_alert(
+                AlertTypes.WARNING,
+                "Filen følger ikke navnestandard",
+                message="Vennligst se mer informasjon her:",
+                link=config.get_dapla_manual_naming_standard_url(),
             ),
             dataset_opened_counter,
         )
