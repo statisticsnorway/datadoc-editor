@@ -13,6 +13,8 @@ on:
       - ".pre-commit-config.yaml"
       - "noxfile.py"
       - ".github/workflows/tests.yml"
+permissions:
+  contents: read
 
 jobs:
   generate-jobs:
