@@ -113,11 +113,11 @@ jobs:
 
       - name: Combine coverage data and display human readable report
         run: |
-          uvx nox@2025.11.12 --session=coverage
+          uvx nox@2025.11.12 --reuse-venv=yes --session=coverage
 
       - name: Create coverage report
         run: |
-          uvx nox@2025.11.12 --session=coverage -- xml
+          uvx nox@2025.11.12 --reuse-venv=yes --session=coverage -- xml
 
       # Need to fix coverage source paths for SonarCloud scanning in GitHub actions.
       # Replace root path with /github/workspace (mounted in docker container).
