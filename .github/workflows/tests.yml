@@ -74,13 +74,13 @@ jobs:
 
       - name: Run Nox
         run: |
-          uvx nox@2025.11.12 --python=${{ matrix.python }}
+          uvx nox@2025.11.12 --session=${{ matrix.session }}
 
       - name: Upload coverage data
-        if: always() && matrix.session == 'tests'
+        if: always() && contains(matrix.session, 'tests')
         uses: "actions/upload-artifact@v6"
         with:
-          name: coverage-data-${{ matrix.os }}-${{ matrix.python }}
+          name: coverage-data-${{ matrix.session }}
           path: ".coverage.*"
           include-hidden-files: true
 
