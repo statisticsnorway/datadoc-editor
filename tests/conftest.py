@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import concurrent
 import copy
-import functools
 import logging
 import os
 import pathlib
@@ -262,7 +261,7 @@ def _mock_fetch_dataframe(
     code_list_csv_filepath_nn: pathlib.Path,
     code_list_csv_filepath_en: pathlib.Path,
 ) -> None:
-    def fake_code_list() -> dict[str, pd.DataFrame]:
+    def fake_code_list(_self: Any) -> dict[str, pd.DataFrame]:  # noqa: ANN401
         return {
             "nb": pd.read_csv(code_list_csv_filepath_nb, converters={"code": str}),
             "nn": pd.read_csv(code_list_csv_filepath_nn, converters={"code": str}),
@@ -272,7 +271,7 @@ def _mock_fetch_dataframe(
     mocker.patch(
         DATADOC_METADATA_MODULE
         + ".code_list.CodeList._fetch_data_from_external_source",
-        functools.partial(fake_code_list),
+        fake_code_list,
     )
 
 
