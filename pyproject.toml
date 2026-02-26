@@ -33,35 +33,38 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [dependency-groups]
-dev = [
-    "coverage[toml]>=6.2",
-    "deptry>=0.12.0",
-    "faker>=37.1.0",
-    "furo>=2021.11.12",
-    "mypy>=0.950",
-    "myst-parser>=0.16.1",
-    "nbstripout>=0.5.0",
-    "pandas-stubs>=2.2.3.250308",
-    "pre-commit>=4.2.0",
-    "pyarrow-stubs>=10.0.1.9",
-    "pygments>=2.10.0",
-    "pytest>=7.1.2",
-    "pytest-cov>=3.0.0",
-    "pytest-mock>=3.14.0",
-    "python-kacl>=0.6.3",
-    "requests-mock>=1.12.1",
-    "ruff>=0.0.284",
-    "sphinx>=6.2.1",
-    "sphinx-autobuild>=2021.3.14",
-    "sphinx-autodoc-typehints>=1.24.0",
-    "sphinx-click>=3.0.2",
-    "tomli>=2.2.1",
-    "typeguard>=2.13.3",
-    "types-beautifulsoup4>=4.12.0.20250204",
-    "types-colorama>=0.4.15.20240311",
-    "types-pygments>=2.19.0.20250305",
-    "types-setuptools>=79.0.0.20250422",
-    "xdoctest[colors]>=0.15.10",
+dev = ["pre-commit>=3.8.0", "ruff>=0.5.6"]
+docs = [
+  "furo>=2024.7.18",
+  "myst-parser>=0.16.1",
+  "sphinx>=6.2.1",
+  "sphinx-autobuild>=2021.3.14",
+  "sphinx-autodoc-typehints>=1.24.0",
+  "sphinx-click>=3.0.2",
+]
+test = [
+  "coverage[toml]>=6.2",
+  "faker>=26.1.0",
+  "pygments>=2.18.0",
+  "pytest>=8.3.2",
+  "pytest-cov>=3.0.0",
+  "pytest-mock>=3.14.0",
+  "requests-mock>=1.12.1",
+  "typeguard>=2.13.3",
+  "xdoctest[colors]>=0.15.10",
+  "tomli>=2.2.1",
+]
+type_check = [
+  "mypy>=0.950",
+  "pandas-stubs",
+  "pyarrow-stubs>=10.0.1.9",
+  "pytest>=8.3.2",
+  "types-Pygments",
+  "types-beautifulsoup4>=4.12.0.20240511",
+  "types-colorama",
+  "types-docker>=7.1.0.20250503",
+  "types-requests",
+  "types-setuptools",
 ]
 
 [tool.hatch.metadata]
@@ -74,7 +77,8 @@ packages = ["src/datadoc_editor"]
 pythonpath = ["src/datadoc_editor"]
 
 [tool.uv]
-required-version = ">=0.6.17"
+required-version = ">=0.8.0"
+default-groups = ["dev", "test", "type_check"]
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]

@@ -12,6 +12,7 @@ import shutil
 from datetime import UTC
 from datetime import datetime
 from typing import TYPE_CHECKING
+from typing import Any
 
 import pandas as pd
 import pytest
@@ -203,14 +204,18 @@ def _mock_fetch_statistical_structure(
     mocker,
     subject_xml_file_path: pathlib.Path,
 ) -> None:
-    def fake_statistical_structure() -> ResultSet:
+    def fake_statistical_structure(_self: Any) -> ResultSet:  # noqa: ANN401
+        """Provide the Statistical Structure document from file.
+
+        Since this is used to mock a method, we need to make a dummy self argument available.
+        """
         with subject_xml_file_path.open() as f:
             return BeautifulSoup(f.read(), features="xml").find_all("hovedemne")
 
     mocker.patch(
         DATADOC_METADATA_MODULE
         + ".statistic_subject_mapping.StatisticSubjectMapping._fetch_data_from_external_source",
-        functools.partial(fake_statistical_structure),
+        fake_statistical_structure,
     )
 
 
