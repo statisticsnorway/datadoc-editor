@@ -13,23 +13,28 @@ on:
       - ".pre-commit-config.yaml"
       - "noxfile.py"
       - ".github/workflows/tests.yml"
+permissions:
+  contents: read
 
 jobs:
+  generate-jobs:
+    runs-on: ubuntu-latest
+    outputs:
+      session: ${{ steps.set-matrix.outputs.session }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+      - id: set-matrix
+        run: echo session=$(uvx nox@2025.11.12 --json -l | jq -c '[.[].session]') | tee --append $GITHUB_OUTPUT
   tests:
-    name: ${{ matrix.session }} ${{ matrix.python }} / ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.session }}
+    needs: [generate-jobs]
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - { python: "3.13", os: "ubuntu-latest", session: "pre-commit" }
-          - { python: "3.12", os: "ubuntu-latest", session: "mypy" }
-          - { python: "3.13", os: "ubuntu-latest", session: "mypy" }
-          - { python: "3.12", os: "ubuntu-latest", session: "tests" }
-          - { python: "3.13", os: "ubuntu-latest", session: "tests" }
-          - { python: "3.13", os: "ubuntu-latest", session: "typeguard" }
-          - { python: "3.13", os: "ubuntu-latest", session: "xdoctest" }
-          - { python: "3.13", os: "ubuntu-latest", session: "docs-build" }
+        session: ${{ fromJson(needs.generate-jobs.outputs.session) }}
 
     env:
       NOXSESSION: ${{ matrix.session }}
@@ -39,12 +44,6 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v6
-
-      - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v6.1.0
-        with:
-          python-version: ${{ matrix.python }}
-
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
@@ -77,13 +76,13 @@ jobs:
 
       - name: Run Nox
         run: |
-          uvx --constraints "${{ github.workspace }}/.github/workflows/constraints.txt" nox --python=${{ matrix.python }}
+          uvx nox@2025.11.12 --session=${{ matrix.session }}
 
       - name: Upload coverage data
-        if: always() && matrix.session == 'tests'
+        if: always() && contains(matrix.session, 'tests')
         uses: "actions/upload-artifact@v6"
         with:
-          name: coverage-data-${{ matrix.os }}-${{ matrix.python }}
+          name: coverage-data-${{ matrix.session }}
           path: ".coverage.*"
           include-hidden-files: true
 
@@ -116,11 +115,11 @@ jobs:
 
       - name: Combine coverage data and display human readable report
         run: |
-          uvx --constraints "${{ github.workspace }}/.github/workflows/constraints.txt" nox --session=coverage
+          uvx nox@2025.11.12 --reuse-venv=yes --session=coverage
 
       - name: Create coverage report
         run: |
-          uvx --constraints "${{ github.workspace }}/.github/workflows/constraints.txt" nox --session=coverage -- xml
+          uvx nox@2025.11.12 --reuse-venv=yes --session=coverage -- xml
 
       # Need to fix coverage source paths for SonarCloud scanning in GitHub actions.
       # Replace root path with /github/workspace (mounted in docker container).

@@ -1,4 +1,5 @@
 import pytest
+from dapla_metadata.datasets.statistic_subject_mapping import StatisticSubjectMapping
 
 from datadoc_editor import state
 from datadoc_editor.frontend.fields.display_base import DROPDOWN_DESELECT_OPTION
@@ -39,8 +40,8 @@ from tests.utils import TEST_RESOURCES_DIRECTORY
     ],
 )
 def test_get_statistical_subject_options(
-    subject_mapping_fake_statistical_structure,
-    expected,
+    subject_mapping_fake_statistical_structure: StatisticSubjectMapping,
+    expected: list[dict[str, str]],
 ):
     state.statistic_subject_mapping = subject_mapping_fake_statistical_structure
     state.statistic_subject_mapping.wait_for_external_result()

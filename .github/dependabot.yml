@@ -11,15 +11,6 @@ updates:
       github-action-dependencies:
         patterns:
           - "*"
-  - package-ecosystem: "pip"
-    directory: "/.github/workflows"
-    schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 99
-    groups:
-      workflows-dependencies:
-        patterns:
-          - "*"
   - package-ecosystem: "uv"
     directory: "/"
     schedule:

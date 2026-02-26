@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import concurrent
 import copy
-import functools
 import logging
 import os
 import pathlib
@@ -12,6 +11,7 @@ import shutil
 from datetime import UTC
 from datetime import datetime
 from typing import TYPE_CHECKING
+from typing import Any
 
 import pandas as pd
 import pytest
@@ -203,14 +203,18 @@ def _mock_fetch_statistical_structure(
     mocker,
     subject_xml_file_path: pathlib.Path,
 ) -> None:
-    def fake_statistical_structure() -> ResultSet:
+    def fake_statistical_structure(_self: Any) -> ResultSet:  # noqa: ANN401
+        """Provide the Statistical Structure document from file.
+
+        Since this is used to mock a method, we need to make a dummy self argument available.
+        """
         with subject_xml_file_path.open() as f:
             return BeautifulSoup(f.read(), features="xml").find_all("hovedemne")
 
     mocker.patch(
         DATADOC_METADATA_MODULE
         + ".statistic_subject_mapping.StatisticSubjectMapping._fetch_data_from_external_source",
-        functools.partial(fake_statistical_structure),
+        fake_statistical_structure,
     )
 
 
@@ -257,7 +261,7 @@ def _mock_fetch_dataframe(
     code_list_csv_filepath_nn: pathlib.Path,
     code_list_csv_filepath_en: pathlib.Path,
 ) -> None:
-    def fake_code_list() -> dict[str, pd.DataFrame]:
+    def fake_code_list(_self: Any) -> dict[str, pd.DataFrame]:  # noqa: ANN401
         return {
             "nb": pd.read_csv(code_list_csv_filepath_nb, converters={"code": str}),
             "nn": pd.read_csv(code_list_csv_filepath_nn, converters={"code": str}),
@@ -267,7 +271,7 @@ def _mock_fetch_dataframe(
     mocker.patch(
         DATADOC_METADATA_MODULE
         + ".code_list.CodeList._fetch_data_from_external_source",
-        functools.partial(fake_code_list),
+        fake_code_list,
     )
 
 
