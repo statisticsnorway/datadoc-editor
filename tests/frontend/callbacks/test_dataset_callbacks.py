@@ -526,7 +526,7 @@ def test_open_dataset_handling_metadata_inconsistency(
     )
     assert alert.color == "warning"
     assert counter == 1
-    assert "Det er inkonsistens mellom data og metadata for" in str(alert)
+    assert "Det er oppdaget inkonsistens i data eller metadata:" in str(alert)
 
 
 @patch(f"{DATASET_CALLBACKS_MODULE}.DaplaDatasetPathInfo")
