@@ -1,6 +1,6 @@
 [project]
 name = "ssb-datadoc"
-version = "1.6.0"
+version = "1.6.1"
 description = "Document dataset metadata. For use in Statistics Norway's metadata system."
 readme = "README.md"
 requires-python = ">=3.12"
