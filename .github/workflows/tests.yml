@@ -26,7 +26,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
       - id: set-matrix
-        run: echo session=$(uvx nox@2025.11.12 --json -l | jq -c '[.[].session]') | tee --append $GITHUB_OUTPUT
+        run: echo session=$(uvx nox --json -l | jq -c '[.[].session]') | tee --append $GITHUB_OUTPUT
   tests:
     name: ${{ matrix.session }}
     needs: [generate-jobs]
@@ -76,7 +76,7 @@ jobs:
 
       - name: Run Nox
         run: |
-          uvx nox@2025.11.12 --session=${{ matrix.session }}
+          uvx nox --session=${{ matrix.session }}
 
       - name: Upload coverage data
         if: always() && contains(matrix.session, 'tests')
@@ -115,11 +115,11 @@ jobs:
 
       - name: Combine coverage data and display human readable report
         run: |
-          uvx nox@2025.11.12 --reuse-venv=yes --session=coverage
+          uvx nox --reuse-venv=yes --session=coverage
 
       - name: Create coverage report
         run: |
-          uvx nox@2025.11.12 --reuse-venv=yes --session=coverage -- xml
+          uvx nox --reuse-venv=yes --session=coverage -- xml
 
       # Need to fix coverage source paths for SonarCloud scanning in GitHub actions.
       # Replace root path with /github/workspace (mounted in docker container).
