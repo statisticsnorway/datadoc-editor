@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import functools
 import logging
-from enum import Enum
+from enum import StrEnum
 
 from dapla_metadata.datasets import enums
 
@@ -60,7 +60,7 @@ def get_owner_options() -> list[dict[str, str]]:
     return dropdown_options
 
 
-class DatasetIdentifiers(str, Enum):
+class DatasetIdentifiers(StrEnum):
     """As defined here: https://statistics-norway.atlassian.net/l/c/aoSfEWJU."""
 
     SHORT_NAME = "short_name"

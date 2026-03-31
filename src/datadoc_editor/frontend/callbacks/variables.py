@@ -249,7 +249,7 @@ def accept_pseudo_variable_metadata_input(
                 else:
                     if isinstance(value, str):
                         value = value.strip()
-                    parsed_value = value if value else None
+                    parsed_value = value or None
             elif isinstance(value, str):
                 parsed_value = value.strip() or None
             else:
