@@ -119,7 +119,7 @@ jobs:
 
       - name: Create coverage report
         run: |
-          uvx nox--reuse-venv=yes --session=coverage -- xml
+          uvx nox --reuse-venv=yes --session=coverage -- xml
 
       # Need to fix coverage source paths for SonarCloud scanning in GitHub actions.
       # Replace root path with /github/workspace (mounted in docker container).
