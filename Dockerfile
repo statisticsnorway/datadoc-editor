@@ -1,5 +1,5 @@
 FROM ghcr.io/astral-sh/uv:bookworm-slim AS builder
-ARG PYTHON_VERSION=3.12
+ARG PYTHON_VERSION=3.13
 
 ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
 
@@ -26,7 +26,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --no-editable
 
 # Then, use a final image without uv
-FROM ghcr.io/statisticsnorway/distroless-python3.12
+FROM gcr.io/distroless/python3-debian13
 
 # Copy the Python version
 COPY --from=builder --chown=python:python /python /python
