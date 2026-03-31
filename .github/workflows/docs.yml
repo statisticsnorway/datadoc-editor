@@ -38,13 +38,9 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Install dependencies
-        run: |
-          uv sync --locked --all-extras --dev
-
       - name: Build doc with Sphinx
         run: |
-          uv run sphinx-build docs docs/_build
+          uvx nox --session docs-build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
