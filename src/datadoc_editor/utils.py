@@ -26,7 +26,7 @@ def pick_random_port() -> int:
     The function will bind a socket to port 0, and a random free port from
     1024 to 65535 will be selected by the operating system.
     """
-    import socket
+    import socket  # noqa: PLC0415
 
     with socket.socket() as sock:
         sock.bind(("", 0))

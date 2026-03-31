@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import StrEnum
 
 import arrow
 from pydantic import BaseModel
@@ -8,7 +8,7 @@ from datadoc_editor.frontend.fields.display_base import MetadataInputField
 from datadoc_editor.frontend.fields.display_base import get_standard_metadata
 
 
-class PseudoVariableIdentifiers(str, Enum):
+class PseudoVariableIdentifiers(StrEnum):
     """Pseudo fields."""
 
     PSEUDONYMIZATION_TIME = "pseudonymization_time"

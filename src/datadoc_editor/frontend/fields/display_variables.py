@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import functools
-from enum import Enum
+from enum import StrEnum
 from typing import TYPE_CHECKING
 
 from dapla_metadata.datasets import enums
@@ -85,7 +85,7 @@ def get_unit_type_options_with_delete() -> list[dict[str, str]]:
     return dropdown_options
 
 
-class VariableIdentifiers(str, Enum):
+class VariableIdentifiers(StrEnum):
     """As defined here: https://statistics-norway.atlassian.net/wiki/spaces/MPD/pages/3042869256/Variabelforekomst."""
 
     SHORT_NAME = "short_name"
