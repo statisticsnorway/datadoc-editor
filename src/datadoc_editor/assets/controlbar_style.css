@@ -16,18 +16,22 @@
     margin-top: 1.5rem;
 }
 
-.jsx-4017309047.tab-container.ssb-tabs{
+.ssb-tabs{
     display: flex;
     flex-direction: row;
+    justify-content: flex-start;
     border-bottom: 2px solid #274247;
+    width: 100%;
 }
 
-.jsx-3468109796.tab.workspace-tab{
+.workspace-tab{
     font-size: 1rem;
     font-weight: bold;
     align-items: center;
-    background-color: transparent;
-    border: none;
+    background-color: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
     color: inherit;
     font-family: "Roboto", sans-serif !important;
     font-stretch: normal;
@@ -36,22 +40,24 @@
     justify-content: center;
     line-height: 1.25;
     outline: none;
-    padding: 20px 0;
+    padding: 10px 15px;
     position: relative;
     text-align: center;
     text-decoration: none;
     transition: background 0.2s;
-    width: fit-content;
+    width: auto;
+    min-width: max-content;
+    flex: 0 0 auto;
 }
 
-.jsx-3468109796.tab.workspace-tab:not(:last-of-type){
+.workspace-tab:not(:last-of-type){
   margin-right: 40px;
 }
 
-.jsx-4017309047.tab-container.ssb-tabs >.tab.jsx-3468109796:last-of-type{
+.ssb-tabs > .workspace-tab:last-of-type{
   border: unset;
 }
-.jsx-3468109796.tab.workspace-tab::before{
+.workspace-tab::before{
   background: #274247;
   bottom: 0;
   content: "";
@@ -63,23 +69,29 @@
   width: 100%;
 }
 
-.jsx-3468109796.tab.workspace-tab:hover::before{
+.workspace-tab:hover::before{
   height: 4px;
 }
-.jsx-3468109796.tab.workspace-tab:focus::before{
+.workspace-tab:focus::before{
   height: 4px;
 }
-.jsx-4017309047.tab-container.ssb-tabs > .jsx-3468109796.tab.workspace-tab.tab--selected {
+.ssb-tabs > .workspace-tab.tab--selected,
+.ssb-tabs > .workspace-tab.dash-tab--selected {
     border-bottom: 4px solid #1a9d49;
+    border-top: none !important;
 }
 
-.jsx-4017309047.tab-container.ssb-tabs > .jsx-3468109796.tab.workspace-tab.tab--selected:hover::before{
+.ssb-tabs > .workspace-tab.tab--selected:hover::before,
+.ssb-tabs > .workspace-tab.dash-tab--selected:hover::before {
   height: unset;
 }
 @media screen and (min-width: 800px){
-    .jsx-4017309047.tab-container.ssb-tabs > .tab--selected.jsx-3468109796, .tab.jsx-3468109796:last-of-type.tab--selected {
-        border: none;
-        border-bottom: 4px solid #1a9d49;
+    .ssb-tabs > .workspace-tab.tab--selected,
+    .ssb-tabs > .workspace-tab.dash-tab--selected,
+    .workspace-tab:last-of-type.tab--selected,
+    .workspace-tab:last-of-type.dash-tab--selected {
+        border: none !important;
+        border-bottom: 4px solid #1a9d49 !important;
     }
 }
 

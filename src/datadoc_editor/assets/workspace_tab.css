@@ -1,13 +1,12 @@
 /*Style for tabs*/
 
-.ssb-tabs.navigation-item.workspace-tab-label{
+.ssb-tabs .workspace-tab{
     margin: 0 1rem;
     font-size: 1.2rem;
-
 }
 
 .workspace-tab{
-    padding: 1rem;
+    padding: 10px 15px;
 }
 
 .ssb-title.workspace-tab-title{
