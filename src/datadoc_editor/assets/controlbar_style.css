@@ -33,21 +33,13 @@
 
 .ssb-tabs .dash-tabs-container {
     display: flex !important;
-    flex-direction: row !important;
     justify-content: flex-start !important;
     padding: 0 !important;
-    margin: 0 !important;
-    border-bottom: 2px solid var(--ssb-dark);
 }
 
 .workspace-tab {
     font-size: 1rem;
     font-weight: bold;
-    align-items: center;
-    background-color: transparent !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
     color: inherit;
     font-family: "Roboto", sans-serif !important;
     cursor: pointer;
@@ -56,10 +48,9 @@
     line-height: 1.25;
     padding: var(--tab-vpadding-top) var(--tab-hpadding) var(--tab-vpadding-bottom) var(--tab-hpadding);
     position: relative;
-    text-decoration: none;
-    transition: background 0.2s;
-    width: auto;
-    min-width: max-content;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
     flex: 0 0 auto;
 }
 
@@ -91,24 +82,15 @@
 }
 
 .workspace-tab:hover::before,
-.workspace-tab:focus::before {
+.workspace-tab:focus::before,
+.workspace-tab.tab--selected::before,
+.workspace-tab.dash-tab--selected::before {
     height: 4px;
 }
 
-.ssb-tabs .workspace-tab.tab--selected,
-.ssb-tabs .workspace-tab.dash-tab--selected {
-    border: none !important;
-}
-
-.ssb-tabs .workspace-tab.tab--selected::before,
-.ssb-tabs .workspace-tab.dash-tab--selected::before {
+.workspace-tab.tab--selected::before,
+.workspace-tab.dash-tab--selected::before {
     background: var(--ssb-green) !important;
-    height: 4px;
-}
-
-.ssb-tabs .workspace-tab.tab--selected:hover::before,
-.ssb-tabs .workspace-tab.dash-tab--selected:hover::before {
-    height: 4px;
 }
 
 .ssb-title.workspace-tab-title {
