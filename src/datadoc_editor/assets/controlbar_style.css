@@ -16,13 +16,14 @@
     margin-top: 1.5rem;
 }
 
-.jsx-4017309047.tab-container.ssb-tabs{
+.tab-container.ssb-tabs{
     display: flex;
     flex-direction: row;
+    justify-content: flex-start;
     border-bottom: 2px solid #274247;
 }
 
-.jsx-3468109796.tab.workspace-tab{
+.tab.workspace-tab{
     font-size: 1rem;
     font-weight: bold;
     align-items: center;
@@ -42,16 +43,17 @@
     text-decoration: none;
     transition: background 0.2s;
     width: fit-content;
+    flex: 0 0 auto;
 }
 
-.jsx-3468109796.tab.workspace-tab:not(:last-of-type){
+.tab.workspace-tab:not(:last-of-type){
   margin-right: 40px;
 }
 
-.jsx-4017309047.tab-container.ssb-tabs >.tab.jsx-3468109796:last-of-type{
+.tab-container.ssb-tabs > .tab.workspace-tab:last-of-type{
   border: unset;
 }
-.jsx-3468109796.tab.workspace-tab::before{
+.tab.workspace-tab::before{
   background: #274247;
   bottom: 0;
   content: "";
@@ -63,17 +65,18 @@
   width: 100%;
 }
 
-.jsx-3468109796.tab.workspace-tab:hover::before{
+.tab.workspace-tab:hover::before{
   height: 4px;
 }
-.jsx-3468109796.tab.workspace-tab:focus::before{
+.tab.workspace-tab:focus::before{
   height: 4px;
 }
-.jsx-4017309047.tab-container.ssb-tabs > .jsx-3468109796.tab.workspace-tab.tab--selected {
+.tab-container.ssb-tabs > .tab.workspace-tab.tab--selected {
+    border-top: none !important;
     border-bottom: 4px solid #1a9d49;
 }
 
-.jsx-4017309047.tab-container.ssb-tabs > .jsx-3468109796.tab.workspace-tab.tab--selected:hover::before{
+.tab-container.ssb-tabs > .tab.workspace-tab.tab--selected:hover::before{
   height: unset;
 }
 @media screen and (min-width: 800px){
