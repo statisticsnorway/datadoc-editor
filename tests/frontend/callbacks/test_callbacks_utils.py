@@ -520,7 +520,7 @@ def test_apply_pseudonymization_based_on_selected_algorithm(case, metadata: Data
         snapshot_param: dict | None = next(
             (
                 p
-                for p in variable.pseudonymization.encryption_algorithm_parameters
+                for p in variable.pseudonymization.encryption_algorithm_parameters or []
                 if constants.ENCRYPTION_PARAMETER_SNAPSHOT_DATE in p
             ),
             None,
