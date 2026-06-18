@@ -20,7 +20,7 @@ def running_in_notebook() -> bool:
         return False
 
 
-def pick_random_port() -> int:
+def pick_free_local_port() -> int:
     """Pick a random free port number.
 
     The function binds a socket to 127.0.0.1 on port 0, which lets the
