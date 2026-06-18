@@ -2713,7 +2713,7 @@ wheels = [
 
 [[package]]
 name = "ssb-datadoc"
-version = "1.6.2"
+version = "1.6.3"
 source = { editable = "." }
 dependencies = [
     { name = "arrow" },
