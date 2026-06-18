@@ -20,16 +20,16 @@ def running_in_notebook() -> bool:
         return False
 
 
-def pick_random_port() -> int:
+def pick_free_local_port() -> int:
     """Pick a random free port number.
 
-    The function will bind a socket to port 0, and a random free port from
-    1024 to 65535 will be selected by the operating system.
+    The function binds a socket to 127.0.0.1 on port 0, which lets the
+    operating system select an available temporary port.
     """
     import socket  # noqa: PLC0415
 
     with socket.socket() as sock:
-        sock.bind(("", 0))
+        sock.bind(("127.0.0.1", 0))
         return int(sock.getsockname()[1])
 
 

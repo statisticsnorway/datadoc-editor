@@ -26,7 +26,7 @@ from datadoc_editor.frontend.components.control_bars import build_footer_control
 from datadoc_editor.frontend.components.control_bars import header
 from datadoc_editor.logging_configuration.logging_config import get_log_config
 from datadoc_editor.utils import get_app_version
-from datadoc_editor.utils import pick_random_port
+from datadoc_editor.utils import pick_free_local_port
 from datadoc_editor.utils import running_in_notebook
 
 logging.config.dictConfig(get_log_config())
@@ -108,7 +108,7 @@ def get_app(
 
     # The service prefix must be set to run correctly on Dapla Jupyter
     if prefix := config.get_jupyterhub_service_prefix():
-        port = pick_random_port()
+        port = pick_free_local_port()
         requests_pathname_prefix = f"{prefix}proxy/{port}/"
     else:
         port = config.get_port()
