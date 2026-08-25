@@ -50,18 +50,22 @@ def register_global_variables_callbacks(app: Dash) -> None:
     @app.callback(
         Output(GLOBAL_VARIABLES_ID, "children"),
         Input("dataset-opened-counter", "data"),
-        Input(GLOBAL_VARIABLES_VALUES_STORE, "data"),
+        State(GLOBAL_VARIABLES_VALUES_STORE, "data"),
     )
     def callback_populate_variables_globals_section(
         dataset_opened_counter: int,  # noqa: ARG001
         store_data,  # noqa: ANN001
     ) -> None | ssb.Accordion:
-        """Populating global variables section."""
+        """Populating global variables section.
+
+        Only rebuilt when a new dataset is opened, so the accordion keeps its
+        open state while the user edits fields.
+        """
         if state.metadata.variables and len(state.metadata.variables) > 0:
             return build_global_ssb_accordion(
                 header=GLOBAL_HEADER,
                 key={"id": "global_id", "type": "accordion"},
-                children=build_global_edit_section(GLOBAL_VARIABLES, store_data),
+                children=build_global_edit_section(GLOBAL_VARIABLES, store_data or {}),
             )
         return None
 
