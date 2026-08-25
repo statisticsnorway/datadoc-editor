@@ -13,14 +13,14 @@ package = "datadoc_editor"
 python_versions = ["3.12", "3.13", "3.14"]
 nox.needs_version = ">= 2021.6.6"
 nox.options.default_venv_backend = "uv"
-nox.options.sessions = (
+nox.options.sessions = [
     "pre-commit",
     "mypy",
     "tests",
     "typeguard",
     "xdoctest",
     "docs-build",
-)
+]
 
 
 def install_with_uv(
