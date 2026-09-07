@@ -9,10 +9,10 @@ resolution-markers = [
     "python_full_version == '3.14.*' and sys_platform == 'emscripten'",
     "python_full_version == '3.14.*' and sys_platform != 'emscripten' and sys_platform != 'win32'",
     "python_full_version == '3.13.*' and sys_platform == 'win32'",
-    "python_full_version < '3.13' and sys_platform == 'win32'",
     "python_full_version == '3.13.*' and sys_platform == 'emscripten'",
-    "python_full_version < '3.13' and sys_platform == 'emscripten'",
     "python_full_version == '3.13.*' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version < '3.13' and sys_platform == 'win32'",
+    "python_full_version < '3.13' and sys_platform == 'emscripten'",
     "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 
@@ -600,7 +600,7 @@ wheels = [
 
 [[package]]
 name = "dapla-toolbelt-metadata"
-version = "0.17.2"
+version = "0.19.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "arrow" },
@@ -624,9 +624,9 @@ dependencies = [
     { name = "universal-pathlib" },
     { name = "urllib3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/83/a1/43e02498b983df866008b805d5021d9f61b10b9c7d8f7456d1f9dfee8c97/dapla_toolbelt_metadata-0.17.2.tar.gz", hash = "sha256:5f785ebc0ad1deebd344ced06ba13592a7ffc2a5747f17eb9bf78d9e01561f22", size = 392354, upload-time = "2026-06-25T06:46:13.385Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4f/15/e428997bab431c550645ab00ab0f479f103c4d2937257c21e3aea727d112/dapla_toolbelt_metadata-0.19.0.tar.gz", hash = "sha256:ad338df405a578b18bdfdd0d13c56e715ba1f327f44f6180a279c2aa4c60a870", size = 447329, upload-time = "2026-09-07T07:17:42.035Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8d/16/846c94200b0ba7fb089c592a825bdd21054c040ac3e2b216948482203faa/dapla_toolbelt_metadata-0.17.2-py3-none-any.whl", hash = "sha256:57b8b0d3b04a75f58e0f68091a488f36628ac01b02909893ef828fd141ab8ec8", size = 196881, upload-time = "2026-06-25T06:46:11.83Z" },
+    { url = "https://files.pythonhosted.org/packages/5d/73/bc5ceb74f11714ad279500670fee29cb1fdd996692ac2438d07082bc2a22/dapla_toolbelt_metadata-0.19.0-py3-none-any.whl", hash = "sha256:6461f8736eda4e86728f6e764529e14bd19083081358b3bf5705d280d1ebe5b9", size = 205171, upload-time = "2026-09-07T07:17:40.628Z" },
 ]
 
 [[package]]
@@ -2756,7 +2756,7 @@ type-check = [
 [package.metadata]
 requires-dist = [
     { name = "arrow", specifier = ">=1.3.0" },
-    { name = "dapla-toolbelt-metadata", specifier = ">=0.17.2" },
+    { name = "dapla-toolbelt-metadata", specifier = ">=0.19.0" },
     { name = "dash", specifier = ">=4.0.0" },
     { name = "dash-bootstrap-components", specifier = ">=1.1.0" },
     { name = "flask-healthz", specifier = ">=0.0.3" },
@@ -2806,14 +2806,14 @@ type-check = [
 
 [[package]]
 name = "ssb-datadoc-model"
-version = "8.0.0"
+version = "8.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4c/33/64bde32cea745b9053c64d92003305e6997d0bcf25d7d2fcefb30d035488/ssb_datadoc_model-8.0.0.tar.gz", hash = "sha256:a3136a98fef5158ba1e04748122a9ed730066de0dc00db3f2d49d4b9b57c352f", size = 29146, upload-time = "2025-09-04T06:58:45.104Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/02/7b/b57b619dadc7696fb7ec1292861a13b44b37b722a74f4b64bddeb951e0b2/ssb_datadoc_model-8.1.1.tar.gz", hash = "sha256:557ca3c0afa9fb65eed255d3dcaf8a040bde41c8aacfea34076d763d20aac6bb", size = 29392, upload-time = "2026-09-02T11:03:08.258Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/34/96/8a5d3fad04ba4dc27e766de2a264845da9fe007a8b0d14d619000b6a2f6b/ssb_datadoc_model-8.0.0-py3-none-any.whl", hash = "sha256:f5a413d6f9ef054275f9af61182795597016b91882ac3fae9c6b01a48942bea8", size = 11308, upload-time = "2025-09-04T06:58:43.369Z" },
+    { url = "https://files.pythonhosted.org/packages/df/61/0e17c0e4f301975858c159d71a316a5143a53075a3885fa53617cd655798/ssb_datadoc_model-8.1.1-py3-none-any.whl", hash = "sha256:a33e12b5302eed79ed4478470ed6998275e8358dc51adefde9213d77bbbdc5f6", size = 11498, upload-time = "2026-09-02T11:03:06.983Z" },
 ]
 
 [[package]]
