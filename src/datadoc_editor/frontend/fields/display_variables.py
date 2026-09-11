@@ -258,7 +258,7 @@ DISPLAY_VARIABLES: dict[
     VariableIdentifiers.DATA_TYPE: MetadataInputField(
         identifier=VariableIdentifiers.DATA_TYPE.value,
         display_name="Datatype",
-        description="Den abstrakte datatypen utledet fra den konkrete datatypen av variabelen i datasettet. Mulige verdier er: tekst, heltall, desimaltall, datotid eller boolsk. Det er ikke tilatt å redigere denne ettersom den må speile datasettet presist.",
+        description="Den abstrakte datatypen utledet fra den konkrete datatypen av variabelen i datasettet. Mulige datatyper er tekst, heltall, desimaltall, datotid, boolsk og liste. For lister kan elementenes datatype være tekst, heltall, desimaltall, datotid eller boolsk. Det er ikke tillatt å redigere denne ettersom den må speile datasettet presist.",
         obligatory=True,
         editable=False,
     ),
