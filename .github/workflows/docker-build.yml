@@ -1,8 +1,12 @@
 name: Docker build
 
 on:
-  release:
-    types: [published]
+  workflow_call:
+    inputs:
+      tag:
+        description: Semver formatted tag to apply to the Docker Image
+        type: string
+        required: false
   push:
     branches:
       - master
@@ -15,7 +19,7 @@ on:
 env:
   REGISTRY: europe-north1-docker.pkg.dev/artifact-registry-5n/dapla-metadata-docker/datadoc
   IMAGE: datadoc
-  TAG: ${{ github.ref_name }}-${{ github.sha }}
+  TAG: ${{ inputs.tag }}
 
 jobs:
   docker:
@@ -59,13 +63,13 @@ jobs:
             type=schedule
             type=ref,event=branch
             type=ref,event=pr
-            type=semver,pattern=v{{version}}
-            type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,pattern=v{{major}}
+            type=semver,pattern=v{{version}},source=${{ env.TAG }}
+            type=semver,pattern=v{{major}}.{{minor}},source=${{ env.TAG }}
+            type=semver,pattern=v{{major}},source=${{ env.TAG }}
             type=sha
-            type=raw,value=${{ env.TAG }}, enable=true
 
       - name: Build and push
+        id: docker_build
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           context: .
