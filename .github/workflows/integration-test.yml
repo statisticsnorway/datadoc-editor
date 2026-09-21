@@ -99,6 +99,14 @@ jobs:
       contents: "read"
       id-token: "write"
     steps:
+      - name: Wait for deployment
+        run: >
+          curl --fail
+          --retry 10
+          --retry-delay 5
+          --retry-all-errors
+          https://datadoc-pr-${{ github.event.number }}.test.ssb.no/healthz/ready
+
       - name: Run mabl tests
         id: mabl-test-deployment
         uses: mablhq/github-run-tests-action@e46db148f0124be267acff561cd4d9303375852a # v1
