@@ -14,14 +14,17 @@ class LanguageStringsEnum(Enum):
     def __init__(
         self,
         language_strings: model.LanguageStringType,
+        serialized_value: str | None = None,
     ) -> None:
         """Store the LanguageStringType object for displaying enum values in multiple languages.
 
         We don't particularly care what the value of the enum is,
         but when serialised it's convenient and readable to use the
-        name of the enum, so we set the value to be the name.
+        name of the enum, so we set the value to be the name. Enum values whose
+        serialized representation is not a valid Python identifier may provide
+        that representation explicitly.
         """
-        self._value_ = self.name
+        self._value_ = serialized_value if serialized_value is not None else self.name
         self.language_strings = language_strings
 
     def get_value_for_language(
@@ -277,6 +280,101 @@ class DataType(LanguageStringsEnum):
             model.LanguageStringTypeItem(languageCode="nn", languageText="BOOLSK"),
             model.LanguageStringTypeItem(languageCode="nb", languageText="BOOLSK"),
         ],
+    )
+    ARRAY = model.LanguageStringType(
+        [
+            model.LanguageStringTypeItem(
+                languageCode="en",
+                languageText=model.DataType.ARRAY.value,
+            ),
+            model.LanguageStringTypeItem(languageCode="nn", languageText="LISTE"),
+            model.LanguageStringTypeItem(languageCode="nb", languageText="LISTE"),
+        ],
+    )
+    ARRAY_STRING_ = (
+        model.LanguageStringType(
+            [
+                model.LanguageStringTypeItem(
+                    languageCode="en",
+                    languageText=model.DataType.ARRAY_STRING_.value,
+                ),
+                model.LanguageStringTypeItem(
+                    languageCode="nn", languageText="LISTE MED TEKST"
+                ),
+                model.LanguageStringTypeItem(
+                    languageCode="nb", languageText="LISTE MED TEKST"
+                ),
+            ],
+        ),
+        model.DataType.ARRAY_STRING_.value,
+    )
+    ARRAY_INTEGER_ = (
+        model.LanguageStringType(
+            [
+                model.LanguageStringTypeItem(
+                    languageCode="en",
+                    languageText=model.DataType.ARRAY_INTEGER_.value,
+                ),
+                model.LanguageStringTypeItem(
+                    languageCode="nn", languageText="LISTE MED HEILTAL"
+                ),
+                model.LanguageStringTypeItem(
+                    languageCode="nb", languageText="LISTE MED HEILTALL"
+                ),
+            ],
+        ),
+        model.DataType.ARRAY_INTEGER_.value,
+    )
+    ARRAY_DATETIME_ = (
+        model.LanguageStringType(
+            [
+                model.LanguageStringTypeItem(
+                    languageCode="en",
+                    languageText=model.DataType.ARRAY_DATETIME_.value,
+                ),
+                model.LanguageStringTypeItem(
+                    languageCode="nn", languageText="LISTE MED DATOTID"
+                ),
+                model.LanguageStringTypeItem(
+                    languageCode="nb", languageText="LISTE MED DATOTID"
+                ),
+            ],
+        ),
+        model.DataType.ARRAY_DATETIME_.value,
+    )
+    ARRAY_BOOLEAN_ = (
+        model.LanguageStringType(
+            [
+                model.LanguageStringTypeItem(
+                    languageCode="en",
+                    languageText=model.DataType.ARRAY_BOOLEAN_.value,
+                ),
+                model.LanguageStringTypeItem(
+                    languageCode="nn", languageText="LISTE MED BOOLSK"
+                ),
+                model.LanguageStringTypeItem(
+                    languageCode="nb", languageText="LISTE MED BOOLSK"
+                ),
+            ],
+        ),
+        model.DataType.ARRAY_BOOLEAN_.value,
+    )
+    ARRAY_FLOAT_ = (
+        model.LanguageStringType(
+            [
+                model.LanguageStringTypeItem(
+                    languageCode="en",
+                    languageText=model.DataType.ARRAY_FLOAT_.value,
+                ),
+                model.LanguageStringTypeItem(
+                    languageCode="nn", languageText="LISTE MED DESIMALTAL"
+                ),
+                model.LanguageStringTypeItem(
+                    languageCode="nb", languageText="LISTE MED DESIMALTALL"
+                ),
+            ],
+        ),
+        model.DataType.ARRAY_FLOAT_.value,
     )
 
 

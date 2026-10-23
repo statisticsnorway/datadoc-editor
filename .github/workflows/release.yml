@@ -10,30 +10,25 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.check-version.outputs.tag }}
     permissions:
-      id-token: write
       contents: write
       pull-requests: read
+      id-token: write
     steps:
-      - name: Generate token
-        id: generate_token
-        uses: actions/create-github-app-token@v2
-        with:
-          app-id: ${{ secrets.DAPLA_BOT_APP_ID }}
-          private-key: ${{ secrets.DAPLA_BOT_PRIVATE_KEY }}
-
       - name: Check out the repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 2
 
       - name: Set up Python
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: "pyproject.toml"
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
         with:
           enable-cache: true
 
@@ -45,7 +40,7 @@ jobs:
       - name: Detect and tag new version
         id: check-version
         if: steps.check-parent-commit.outputs.sha
-        uses: salsify/action-detect-and-tag-new-version@v2.0.3
+        uses: salsify/action-detect-and-tag-new-version@b1778166f13188a9d478e2d1198f993011ba9864 # v2.0.3
         with:
           version-command: |
             bash -o pipefail -c "uvx --from=toml-cli toml get --toml-path=pyproject.toml project.version"
@@ -62,18 +57,28 @@ jobs:
 
       - name: Publish package on PyPI
         if: steps.check-version.outputs.tag
-        uses: pypa/gh-action-pypi-publish@v1.13.0
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
 
       - name: Publish package on TestPyPI
         if: (!steps.check-version.outputs.tag)
-        uses: pypa/gh-action-pypi-publish@v1.13.0
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
         with:
           repository-url: https://test.pypi.org/legacy/
 
       - name: Publish the release notes
-        uses: release-drafter/release-drafter@v6.2.0
+        uses: release-drafter/release-drafter@34d80673e067bdc0c24568d3af899c216adcfaa9 # v7.7.0
         with:
           publish: ${{ steps.check-version.outputs.tag != '' }}
           tag: ${{ steps.check-version.outputs.tag }}
-        env:
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+
+  build-release-image:
+    name: Build Release Image
+    needs: release
+    if: needs.release.outputs.tag != ''
+    uses: ./.github/workflows/docker-build.yml
+    with:
+      tag: ${{ needs.release.outputs.tag }}
+    permissions:
+      contents: "read"
+      id-token: "write"
+    secrets: inherit

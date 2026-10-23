@@ -288,7 +288,7 @@ MULTIPLE_DROPDOWN_DATASET_IDENTIFIERS = [
     if isinstance(m, MetadataMultiDropdownField)
 ]
 
-EDITABLE_DATASET_METADATA_LEFT = [
+EDITABLE_DATASET_METADATA_LEFT: list[FieldTypes] = [
     m
     for m in DISPLAY_DATASET.values()
     if m.editable and isinstance(m, MetadataMultiLanguageField)
@@ -297,7 +297,7 @@ EDITABLE_DATASET_METADATA_LEFT = [
 EDITABLE_DATASET_METADATA_LEFT.insert(3, DISPLAY_DATASET[DatasetIdentifiers.VERSION])
 
 
-EDITABLE_DATASET_METADATA_RIGHT = [
+EDITABLE_DATASET_METADATA_RIGHT: list[FieldTypes] = [
     m
     for m in DISPLAY_DATASET.values()
     if m.editable and m not in EDITABLE_DATASET_METADATA_LEFT

@@ -1,0 +1,14 @@
+name: Label PR
+
+on:
+  pull_request:
+
+jobs:
+  label_pr:
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: release-drafter/release-drafter/autolabeler@34d80673e067bdc0c24568d3af899c216adcfaa9 # v7.7.0
+        name: Label PR

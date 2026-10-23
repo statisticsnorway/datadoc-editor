@@ -24,6 +24,39 @@ categories:
       - "dependencies"
 exclude-labels:
   - "skip-changelog"
+autolabeler:
+  - label: "documentation"
+    files:
+      - "**/*.md"
+      - "docs/**"
+      - "backstage.yaml"
+  - label: "bug"
+    branch:
+      - '/fix\/.+/'
+  - label: "enhancement"
+    branch:
+      - '/feat\/.+/'
+  - label: "refactoring"
+    branch:
+      - '/refactor\/.+/'
+    title:
+      - "/^refactor/i"
+  - label: "testing"
+    branch:
+      - '/test\/.+/'
+  - label: "skip-changelog"
+    branch:
+      - '/release\/.+/'
+      - '/chore\/.+/'
+  - label: "breaking"
+    title:
+      - "/breaking change/i"
+  - label: "ci"
+    files:
+      - ".github/*"
+      - "noxfile.py"
+    branch:
+      - '/ci\/.+/'
 template: |
   ## Changes
 
