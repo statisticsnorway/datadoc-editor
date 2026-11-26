@@ -26,7 +26,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --no-editable
 
 # Then, use a final image without uv
-FROM gcr.io/distroless/python3-debian13@sha256:96234eaf03bba491856ead9142eccdda8cf9d09ce418770a260b84f529d81848
+FROM gcr.io/distroless/python3-debian13@sha256:9a1ed29d41d7695245ff86bc2e08684d3dd253a3f9c8ca45677427f9f4fe3598
 
 # Copy the Python version
 COPY --from=builder --chown=python:python /python /python
